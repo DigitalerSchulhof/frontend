@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "lib": ["ESNext"],
+    "target": "ESNext",
+    "strict": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true,
+    "moduleResolution": "node"
+  },
+  "include": ["**/*"]
+}

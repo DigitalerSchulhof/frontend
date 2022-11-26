@@ -1,0 +1,24 @@
+{
+  "name": "@dsh/core",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build:loaders": "tsc --build loaders/tsconfig.json",
+    "build": "pnpm run build:loaders && next build"
+  },
+  "dependencies": {
+    "@dsh/shell": "1.0.0",
+    "eslint-config-next": "13.0.4",
+    "next": "13.0.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.9",
+    "@types/webpack": "5.28.0",
+    "eslint": "8.28.0",
+    "next-transpile-modules": "10.0.0",
+    "typescript": "4.9.3"
+  }
+}
