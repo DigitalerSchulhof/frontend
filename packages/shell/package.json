@@ -1,5 +1,16 @@
 {
   "name": "@dsh/shell",
   "version": "1.0.0",
-  "main": "index.ts"
+  "main": "index.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./*": {
+      "import": "./dist/*",
+      "require": "./dist/*"
+    },
+    "./package.json": "./package.json"
+  }
 }

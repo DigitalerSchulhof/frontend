@@ -1,0 +1,29 @@
+{
+  "name": "@dsh/schulhof-login-provider-password",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@dsh/schulhof": "workspace:1.0.0",
+    "@types/react": "18.0.25"
+  },
+  "peerDependencies": {
+    "@dsh/schulhof": "1.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./*": {
+      "import": "./dist/*",
+      "require": "./dist/*"
+    },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bodies": {
+      "@dsh/schulhof": [
+        "login-provider"
+      ]
+    }
+  }
+}

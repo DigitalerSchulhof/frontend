@@ -1,4 +1,10 @@
 {
   "name": "@dsh/digitaler-schulhof",
-  "private": "true"
+  "private": "true",
+  "scripts": {
+    "dev": "cd frontend && pnpm run dev"
+  },
+  "devDependencies": {
+    "typescript": "4.9.3"
+  }
 }

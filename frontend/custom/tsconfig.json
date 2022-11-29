@@ -10,5 +10,5 @@
     "incremental": true,
     "moduleResolution": "node"
   },
-  "include": ["**/*"]
+  "include": ["**/*.ts"]
 }

@@ -1,0 +1,26 @@
+welcome: Willkommen auf dem Schulhof {school.article, genitive} {school.name, genitive}
+login:
+  title: Anmeldung
+  subtitle: Um den Schulhof zu betreten, ist eine Anmeldung nötig.
+app:
+  title: Jetzt auch als App
+  ios: iPhone/iPad
+  android: Android
+  pwa: Direkt installieren
+changelog:
+  title: Neuerungen
+  heading: '{version} - {date}'
+  specific:
+    show: Neuerungen in Version <b>{version}</b> einblenden
+    hide: Neuerungen in Version <b>{version}</b> ausblenden
+  all:
+    show: Neuerungen älterer Versionen einblenden
+    hide: Neuerungen älterer Versionen ausblenden
+system:
+  version: Version {version}
+  cookies: Cookies aktiv?
+  javascript: JavaScript aktiv?
+  one_user: Nur ein Nutzer pro Browser zur selben Zeit.
+  check:
+   'yes': Der Browser unterstützt alle Funktionen des Digitalen Schulhofs.
+   'no': Der Browser unterstützt womöglich nicht alle Funktionen des Digitalen Schulhofs.
