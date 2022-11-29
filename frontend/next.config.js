@@ -16,7 +16,7 @@ const withTM = require('next-transpile-modules')(
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  webpack: (config, {dev}) => {
+  webpack: (config) => {
     config.module.rules.push({
       test: /\.tsx?$/,
       use: {
@@ -33,9 +33,8 @@ const nextConfig = {
       config.resolve.plugins[pathsPluginIndex] = new DshPathsPlugin();
     }
 
-    if (dev) {
-      config.resolve.modules.push(path.resolve(__dirname, 'node_modules'));
-    }
+    // Since symlinked modules are resolved in their actual directory, they need access to this node_modules (where they're installed) to resolve modules injected by the shellLoader
+    config.resolve.modules.push(path.resolve(__dirname, 'node_modules'));
 
     return config;
   },

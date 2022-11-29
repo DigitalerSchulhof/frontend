@@ -5,6 +5,7 @@
     "dev": "next dev",
     "build:custom": "tsc --build custom/tsconfig.json",
     "build": "pnpm run build:custom && next build",
+    "build:pages": "node custom/scripts/generate-pages",
     "start": "next start"
   },
   "dependencies": {
