@@ -155,8 +155,6 @@ function forEachBail<TEntry>(
   while (next());
 }
 
-const NODE_MODULES_REGEX = /node_modules/;
-
 type Paths = { [match: string]: string[] };
 
 const moduleAliases = new Map<string, [string, Paths]>();
@@ -182,9 +180,6 @@ for (const dir of yieldModules()) {
   ]);
 }
 
-/**
- * Based on https://github.com/vercel/next.js/tree/canary/packages/next/build/webpack/plugins/jsconfig-paths-plugin.ts
- */
 export class PathsPlugin implements webpack.ResolvePluginInstance {
   pathsPlugin = true;
 
@@ -270,67 +265,6 @@ export class PathsPlugin implements webpack.ResolvePluginInstance {
           },
           callback
         );
-
-        // if (!request.request) return callback();
-
-        // if (!isDsh(request)) return callback();
-        // if (isRelative(request)) return callback();
-
-        // // @ts-expect-error
-        // const name = request.descriptionFileData?.name;
-
-        // // @ts-expect-error
-        // if (!moduleAliases.has(request.descriptionFileData?.name))
-        //   return callback();
-
-        // // @ts-expect-error
-        // const paths = moduleAliases.get(request.descriptionFileData?.name)!;
-
-        // for (const [search, replace] of paths) {
-        //   if (search.endsWith('*')) {
-        //     const searchPrefix = search.slice(0, -1);
-        //     if (!request.request.startsWith(searchPrefix)) continue;
-        //     const requestSuffix = request.request.slice(searchPrefix.length);
-        //     for (const replacePath of replace) {
-        //       const newRequest = {
-        //         ...request,
-        //         request: replacePath + requestSuffix,
-        //       };
-        //       resolver.doResolve(
-        //         target,
-        //         newRequest,
-        //         null,
-        //         resolveContext,
-        //         callback
-        //       );
-        //     }
-        //   } else {
-        //     if (request.request !== search) continue;
-        //     for (const replacePath of replace) {
-        //       const newRequest = {
-        //         ...request,
-        //         request: replacePath,
-        //       };
-        //       resolver.doResolve(
-        //         target,
-        //         newRequest,
-        //         null,
-        //         resolveContext,
-        //         callback
-        //       );
-        //     }
-        //   }
-        // }
-
-        // callback();
       });
   }
-}
-
-function isDsh(request: { descriptionFileData?: object }): boolean {
-  return !!request.descriptionFileData && 'dsh' in request.descriptionFileData;
-}
-
-function isRelative(request: { request?: string }): boolean {
-  return request.request?.[0] === '.' || request.request?.[0] === '/';
 }
