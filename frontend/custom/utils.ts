@@ -10,16 +10,28 @@ export function* yieldModules(): Generator<string> {
   yield* yieldModulesWorker(path.resolve(__dirname, '../node_modules'));
 }
 
-const blacklist = new Set().add(".bin").add(".pnpm").add(".yarn").add(".modules.yaml");
+const blacklist = new Set(['.bin', '.pnpm', '.yarn', '.modules.yaml']);
 function* yieldModulesWorker(dir: string): Generator<string> {
   for (const entity of fs.readdirSync(dir)) {
     if (blacklist.has(entity)) continue;
-
 
     if (entity[0] === '@') {
       yield* yieldModulesWorker(path.join(dir, entity));
     } else {
       yield path.join(dir, entity);
+    }
+  }
+}
+
+export function* yieldFiles(dir: string): Generator<string> {
+  for (const entity of fs.readdirSync(dir)) {
+    const entityPath = path.join(dir, entity);
+    const stat = fs.statSync(entityPath);
+    if (stat.isDirectory()) {
+      yield* yieldFiles(entityPath);
+    }
+    if (stat.isFile()) {
+      yield entityPath;
     }
   }
 }

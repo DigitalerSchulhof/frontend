@@ -2,7 +2,7 @@
   "name": "@dsh/schulhof-login-provider-password",
   "version": "1.0.0",
   "devDependencies": {
-    "@dsh/schulhof": "workspace:1.0.0",
+    "@dsh/schulhof": "1.0.0",
     "@types/react": "18.0.25"
   },
   "peerDependencies": {

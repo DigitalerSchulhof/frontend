@@ -4,7 +4,7 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "ESNext"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -12,15 +12,12 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
-    "paths": {
-      "~": ["./test"]
-    }
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
@@ -29,6 +26,7 @@
   ],
   "exclude": [
     "node_modules",
-    "custom/**/*",
+    "pages/**/*",
+    "custom/**/*"
   ]
 }
