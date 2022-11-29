@@ -193,8 +193,9 @@ export class PathsPlugin implements webpack.ResolvePluginInstance {
     resolver
       .getHook('described-resolve')
       .tapAsync('PathsPlugin', (request: any, resolveContext, callback) => {
-        if (!moduleAliases.has(request.descriptionFileData?.name))
+        if (!moduleAliases.has(request.descriptionFileData?.name)) {
           return callback();
+        }
 
         const [baseUrl, paths] = moduleAliases.get(
           request.descriptionFileData?.name
