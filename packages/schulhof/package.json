@@ -11,17 +11,6 @@
   "peerDependencies": {
     "@dsh/core": "1.0.0"
   },
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    },
-    "./*": {
-      "import": "./dist/*",
-      "require": "./dist/*"
-    },
-    "./package.json": "./package.json"
-  },
   "dsh": {
     "pages": true,
     "shells": [
