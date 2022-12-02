@@ -1,4 +1,4 @@
-import { getShell } from '@dsh/shell';
+import { getShell } from '@dsh/core';
 
 export interface LoginProvider {
   component: JSX.Element;

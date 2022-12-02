@@ -8,7 +8,8 @@
     "declaration": true,
     "declarationMap": true,
     "incremental": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "outDir": "../.custom"
   },
   "include": ["**/*.ts"]
 }

@@ -1,27 +1,34 @@
 const path = require('path');
-const { yieldModules, readJsonSync } = require('./custom/utils');
+const { findNearestPackageJson, readJsonSync } = require('./.custom/utils');
 
 const {
   PathsPlugin: DshPathsPlugin,
-} = require('./custom/webpack/plugins/paths');
-
-const withTM = require('next-transpile-modules')(
-  [...yieldModules()]
-    .map((m) => readJsonSync(`${m}/package.json`))
-    .filter((m) => m.dsh)
-    .map((m) => m.name)
-);
+} = require('./.custom/webpack/plugins/paths');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  webpack: (config) => {
+  webpack: (config, options) => {
     config.module.rules.push({
-      test: /\.tsx?$/,
-      use: {
-        loader: require.resolve('./custom/webpack/loaders/shell'),
+      use: require.resolve('./.custom/webpack/loaders/shell'),
+      enforce: 'pre',
+      include: (p) => {
+        if (!p.endsWith('.ts') && !p.endsWith('.tsx')) return false;
+        const pkg = readJsonSync(findNearestPackageJson(p));
+        return 'dsh' in pkg;
       },
+      type: 'javascript/auto',
+    });
+
+    config.module.rules.push({
+      use: options.defaultLoaders.babel,
+      include: (p) => {
+        if (!p.endsWith('.ts') && !p.endsWith('.tsx')) return false;
+        const pkg = readJsonSync(findNearestPackageJson(p));
+        return 'dsh' in pkg;
+      },
+      type: 'javascript/auto',
     });
 
     const pathsPluginIndex = config.resolve.plugins.findIndex(
@@ -40,4 +47,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withTM(nextConfig);
+module.exports = nextConfig;

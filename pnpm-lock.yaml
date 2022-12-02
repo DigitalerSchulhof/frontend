@@ -19,7 +19,6 @@ importers:
       eslint: 8.28.0
       eslint-config-next: 13.0.5
       next: 13.0.5
-      next-transpile-modules: 10.0.0
       react: 18.2.0
       react-dom: 18.2.0
       typescript: 4.9.3
@@ -36,30 +35,29 @@ importers:
       '@types/react-dom': 18.0.9
       '@types/webpack': 5.28.0
       eslint: 8.28.0
-      next-transpile-modules: 10.0.0
       typescript: 4.9.3
+
+  packages/core:
+    specifiers: {}
 
   packages/schulhof:
     specifiers:
-      '@dsh/shell': workspace:1.0.0
+      '@dsh/core': 1.0.0
       '@types/react': 18.0.25
       react: 18.2.0
     dependencies:
-      '@dsh/shell': link:../shell
+      '@dsh/core': link:../core
       react: 18.2.0
     devDependencies:
       '@types/react': 18.0.25
 
   packages/schulhof-login-provider-password:
     specifiers:
-      '@dsh/schulhof': workspace:1.0.0
+      '@dsh/schulhof': 1.0.0
       '@types/react': 18.0.25
     devDependencies:
       '@dsh/schulhof': link:../schulhof
       '@types/react': 18.0.25
-
-  packages/shell:
-    specifiers: {}
 
 packages:
 
@@ -1707,12 +1705,6 @@ packages:
 
   /neo-async/2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
-    dev: true
-
-  /next-transpile-modules/10.0.0:
-    resolution: {integrity: sha512-FyeJ++Lm2Fq31gbThiRCrJlYpIY9QaI7A3TjuhQLzOix8ChQrvn5ny4MhfIthS5cy6+uK1AhDRvxVdW17y3Xdw==}
-    dependencies:
-      enhanced-resolve: 5.12.0
     dev: true
 
   /next/13.0.5_biqbaboplfbrettd7655fr4n2y:

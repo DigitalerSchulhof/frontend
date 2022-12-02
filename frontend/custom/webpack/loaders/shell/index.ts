@@ -6,7 +6,7 @@ import {
   yieldModules,
 } from '../../../utils';
 
-const GET_SHELL_REGEX = /\WgetShell(?:<\w*>)\(["']([a-z-]+)["']\)/g;
+const GET_SHELL_REGEX = /(\b)getShell(?:<\w*>)\(["']([a-z-]+)["']\)/g;
 
 const bodies: Map<string, string[]> = new Map();
 
@@ -41,7 +41,7 @@ export const shellLoader: LoaderDefinitionFunction = async function (source) {
   ).then((pkg) => pkg.name);
 
   for (const match of matches) {
-    const [stringMatch, shellName] = match;
+    const [stringMatch, boundary, shellName] = match;
 
     const key = `${packageName}/${shellName}`;
 
@@ -54,7 +54,7 @@ export const shellLoader: LoaderDefinitionFunction = async function (source) {
     }
 
     source =
-      source.substring(0, match.index! + 1) +
+      source.substring(0, match.index!) +
       `[${foundBodies.map(
         (bod) => `require(\"${bod}/bodies/${key}\").default`
       )}]` +

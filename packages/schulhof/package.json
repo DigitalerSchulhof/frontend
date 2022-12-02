@@ -2,7 +2,7 @@
   "name": "@dsh/schulhof",
   "version": "1.0.0",
   "dependencies": {
-    "@dsh/shell": "1.0.0",
+    "@dsh/core": "1.0.0",
     "react": "18.2.0"
   },
   "devDependencies": {
@@ -11,5 +11,7 @@
   "peerDependencies": {
     "@dsh/core": "1.0.0"
   },
-  "dsh": {}
+  "dsh": {
+    "defaultLanguage": "de-DE"
+  }
 }
