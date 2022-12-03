@@ -16,6 +16,9 @@ const nextConfig = {
         require.resolve('./.custom/webpack/loaders/i18n'),
       ],
       enforce: 'pre',
+      /**
+       * @param {string} p
+       */
       include: (p) => {
         if (!p.endsWith('.ts') && !p.endsWith('.tsx')) return false;
         const pkg = readJsonSync(findNearestPackageJson(p));
@@ -26,7 +29,10 @@ const nextConfig = {
 
     config.module.rules.push({
       use: options.defaultLoaders.babel,
-      include: (p) => {
+      /**
+       * @param {string} p
+       */
+       include: (p) => {
         if (!p.endsWith('.ts') && !p.endsWith('.tsx')) return false;
         const pkg = readJsonSync(findNearestPackageJson(p));
         return 'dsh' in pkg;
@@ -35,7 +41,10 @@ const nextConfig = {
     });
 
     const pathsPluginIndex = config.resolve.plugins.findIndex(
-      (p) => p.constructor.name === 'JsConfigPathsPlugin'
+      /**
+       * @param {import("webpack").ResolvePluginInstance} p
+       */
+      (p) => p.jsConfigPlugin
     );
     if (pathsPluginIndex === -1) {
       config.resolve.plugins.push(new DshPathsPlugin());

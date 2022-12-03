@@ -1,6 +1,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
+export const LOCALE = "de-DE";
+
 /**
  * Yields all installed node modules.
  *
@@ -81,53 +83,6 @@ export function findNearestPackageJsonWorker(file: string): string | undefined {
   return findNearestPackageJsonWorker(dir);
 }
 
-/**
- * Recursively merges two objects.
- */
-export function mergeObjects(
-  a: Record<string, any>,
-  b: Record<string, any>,
-  throwOnConflict = true
-) {
-  const res = { ...a };
-
-  for (const [key, value] of Object.entries(b)) {
-    if (
-      key in res &&
-      typeof res[key] === 'object' &&
-      typeof value === 'object'
-    ) {
-      res[key] = mergeObjects(res[key], value, throwOnConflict);
-    } else {
-      if (throwOnConflict && key in res) {
-        throw new Error(`Duplicate key ${key}`);
-      }
-      res[key] = value;
-    }
-  }
-
-  return res;
-}
-
-/**
- * Recursively picks those keys from obj that are in keys.
- */
-export function pickFromObject(
-  obj: Record<string, any>,
-  keys: Record<string, any>,
-  fallbackToKey = false
-): Record<string, any> {
-  const res: Record<string, any> = {};
-
-  for (const [key, value] of Object.entries(obj)) {
-    if (key in keys) {
-      if (typeof value === 'object' && typeof keys[key] === 'object') {
-        res[key] = pickFromObject(value, keys[key], fallbackToKey);
-      } else {
-        res[key] = value ?? key;
-      }
-    }
-  }
-
-  return res;
+export function toBase64(str: string): string {
+  return Buffer.from(str).toString('base64');
 }

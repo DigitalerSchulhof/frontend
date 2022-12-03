@@ -42,6 +42,8 @@ export const shellLoader: LoaderDefinitionFunction = async function (source) {
     findNearestPackageJson(this.resourcePath)
   ).name;
 
+  let offset = 0;
+
   for (const match of matches) {
     const [stringMatch, shellName] = match;
 
@@ -55,12 +57,16 @@ export const shellLoader: LoaderDefinitionFunction = async function (source) {
       foundBodies = emptyArray;
     }
 
+    const replacement = `[${foundBodies.map(
+      (bod) => `require(\"${bod}/bodies/${key}\").default`
+    )}]`;
+
     source =
       source.substring(0, match.index!) +
-      `[${foundBodies.map(
-        (bod) => `require(\"${bod}/bodies/${key}\").default`
-      )}]` +
+      replacement +
       source.substring(match.index! + 1 + stringMatch.length);
+
+    offset += replacement.length - stringMatch.length;
   }
 
   return source;

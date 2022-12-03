@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
-    "build:custom": "tsc --build custom/tsconfig.json",
-    "build": "pnpm run build:custom && next build",
-    "build:pages": "node custom/scripts/generate-pages",
+    "build": "pnpm run build:custom && pnpm run build:pages && next build",
+    "build:watch": "concurrently \"pnpm run build:custom:watch\" \"pnpm run build:pages:watch\"",
+    "build:custom": "rm -rf .custom && tsc --build custom/tsconfig.json",
+    "build:custom:watch": "tsc --build custom/tsconfig.json -w",
+    "build:pages": "node .custom/scripts/generate-pages",
+    "build:pages:watch": "nodemon .custom/scripts/generate-pages",
     "start": "next start"
   },
   "dependencies": {
+    "@dsh/core": "1.0.0",
     "@dsh/schulhof": "1.0.0",
     "@dsh/schulhof-login-provider-password": "1.0.0",
     "eslint-config-next": "13.0.5",
@@ -21,7 +25,9 @@
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
     "@types/webpack": "5.28.0",
+    "concurrently": "7.6.0",
     "eslint": "8.28.0",
+    "nodemon": "2.0.20",
     "typescript": "4.9.3",
     "yaml": "2.1.3"
   }
