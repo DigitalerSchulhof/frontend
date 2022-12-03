@@ -1,4 +1,4 @@
-welcome: Willkommen auf dem Schulhof {@dsh/core:school.casus, select, m {des} w {der} n {des}} {@dsh/core:school.name.genitive}
+welcome: Willkommen auf dem Schulhof {@dsh/core:school.genus, select, m {des} w {der} n {des}} {@dsh/core:school.name.genitive}
 login:
   title: Anmeldung
   subtitle: Um den Schulhof zu betreten, ist eine Anmeldung nötig.
