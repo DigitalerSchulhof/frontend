@@ -1,15 +1,11 @@
-import * as React from 'react';
-import { getLoginProviders } from '~/shells/login-provider';
+import { useT } from '@dsh/core';
 
 export default function Page() {
-  const loginProviders = getLoginProviders();
+  const { t } = useT();
 
-  console.log(loginProviders);
+  console.dir(__dshI18n, { depth: null });
 
-  return (
-    <>
-      {loginProviders[0].component}
-      <button onClick={loginProviders[0].onLogin}>Login</button>
-    </>
-  );
+  console.log(t('paths.schulhof'));
+
+  return t('login.login.subtitle');
 }

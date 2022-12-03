@@ -1,4 +1,4 @@
-welcome: Willkommen auf dem Schulhof {school.article, genitive} {school.name, genitive}
+welcome: Willkommen auf dem Schulhof {@dsh/core:school.article.genitive} {@dsh/core:school.name.genitive}
 login:
   title: Anmeldung
   subtitle: Um den Schulhof zu betreten, ist eine Anmeldung nötig.

@@ -11,7 +11,10 @@ const nextConfig = {
   swcMinify: true,
   webpack: (config, options) => {
     config.module.rules.push({
-      use: require.resolve('./.custom/webpack/loaders/shell'),
+      use: [
+        require.resolve('./.custom/webpack/loaders/shell'),
+        require.resolve('./.custom/webpack/loaders/i18n'),
+      ],
       enforce: 'pre',
       include: (p) => {
         if (!p.endsWith('.ts') && !p.endsWith('.tsx')) return false;

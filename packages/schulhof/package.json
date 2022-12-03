@@ -12,6 +12,6 @@
     "@dsh/core": "1.0.0"
   },
   "dsh": {
-    "defaultLanguage": "de-DE"
+    "defaultLocale": "de-DE"
   }
 }
