@@ -1,0 +1,12 @@
+{
+  "locale": "de-DE",
+  "school": {
+    "name": {
+      "genus": "w",
+      "nominative": "Test-Schule",
+      "genitive": "Test-Schule",
+      "accusative": "Test-Schule",
+      "dative": "Test-Schule"
+    }
+  }
+}

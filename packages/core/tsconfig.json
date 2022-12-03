@@ -6,6 +6,8 @@
     "lib": ["ESNext", "DOM"],
     "paths": {
       "~/*": ["*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   }
 }

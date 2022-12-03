@@ -33,10 +33,11 @@ for (const [pagePath, [pkgName, filePath]] of pages) {
   fs.mkdirSync(path.dirname(path.join(_pages, pagePath)), { recursive: true });
   fs.writeFileSync(
     path.join(_pages, pagePath),
-    `export { default } from '${pkgName}/pages/${filePath.replace(
+    `import * as helloThere from '${pkgName}/pages/${filePath.replace(
       /\.tsx?/,
       ''
-    )}';`
+    )}';
+module.exports = helloThere;`
   );
 }
 
@@ -45,7 +46,7 @@ function translatePagePathSegment(
   segment: string,
   locale: string
 ): string {
-  return segment.replace(/{([a-z-.]+)}/, (match, i18nKey) =>
+  return segment.replace(/{([a-z-.]+)}/, (_, i18nKey) =>
     getTranslation(packageName, i18nKey, locale)
   );
 }
