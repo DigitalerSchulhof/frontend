@@ -2,7 +2,6 @@ import * as yaml from 'yaml';
 import * as fs from 'fs';
 import * as path from 'path';
 import { yieldModules, readJsonSync, yieldFiles, mergeObjects } from './utils';
-import { translate } from "@dsh/core/translate";
 
 /**
  * @key package name

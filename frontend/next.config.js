@@ -6,7 +6,7 @@ const {
 } = require('./.custom/webpack/plugins/paths');
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+module.exports = {
   reactStrictMode: true,
   swcMinify: true,
   webpack: (config, options) => {
@@ -53,10 +53,8 @@ const nextConfig = {
     }
 
     // Since symlinked modules are resolved in their actual directory, they need access to this node_modules (where they're installed) to resolve modules injected by the shellLoader
-    config.resolve.modules.push(path.resolve(__dirname, 'node_modules'));
+    config.resolve.modules.push(path.join(options.dir, 'node_modules'));
 
     return config;
   },
 };
-
-module.exports = nextConfig;
