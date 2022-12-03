@@ -1,30 +1,26 @@
 import * as yaml from 'yaml';
 import * as fs from 'fs';
 import * as path from 'path';
-import { yieldModules, readJsonSync, yieldFiles, mergeObjects } from './utils';
+import { yieldModules, readJsonSync, yieldFiles, flattenObject } from './utils';
+
+export interface TranslationEntry {
+  value: string;
+  file: string;
+}
 
 /**
  * @key package name
  * @value {
  *   @key locale code
- *   @value translations tree
+ *   @value {
+ *     @key i18n key
+ *     @value TranslationEntry
+ *   }
  * }
  */
 export const packageTranslations = new Map<
   string,
-  Map<string, Record<string, any>>
->();
-
-/**
- * @key package name
- * @value {
- *   @key locale code
- *   @value translations tree
- * }
- */
-export const mergedPackageTranslations = new Map<
-  string,
-  Map<string, Record<string, any>>
+  Map<string, Map<string, TranslationEntry>>
 >();
 
 /**
@@ -33,52 +29,63 @@ export const mergedPackageTranslations = new Map<
  */
 export const packageDefaultLocale = new Map<string, string>();
 
-for (const dir of yieldModules()) {
-  if (!fs.existsSync(path.join(dir, 'locales'))) continue;
+function loadTranslations() {
+  for (const dir of yieldModules()) {
+    if (!fs.existsSync(path.join(dir, 'locales'))) continue;
 
-  const pkg = readJsonSync(`${dir}/package.json`);
-  if ('defaultLocale' in pkg.dsh === false) {
-    throw new Error(`Missing defaultLocale in ${pkg.name}`);
-  }
-
-  packageDefaultLocale.set(pkg.name, pkg.defaultLocale);
-
-  const locales = new Map<string, Record<string, any>>();
-  for (const locale of fs.readdirSync(path.join(dir, 'locales'))) {
-    if (!locales.has(locale)) locales.set(locale, {});
-
-    for (const localeFile of yieldFiles(path.join(dir, 'locales', locale))) {
-      let content = yaml.parse(fs.readFileSync(localeFile, 'utf-8'));
-      const filePrefix = localeFile
-        .substring(
-          path.join(dir, 'locales', locale).length + 1,
-          localeFile.length - '.yml'.length
-        )
-        .split('/');
-
-      for (let i = filePrefix.length - 1; i >= 0; i--) {
-        content = { [filePrefix[i]]: content };
-      }
-
-      locales.set(locale, mergeObjects(locales.get(locale)!, content));
+    const pkg = readJsonSync(`${dir}/package.json`);
+    if ('defaultLocale' in pkg.dsh === false) {
+      throw new Error(`Missing defaultLocale in ${pkg.name}`);
     }
-  }
-  if (!locales.has(pkg.dsh.defaultLocale)) {
-    throw new Error(
-      `Missing defaultLocale in ${pkg.name}: ${pkg.dsh.defaultLocale}`
-    );
-  }
+    packageDefaultLocale.set(pkg.name, pkg.defaultLocale);
 
-  packageTranslations.set(pkg.name, locales);
+    const locales = new Map<string, Map<string, TranslationEntry>>();
+    for (const locale of fs.readdirSync(path.join(dir, 'locales'))) {
+      if (!locales.has(locale)) locales.set(locale, new Map());
+      const map = locales.get(locale)!;
 
-  const mergedLocales = new Map<string, Record<string, any>>();
-  for (const locale of fs.readdirSync(path.join(dir, 'locales'))) {
-    const l = locales.get(locale)!;
-    const dl = locales.get(pkg.dsh.defaultLocale)!;
+      for (const localeFile of yieldFiles(path.join(dir, 'locales', locale))) {
+        let content = yaml.parse(fs.readFileSync(localeFile, 'utf-8'));
+        const localePrefix = localeFile
+          .substring(
+            path.join(dir, 'locales', locale).length + 1,
+            localeFile.length - '.yml'.length
+          )
+          .split('/')
+          .join('.');
 
-    mergedLocales.set(locale, mergeObjects(dl, l, false));
+        for (const [key, value] of Object.entries(
+          flattenObject(content, '.')
+        )) {
+          map.set(`${localePrefix}.${key}`, {
+            value: value as string,
+            file: localeFile,
+          });
+        }
+      }
+    }
+    if (!locales.has(pkg.dsh.defaultLocale)) {
+      throw new Error(
+        `Missing defaultLocale in ${pkg.name}: ${pkg.dsh.defaultLocale}`
+      );
+    }
+
+    for (const k in locales.get(pkg.dsh.defaultLocale)!) {
+      for (const locale of locales) {
+        if (locale[1].has(k)) continue;
+        locale[1].set(k, locales.get(pkg.dsh.defaultLocale)!.get(k)!);
+      }
+    }
+
+    packageTranslations.set(pkg.name, locales);
   }
-  mergedPackageTranslations.set(pkg.name, mergedLocales);
+}
+loadTranslations();
+
+export function reloadTranslations() {
+  packageTranslations.clear();
+  packageDefaultLocale.clear();
+  loadTranslations();
 }
 
 export function getTranslation(
@@ -91,21 +98,32 @@ export function getTranslation(
   }
 
   const translations =
-    mergedPackageTranslations.get(packageName)?.get(locale) ??
-    mergedPackageTranslations
+    packageTranslations.get(packageName)?.get(locale) ??
+    packageTranslations
       .get(packageName)
       ?.get(packageDefaultLocale.get(packageName)!);
 
   if (!translations) throw new Error(`Missing translations for ${packageName}`);
 
-  let current = translations;
-  for (const segment of key.split('.')) {
-    if (segment in current) {
-      current = current[segment];
-    } else {
-      throw new Error(`Missing translation for ${packageName}:${key}`);
-    }
+  if (!translations.has(key)) return key;
+
+  return translations.get(key)!.value;
+}
+
+export function getTranslationOrigin(
+  packageName: string,
+  key: string,
+  locale: string
+): string | null {
+  if (key.includes(':')) {
+    [packageName, key] = key.split(':');
   }
 
-  return current as any as string;
+  const translations = packageTranslations.get(packageName)?.get(locale);
+
+  if (!translations) throw new Error(`Missing translations for ${packageName}`);
+
+  if (!translations.has(key)) return null;
+
+  return translations.get(key)!.file;
 }

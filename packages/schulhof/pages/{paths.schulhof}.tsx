@@ -5,5 +5,3 @@ export default function Page() {
 
   return t('login.welcome');
 }
-
-export const getStaticProps = () => ({ props: {} });

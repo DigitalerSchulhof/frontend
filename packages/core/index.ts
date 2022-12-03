@@ -10,14 +10,10 @@ export function useT(): { t: TFunction } {
 
   return {
     t(key: string, data?: Record<string, any>) {
-      key = atob(key);
-      key = key.replace(/_/g, '__').replace(/\./g, '_');
+      key = fromBase64(key);
 
       try {
-        return new IntlMessageFormat(
-          key,
-          settings.locale
-        ).format({
+        return new IntlMessageFormat(key, settings.locale).format({
           ...flattenedSettings,
           ...flattenKeys(data),
         }) as string;
@@ -47,4 +43,16 @@ function flattenKeys(obj: any): any {
     }, {});
   }
   return obj;
+}
+
+// https://stackoverflow.com/a/30106551/12405307
+function fromBase64(str: string): string {
+  return decodeURIComponent(
+    atob(str)
+      .split('')
+      .map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join('')
+  );
 }

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-export const LOCALE = "de-DE";
+export const LOCALE = 'de-DE';
 
 /**
  * Yields all installed node modules.
@@ -83,32 +83,23 @@ export function findNearestPackageJsonWorker(file: string): string | undefined {
   return findNearestPackageJsonWorker(dir);
 }
 
-/**
- * Recursively merges two objects.
- */
-export function mergeObjects(
-  a: Record<string, any>,
-  b: Record<string, any>,
-  throwOnConflict = true
-) {
-  const res = { ...a };
-
-  for (const [key, value] of Object.entries(b)) {
-    if (
-      key in res &&
-      typeof res[key] === 'object' &&
-      typeof value === 'object'
-    ) {
-      res[key] = mergeObjects(res[key], value, throwOnConflict);
-    } else {
-      if (throwOnConflict && key in res) {
-        throw new Error(`Duplicate key ${key}`);
+export function flattenObject(obj: any, joiner = '_'): any {
+  if (typeof obj === 'object' && obj !== null) {
+    return Object.keys(obj).reduce<Record<string, any>>((acc, key) => {
+      const val = obj[key];
+      if (typeof val === 'object' && val !== null) {
+        const flatObject = flattenObject(val, joiner);
+        Object.keys(flatObject).forEach((k) => {
+          acc[`${key}${joiner}${k}`] = flatObject[k];
+        });
+      } else {
+        acc[key] = val;
       }
-      res[key] = value;
-    }
-  }
 
-  return res;
+      return acc;
+    }, {});
+  }
+  return obj;
 }
 
 export function toBase64(str: string): string {

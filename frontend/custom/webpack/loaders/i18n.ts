@@ -5,37 +5,53 @@ import {
   readJsonSync,
   toBase64,
 } from '../../utils';
-import { getTranslation } from '../../i18n';
+import {
+  getTranslation,
+  getTranslationOrigin,
+  reloadTranslations,
+} from '../../i18n';
+import * as fs from "fs";
 
 const T_FUNC_REGEX = /\bt\(["']([a-z-.]+)["']\)/g;
 
-export const i18nLoader: LoaderDefinitionFunction = async function (source) {
-  const matches = source.matchAll(T_FUNC_REGEX);
+export const i18nLoader: LoaderDefinitionFunction<{ isDev: boolean }> =
+  async function (source) {
+    const matches = source.matchAll(T_FUNC_REGEX);
 
-  if (!matches) return source;
+    if (!matches) return source;
 
-  const packageName = readJsonSync<{ name: string }>(
-    findNearestPackageJson(this.resourcePath)
-  ).name;
+    const options = this.getOptions();
 
-  let offset = 0;
+    if (options.isDev) {
+      reloadTranslations();
+    }
 
-  for (const match of matches) {
-    const [stringMatch, i18nKey] = match;
+    const packageName = readJsonSync<{ name: string }>(
+      findNearestPackageJson(this.resourcePath)
+    ).name;
 
-    const replacement = `t('${toBase64(
-      getTranslation(packageName, i18nKey, LOCALE)
-    )}')`;
+    let offset = 0;
 
-    source =
-      source.substring(0, offset + match.index!) +
-      replacement +
-      source.substring(offset + match.index! + stringMatch.length);
+    for (const match of matches) {
+      const [stringMatch, i18nKey] = match;
 
-    offset += replacement.length - stringMatch.length;
-  }
+      const file = getTranslationOrigin(packageName, i18nKey, LOCALE);
 
-  return source;
-};
+      const replacement = `t('${toBase64(
+        getTranslation(packageName, i18nKey, LOCALE)
+      )}')`;
+
+      source =
+        source.substring(0, offset + match.index!) +
+        replacement +
+        source.substring(offset + match.index! + stringMatch.length);
+
+      offset += replacement.length - stringMatch.length;
+
+      if (file !== null) this.addDependency(fs.realpathSync(file));
+    }
+
+    return source;
+  };
 
 export default i18nLoader;

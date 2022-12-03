@@ -13,7 +13,12 @@ module.exports = {
     config.module.rules.push({
       use: [
         require.resolve('./.custom/webpack/loaders/shell'),
-        require.resolve('./.custom/webpack/loaders/i18n'),
+        {
+          loader: require.resolve('./.custom/webpack/loaders/i18n'),
+          options: {
+            isDev: options.dev
+          }
+        }
       ],
       enforce: 'pre',
       /**
@@ -32,7 +37,7 @@ module.exports = {
       /**
        * @param {string} p
        */
-       include: (p) => {
+      include: (p) => {
         if (!p.endsWith('.ts') && !p.endsWith('.tsx')) return false;
         const pkg = readJsonSync(findNearestPackageJson(p));
         return 'dsh' in pkg;
