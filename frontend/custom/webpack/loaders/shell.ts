@@ -1,11 +1,10 @@
-import type { LoaderDefinitionFunction } from 'webpack';
+import * as ts from 'typescript';
+import type { DshTransformerFactory } from '.';
 import {
   findNearestPackageJson,
   readJsonSync,
   yieldModules,
 } from '../../utils';
-
-const GET_SHELL_REGEX = /\bgetShell(?:<\w*>)\(["']([a-z-]+)["']\)/g;
 
 /**
  * @key package name
@@ -32,44 +31,58 @@ for (const dir of yieldModules()) {
   }
 }
 
-const emptyArray: readonly string[] = [];
-export const shellLoader: LoaderDefinitionFunction = async function (source) {
-  const matches = source.matchAll(GET_SHELL_REGEX);
+export const transformerFactory: DshTransformerFactory =
+  () => (context) => (sourceFile) => {
+    const { factory } = context;
 
-  if (!matches) return source;
+    function visitor(node: ts.Node): ts.Node {
+      if (ts.isCallExpression(node)) {
+        const {
+          expression,
+          arguments: [arg],
+        } = node;
+        if (ts.isIdentifier(expression) && expression.text === 'getShell') {
+          if (ts.isStringLiteral(arg)) {
+            const { text: shellName } = arg;
+            const packageName = readJsonSync(
+              findNearestPackageJson(sourceFile.fileName)
+            ).name;
 
-  const packageName = readJsonSync<{ name: string }>(
-    findNearestPackageJson(this.resourcePath)
-  ).name;
+            const key = `${packageName}/${shellName}`;
 
-  let offset = 0;
+            let foundBodies: readonly string[];
 
-  for (const match of matches) {
-    const [stringMatch, shellName] = match;
+            if (packageBodies.has(key)) {
+              foundBodies = packageBodies.get(key)!;
+            } else {
+              foundBodies = [];
+            }
 
-    const key = `${packageName}/${shellName}`;
+            const arrayLiteralExpression = factory.createArrayLiteralExpression(
+              foundBodies.map((bod) =>
+                factory.createPropertyAccessExpression(
+                  factory.createCallExpression(
+                    factory.createIdentifier('require'),
+                    undefined,
+                    [factory.createStringLiteral(`${bod}/bodies/${key}`)]
+                  ),
+                  factory.createIdentifier('default')
+                )
+              )
+            );
 
-    let foundBodies: readonly string[];
+            return node.typeArguments?.length
+              ? factory.createAsExpression(
+                  arrayLiteralExpression,
+                  node.typeArguments[0]
+                )
+              : arrayLiteralExpression;
+          }
+        }
+      }
 
-    if (packageBodies.has(key)) {
-      foundBodies = packageBodies.get(key)!;
-    } else {
-      foundBodies = emptyArray;
+      return ts.visitEachChild(node, visitor, context);
     }
 
-    const replacement = `[${foundBodies.map(
-      (bod) => `require(\"${bod}/bodies/${key}\").default`
-    )}]`;
-
-    source =
-      source.substring(0, match.index!) +
-      replacement +
-      source.substring(match.index! + 1 + stringMatch.length);
-
-    offset += replacement.length - stringMatch.length;
-  }
-
-  return source;
-};
-
-export default shellLoader;
+    return ts.visitNode(sourceFile, visitor);
+  };

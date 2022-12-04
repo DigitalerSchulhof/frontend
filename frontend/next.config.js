@@ -5,21 +5,21 @@ const {
   PathsPlugin: DshPathsPlugin,
 } = require('./.custom/webpack/plugins/paths');
 
+// Do this import so that the IDE debugger is able to attach to loaders too
+require('./.custom/webpack/loaders');
+
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
   swcMinify: true,
   webpack: (config, options) => {
     config.module.rules.push({
-      use: [
-        require.resolve('./.custom/webpack/loaders/shell'),
-        {
-          loader: require.resolve('./.custom/webpack/loaders/i18n'),
-          options: {
-            isDev: options.dev
-          }
-        }
-      ],
+      use: {
+        loader: require.resolve('./.custom/webpack/loaders'),
+        options: {
+          isDev: options.dev,
+        },
+      },
       enforce: 'pre',
       /**
        * @param {string} p

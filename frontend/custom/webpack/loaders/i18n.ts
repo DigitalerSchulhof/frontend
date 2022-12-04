@@ -1,4 +1,4 @@
-import { LoaderDefinitionFunction } from 'webpack';
+import * as ts from 'typescript';
 import {
   findNearestPackageJson,
   LOCALE,
@@ -10,48 +10,49 @@ import {
   getTranslationOrigin,
   reloadTranslations,
 } from '../../i18n';
-import * as fs from "fs";
+import * as fs from 'fs';
+import type { DshTransformerFactory } from '.';
 
-const T_FUNC_REGEX = /\bt\(["']([a-z-.]+)["']\)/g;
-
-export const i18nLoader: LoaderDefinitionFunction<{ isDev: boolean }> =
-  async function (source) {
-    const matches = source.matchAll(T_FUNC_REGEX);
-
-    if (!matches) return source;
-
-    const options = this.getOptions();
-
-    if (options.isDev) {
+export const transformerFactory: DshTransformerFactory =
+  ({ options: { isDev }, addDependency }) =>
+  (context) =>
+  (sourceFile) => {
+    if (isDev) {
       reloadTranslations();
     }
 
-    const packageName = readJsonSync<{ name: string }>(
-      findNearestPackageJson(this.resourcePath)
-    ).name;
+    const { factory } = context;
 
-    let offset = 0;
+    function visitor(node: ts.Node): ts.Node {
+      if (ts.isCallExpression(node)) {
+        const {
+          expression,
+          arguments: [arg],
+        } = node;
+        if (ts.isIdentifier(expression) && expression.text === 't') {
+          if (ts.isStringLiteral(arg)) {
+            const i18nKey = arg.text;
+            const packageName = readJsonSync(
+              findNearestPackageJson(sourceFile.fileName)
+            ).name;
 
-    for (const match of matches) {
-      const [stringMatch, i18nKey] = match;
+            const file = getTranslationOrigin(packageName, i18nKey, LOCALE);
 
-      const file = getTranslationOrigin(packageName, i18nKey, LOCALE);
+            const replacement = toBase64(
+              getTranslation(packageName, i18nKey, LOCALE)
+            );
 
-      const replacement = `t('${toBase64(
-        getTranslation(packageName, i18nKey, LOCALE)
-      )}')`;
+            if (file !== null) addDependency(fs.realpathSync(file));
 
-      source =
-        source.substring(0, offset + match.index!) +
-        replacement +
-        source.substring(offset + match.index! + stringMatch.length);
+            return factory.updateCallExpression(node, expression, undefined, [
+              factory.createStringLiteral(replacement),
+            ]);
+          }
+        }
+      }
 
-      offset += replacement.length - stringMatch.length;
-
-      if (file !== null) this.addDependency(fs.realpathSync(file));
+      return ts.visitEachChild(node, visitor, context);
     }
 
-    return source;
+    return ts.visitNode(sourceFile, visitor);
   };
-
-export default i18nLoader;
