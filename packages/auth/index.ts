@@ -8,3 +8,9 @@ export interface LoginProvider {
 export function getLoginProviders() {
   return getShell<LoginProvider>('login-provider');
 }
+
+export function useAuth() {
+  return {
+    isLoggedIn: false,
+  };
+}

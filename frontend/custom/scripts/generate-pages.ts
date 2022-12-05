@@ -46,7 +46,9 @@ function translatePagePathSegment(
   segment: string,
   locale: string
 ): string {
-  return segment.replace(/{([a-z-.]+)}/, (_, i18nKey) =>
-    getTranslation(packageName, i18nKey, locale)
-  );
+  return segment.replace(/{([a-z-.]+)}/, (_, i18nKey) => {
+    const val = getTranslation(packageName, i18nKey, locale);
+    if (typeof val === 'string') return val;
+    throw new Error('Invalid page path segment: ' + segment);
+  });
 }

@@ -4,7 +4,7 @@ import * as path from 'path';
 import { yieldModules, readJsonSync, yieldFiles, flattenObject } from './utils';
 
 export interface TranslationEntry {
-  value: string;
+  value: string | string[];
   file: string;
 }
 
@@ -92,7 +92,7 @@ export function getTranslation(
   packageName: string,
   key: string,
   locale: string
-): string {
+): string | string[] {
   if (key.includes(':')) {
     [packageName, key] = key.split(':');
   }

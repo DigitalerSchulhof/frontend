@@ -2,14 +2,14 @@
   "name": "@dsh/core",
   "version": "1.0.0",
   "dsh": {},
+  "devDependencies": {
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.9"
+  },
   "dependencies": {
     "intl-messageformat": "10.2.5",
     "next": "13.0.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
-  },
-  "devDependencies": {
-    "@types/react": "18.0.25",
-    "@types/react-dom": "18.0.9"
   }
 }

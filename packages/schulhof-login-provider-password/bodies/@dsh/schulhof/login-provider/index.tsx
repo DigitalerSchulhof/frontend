@@ -1,13 +1,17 @@
-import * as React from "react";
-import type { LoginProvider } from "@dsh/schulhof/shells/login-provider";
+import * as React from 'react';
+import type { LoginProvider } from '@dsh/schulhof/shells/login-provider';
+import { useT } from '@dsh/core';
 
-export default {
-  component: (
-    <>
-      Anmeldung hier
-    </>
-  ),
+const passwordLoginProvider: LoginProvider = {
+  component: () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { t } = useT();
+
+    return <div>{t('@dsh/schulhof:login.login.title')}</div>;
+  },
   onLogin() {
-    alert("HI");
-  }
-} satisfies LoginProvider;
+    alert('HI');
+  },
+};
+
+export default passwordLoginProvider;

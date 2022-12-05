@@ -84,10 +84,10 @@ export function findNearestPackageJsonWorker(file: string): string | undefined {
 }
 
 export function flattenObject(obj: any, joiner = '_'): any {
-  if (typeof obj === 'object' && obj !== null) {
+  if (typeof obj === 'object' && obj !== null && !Array.isArray(obj)) {
     return Object.keys(obj).reduce<Record<string, any>>((acc, key) => {
       const val = obj[key];
-      if (typeof val === 'object' && val !== null) {
+      if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
         const flatObject = flattenObject(val, joiner);
         Object.keys(flatObject).forEach((k) => {
           acc[`${key}${joiner}${k}`] = flatObject[k];
