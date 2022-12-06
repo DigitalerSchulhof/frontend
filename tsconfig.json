@@ -6,6 +6,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
-    "jsx": "react"
+    "jsx": "react",
+    "esModuleInterop": true
   }
 }

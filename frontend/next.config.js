@@ -12,6 +12,9 @@ require('./.custom/webpack/loaders');
 module.exports = {
   reactStrictMode: true,
   swcMinify: true,
+  compiler: {
+    styledComponents: true,
+  },
   webpack: (config, options) => {
     config.module.rules.push({
       use: {

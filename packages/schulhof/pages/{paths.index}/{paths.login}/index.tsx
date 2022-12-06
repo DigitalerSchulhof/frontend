@@ -1,8 +1,9 @@
 import { useAuth } from '@dsh/auth';
 import { useT } from '@dsh/core';
+import { Breadcrumbs } from '@dsh/ui/Breadcrumbs';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import * as React from 'react';
+import React from 'react';
 
 const Page: NextPage = () => {
   const router = useRouter();
@@ -38,7 +39,6 @@ const Page: NextPage = () => {
 
 export default Page;
 
-const Breadcrumbs = (...args: any) => args[0].children;
 const Heading = (...args: any) => args[0].children;
 const Cols = (...args: any) => args[0].children;
 const Col = (...args: any) => args[0].children;

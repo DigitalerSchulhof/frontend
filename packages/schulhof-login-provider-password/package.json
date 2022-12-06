@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "devDependencies": {
     "@dsh/schulhof": "1.0.0",
-    "@types/react": "18.0.25"
+    "@types/react": "18.0.26"
   },
   "peerDependencies": {
     "@dsh/schulhof": "1.0.0"

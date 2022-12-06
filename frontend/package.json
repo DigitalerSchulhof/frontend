@@ -12,21 +12,21 @@
     "start": "next start"
   },
   "dependencies": {
-    "@dsh/core": "1.0.0",
-    "@dsh/schulhof": "1.0.0",
-    "@dsh/schulhof-login-provider-password": "1.0.0",
-    "eslint-config-next": "13.0.5",
-    "next": "13.0.5",
+    "@dsh/core": "workspace:1.0.0",
+    "@dsh/schulhof": "workspace:1.0.0",
+    "@dsh/schulhof-login-provider-password": "workspace:1.0.0",
+    "eslint-config-next": "13.0.6",
+    "next": "13.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "18.11.9",
-    "@types/react": "18.0.25",
+    "@types/node": "18.11.11",
+    "@types/react": "18.0.26",
     "@types/react-dom": "18.0.9",
     "@types/webpack": "5.28.0",
     "concurrently": "7.6.0",
-    "eslint": "8.28.0",
+    "eslint": "8.29.0",
     "nodemon": "2.0.20",
     "typescript": "4.9.3",
     "yaml": "2.1.3"

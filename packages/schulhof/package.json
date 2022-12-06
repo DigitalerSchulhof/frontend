@@ -2,13 +2,14 @@
   "name": "@dsh/schulhof",
   "version": "1.0.0",
   "dependencies": {
-    "@dsh/auth": "1.0.0",
-    "@dsh/core": "1.0.0",
-    "@dsh/ui": "1.0.0"
+    "@dsh/auth": "workspace:1.0.0",
+    "@dsh/core": "workspace:1.0.0",
+    "@dsh/ui": "workspace:1.0.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/react": "18.0.25",
-    "next": "13.0.5",
+    "@types/react": "18.0.26",
+    "next": "13.0.6",
     "react": "18.2.0"
   },
   "peerDependencies": {

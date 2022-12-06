@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import IntlMessageFormat, { PrimitiveType } from 'intl-messageformat';
 import { useAppSettings } from './AppSettingsContext';
 
