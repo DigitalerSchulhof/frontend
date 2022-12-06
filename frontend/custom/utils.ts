@@ -4,14 +4,16 @@ import * as fs from 'fs';
 export const LOCALE = 'de-DE';
 
 /**
- * Yields all installed node modules.
+ * Yields all installed dsh node modules.
  *
  * Note: Yields absolute paths.
  */
 export function* yieldModules(): Generator<string> {
+  seenModules.clear();
   yield* yieldModulesWorker(path.resolve(__dirname, '../node_modules'));
 }
 
+const seenModules = new Set<string>();
 const blacklist = new Set(['.bin', '.pnpm', '.yarn', '.modules.yaml']);
 function* yieldModulesWorker(dir: string): Generator<string> {
   for (const entity of fs.readdirSync(dir)) {
@@ -20,11 +22,19 @@ function* yieldModulesWorker(dir: string): Generator<string> {
     if (entity[0] === '@') {
       yield* yieldModulesWorker(path.join(dir, entity));
     } else {
-      if (
-        fs.existsSync(path.join(dir, entity, 'package.json')) &&
-        'dsh' in readJsonSync(path.join(dir, entity, 'package.json'))
-      ) {
-        yield path.join(dir, entity);
+      if (fs.existsSync(path.join(dir, entity, 'package.json'))) {
+        const pkg = readJsonSync(path.join(dir, entity, 'package.json'));
+        if (seenModules.has(pkg.name)) {
+          continue;
+        } else {
+          seenModules.add(pkg.name);
+        }
+        if ('dsh' in pkg) {
+            yield path.join(dir, entity);
+        }
+        if (fs.existsSync(path.join(dir, entity, 'node_modules'))) {
+          yield* yieldModulesWorker(path.join(dir, entity, 'node_modules'));
+        }
       }
     }
   }

@@ -1,4 +1,6 @@
 import * as ts from 'typescript';
+import * as path from 'path';
+import * as fs from 'fs';
 import type { DshTransformerFactory } from '.';
 import {
   findNearestPackageJson,
@@ -25,7 +27,28 @@ for (const dir of yieldModules()) {
         const key = `${scope}/${name}`;
         if (!packageBodies.has(key)) packageBodies.set(key, []);
 
-        packageBodies.get(key)!.push(pkg.name);
+        const splitDir = dir.split('/');
+        let modulePath: string[] = [];
+
+        for (let i = splitDir.length - 3; i >= 0; i--) {
+          const partialDir = splitDir.slice(0, i);
+          if (fs.existsSync(path.join(partialDir.join("/"), 'package.json'))) {
+            if (
+              readJsonSync(path.join(partialDir.join("/"), 'package.json')).name ===
+              '@dsh/frontend'
+            ) {
+              break;
+            }
+          }
+          modulePath.push(splitDir[i]);
+        }
+
+        modulePath = modulePath.reverse();
+
+        // For a trailing slash
+        if (modulePath.length) modulePath.push("");
+
+        packageBodies.get(key)!.push(`${modulePath.join("/")}${pkg.name}`);
       }
     }
   }

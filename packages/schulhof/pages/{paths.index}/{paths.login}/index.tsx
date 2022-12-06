@@ -1,15 +1,12 @@
-import { useAuth } from '@dsh/auth';
 import { useT } from '@dsh/core';
 import { Breadcrumbs } from '@dsh/ui/Breadcrumbs';
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import React from 'react';
+import { useRequireLogin } from '../../..';
 
 const Page: NextPage = () => {
-  const router = useRouter();
   const { t, T } = useT();
-  const { isLoggedIn } = useAuth();
-  if (isLoggedIn) router.replace(`/${t('paths.schulhof.index')}`);
+  useRequireLogin(false);
 
   return (
     <>
