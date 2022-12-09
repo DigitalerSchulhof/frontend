@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { Fragment, memo, useMemo } from 'react';
+import React, { Fragment, useMemo } from 'react';
 import styled from 'styled-components';
 
 export type BreadcrumbItem =
@@ -13,54 +13,52 @@ export interface BreadcrumbsProps {
   path: BreadcrumbItem[];
 }
 
-export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(
-  function Breadcrumbs({ path }) {
-    // If a path item is a string, its value is simply appended to the previous item's href.
-    const filledPath = useMemo(
-      () =>
-        path.reduce<(BreadcrumbItem & object)[]>((acc, item) => {
-          if (typeof item === 'string') {
-            const lastItem = acc[acc.length - 1];
-            if (lastItem) {
-              item = {
-                title: item,
-                href: `${lastItem.href}/${item}`,
-              };
-            } else {
-              item = {
-                title: item,
-                href: `/${item}`,
-              };
-            }
+export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ path }) => {
+  // If a path item is a string, its value is simply appended to the previous item's href.
+  const filledPath = useMemo(
+    () =>
+      path.reduce<(BreadcrumbItem & object)[]>((acc, item) => {
+        if (typeof item === 'string') {
+          const lastItem = acc[acc.length - 1];
+          if (lastItem) {
+            item = {
+              title: item,
+              href: `${lastItem.href}/${item}`,
+            };
+          } else {
+            item = {
+              title: item,
+              href: `/${item}`,
+            };
           }
-          acc.push(item);
-          return acc;
-        }, []),
-      [path]
-    );
+        }
+        acc.push(item);
+        return acc;
+      }, []),
+    [path]
+  );
 
-    return (
-      <StyledBreadcrumbs>
-        {filledPath.map((item, i) => {
-          return (
-            <Fragment key={`${item.title}-${item.href}`}>
-              <StyledBreadcrumbItem href={item.href}>
-                {item.title}
-              </StyledBreadcrumbItem>
-              {i < filledPath.length - 1 ? <> / </> : null}
-            </Fragment>
-          );
-        })}
-      </StyledBreadcrumbs>
-    );
-  }
-);
+  return (
+    <StyledBreadcrumbs>
+      {filledPath.map((item, i) => {
+        return (
+          <Fragment key={`${item.title}-${item.href}`}>
+            <StyledBreadcrumbItem href={item.href}>
+              {item.title}
+            </StyledBreadcrumbItem>
+            {i < filledPath.length - 1 ? <> / </> : null}
+          </Fragment>
+        );
+      })}
+    </StyledBreadcrumbs>
+  );
+};
 
-const StyledBreadcrumbs = styled.p`
+export const StyledBreadcrumbs = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.small};
   color: ${({ theme }) => theme.colors.textMuted};
 `;
 
-const StyledBreadcrumbItem = styled(Link)`
+export const StyledBreadcrumbItem = styled(Link)`
   color: ${({ theme }) => theme.colors.textLink};
 `;

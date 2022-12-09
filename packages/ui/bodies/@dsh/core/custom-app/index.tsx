@@ -1,7 +1,8 @@
-import { createGlobalStyle, ThemeProvider } from 'styled-components';
-import React from 'react';
-import { Roboto } from '@next/font/google';
 import type { CustomApp } from '@dsh/core/shells/custom-app';
+import { Roboto } from '@next/font/google';
+import React from 'react';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { theme } from "~/theme";
 
 const roboto = Roboto({
   weight: '400',
@@ -12,18 +13,7 @@ const roboto = Roboto({
 const UiApp: CustomApp = ({ children }) => {
   return (
     <ThemeProvider
-      theme={{
-        backgroundColor: '#181818',
-        fontSizes: {
-          regular: '13px',
-          small: '80%',
-        },
-        colors: {
-          text: '#fcf8e3',
-          textLink: '#3299cc',
-          textMuted: '#ffffffb0',
-        },
-      }}
+      theme={theme}
     >
       <GlobalStyles fontFamily={roboto.style.fontFamily} />
       {children}
@@ -41,10 +31,13 @@ const GlobalStyles = createGlobalStyle<{ fontFamily: string }>`
   }
 
   body {
-    font-family: ${({ fontFamily }) => fontFamily};
-    font-size: ${({ theme }) => theme.fontSizes.regular};
     background-color: ${({ theme }) => theme.backgroundColor};
     color: ${({ theme }) => theme.colors.text};
+  }
+
+  body, button, input, optgroup, select, textarea {
+    font-family: ${({ fontFamily }) => fontFamily};
+    font-size: ${({ theme }) => theme.fontSizes.regular};
   }
 
   a {
