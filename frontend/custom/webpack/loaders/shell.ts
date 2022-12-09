@@ -32,10 +32,10 @@ for (const dir of yieldModules()) {
 
         for (let i = splitDir.length - 3; i >= 0; i--) {
           const partialDir = splitDir.slice(0, i);
-          if (fs.existsSync(path.join(partialDir.join("/"), 'package.json'))) {
+          if (fs.existsSync(path.join(partialDir.join('/'), 'package.json'))) {
             if (
-              readJsonSync(path.join(partialDir.join("/"), 'package.json')).name ===
-              '@dsh/frontend'
+              readJsonSync(path.join(partialDir.join('/'), 'package.json'))
+                .name === '@dsh/frontend'
             ) {
               break;
             }
@@ -46,9 +46,9 @@ for (const dir of yieldModules()) {
         modulePath = modulePath.reverse();
 
         // For a trailing slash
-        if (modulePath.length) modulePath.push("");
+        if (modulePath.length) modulePath.push('');
 
-        packageBodies.get(key)!.push(`${modulePath.join("/")}${pkg.name}`);
+        packageBodies.get(key)!.push(`${modulePath.join('/')}${pkg.name}`);
       }
     }
   }
@@ -57,12 +57,13 @@ for (const dir of yieldModules()) {
 export const transformerFactory: DshTransformerFactory =
   () => (context) => (sourceFile) => {
     const { factory } = context;
+    const imports: ts.ImportDeclaration[] = [];
 
     function visitor(node: ts.Node): ts.Node {
       if (ts.isCallExpression(node)) {
         const {
           expression,
-          arguments: [arg],
+          arguments: [arg, dynamicImportArg],
         } = node;
         if (ts.isIdentifier(expression) && expression.text === 'getShell') {
           if (ts.isStringLiteral(arg)) {
@@ -81,25 +82,63 @@ export const transformerFactory: DshTransformerFactory =
               foundBodies = [];
             }
 
-            const arrayLiteralExpression = factory.createArrayLiteralExpression(
-              foundBodies.map((bod) =>
-                factory.createPropertyAccessExpression(
-                  factory.createCallExpression(
-                    factory.createIdentifier('require'),
-                    undefined,
-                    [factory.createStringLiteral(`${bod}/bodies/${key}`)]
-                  ),
-                  factory.createIdentifier('default')
-                )
-              )
-            );
+            if (
+              dynamicImportArg &&
+              dynamicImportArg.kind !== ts.SyntaxKind.TrueKeyword &&
+              dynamicImportArg.kind !== ts.SyntaxKind.FalseKeyword
+            ) {
+              throw new Error('Invalid dynamic import argument');
+            }
 
-            return node.typeArguments?.length
-              ? factory.createAsExpression(
-                  arrayLiteralExpression,
-                  node.typeArguments[0]
+            if (dynamicImportArg?.kind === ts.SyntaxKind.TrueKeyword) {
+              const arrayLiteralExpression =
+                factory.createArrayLiteralExpression(
+                  foundBodies.map((bod) =>
+                    factory.createPropertyAccessExpression(
+                      factory.createCallExpression(
+                        factory.createIdentifier('require'),
+                        undefined,
+                        [factory.createStringLiteral(`${bod}/bodies/${key}`)]
+                      ),
+                      factory.createIdentifier('default')
+                    )
+                  )
+                );
+
+              return node.typeArguments?.length
+                ? factory.createAsExpression(
+                    arrayLiteralExpression,
+                    node.typeArguments[0]
+                  )
+                : arrayLiteralExpression;
+            } else {
+              const importStatements = foundBodies.map((bod) =>
+                factory.createImportDeclaration(
+                  [],
+                  factory.createImportClause(
+                    false,
+                    factory.createUniqueName('dsh_generated_shell_import'),
+                    undefined
+                  ),
+                  factory.createStringLiteral(`${bod}/bodies/${key}`),
+                  undefined
                 )
-              : arrayLiteralExpression;
+              );
+
+              const arrayLiteralExpression =
+                factory.createArrayLiteralExpression(
+                  importStatements.map((imp) => imp.importClause!.name!)
+                );
+
+              imports.push(...importStatements);
+
+              return node.typeArguments?.length
+                ? factory.createAsExpression(
+                    arrayLiteralExpression,
+                    node.typeArguments[0]
+                  )
+                : arrayLiteralExpression;
+            }
           }
         }
       }
@@ -107,5 +146,10 @@ export const transformerFactory: DshTransformerFactory =
       return ts.visitEachChild(node, visitor, context);
     }
 
-    return ts.visitNode(sourceFile, visitor);
+    const sf = ts.visitNode(sourceFile, visitor);
+
+    return factory.updateSourceFile(sf, [
+      ...imports,
+      ...sf.statements,
+    ]);
   };

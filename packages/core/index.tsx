@@ -2,7 +2,7 @@ import React from 'react';
 import IntlMessageFormat, { PrimitiveType } from 'intl-messageformat';
 import { useAppSettings } from './AppSettingsContext';
 
-export declare function getShell<T>(name: string): T[];
+export declare function getShell<T>(name: string, dynamicImport?: boolean): T[];
 
 export function useT() {
   const settings = useAppSettings();
