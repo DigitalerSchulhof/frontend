@@ -8,7 +8,7 @@ export function useT() {
   const settings = useAppSettings();
   const flattenedSettings = flattenKeys(settings);
 
-  function t(
+  function tFunc(
     key: string,
     data?: Record<string, PrimitiveType | ((part: string) => any)>
   ): string {
@@ -29,7 +29,7 @@ export function useT() {
   }
 
   return {
-    t,
+    t: tFunc,
     T: ({
       as: Component = React.Fragment,
       vars,
@@ -41,12 +41,12 @@ export function useT() {
       children: string | string[];
     }): JSX.Element => {
       if (typeof children === 'string') {
-        return <Component {...props}>{t(children, vars)}</Component>;
+        return <Component {...props}>{tFunc(children, vars)}</Component>;
       }
       return (
         <>
           {children.map((c: string, i: number) => {
-            const translated = t(c, vars);
+            const translated = tFunc(c, vars);
             return (
               <Component key={`${c}-${i}`} {...props}>
                 {Array.isArray(translated)
@@ -88,12 +88,18 @@ function flattenKeys(obj: any): any {
 
 // https://stackoverflow.com/a/30106551/12405307
 export function fromBase64(str: string): string {
-  return decodeURIComponent(
-    atob(str)
-      .split('')
-      .map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join('')
-  );
+  try {
+    return decodeURIComponent(
+      atob(str)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+  } catch (e) {
+    console.log("Error decoding %s", str);
+    console.error(e);
+    return str;
+  }
 }

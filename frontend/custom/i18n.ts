@@ -30,7 +30,7 @@ export const packageTranslations = new Map<
 export const packageDefaultLocale = new Map<string, string>();
 
 function loadTranslations() {
-  for (const dir of yieldModules()) {
+  for (const [dir] of yieldModules()) {
     if (!fs.existsSync(path.join(dir, 'locales'))) continue;
 
     const pkg = readJsonSync(`${dir}/package.json`);

@@ -8,7 +8,6 @@ export const Button = styled.button<ButtonProps>(
   ({ theme, variant = 'default' }) => css`
     border: 1px solid transparent;
     border-radius: 3px;
-    box-shadow: 0 0 1em #80808014;
     padding: 3px 7px;
     margin-bottom: 2px;
     line-height: 1.5em;
@@ -27,11 +26,11 @@ export const Button = styled.button<ButtonProps>(
     }
 
     &:not(:first-child) {
-      margin-left: 1.5px;
+      margin-left: 2px;
     }
 
     &:not(:last-child) {
-      margin-right: 1.5px;
+      margin-right: 2px;
     }
   `
 );

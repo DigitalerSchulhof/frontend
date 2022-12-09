@@ -7,7 +7,7 @@ const _pages = path.resolve(__dirname, '../../pages');
 
 const pages = new Map<string, [string, string]>();
 
-for (const dir of yieldModules()) {
+for (const [dir, moduleName] of yieldModules()) {
   const pkg = readJsonSync(`${dir}/package.json`);
   if (!fs.existsSync(path.join(dir, 'pages'))) continue;
 
@@ -23,7 +23,8 @@ for (const dir of yieldModules()) {
     if (pages.has(translatedPagePath)) {
       throw new Error(`Duplicate page: ${translatedPagePath}`);
     }
-    pages.set(translatedPagePath, [pkg.name, pagePath]);
+    console.log(translatedPagePath, moduleName, pagePath);
+    pages.set(translatedPagePath, [moduleName, pagePath]);
   }
 }
 
@@ -32,7 +33,7 @@ fs.rmSync(_pages, { recursive: true, force: true });
 for (const [pagePath, [pkgName, filePath]] of pages) {
   fs.mkdirSync(path.dirname(path.join(_pages, pagePath)), { recursive: true });
   fs.writeFileSync(
-    path.join(_pages, pagePath),
+    path.join(_pages, pagePath.replace(/\.tsx/, '.ts')),
     `import * as helloThere from '${pkgName}/pages/${filePath.replace(
       /\.tsx?/,
       ''

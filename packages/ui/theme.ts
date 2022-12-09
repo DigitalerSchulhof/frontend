@@ -1,4 +1,6 @@
+import { Roboto } from '@next/font/google';
 import 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 
 export interface Accents {
   [K: string]: {
@@ -72,7 +74,45 @@ export const theme = {
   } satisfies Accents,
 };
 
-type Theme = typeof theme;
+const roboto = Roboto({
+  weight: '400',
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+});
+
+export const GlobalStyles = createGlobalStyle`
+  * {
+    box-sizing: border-box;
+    line-height: 1.2em;
+  }
+
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  body {
+    background-color: ${({ theme }) => theme.backgroundColor};
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  body, button, input, optgroup, select, textarea {
+    font-family: ${roboto.style.fontFamily};
+    font-size: ${({ theme }) => theme.fontSizes.regular};
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: 7px;
+  }
+`;
+
+export type Theme = typeof theme;
 declare module 'styled-components' {
   export interface DefaultTheme extends Theme {}
 }

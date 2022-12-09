@@ -159,9 +159,8 @@ type Paths = { [match: string]: string[] };
 
 const moduleAliases = new Map<string, [string, Paths]>();
 
-for (const dir of yieldModules()) {
+for (const [dir] of yieldModules()) {
   const pkg = readJsonSync(`${dir}/package.json`);
-  if (!pkg.dsh) continue;
 
   if (!fs.existsSync(`${dir}/tsconfig.json`)) continue;
   const tsconfig = readJsonSync(`${dir}/tsconfig.json`);

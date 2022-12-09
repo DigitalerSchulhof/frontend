@@ -1,10 +1,11 @@
 import { useT } from '@dsh/core';
 import { Breadcrumbs } from '@dsh/ui/Breadcrumbs';
+import { Button } from '@dsh/ui/Button';
 import { Col } from '@dsh/ui/Col';
 import { Flex } from '@dsh/ui/Flex';
 import { Heading } from '@dsh/ui/Heading';
+import { Link } from '@dsh/ui/Link';
 import { Note } from '@dsh/ui/Note';
-import { Button } from '@dsh/ui/Button';
 import { NextPage } from 'next';
 import React from 'react';
 import { useRequireLogin } from '../../..';
@@ -26,15 +27,14 @@ const Page: NextPage = () => {
         <T
           as={Note}
           vars={{
-            PrivacyLink: (c) => <Link href="/privacy">{c}</Link>,
+            PrivacyLink: (c) => <Link href={`/${t('paths.privacy')}`}>{c}</Link>,
           }}
         >
           login.privacy
         </T>
         <Button variant="success">{t('login.buttons.login')}</Button>
-        <Button variant="warning">{t('login.buttons.password')}</Button>
-        <Button variant="error">{t('login.buttons.register')}</Button>
-        <Button variant="default">{t('login.buttons.register')}</Button>
+        <Button>{t('login.buttons.password')}</Button>
+        <Button>{t('login.buttons.register')}</Button>
       </Col>
     </Flex>
   );
@@ -43,4 +43,3 @@ const Page: NextPage = () => {
 export default Page;
 
 const Form = (...args: any) => args[0].children;
-const Link = (...args: any) => args[0].children;

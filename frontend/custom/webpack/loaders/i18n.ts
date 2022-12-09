@@ -50,6 +50,8 @@ export const transformerFactory: DshTransformerFactory =
               undefined,
               [factory.createStringLiteral(toBase64(translation)), ...args]
             );
+          } else {
+            throw new Error('t() argument must be a string');
           }
         }
       } else if (ts.isJsxElement(node)) {
@@ -78,14 +80,14 @@ export const transformerFactory: DshTransformerFactory =
           if (typeof translation === 'string') {
             return factory.updateJsxElement(
               node,
-              node.openingElement,
+              visitor(node.openingElement) as ts.JsxOpeningElement,
               [factory.createJsxText(toBase64(translation))],
-              node.closingElement
+              visitor(node.closingElement) as ts.JsxClosingElement
             );
           } else {
             return factory.updateJsxElement(
               node,
-              node.openingElement,
+              visitor(node.openingElement) as ts.JsxOpeningElement,
               [
                 factory.createJsxExpression(
                   undefined,
@@ -96,7 +98,7 @@ export const transformerFactory: DshTransformerFactory =
                   )
                 ),
               ],
-              node.closingElement
+              visitor(node.closingElement) as ts.JsxClosingElement
             );
           }
         }
