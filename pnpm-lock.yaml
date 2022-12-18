@@ -45,8 +45,13 @@ importers:
   packages/auth:
     specifiers:
       '@dsh/core': workspace:1.0.0
+      '@types/react': 18.0.26
+      react: 18.2.0
     dependencies:
       '@dsh/core': link:../core
+      react: 18.2.0
+    devDependencies:
+      '@types/react': 18.0.26
 
   packages/core:
     specifiers:
@@ -86,13 +91,15 @@ importers:
 
   packages/schulhof-login-provider-password:
     specifiers:
+      '@dsh/auth': 1.0.0
       '@dsh/core': 1.0.0
-      '@dsh/schulhof': 1.0.0
+      '@dsh/ui': workspace:1.0.0
       '@types/react': 18.0.26
     dependencies:
       '@dsh/core': link:../core
+      '@dsh/ui': link:../ui
     devDependencies:
-      '@dsh/schulhof': link:../schulhof
+      '@dsh/auth': link:../auth
       '@types/react': 18.0.26
 
   packages/ui:

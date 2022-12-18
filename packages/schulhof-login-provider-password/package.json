@@ -2,18 +2,19 @@
   "name": "@dsh/schulhof-login-provider-password",
   "version": "1.0.0",
   "devDependencies": {
-    "@dsh/schulhof": "1.0.0",
+    "@dsh/auth": "1.0.0",
     "@types/react": "18.0.26"
   },
   "peerDependencies": {
-    "@dsh/schulhof": "1.0.0"
+    "@dsh/auth": "1.0.0"
   },
   "dependencies": {
-    "@dsh/core": "1.0.0"
+    "@dsh/core": "1.0.0",
+    "@dsh/ui": "workspace:1.0.0"
   },
   "dsh": {
     "bodies": {
-      "@dsh/schulhof": [
+      "@dsh/auth": [
         "login-provider"
       ]
     }

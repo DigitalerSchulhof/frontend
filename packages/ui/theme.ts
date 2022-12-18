@@ -2,6 +2,12 @@ import { Roboto } from '@next/font/google';
 import 'styled-components';
 import { createGlobalStyle } from 'styled-components';
 
+const roboto = Roboto({
+  weight: '400',
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+});
+
 export interface Accents {
   [K: string]: {
     regular: {
@@ -74,12 +80,6 @@ export const theme = {
   } satisfies Accents,
 };
 
-const roboto = Roboto({
-  weight: '400',
-  style: ['normal', 'italic'],
-  subsets: ['latin'],
-});
-
 export const GlobalStyles = createGlobalStyle`
   * {
     box-sizing: border-box;
@@ -94,12 +94,12 @@ export const GlobalStyles = createGlobalStyle`
 
   body {
     background-color: ${({ theme }) => theme.backgroundColor};
-    color: ${({ theme }) => theme.colors.text};
   }
 
   body, button, input, optgroup, select, textarea {
     font-family: ${roboto.style.fontFamily};
     font-size: ${({ theme }) => theme.fontSizes.regular};
+    color: ${({ theme }) => theme.colors.text};
   }
 
   a {

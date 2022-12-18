@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 import { StyledBreadcrumbs } from '../Breadcrumbs';
 
@@ -8,9 +7,16 @@ export interface HeadingProps {
   size: HeadingSize;
 }
 
-export const Heading = styled.h1.attrs<HeadingProps>(({ size }) => ({
-  as: `h${size}`,
-}))<HeadingProps>`
+const noForwardProps = new Set(['size']);
+
+export const Heading = styled.h1
+  .withConfig({
+    shouldForwardProp: (prop, defaultValidatorFn) =>
+      !noForwardProps.has(prop) && defaultValidatorFn(prop),
+  })
+  .attrs<HeadingProps>(({ size }) => ({
+    as: `h${size}`,
+  }))<HeadingProps>`
   ${({ size }) => {
     const h = `h${size}` as const;
 

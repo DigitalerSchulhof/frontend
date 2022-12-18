@@ -3,7 +3,7 @@ import { useT } from '@dsh/core';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-export const useRequireLogin = (shouldBeLoggedIn: boolean) => {
+export const useRequireLogin = (shouldBeLoggedIn: boolean = true) => {
   const { isLoggedIn } = useAuth();
   const { t } = useT();
   const router = useRouter();

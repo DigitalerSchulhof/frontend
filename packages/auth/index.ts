@@ -1,16 +1,4 @@
-import { getShell } from '@dsh/core';
+export type { LoginProvider } from './login-provider';
+export { getLoginProviders } from './login-provider';
 
-export interface LoginProvider {
-  component: JSX.Element;
-  onLogin(): void;
-}
-
-export function getLoginProviders() {
-  return getShell<LoginProvider>('login-provider');
-}
-
-export function useAuth() {
-  return {
-    isLoggedIn: false,
-  };
-}
+export { useAuth } from './auth';

@@ -23,7 +23,6 @@ for (const [dir, moduleName] of yieldModules()) {
     if (pages.has(translatedPagePath)) {
       throw new Error(`Duplicate page: ${translatedPagePath}`);
     }
-    console.log(translatedPagePath, moduleName, pagePath);
     pages.set(translatedPagePath, [moduleName, pagePath]);
   }
 }
