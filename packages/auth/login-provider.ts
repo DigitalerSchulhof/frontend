@@ -2,7 +2,7 @@ import { getShell } from '@dsh/core';
 
 export interface LoginProviderProps {
   privacyNote: JSX.Element;
-  submitJWT(jwt: string): void;
+  submitJwt(jwt: string): void;
 }
 
 export type LoginProvider = React.FC<LoginProviderProps>;

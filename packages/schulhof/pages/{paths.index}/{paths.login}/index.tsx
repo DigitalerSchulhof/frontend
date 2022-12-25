@@ -27,7 +27,7 @@ const Page: NextPage = () => {
         <Heading size="2">{t('login.title')}</Heading>
         <T as="p">login.description</T>
         <LoginProvider
-          submitJWT={setJWT}
+          submitJwt={setJWT}
           privacyNote={
             <T
               as={Note}

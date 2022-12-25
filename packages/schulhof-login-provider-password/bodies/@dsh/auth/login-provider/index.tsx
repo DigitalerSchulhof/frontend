@@ -5,7 +5,7 @@ import { Form, FormRow } from '@dsh/ui/Form';
 import { Table, Tbody } from '@dsh/ui/Table';
 import React, { useCallback, useRef } from 'react';
 
-const PasswordLoginProvider: LoginProvider = ({ submitJWT, privacyNote }) => {
+const PasswordLoginProvider: LoginProvider = ({ submitJwt, privacyNote }) => {
   const { t } = useT();
 
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -15,10 +15,10 @@ const PasswordLoginProvider: LoginProvider = ({ submitJWT, privacyNote }) => {
     if (!usernameRef.current?.value || !passwordRef.current?.value)
       return alert('invalid sth');
 
-    submitJWT(
+      submitJwt(
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDU2Nzg5MCwiaWF0IjoxNTE2MjM5MDIyfQ.8GgICY6THm6B1FR-zwd3Z6nsVMPVFeupuks_Jy8lqNw'
     );
-  }, [submitJWT, usernameRef, passwordRef]);
+  }, [submitJwt, usernameRef, passwordRef]);
 
   return (
     <Form onSubmit={doLogin}>

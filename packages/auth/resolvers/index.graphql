@@ -1,0 +1,13 @@
+union AuthPayload = AuthPayloadSuccess | AuthPayloadError
+
+type AuthPayloadSuccess {
+  jwt: String!
+}
+
+type AuthPayloadError {
+  code: AuthErrorCode!
+}
+
+enum AuthErrorCode {
+  INTERNAL_ERROR
+}
