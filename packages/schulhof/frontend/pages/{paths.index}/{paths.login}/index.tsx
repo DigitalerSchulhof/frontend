@@ -1,4 +1,4 @@
-import { getLoginProviders, useAuth } from '@dsh/auth';
+import { getLoginProviders, useAuth } from '@dsh/auth/frontend';
 import { useT } from '@dsh/core';
 import { Breadcrumbs } from '@dsh/ui/Breadcrumbs';
 import { Col } from '@dsh/ui/Col';

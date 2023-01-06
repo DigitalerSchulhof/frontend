@@ -1,5 +1,5 @@
 import { login } from '.';
-import { createJwt } from '@dsh/auth/resolvers';
+import { createJwt } from '@dsh/auth/backend/resolvers';
 import { AuthErrorCode, RootMutationResolvers } from '../types';
 
 export const RootMutation = {

@@ -1,4 +1,4 @@
-import { useAuth } from '@dsh/auth';
+import { useAuth } from '@dsh/auth/frontend';
 import { useT } from '@dsh/core';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';

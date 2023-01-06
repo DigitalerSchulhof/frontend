@@ -56,6 +56,8 @@ function* yieldModulesWorker(
  * Note: Yields absolute paths.
  */
 export function* yieldFiles(dir: string): Generator<string> {
+  if (!fs.existsSync(dir)) return;
+
   for (const entity of fs.readdirSync(dir)) {
     const entityPath = path.join(dir, entity);
     const stat = fs.statSync(entityPath);

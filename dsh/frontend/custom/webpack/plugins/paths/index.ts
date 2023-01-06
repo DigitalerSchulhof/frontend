@@ -2,10 +2,10 @@
  * Stolen from https://github.com/vercel/next.js/blob/canary/packages/next/build/webpack/plugins/jsconfig-paths-plugin.ts and adapted for multi-package support
  */
 
-import * as path from 'path';
-import * as webpack from 'webpack';
+import path from 'path';
+import webpack from 'webpack';
 import { readJsonSync, yieldModules } from '../../../utils';
-import * as fs from 'fs';
+import fs from 'fs';
 
 export interface Pattern {
   prefix: string;

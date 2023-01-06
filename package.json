@@ -2,6 +2,9 @@
   "name": "@dsh/digitaler-schulhof",
   "private": "true",
   "scripts": {
-    "dev": "cd frontend && pnpm run dev"
+    "dev": "cd dsh/frontend && pnpm run dev"
+  },
+  "devDependencies": {
+    "@types/node": "18.11.18"
   }
 }

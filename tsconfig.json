@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["ESNext"],
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
-    "jsx": "react",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "module": "CommonJS",
+    "resolveJsonModule": true,
+    "isolatedModules": true
   }
 }

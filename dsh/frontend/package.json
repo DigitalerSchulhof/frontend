@@ -7,8 +7,8 @@
     "build:watch": "concurrently \"pnpm run build:custom:watch\" \"pnpm run build:pages:watch\"",
     "build:custom": "rm -rf .custom && tsc --build custom/tsconfig.json",
     "build:custom:watch": "tsc --build custom/tsconfig.json -w",
-    "build:pages": "node .custom/scripts/generate-pages",
-    "build:pages:watch": "nodemon .custom/scripts/generate-pages",
+    "build:pages": "node -r source-map-support/register .custom/scripts/generate-pages",
+    "build:pages:watch": "nodemon --exec \"node -r source-map-support/register .custom/scripts/generate-pages\"",
     "start": "next start"
   },
   "dependencies": {
@@ -18,13 +18,13 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "18.11.11",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.9",
     "@types/webpack": "5.28.0",
     "concurrently": "7.6.0",
     "eslint": "8.29.0",
     "nodemon": "2.0.20",
+    "source-map-support": "0.5.21",
     "typescript": "4.9.3",
     "yaml": "2.1.3"
   }

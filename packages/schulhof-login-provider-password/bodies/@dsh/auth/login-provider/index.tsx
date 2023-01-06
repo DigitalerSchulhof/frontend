@@ -1,4 +1,4 @@
-import type { LoginProvider } from '@dsh/auth';
+import type { LoginProvider } from '@dsh/auth/frontend';
 import { useT } from '@dsh/core';
 import { Button } from '@dsh/ui/Button';
 import { Form, FormRow } from '@dsh/ui/Form';

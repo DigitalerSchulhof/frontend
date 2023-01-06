@@ -1,6 +1,6 @@
 import type { CustomApp } from '@dsh/core/shells/custom-app';
 import React from 'react';
-import { AuthContextProvider } from '../../../../auth';
+import { AuthContextProvider } from '../../../../frontend/auth';
 
 const AuthApp: CustomApp = ({ children }) => {
   return (

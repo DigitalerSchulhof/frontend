@@ -1,17 +1,17 @@
-import * as ts from 'typescript';
+import fs from 'fs';
+import ts from 'typescript';
+import type { DshTransformerFactory } from '.';
+import {
+  getTranslation,
+  getTranslationOrigin,
+  reloadTranslations,
+} from '../../i18n';
 import {
   findNearestPackageJson,
   LOCALE,
   readJsonSync,
   toBase64,
 } from '../../utils';
-import {
-  getTranslation,
-  getTranslationOrigin,
-  reloadTranslations,
-} from '../../i18n';
-import * as fs from 'fs';
-import type { DshTransformerFactory } from '.';
 
 export const transformerFactory: DshTransformerFactory =
   ({ options: { isDev }, addDependency }) =>

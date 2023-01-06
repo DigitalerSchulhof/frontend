@@ -10,12 +10,22 @@ export function createSchema() {
   const resolvers = mergeResolvers(
     loadFilesSync([
       path.resolve(__dirname, '../resolvers/**/*.resolve.ts'),
-      ...moduleDirs.map((dir) => path.join(dir, 'resolvers/**/*.resolve.ts')),
+      ...moduleDirs
+        .map((dir) => [
+          path.join(dir, 'resolvers/**/*.resolve.ts'),
+          path.join(dir, 'backend/resolvers/**/*.resolve.ts'),
+        ])
+        .flat(),
     ])
   );
   const typeDefs = loadFilesSync([
     path.resolve(__dirname, '../resolvers/**/*.graphql'),
-    ...moduleDirs.map((dir) => path.join(dir, 'resolvers/**/*.graphql')),
+    ...moduleDirs
+      .map((dir) => [
+        path.join(dir, 'resolvers/**/*.graphql'),
+        path.join(dir, 'backend/resolvers/**/*.graphql'),
+      ])
+      .flat(),
   ]);
 
   return makeExecutableSchema({

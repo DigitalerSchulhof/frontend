@@ -1,20 +1,17 @@
 {
+  "extends": "../../tsconfig.frontend.json",
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "**/node_modules/**",
+    "pages/**/*",
+    "custom/**/*"
+  ],
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["ESNext", "DOM"],
     "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "pages/**/*", "custom/**/*"]
+    "noEmit": true
+  }
 }

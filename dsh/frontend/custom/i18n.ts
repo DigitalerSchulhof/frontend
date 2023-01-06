@@ -1,7 +1,7 @@
-import * as yaml from 'yaml';
 import * as fs from 'fs';
 import * as path from 'path';
-import { yieldModules, readJsonSync, yieldFiles, flattenObject } from './utils';
+import * as yaml from 'yaml';
+import { flattenObject, readJsonSync, yieldFiles, yieldModules } from './utils';
 
 export interface TranslationEntry {
   value: string | string[];

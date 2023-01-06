@@ -1,7 +1,7 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import { LoaderDefinitionFunction } from 'webpack';
-import { transformerFactory as transformFactoryShell } from './shell';
 import { transformerFactory as transformFactoryI18n } from './i18n';
+import { transformerFactory as transformFactoryShell } from './shell';
 
 interface Options {
   isDev: boolean;

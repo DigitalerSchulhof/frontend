@@ -1,12 +1,5 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "moduleResolution": "Node",
-    "target": "ESNext",
-    "lib": ["ESNext"],
-    "types": ["node"],
-    "module": "CommonJS"
-  },
+  "extends": "../../tsconfig.backend.json",
   "ts-node": {
     "swc": true
   }

@@ -1,0 +1,4 @@
+{
+  "extends": "../../../tsconfig.backend.json",
+  "exclude": ["**/node_modules/**", "resolvers/types.ts"]
+}

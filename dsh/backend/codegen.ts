@@ -23,12 +23,28 @@ const generates: CodegenConfig['generates'] = {
 
 for (const dirName of fs.readdirSync(_packages)) {
   const dir = path.join(_packages, dirName);
-  if (!fs.existsSync(path.join(dir, 'resolvers'))) continue;
 
-  generates[path.join(dir, 'resolvers/types.ts')] = {
+  const hasBackendDir = fs.existsSync(path.join(dir, 'backend'));
+  if (
+    !fs.existsSync(
+      path.join(dir, hasBackendDir ? 'backend/resolvers' : 'resolvers')
+    )
+  ) {
+    continue;
+  }
+
+  generates[
+    path.join(
+      dir,
+      hasBackendDir ? 'backend/resolvers' : 'resolvers',
+      'types.ts'
+    )
+  ] = {
     plugins: ['typescript', 'typescript-resolvers'],
     schema: [
-      path.join(_packages, '*/resolvers/**/*.graphql'),
+      hasBackendDir
+        ? path.join(_packages, '*/backend/resolvers/**/*.graphql')
+        : path.join(_packages, '*/resolvers/**/*.graphql'),
       path.join(__dirname, 'resolvers/**/*.graphql'),
     ],
     config: {

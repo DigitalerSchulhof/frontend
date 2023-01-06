@@ -1,7 +1,7 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'fs';
+import path from 'path';
 import { getTranslation } from '../i18n';
-import { yieldModules, readJsonSync, yieldFiles, LOCALE } from '../utils';
+import { LOCALE, readJsonSync, yieldFiles, yieldModules } from '../utils';
 
 const _pages = path.resolve(__dirname, '../../pages');
 
@@ -9,11 +9,24 @@ const pages = new Map<string, [string, string]>();
 
 for (const [dir, moduleName] of yieldModules()) {
   const pkg = readJsonSync(`${dir}/package.json`);
-  if (!fs.existsSync(path.join(dir, 'pages'))) continue;
+  const hasFrontendDir = fs.existsSync(path.join(dir, 'frontend'));
+  if (
+    hasFrontendDir
+      ? !fs.existsSync(path.join(dir, 'frontend/pages'))
+      : !fs.existsSync(path.join(dir, 'pages'))
+  ) {
+    continue;
+  }
 
-  for (const filePath of yieldFiles(path.join(dir, 'pages'))) {
-    let pagePath = filePath.substring(dir.length + 'pages/'.length + 1);
-    if (pagePath.endsWith('tsconfig.json')) continue;
+  for (const filePath of yieldFiles(
+    path.join(dir, hasFrontendDir ? 'frontend/pages' : 'pages')
+  )) {
+    let pagePath = filePath.substring(
+      dir.length +
+        (hasFrontendDir ? 'frontend/pages/'.length : 'pages/'.length) +
+        1
+    );
+    if (pagePath === 'tsconfig.json') continue;
 
     const translatedPagePath = pagePath
       .split('/')
@@ -23,7 +36,10 @@ for (const [dir, moduleName] of yieldModules()) {
     if (pages.has(translatedPagePath)) {
       throw new Error(`Duplicate page: ${translatedPagePath}`);
     }
-    pages.set(translatedPagePath, [moduleName, pagePath]);
+    pages.set(translatedPagePath, [
+      moduleName,
+      (hasFrontendDir ? 'frontend/pages/' : 'pages/') + pagePath,
+    ]);
   }
 }
 
@@ -33,10 +49,7 @@ for (const [pagePath, [pkgName, filePath]] of pages) {
   fs.mkdirSync(path.dirname(path.join(_pages, pagePath)), { recursive: true });
   fs.writeFileSync(
     path.join(_pages, pagePath.replace(/\.tsx/, '.ts')),
-    `import * as helloThere from '${pkgName}/pages/${filePath.replace(
-      /\.tsx?/,
-      ''
-    )}';
+    `import * as helloThere from '${pkgName}/${filePath.replace(/\.tsx?/, '')}';
 module.exports = helloThere;`
   );
 }
