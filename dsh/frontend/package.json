@@ -12,9 +12,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@dsh/core": "workspace:1.0.0",
-    "@dsh/schulhof": "workspace:1.0.0",
-    "@dsh/schulhof-login-provider-password": "workspace:1.0.0",
     "eslint-config-next": "13.0.6",
     "next": "13.0.6",
     "react": "18.2.0",

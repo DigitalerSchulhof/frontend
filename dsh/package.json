@@ -1,0 +1,10 @@
+{
+  "name": "@dsh/dsh",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@dsh/core": "workspace:1.0.0",
+    "@dsh/schulhof": "workspace:1.0.0",
+    "@dsh/schulhof-login-provider-password": "workspace:1.0.0"
+  }
+}

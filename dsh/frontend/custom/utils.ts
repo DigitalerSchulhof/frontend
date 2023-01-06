@@ -10,7 +10,7 @@ export const LOCALE = 'de-DE';
  */
 export function* yieldModules(): Generator<[string, string]> {
   seenModules.clear();
-  yield* yieldModulesWorker(path.resolve(__dirname, '../node_modules'), []);
+  yield* yieldModulesWorker(path.resolve(__dirname, '../../node_modules'), []);
 }
 
 const seenModules = new Set<string>();

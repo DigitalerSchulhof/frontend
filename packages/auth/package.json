@@ -5,6 +5,9 @@
     "@dsh/core": "workspace:1.0.0",
     "react": "18.2.0"
   },
+  "devDependencies": {
+    "@types/react": "18.0.26"
+  },
   "dsh": {
     "shells": {
       "login-provider": {
@@ -17,8 +20,5 @@
         "custom-app"
       ]
     }
-  },
-  "devDependencies": {
-    "@types/react": "18.0.26"
   }
 }

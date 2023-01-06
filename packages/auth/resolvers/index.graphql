@@ -1,10 +1,10 @@
-union AuthPayload = AuthPayloadSuccess | AuthPayloadError
+union AuthResponse = AuthResponseSuccess | AuthResponseError
 
-type AuthPayloadSuccess {
+type AuthResponseSuccess {
   jwt: String!
 }
 
-type AuthPayloadError {
+type AuthResponseError {
   code: AuthErrorCode!
 }
 

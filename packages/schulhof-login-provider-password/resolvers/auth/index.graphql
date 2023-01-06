@@ -1,3 +1,7 @@
-extend type Mutation {
-  login(username: String!, password: String!): AuthPayload!
+extend type RootMutation {
+  login(username: String!, password: String!): AuthResponse!
+}
+
+extend enum AuthErrorCode {
+  INVALID_CREDENTIALS
 }
