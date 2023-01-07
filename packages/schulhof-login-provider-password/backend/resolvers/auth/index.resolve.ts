@@ -11,9 +11,7 @@ export const RootMutation = {
         FILTER user.username == ${username}
         FILTER SHA512(CONCAT(${password}, user.salt)) == user.password
         LIMIT 1
-        RETURN {
-          _key: user._key,
-        }
+        RETURN KEEP(user, '_key')
     `.then((c) => c.next());
 
     if (!user) {

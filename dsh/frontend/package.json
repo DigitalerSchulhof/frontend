@@ -2,7 +2,7 @@
   "name": "@dsh/frontend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_ENV=development next dev",
     "build": "pnpm run build:custom && pnpm run build:pages && next build",
     "build:watch": "concurrently \"pnpm run build:custom:watch\" \"pnpm run build:pages:watch\"",
     "build:custom": "rm -rf .custom && tsc --build custom/tsconfig.json",

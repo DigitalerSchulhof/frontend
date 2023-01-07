@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "generate:types": "graphql-codegen --config codegen.ts",
-    "dev": "nodemon --exec \"node --inspect=7000 -r dotenv/config -r ts-node/register src/index.ts\"",
-    "dev-brk": "nodemon --exec \"node --inspect-brk=7000 -r dotenv/config -r ts-node/register src/index.ts\""
+    "dev": "NODE_ENV=development nodemon --exec \"node --inspect=7000 -r dotenv/config -r ts-node/register src/index.ts\"",
+    "dev-brk": "NODE_ENV=development nodemon --exec \"node --inspect-brk=7000 -r dotenv/config -r ts-node/register src/index.ts\""
   },
   "devDependencies": {
     "@babel/core": "7.20.12",
