@@ -9,6 +9,7 @@ const generates: CodegenConfig['generates'] = {
     plugins: ['typescript', 'typescript-resolvers'],
     schema: path.join(__dirname, 'resolvers/**/*.graphql'),
     config: {
+      contextType: './context#BackendContext',
       addUnderscoreToArgsType: true,
       mapperTypeSuffix: '_DSH_Model',
       showUnusedMappers: true,
@@ -48,6 +49,7 @@ for (const dirName of fs.readdirSync(_packages)) {
       path.join(__dirname, 'resolvers/**/*.graphql'),
     ],
     config: {
+      contextType: '@dsh/backend/resolvers/context#BackendContext',
       addUnderscoreToArgsType: true,
       mapperTypeSuffix: '_DSH_Model',
       showUnusedMappers: true,

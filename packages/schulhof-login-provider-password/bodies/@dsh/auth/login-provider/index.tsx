@@ -1,5 +1,5 @@
 import type { LoginProvider } from '@dsh/auth/frontend';
-import { useT } from '@dsh/core';
+import { useT } from '@dsh/core/frontend';
 import { Button } from '@dsh/ui/Button';
 import { Form, FormRow } from '@dsh/ui/Form';
 import { Table, Tbody } from '@dsh/ui/Table';

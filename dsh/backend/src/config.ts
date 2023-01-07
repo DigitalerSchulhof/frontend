@@ -5,12 +5,18 @@ const config = {
     url: v.string,
     databaseName: v.string,
   },
+  jwt: {
+    privateKey: v.string,
+  },
 };
 
 const environment = {
   db: {
     url: 'DATABASE_URL',
     databaseName: 'DATABASE_NAME',
+  },
+  jwt: {
+    privateKey: 'JWT_PRIVATE_KEY',
   },
 };
 

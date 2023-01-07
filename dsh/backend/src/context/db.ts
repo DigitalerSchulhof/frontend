@@ -2,7 +2,7 @@ import { aql, Database } from 'arangojs';
 import { ArrayCursor } from 'arangojs/cursor';
 import { CreateContextContext } from '.';
 
-export interface BackendContext {
+export interface DbContext {
   db: Database;
   query: <T>(
     template: TemplateStringsArray,
@@ -10,7 +10,7 @@ export interface BackendContext {
   ) => Promise<ArrayCursor<T>>;
 }
 
-export function createDbContext(context: CreateContextContext): BackendContext {
+export function createDbContext(context: CreateContextContext): DbContext {
   const db = new Database({
     url: context.config.db.url,
     databaseName: context.config.db.databaseName,

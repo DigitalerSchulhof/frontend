@@ -1,5 +1,5 @@
 import { getLoginProviders, useAuth } from '@dsh/auth/frontend';
-import { useT } from '@dsh/core';
+import { useT } from '@dsh/core/frontend';
 import { Breadcrumbs } from '@dsh/ui/Breadcrumbs';
 import { Col } from '@dsh/ui/Col';
 import { Flex } from '@dsh/ui/Flex';

@@ -1,5 +1,5 @@
 import { useAuth } from '@dsh/auth/frontend';
-import { useT } from '@dsh/core';
+import { useT } from '@dsh/core/frontend';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 

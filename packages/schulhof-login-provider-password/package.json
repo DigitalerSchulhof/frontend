@@ -3,10 +3,15 @@
   "version": "1.0.0",
   "dependencies": {
     "@dsh/auth": "workspace:1.0.0",
-    "@dsh/ui": "workspace:1.0.0"
+    "@dsh/core": "workspace:1.0.0",
+    "@dsh/schulhof": "workspace:1.0.0",
+    "@dsh/ui": "workspace:1.0.0",
+    "graphql": "16.6.0"
   },
   "devDependencies": {
     "@dsh/auth": "1.0.0",
+    "@dsh/backend": "workspace:1.0.0",
+    "@types/node": "18.11.18",
     "@types/react": "18.0.26"
   },
   "peerDependencies": {

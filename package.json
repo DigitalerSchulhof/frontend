@@ -2,12 +2,9 @@
   "name": "@dsh/digitaler-schulhof",
   "private": "true",
   "scripts": {
-    "dev": "cd dsh/frontend && pnpm run dev"
+    "dev": "concurrently --names f,b --handle-input --default-input-target 1 \"cd dsh/frontend && pnpm run dev\" \"cd dsh/backend && pnpm run dev\""
   },
   "devDependencies": {
-    "@types/node": "18.11.18"
-  },
-  "dependencies": {
-    "graphql": "16.6.0"
+    "concurrently": "7.6.0"
   }
 }

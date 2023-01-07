@@ -2,7 +2,7 @@ import type { AppProps } from 'next/app';
 import React from 'react';
 import { AppSettingsContext } from '../AppSettingsContext';
 import settings from '../settings.json';
-import { getCustomApps } from '../shells/custom-app';
+import { getCustomApps } from '../../shells/custom-app';
 
 interface CustomAppProps {
   settings: any;

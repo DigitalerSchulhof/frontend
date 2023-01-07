@@ -1,5 +1,5 @@
 import React from 'react';
-import { getShell } from '..';
+import { getShell } from '../../frontend';
 
 export type CustomApp = React.FC<{ children: React.ReactNode }>;
 
