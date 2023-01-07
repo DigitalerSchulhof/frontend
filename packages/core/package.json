@@ -6,7 +6,8 @@
     "intl-messageformat": "10.2.5",
     "next": "13.0.6",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "urql": "3.0.3"
   },
   "devDependencies": {
     "@dsh/backend": "workspace:1.0.0",

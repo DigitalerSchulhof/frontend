@@ -1,8 +1,8 @@
 import type { AppProps } from 'next/app';
-import React from 'react';
+import { Client as UrqlClient, Context as UrqlContext } from 'urql';
+import { getCustomApps } from '../../shells/custom-app';
 import { AppSettingsContext } from '../AppSettingsContext';
 import settings from '../settings.json';
-import { getCustomApps } from '../../shells/custom-app';
 
 interface CustomAppProps {
   settings: any;
@@ -15,14 +15,20 @@ export default function App({
 }: AppProps & CustomAppProps) {
   const customApps = getCustomApps();
 
+  const urqlClient = new UrqlClient({
+    url: process.env.NEXT_PUBLIC_BACKEND_URL!,
+  });
+
   return (
     <AppSettingsContext.Provider value={settings}>
-      {customApps.reduce(
-        (acc, App) => (
-          <App>{acc}</App>
-        ),
-        <Component {...pageProps} />
-      )}
+      <UrqlContext.Provider value={urqlClient}>
+        {customApps.reduce(
+          (acc, App) => (
+            <App>{acc}</App>
+          ),
+          <Component {...pageProps} />
+        )}
+      </UrqlContext.Provider>
     </AppSettingsContext.Provider>
   );
 }

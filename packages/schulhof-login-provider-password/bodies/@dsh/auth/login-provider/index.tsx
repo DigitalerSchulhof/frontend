@@ -1,24 +1,32 @@
 import type { LoginProvider } from '@dsh/auth/frontend';
-import { useT } from '@dsh/core/frontend';
+import { useMutation, useT } from '@dsh/core/frontend';
 import { Button } from '@dsh/ui/Button';
 import { Form, FormRow } from '@dsh/ui/Form';
 import { Table, Tbody } from '@dsh/ui/Table';
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
+import { LoginDocument } from './login.query';
 
 const PasswordLoginProvider: LoginProvider = ({ submitJwt, privacyNote }) => {
   const { t } = useT();
 
+  const [, executeLoginMutation] = useMutation(LoginDocument);
+
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const doLogin = useCallback(() => {
-    if (!usernameRef.current?.value || !passwordRef.current?.value)
-      return alert('invalid sth');
+  const doLogin = useCallback(async () => {
+    const res = await executeLoginMutation({
+      username: usernameRef.current!.value,
+      password: passwordRef.current!.value,
+    });
 
-      submitJwt(
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDU2Nzg5MCwiaWF0IjoxNTE2MjM5MDIyfQ.8GgICY6THm6B1FR-zwd3Z6nsVMPVFeupuks_Jy8lqNw'
-    );
-  }, [submitJwt, usernameRef, passwordRef]);
+    if (res.error || res.data?.login.__typename !== 'LoginResponseSuccess') {
+      console.error(res.error ?? res.data);
+      return;
+    }
+
+    submitJwt(res.data.login.jwt);
+  }, [submitJwt, usernameRef, passwordRef, executeLoginMutation]);
 
   return (
     <Form onSubmit={doLogin}>

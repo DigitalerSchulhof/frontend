@@ -1,7 +1,7 @@
 extend type RootMutation {
-  login(username: String!, password: String!): AuthResponse!
+  login(username: String!, password: String!): LoginResponse!
 }
 
-extend enum AuthErrorCode {
+extend enum LoginErrorCode {
   INVALID_CREDENTIALS
 }

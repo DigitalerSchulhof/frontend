@@ -1,5 +1,5 @@
 import { createJwt } from '@dsh/auth/backend/resolvers';
-import { AuthErrorCode, RootMutationResolvers } from '../types';
+import { LoginErrorCode, RootMutationResolvers } from '../types';
 import { User } from '../user/model';
 
 export const RootMutation = {
@@ -16,13 +16,13 @@ export const RootMutation = {
 
     if (!user) {
       return {
-        __typename: 'AuthResponseError',
-        code: AuthErrorCode.InvalidCredentials,
+        __typename: 'LoginResponseError',
+        code: LoginErrorCode.InvalidCredentials,
       };
     }
 
     return {
-      __typename: 'AuthResponseSuccess',
+      __typename: 'LoginResponseSuccess',
       jwt: await createJwt(ctx, user),
     };
   },

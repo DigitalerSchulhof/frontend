@@ -1,6 +1,8 @@
-import React from 'react';
 import IntlMessageFormat, { PrimitiveType } from 'intl-messageformat';
+import React from 'react';
 import { useAppSettings } from './AppSettingsContext';
+
+export { useMutation } from 'urql';
 
 export declare function getShell<T>(name: string, dynamicImport?: boolean): T[];
 
@@ -98,7 +100,7 @@ export function fromBase64(str: string): string {
         .join('')
     );
   } catch (e) {
-    console.log("Error decoding %s", str);
+    console.log('Error decoding %s', str);
     console.error(e);
     return str;
   }

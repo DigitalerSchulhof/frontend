@@ -1,6 +1,8 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
-import * as path from 'path';
-import * as fs from 'fs';
+import type { TypeScriptPluginConfig } from '@graphql-codegen/typescript';
+import type { TypeScriptResolversPluginConfig } from '@graphql-codegen/typescript-resolvers';
+import fs from 'fs';
+import path from 'path';
 
 const _packages = path.resolve(__dirname, '../../packages');
 
@@ -18,7 +20,7 @@ const generates: CodegenConfig['generates'] = {
       scalars: {
         Date: 'Date',
       },
-    },
+    } satisfies TypeScriptPluginConfig & TypeScriptResolversPluginConfig,
   },
 };
 
@@ -58,12 +60,10 @@ for (const dirName of fs.readdirSync(_packages)) {
       scalars: {
         Date: 'Date',
       },
-    },
+    } satisfies TypeScriptPluginConfig & TypeScriptResolversPluginConfig,
   };
 }
 
-let config: CodegenConfig = {
+export default {
   generates,
-};
-
-export default config;
+} satisfies CodegenConfig;

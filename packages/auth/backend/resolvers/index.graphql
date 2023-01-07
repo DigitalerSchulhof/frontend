@@ -1,13 +1,13 @@
-union AuthResponse = AuthResponseSuccess | AuthResponseError
+union LoginResponse = LoginResponseSuccess | LoginResponseError
 
-type AuthResponseSuccess {
+type LoginResponseSuccess {
   jwt: String!
 }
 
-type AuthResponseError {
-  code: AuthErrorCode!
+type LoginResponseError {
+  code: LoginErrorCode!
 }
 
-enum AuthErrorCode {
+enum LoginErrorCode {
   INTERNAL_ERROR
 }
