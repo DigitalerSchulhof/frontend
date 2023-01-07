@@ -1,9 +1,13 @@
 import { aql, Database } from 'arangojs';
+import { ArrayCursor } from 'arangojs/cursor';
 import { CreateContextContext } from '.';
 
 export interface BackendContext {
   db: Database;
-  query: <T>(template: TemplateStringsArray, ...args: any[]) => Promise<T[]>;
+  query: <T>(
+    template: TemplateStringsArray,
+    ...args: any[]
+  ) => Promise<ArrayCursor<T>>;
 }
 
 export function createDbContext(context: CreateContextContext): BackendContext {
@@ -14,6 +18,6 @@ export function createDbContext(context: CreateContextContext): BackendContext {
 
   return {
     db,
-    query: (...args) => db.query(aql(...args)).then((cursor) => cursor.all()),
+    query: (...args) => db.query(aql(...args)),
   };
 }

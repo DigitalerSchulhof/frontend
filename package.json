@@ -6,5 +6,8 @@
   },
   "devDependencies": {
     "@types/node": "18.11.18"
+  },
+  "dependencies": {
+    "graphql": "16.6.0"
   }
 }

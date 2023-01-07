@@ -15,6 +15,9 @@
     "@types/react": "18.0.26",
     "@types/styled-components": "5.1.26"
   },
+  "peerDependencies": {
+    "@dsh/frontend": "1.0.0"
+  },
   "dsh": {
     "bodies": {
       "@dsh/core": [

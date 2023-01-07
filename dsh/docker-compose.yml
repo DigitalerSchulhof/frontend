@@ -8,5 +8,6 @@ services:
       - ARANGO_NO_AUTH=1
     volumes:
       - arangodb:/var/lib/arangodb3
+    restart: always
 volumes:
   arangodb:
