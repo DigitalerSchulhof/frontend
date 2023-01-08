@@ -18,16 +18,16 @@ export interface TranslationEntry {
  *   }
  * }
  */
-export const packageTranslations = new Map<
+export let packageTranslations: Record<
   string,
-  Map<string, Map<string, TranslationEntry>>
->();
+  Record<string, Record<string, TranslationEntry>>
+> = {};
 
 /**
  * @key package name
  * @value default locale
  */
-export const packageDefaultLocale = new Map<string, string>();
+export let packageDefaultLocale: Record<string, string> = {};
 
 function loadTranslations() {
   for (const [dir] of yieldModules()) {
@@ -37,12 +37,12 @@ function loadTranslations() {
     if ('defaultLocale' in pkg.dsh === false) {
       throw new Error(`Missing defaultLocale in ${pkg.name}`);
     }
-    packageDefaultLocale.set(pkg.name, pkg.defaultLocale);
+    packageDefaultLocale[pkg.name] = pkg.defaultLocale;
 
-    const locales = new Map<string, Map<string, TranslationEntry>>();
+    const locales: Record<string, Record<string, TranslationEntry>> = {};
     for (const locale of fs.readdirSync(path.join(dir, 'locales'))) {
-      if (!locales.has(locale)) locales.set(locale, new Map());
-      const map = locales.get(locale)!;
+      if (locale in locales === false) locales[locale] = {};
+      const map = locales[locale];
 
       for (const localeFile of yieldFiles(path.join(dir, 'locales', locale))) {
         let content = yaml.parse(fs.readFileSync(localeFile, 'utf-8'));
@@ -57,34 +57,34 @@ function loadTranslations() {
         for (const [key, value] of Object.entries(
           flattenObject(content, '.')
         )) {
-          map.set(`${localePrefix}.${key}`, {
+          map[`${localePrefix}.${key}`] = {
             value: value as string,
             file: localeFile,
-          });
+          };
         }
       }
     }
-    if (!locales.has(pkg.dsh.defaultLocale)) {
+    if (pkg.dsh.defaultLocale in locales === false) {
       throw new Error(
         `Missing defaultLocale in ${pkg.name}: ${pkg.dsh.defaultLocale}`
       );
     }
 
-    for (const k in locales.get(pkg.dsh.defaultLocale)!) {
-      for (const locale of locales) {
-        if (locale[1].has(k)) continue;
-        locale[1].set(k, locales.get(pkg.dsh.defaultLocale)!.get(k)!);
-      }
+    for (const locale in locales) {
+      locales[locale] = {
+        ...locales[pkg.dsh.defaultLocale],
+        ...locales[locale],
+      };
     }
 
-    packageTranslations.set(pkg.name, locales);
+    packageTranslations[pkg.name] = locales;
   }
 }
 loadTranslations();
 
 export function reloadTranslations() {
-  packageTranslations.clear();
-  packageDefaultLocale.clear();
+  packageTranslations = {};
+  packageDefaultLocale = {};
   loadTranslations();
 }
 
@@ -98,16 +98,12 @@ export function getTranslation(
   }
 
   const translations =
-    packageTranslations.get(packageName)?.get(locale) ??
-    packageTranslations
-      .get(packageName)
-      ?.get(packageDefaultLocale.get(packageName)!);
+    packageTranslations[packageName]?.[locale] ??
+    packageTranslations[packageName]?.[packageDefaultLocale[packageName]];
 
   if (!translations) throw new Error(`Missing translations for ${packageName}`);
 
-  if (!translations.has(key)) return key;
-
-  return translations.get(key)!.value;
+  return translations[key]?.value ?? key;
 }
 
 export function getTranslationOrigin(
@@ -119,11 +115,9 @@ export function getTranslationOrigin(
     [packageName, key] = key.split(':');
   }
 
-  const translations = packageTranslations.get(packageName)?.get(locale);
+  const translations = packageTranslations[packageName]?.[locale];
 
   if (!translations) throw new Error(`Missing translations for ${packageName}`);
 
-  if (!translations.has(key)) return null;
-
-  return translations.get(key)!.file;
+  return translations[key]?.file ?? null;
 }

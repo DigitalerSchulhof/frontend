@@ -4,16 +4,16 @@ import { useAppSettings } from './AppSettingsContext';
 
 export { useMutation } from 'urql';
 
-export declare function getShell<T>(name: string, dynamicImport?: boolean): T[];
+interface DataType {
+  [K: string]: DataType | PrimitiveType | ((part: string) => any);
+}
 
 export function useT() {
   const settings = useAppSettings();
   const flattenedSettings = flattenKeys(settings);
 
-  function tFunc(
-    key: string,
-    data?: Record<string, PrimitiveType | ((part: string) => any)>
-  ): string {
+  function tFunc(key: string, data?: DataType): string {
+    const flattenedData = flattenKeys(data);
     key = fromBase64(key);
 
     try {
@@ -21,10 +21,10 @@ export function useT() {
         i: (c) => <i>{c}</i>,
         b: (c) => <b>{c}</b>,
         ...flattenedSettings,
-        ...flattenKeys(data),
+        ...flattenedData,
       }) as string;
     } catch (e) {
-      console.log(key, flattenedSettings, data);
+      console.log(key, settings, flattenedSettings, data, flattenedData);
       console.error(e);
       return key;
     }
@@ -39,7 +39,7 @@ export function useT() {
       ...props
     }: {
       as?: React.ElementType;
-      vars?: Record<string, PrimitiveType | ((part: string) => any)>;
+      vars?: DataType;
       children: string | string[];
     }): JSX.Element => {
       if (typeof children === 'string') {
@@ -73,7 +73,11 @@ function flattenKeys(obj: any): any {
   if (typeof obj === 'object' && obj !== null) {
     return Object.keys(obj).reduce<Record<string, any>>((acc, key) => {
       const val = obj[key];
-      if (typeof val === 'object' && val !== null) {
+      if (
+        typeof val === 'object' &&
+        val !== null &&
+        val instanceof Date === false
+      ) {
         const flatObject = flattenKeys(val);
         Object.keys(flatObject).forEach((k) => {
           acc[`${key}_${k}`] = flatObject[k];

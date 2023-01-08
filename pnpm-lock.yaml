@@ -112,19 +112,23 @@ importers:
     specifiers:
       '@dsh/backend': workspace:1.0.0
       '@dsh/core': workspace:1.0.0
+      '@types/js-cookie': 3.0.2
       '@types/jsonwebtoken': 9.0.0
       '@types/node': 18.11.18
       '@types/react': 18.0.26
       graphql: 16.6.0
+      js-cookie: 3.0.1
       jsonwebtoken: 9.0.0
       react: 18.2.0
     dependencies:
       '@dsh/core': link:../core
       graphql: 16.6.0
+      js-cookie: 3.0.1
       jsonwebtoken: 9.0.0
       react: 18.2.0
     devDependencies:
       '@dsh/backend': link:../../dsh/backend
+      '@types/js-cookie': 3.0.2
       '@types/jsonwebtoken': 9.0.0
       '@types/node': 18.11.18
       '@types/react': 18.0.26
@@ -2045,6 +2049,10 @@ packages:
     dependencies:
       '@types/react': 18.0.26
       hoist-non-react-statics: 3.3.2
+    dev: true
+
+  /@types/js-cookie/3.0.2:
+    resolution: {integrity: sha512-6+0ekgfusHftJNYpihfkMu8BWdeHs9EOJuGcSofErjstGPfPGEu9yTu4t460lTzzAMl2cM5zngQJqPMHbbnvYA==}
     dev: true
 
   /@types/js-yaml/4.0.5:
@@ -4466,6 +4474,11 @@ packages:
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: true
+
+  /js-cookie/3.0.1:
+    resolution: {integrity: sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==}
+    engines: {node: '>=12'}
+    dev: false
 
   /js-sdsl/4.2.0:
     resolution: {integrity: sha512-dyBIzQBDkCqCu+0upx25Y2jGdbTGxE9fshMsCdK0ViOongpV+n5tXRcZY9v7CaVQ79AGS9KA1KHtojxiM7aXSQ==}

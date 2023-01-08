@@ -1,4 +1,4 @@
-import { getShell } from '@dsh/core';
+import { getShell } from '@dsh/core/shell';
 
 export interface LoginProviderProps {
   privacyNote: JSX.Element;

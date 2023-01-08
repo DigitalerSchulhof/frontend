@@ -1,7 +1,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import settings from "@dsh/core/frontend/settings.json";
 
-export const LOCALE = 'de-DE';
+export const LOCALE = settings.locale;
 
 /**
  * Yields all installed dsh node modules.
