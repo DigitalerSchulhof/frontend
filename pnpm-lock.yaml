@@ -8,6 +8,16 @@ importers:
     devDependencies:
       concurrently: 7.6.0
 
+  dsh:
+    specifiers:
+      '@dsh/core': workspace:1.0.0
+      '@dsh/schulhof': workspace:1.0.0
+      '@dsh/schulhof-login-provider-password': workspace:1.0.0
+    dependencies:
+      '@dsh/core': link:../packages/core
+      '@dsh/schulhof': link:../packages/schulhof
+      '@dsh/schulhof-login-provider-password': link:../packages/schulhof-login-provider-password
+
   dsh/backend:
     specifiers:
       '@babel/core': 7.20.12
@@ -26,7 +36,8 @@ importers:
       nodemon: 2.0.20
       ts-node: 10.9.1
       typescript: 4.9.3
-      vality: 6.2.2
+      vality: 6.3.1
+      vality-env: 1.0.0
     dependencies:
       '@graphql-tools/load-files': 6.6.1_graphql@16.6.0
       '@graphql-tools/merge': 8.3.14_graphql@16.6.0
@@ -35,7 +46,8 @@ importers:
       dotenv: 16.0.3
       graphql: 16.6.0
       graphql-yoga: 3.3.0_ykzowzmb7rcumunkscnbisnkom
-      vality: 6.2.2_typescript@4.9.3
+      vality: 6.3.1_typescript@4.9.3
+      vality-env: 1.0.0_vality@6.3.1
     devDependencies:
       '@babel/core': 7.20.12
       '@graphql-codegen/cli': 2.16.2_emrzuxzthhzy56iqn4dkbnikg4
@@ -2969,7 +2981,7 @@ packages:
     dependencies:
       '@types/node': 18.11.18
       cosmiconfig: 7.1.0
-      ts-node: 10.9.1_76bvzwqatfihmnr5dx42jk5azq
+      ts-node: 10.9.1_hpyheji465cvhbb42kg5fkayyq
       typescript: 4.9.3
     dev: true
 
@@ -2984,7 +2996,7 @@ packages:
     dependencies:
       '@types/node': 18.11.18
       cosmiconfig: 7.0.1
-      ts-node: 10.9.1_76bvzwqatfihmnr5dx42jk5azq
+      ts-node: 10.9.1_hpyheji465cvhbb42kg5fkayyq
       typescript: 4.9.3
     dev: true
 
@@ -6165,8 +6177,16 @@ packages:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
     dev: true
 
-  /vality/6.2.2_typescript@4.9.3:
-    resolution: {integrity: sha512-ZT30isWNDkm4Y0wjKcBWJAOLNXPJhQHanh5Dr/MWBZmKerVNWnidUtewmNy2Xjdqentnjl6tEtMHbHMfIzckew==}
+  /vality-env/1.0.0_vality@6.3.1:
+    resolution: {integrity: sha512-p+Kxye6lFjx2xHzkx+Qg0LHJYlc9D0reDdpIQ3AoI7qKELns3CB/oEdr8r2tR/TEDfbTPKSB0SuVcKkHrp+9sw==}
+    peerDependencies:
+      vality: '>=6.3.1'
+    dependencies:
+      vality: 6.3.1_typescript@4.9.3
+    dev: false
+
+  /vality/6.3.1_typescript@4.9.3:
+    resolution: {integrity: sha512-ynChNl1lqrqUruKA3f+9q9i9VnKKr9BoihSg469jXa08DZ/9GFN4kDCNX8Z/9OdJQCpd4YzLjo0Pkl/ZMVN65w==}
     peerDependencies:
       typescript: '>=4.2.2'
     dependencies:

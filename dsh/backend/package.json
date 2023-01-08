@@ -14,7 +14,8 @@
     "dotenv": "16.0.3",
     "graphql": "16.6.0",
     "graphql-yoga": "3.3.0",
-    "vality": "6.2.2"
+    "vality": "6.3.1",
+    "vality-env": "1.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.20.12",
