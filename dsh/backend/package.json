@@ -2,7 +2,8 @@
   "name": "@dsh/backend",
   "version": "1.0.0",
   "scripts": {
-    "generate:types": "graphql-codegen --config codegen.ts",
+    "generate:types": "pnpm run generate:types:graphql",
+    "generate:types:graphql": "graphql-codegen --config codegen.ts",
     "dev": "NODE_ENV=development nodemon --exec \"node --inspect=7000 -r dotenv/config -r ts-node/register src/index.ts\"",
     "dev-brk": "NODE_ENV=development nodemon --exec \"node --inspect-brk=7000 -r dotenv/config -r ts-node/register src/index.ts\""
   },

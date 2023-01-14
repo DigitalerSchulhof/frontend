@@ -10,7 +10,7 @@ const _packages = path.resolve(__dirname, '../../packages');
 
 const generates: CodegenConfig['generates'] = {};
 
-const queries = globby.sync(path.join(_packages, '*/**/*.gql'));
+const queries = globby.sync(path.join(_packages, '**/*.gql'));
 
 for (const query of queries) {
   generates[`${query.substring(0, query.length - '.gql'.length)}.query.ts`] = {

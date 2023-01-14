@@ -4,3 +4,4 @@ dist/
 *.tsbuildinfo
 
 *.query.ts
+t.d.ts

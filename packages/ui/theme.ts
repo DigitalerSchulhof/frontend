@@ -106,9 +106,26 @@ export const GlobalStyles = createGlobalStyle`
     text-decoration: none;
   }
 
-  p {
-    margin-top: 0;
-    margin-bottom: 7px;
+  p, ul, li {
+    & {
+      margin-top:7px;
+      margin-bottom: 7px;
+    }
+    &:first-child {
+      margin-top: 0;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul {
+    padding: 0;
+  }
+
+  ul > li {
+    margin-left: 20px;
+    list-style-type: square;
   }
 `;
 

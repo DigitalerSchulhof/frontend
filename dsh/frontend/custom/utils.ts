@@ -1,3 +1,4 @@
+import JSON5 from 'json5'
 import * as path from 'path';
 import * as fs from 'fs';
 import settings from "@dsh/core/frontend/settings.json";
@@ -75,14 +76,14 @@ export function* yieldFiles(dir: string): Generator<string> {
  * Synchronously reads a file as json.
  */
 export function readJsonSync<T = any>(file: string): T {
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
+  return JSON5.parse(fs.readFileSync(file, 'utf8'));
 }
 
 /**
  * Asynchronously reads a file as json.
  */
 export async function readJson<T = any>(file: string): Promise<T> {
-  return JSON.parse(await fs.promises.readFile(file, 'utf8'));
+  return JSON5.parse(await fs.promises.readFile(file, 'utf8'));
 }
 
 /**

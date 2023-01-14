@@ -1,35 +1,83 @@
-import type { LoginProvider } from '@dsh/auth/frontend';
+import { LoginProvider, useAuth } from '@dsh/auth/frontend';
 import { useMutation, useT } from '@dsh/core/frontend';
+import { Alert } from '@dsh/ui/Alert';
 import { Button } from '@dsh/ui/Button';
 import { Form, FormRow } from '@dsh/ui/Form';
+import { Heading } from '@dsh/ui/Heading';
+import { LoadingModal, Modal } from '@dsh/ui/Modal';
 import { Table, Tbody } from '@dsh/ui/Table';
-import { useCallback, useRef } from 'react';
-import { LoginDocument } from './login.query';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { LoginDocument, LoginErrorCode } from './login.query';
 
-const PasswordLoginProvider: LoginProvider = ({ submitJwt, privacyNote }) => {
-  const { t } = useT();
+const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
+  const t = useT();
 
+  const { setJWT } = useAuth();
   const [, executeLoginMutation] = useMutation(LoginDocument);
+  const [isLoading, setLoading] = useState(false);
+  const [errorCode, setError] = useState<LoginErrorCode | null>(null);
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const doLogin = useCallback(async () => {
-    const res = await executeLoginMutation({
-      username: usernameRef.current!.value,
-      password: passwordRef.current!.value,
-    });
+    try {
+      setLoading(true);
+      const res = await executeLoginMutation({
+        username: usernameRef.current!.value,
+        password: passwordRef.current!.value,
+      });
 
-    if (res.error || res.data?.login.__typename !== 'LoginResponseSuccess') {
-      console.error(res.error ?? res.data);
+      if (!res.data) throw res;
+      if (res.data.login.__typename === 'LoginResponseError') {
+        setError(res.data.login.code);
+        return;
+      }
+
+      setError(null);
+      setJWT(res.data.login.jwt);
+    } catch (e) {
+      setError(LoginErrorCode.InternalError);
       return;
+    } finally {
+      setLoading(false);
     }
+  }, [executeLoginMutation, usernameRef, passwordRef, setJWT]);
 
-    submitJwt(res.data.login.jwt);
-  }, [submitJwt, usernameRef, passwordRef, executeLoginMutation]);
+  const loadingComponent = useMemo(() => {
+    if (!isLoading) return null;
+
+    return <LoadingModal />;
+  }, [isLoading]);
+
+  const errorComponent = useMemo(() => {
+    if (!errorCode) return null;
+
+    return (
+      <Modal onClose={() => setError(null)}>
+        <Alert variant="error">
+          <Heading size="4">{t('@dsh/schulhof:login.error.title')}</Heading>
+          <p>{t('@dsh/schulhof:login.error.description')}</p>
+          <ul>
+            {errorCode === LoginErrorCode.InternalError
+              ? t('@dsh/schulhof:login.error.codes.internal').map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))
+              : t('login.error.invalidCredentials').map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+          </ul>
+        </Alert>
+        <Button onClick={() => setError(null)}>
+          {t('@dsh/core:generic.back')}
+        </Button>
+      </Modal>
+    );
+  }, [errorCode, t]);
 
   return (
     <Form onSubmit={doLogin}>
+      {loadingComponent ?? errorComponent}
       <Table>
         <Tbody>
           <FormRow

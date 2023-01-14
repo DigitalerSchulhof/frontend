@@ -25,10 +25,13 @@ export const transformerFactory: DshTransformerFactory =
 
     function visitor(node: ts.Node): ts.Node {
       if (ts.isCallExpression(node)) {
-        const {
+        let {
           expression,
-          arguments: [arg, ...args],
+          arguments: [arg, data],
         } = node;
+        // Make sure we also visit the body
+        if (data) data = visitor(data) as ts.Expression;
+
         if (ts.isIdentifier(expression) && expression.text === 't') {
           if (ts.isStringLiteral(arg)) {
             const i18nKey = arg.text;
@@ -41,65 +44,75 @@ export const transformerFactory: DshTransformerFactory =
 
             if (file !== null) addDependency(fs.realpathSync(file));
 
-            if (typeof translation !== 'string') {
-              throw new Error("t() doesn't support arrays");
-            }
+            if (typeof translation === 'string') {
+              return factory.createCallExpression(
+                factory.createIdentifier('t'),
+                undefined,
+                [
+                  factory.createStringLiteral(toBase64(translation)),
+                  data,
+                ].filter(Boolean)
+              );
+            } else {
+              // If data is passed, instead of transforming `t('x.y', { ... }).map(...)` directly to
+              // `[t('x.y.2', { ... }), t('x.y.1', { ... }), ...].map(...)`, potentially causing side-effects if { ... } is a function with side-effects,
+              // we wrap it in a temporary IIFE, so that it's only evaluated once:
+              // `(() => {let _temp = { ... }; return [t('x.y.0', _temp), t('x.y.1', _temp), ...]})().map(...)`
 
-            return factory.createCallExpression(
-              factory.createIdentifier('t'),
-              undefined,
-              [factory.createStringLiteral(toBase64(translation)), ...args]
-            );
-          } else {
-            throw new Error('t() argument must be a string');
-          }
-        }
-      } else if (ts.isJsxElement(node)) {
-        const {
-          openingElement: { tagName: openingTagName },
-          children,
-        } = node;
-        if (ts.isIdentifier(openingTagName) && openingTagName.text === 'T') {
-          if (children.length !== 1) {
-            throw new Error('<T> can have only one child');
-          }
-          const [child] = children;
-          if (!ts.isJsxText(child)) {
-            throw new Error('<T> child must be a string');
-          }
-          const i18nKey = child.text.trim();
-          const packageName = readJsonSync(
-            findNearestPackageJson(sourceFile.fileName)
-          ).name;
+              const dataRef = data ? factory.createUniqueName('data') : data;
+              const dataWrapper = data
+                ? (e: ts.Expression) =>
+                    factory.createCallExpression(
+                      factory.createParenthesizedExpression(
+                        factory.createArrowFunction(
+                          undefined,
+                          undefined,
+                          [],
+                          undefined,
+                          factory.createToken(
+                            ts.SyntaxKind.EqualsGreaterThanToken
+                          ),
+                          factory.createBlock([
+                            factory.createVariableStatement(
+                              undefined,
+                              factory.createVariableDeclarationList(
+                                [
+                                  factory.createVariableDeclaration(
+                                    dataRef,
+                                    undefined,
+                                    undefined,
+                                    data
+                                  ),
+                                ],
+                                ts.NodeFlags.Const
+                              )
+                            ),
+                            factory.createReturnStatement(e),
+                          ])
+                        )
+                      ),
+                      undefined,
+                      []
+                    )
+                : (e: ts.Expression) => e;
 
-          const file = getTranslationOrigin(packageName, i18nKey, LOCALE);
-          const translation = getTranslation(packageName, i18nKey, LOCALE);
-
-          if (file !== null) addDependency(fs.realpathSync(file));
-
-          if (typeof translation === 'string') {
-            return factory.updateJsxElement(
-              node,
-              visitor(node.openingElement) as ts.JsxOpeningElement,
-              [factory.createJsxText(toBase64(translation))],
-              visitor(node.closingElement) as ts.JsxClosingElement
-            );
-          } else {
-            return factory.updateJsxElement(
-              node,
-              visitor(node.openingElement) as ts.JsxOpeningElement,
-              [
-                factory.createJsxExpression(
-                  undefined,
-                  factory.createArrayLiteralExpression(
-                    translation.map((t) =>
-                      factory.createStringLiteral(toBase64(t))
+              return dataWrapper(
+                factory.createArrayLiteralExpression(
+                  translation.map((t) =>
+                    factory.createCallExpression(
+                      factory.createIdentifier('t'),
+                      undefined,
+                      [
+                        factory.createStringLiteral(toBase64(t)),
+                        dataRef,
+                      ].filter(Boolean)
                     )
                   )
-                ),
-              ],
-              visitor(node.closingElement) as ts.JsxClosingElement
-            );
+                )
+              );
+            }
+          } else {
+            throw new Error('t() argument must be a string');
           }
         }
       }

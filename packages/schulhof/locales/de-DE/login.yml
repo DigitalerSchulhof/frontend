@@ -6,10 +6,8 @@ buttons:
   password: Passwort vergessen?
   register: Registrieren
 privacy:
-  [
-    "<b>Datenschutzhinweis</b>: Im Schulhof werden Daten anders verarbeitet als auf der normalen Website. Was gespeichert und wie die Daten verarbeitet werden, ist der <PrivacyLink>Datenschutzseite</PrivacyLink> zu entnehmen.",
-    "Mit der Anmeldung wird automatisch »Einwilligung A« erteilt.",
-  ]
+  - "<b>Datenschutzhinweis</b>: Im Schulhof werden Daten anders verarbeitet als auf der normalen Website. Was gespeichert und wie die Daten verarbeitet werden, ist der <PrivacyLink>Datenschutzseite</PrivacyLink> zu entnehmen."
+  - "Mit der Anmeldung wird automatisch »Einwilligung A« erteilt."
 app:
   title: Jetzt auch als App
   ios: iPhone/iPad
@@ -32,3 +30,9 @@ system:
   check:
     "yes": Der Browser unterstützt alle Funktionen des Digitalen Schulhofs.
     "no": Der Browser unterstützt womöglich nicht alle Funktionen des Digitalen Schulhofs.
+error:
+  title: Anmeldung fehlgeschlagen
+  description: Die Anmeldung ist fehlgeschlagen, denn ...
+  codes:
+    internal:
+      - es ist ein interner Fehler aufgetreten.

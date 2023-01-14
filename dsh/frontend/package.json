@@ -2,7 +2,9 @@
   "name": "@dsh/frontend",
   "version": "1.0.0",
   "scripts": {
-    "generate:types": "graphql-codegen --config codegen.ts",
+    "generate:types": "concurrently \"pnpm run generate:types:graphql\" \"pnpm run generate:types:t\"",
+    "generate:types:graphql": "graphql-codegen --config codegen.ts",
+    "generate:types:t": "node -r source-map-support/register .custom/scripts/generate-t",
     "dev": "NODE_ENV=development next dev",
     "build": "pnpm run build:custom && pnpm run build:pages && next build",
     "build:watch": "concurrently \"pnpm run build:custom:watch\" \"pnpm run build:pages:watch\"",
@@ -32,6 +34,7 @@
     "eslint": "8.29.0",
     "globby": "11.1.0",
     "graphql": "16.6.0",
+    "json5": "2.2.3",
     "nodemon": "2.0.20",
     "source-map-support": "0.5.21",
     "ts-node": "10.9.1",

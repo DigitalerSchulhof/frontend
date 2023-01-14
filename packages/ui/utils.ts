@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export const useMounted = () => {
   const [mounted, setMounted] = useState(false);
@@ -8,3 +8,5 @@ export const useMounted = () => {
 
   return mounted;
 };
+
+export type Variant = 'success' | 'warning' | 'error' | 'default';

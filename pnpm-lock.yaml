@@ -8,16 +8,6 @@ importers:
     devDependencies:
       concurrently: 7.6.0
 
-  dsh:
-    specifiers:
-      '@dsh/core': workspace:1.0.0
-      '@dsh/schulhof': workspace:1.0.0
-      '@dsh/schulhof-login-provider-password': workspace:1.0.0
-    dependencies:
-      '@dsh/core': link:../packages/core
-      '@dsh/schulhof': link:../packages/schulhof
-      '@dsh/schulhof-login-provider-password': link:../packages/schulhof-login-provider-password
-
   dsh/backend:
     specifiers:
       '@babel/core': 7.20.12
@@ -75,6 +65,7 @@ importers:
       eslint-config-next: 13.0.6
       globby: 11.1.0
       graphql: 16.6.0
+      json5: 2.2.3
       next: 13.0.6
       nodemon: 2.0.20
       react: 18.2.0
@@ -102,6 +93,7 @@ importers:
       eslint: 8.29.0
       globby: 11.1.0
       graphql: 16.6.0
+      json5: 2.2.3
       nodemon: 2.0.20
       source-map-support: 0.5.21
       ts-node: 10.9.1_76bvzwqatfihmnr5dx42jk5azq
@@ -207,6 +199,7 @@ importers:
       '@dsh/core': workspace:1.0.0
       '@next/font': 13.0.6
       '@types/react': 18.0.26
+      '@types/react-dom': 18.0.9
       '@types/styled-components': 5.1.26
       next: 13.0.6
       react: 18.2.0
@@ -225,6 +218,7 @@ importers:
       tailwindcss: 3.2.4
     devDependencies:
       '@types/react': 18.0.26
+      '@types/react-dom': 18.0.9
       '@types/styled-components': 5.1.26
 
 packages:

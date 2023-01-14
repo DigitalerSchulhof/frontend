@@ -37,7 +37,7 @@ function loadTranslations() {
     if ('defaultLocale' in pkg.dsh === false) {
       throw new Error(`Missing defaultLocale in ${pkg.name}`);
     }
-    packageDefaultLocale[pkg.name] = pkg.defaultLocale;
+    packageDefaultLocale[pkg.name] = pkg.dsh.defaultLocale;
 
     const locales: Record<string, Record<string, TranslationEntry>> = {};
     for (const locale of fs.readdirSync(path.join(dir, 'locales'))) {
@@ -53,6 +53,8 @@ function loadTranslations() {
           )
           .split('/')
           .join('.');
+
+        if (content === null) continue;
 
         for (const [key, value] of Object.entries(
           flattenObject(content, '.')

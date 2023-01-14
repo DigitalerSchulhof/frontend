@@ -18,5 +18,7 @@
   "peerDependencies": {
     "@dsh/frontend": "workspace:1.0.0"
   },
-  "dsh": {}
+  "dsh": {
+    "defaultLocale": "de-DE"
+  }
 }

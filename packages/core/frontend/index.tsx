@@ -4,7 +4,7 @@ import { useAppSettings } from './AppSettingsContext';
 
 export { useMutation } from 'urql';
 
-interface DataType {
+export interface DataType {
   [K: string]: DataType | PrimitiveType | ((part: string) => any);
 }
 
@@ -12,7 +12,7 @@ export function useT() {
   const settings = useAppSettings();
   const flattenedSettings = flattenKeys(settings);
 
-  function tFunc(key: string, data?: DataType): string {
+  return (key: string, data?: DataType): string | string[] => {
     const flattenedData = flattenKeys(data);
     key = fromBase64(key);
 
@@ -28,44 +28,6 @@ export function useT() {
       console.error(e);
       return key;
     }
-  }
-
-  return {
-    t: tFunc,
-    T: ({
-      as: Component = React.Fragment,
-      vars,
-      children,
-      ...props
-    }: {
-      as?: React.ElementType;
-      vars?: DataType;
-      children: string | string[];
-    }): JSX.Element => {
-      if (typeof children === 'string') {
-        return <Component {...props}>{tFunc(children, vars)}</Component>;
-      }
-      return (
-        <>
-          {children.map((c: string, i: number) => {
-            const translated = tFunc(c, vars);
-            return (
-              <Component key={`${c}-${i}`} {...props}>
-                {Array.isArray(translated)
-                  ? translated.map((tr, i) =>
-                      typeof tr === 'string' ? (
-                        tr
-                      ) : (
-                        <React.Fragment key={`${c}-${i}`}>{tr}</React.Fragment>
-                      )
-                    )
-                  : translated}
-              </Component>
-            );
-          })}
-        </>
-      );
-    },
   };
 }
 

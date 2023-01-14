@@ -21,7 +21,8 @@
     "@dsh/frontend": "workspace:1.0.0"
   },
   "dsh": {
-    "bodies": {
+      "defaultLocale": "de-DE",
+      "bodies": {
       "@dsh/auth": [
         "login-provider"
       ]

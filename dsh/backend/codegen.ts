@@ -26,6 +26,7 @@ const generates: CodegenConfig['generates'] = {
 
 for (const dirName of fs.readdirSync(_packages)) {
   const dir = path.join(_packages, dirName);
+  if (!fs.statSync(dir).isDirectory()) continue;
 
   const hasBackendDir = fs.existsSync(path.join(dir, 'backend'));
   if (

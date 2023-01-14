@@ -1,4 +1,4 @@
-import { getLoginProviders, useAuth } from '@dsh/auth/frontend';
+import { getLoginProviders } from '@dsh/auth/frontend';
 import { useT } from '@dsh/core/frontend';
 import { Breadcrumbs } from '@dsh/ui/Breadcrumbs';
 import { Col } from '@dsh/ui/Col';
@@ -11,10 +11,9 @@ import React from 'react';
 import { useRequireLogin } from '../../..';
 
 const Page: NextPage = () => {
-  const { t, T } = useT();
+  const t = useT();
   useRequireLogin(false);
 
-  const { setJWT } = useAuth();
   const [LoginProvider] = getLoginProviders();
 
   return (
@@ -25,20 +24,18 @@ const Page: NextPage = () => {
       </Col>
       <Col nr="3">
         <Heading size="2">{t('login.title')}</Heading>
-        <T as="p">login.description</T>
+        <p>{t('login.description')}</p>
         <LoginProvider
-          submitJwt={setJWT}
           privacyNote={
-            <T
-              as={Note}
-              vars={{
+            <>
+              {t('login.privacy', {
                 PrivacyLink: (c) => (
                   <Link href={`/${t('paths.privacy')}`}>{c}</Link>
                 ),
-              }}
-            >
-              login.privacy
-            </T>
+              }).map((s, i) => (
+                <Note key={i}>{s}</Note>
+              ))}
+            </>
           }
         />
       </Col>

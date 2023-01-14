@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components';
+import { Variant } from '../utils';
 
 export interface ButtonProps {
-  variant?: 'success' | 'warning' | 'error' | 'default';
+  variant?: Variant;
 }
 
 export const Button = styled.button<ButtonProps>(
@@ -13,24 +14,23 @@ export const Button = styled.button<ButtonProps>(
     line-height: 1.5em;
     text-align: center;
     cursor: pointer;
+    margin: 0 2px;
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
     background-color: ${theme.accents[variant].regular.background};
-
     color: ${theme.accents[variant].regular.text};
 
     &:hover {
       background-color: ${theme.accents[variant].hover.background};
-
       color: ${theme.accents[variant].hover.text};
     }
 
-    &:not(:first-child) {
-      margin-left: 2px;
+    &:first-child {
+      margin-left: 0px;
     }
 
-    &:not(:last-child) {
-      margin-right: 2px;
+    &:last-child {
+      margin-right: 0px;
     }
   `
 );

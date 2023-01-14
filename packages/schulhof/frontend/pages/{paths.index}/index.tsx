@@ -7,7 +7,7 @@ import { NextPage } from 'next';
 import { useRequireLogin } from '../..';
 
 const Page: NextPage = () => {
-  const { t, T } = useT();
+  const t = useT();
   useRequireLogin();
 
   return (
@@ -21,9 +21,8 @@ const Page: NextPage = () => {
             },
           })}
         </Heading>
-        <T
-          as="p"
-          vars={{
+        <p>
+          {t('schulhof.lastLogin', {
             lastLogin: new Date(),
             TheftLink: (c) => (
               <a
@@ -34,10 +33,8 @@ const Page: NextPage = () => {
                 {c}
               </a>
             ),
-          }}
-        >
-          schulhof.lastLogin
-        </T>
+          })}
+        </p>
       </Col>
     </Flex>
   );
