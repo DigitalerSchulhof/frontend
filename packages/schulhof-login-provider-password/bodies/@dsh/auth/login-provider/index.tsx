@@ -1,20 +1,21 @@
 import { LoginProvider, useAuth } from '@dsh/auth/frontend';
-import { useMutation, useT } from '@dsh/core/frontend';
+import { useMutation, useQuery, useT } from '@dsh/core/frontend';
 import { Alert } from '@dsh/ui/Alert';
 import { Button } from '@dsh/ui/Button';
 import { Form, FormRow } from '@dsh/ui/Form';
 import { Heading } from '@dsh/ui/Heading';
 import { LoadingModal, Modal } from '@dsh/ui/Modal';
 import { Table, Tbody } from '@dsh/ui/Table';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { LoginDocument, LoginErrorCode } from './login.query';
 
 const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
   const t = useT();
 
   const { setJWT } = useAuth();
-  const [, executeLoginMutation] = useMutation(LoginDocument);
-  const [isLoading, setLoading] = useState(false);
+  const [{ fetching: isLoading }, executeLoginMutation] =
+    useMutation(LoginDocument);
+
   const [errorCode, setError] = useState<LoginErrorCode | null>(null);
 
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -22,7 +23,6 @@ const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
 
   const doLogin = useCallback(async () => {
     try {
-      setLoading(true);
       const res = await executeLoginMutation({
         username: usernameRef.current!.value,
         password: passwordRef.current!.value,
@@ -39,8 +39,6 @@ const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
     } catch (e) {
       setError(LoginErrorCode.InternalError);
       return;
-    } finally {
-      setLoading(false);
     }
   }, [executeLoginMutation, usernameRef, passwordRef, setJWT]);
 

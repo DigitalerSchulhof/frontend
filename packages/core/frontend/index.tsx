@@ -2,7 +2,7 @@ import IntlMessageFormat, { PrimitiveType } from 'intl-messageformat';
 import React from 'react';
 import { useAppSettings } from './AppSettingsContext';
 
-export { useMutation } from 'urql';
+export { useMutation, useQuery, useSubscription } from 'urql';
 
 export interface DataType {
   [K: string]: DataType | PrimitiveType | ((part: string) => any);
