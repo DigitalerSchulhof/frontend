@@ -16,5 +16,5 @@ export const useRequireLogin = (shouldBeLoggedIn: boolean = true) => {
         router.push(`/${t('paths.index')}`);
       }
     }
-  }, [shouldBeLoggedIn, isLoggedIn]);
+  }, [router, t, shouldBeLoggedIn, isLoggedIn]);
 };

@@ -30,9 +30,10 @@ system:
   check:
     "yes": Der Browser unterstützt alle Funktionen des Digitalen Schulhofs.
     "no": Der Browser unterstützt womöglich nicht alle Funktionen des Digitalen Schulhofs.
-error:
-  title: Anmeldung fehlgeschlagen
-  description: Die Anmeldung ist fehlgeschlagen, denn ...
-  codes:
-    internal:
-      - es ist ein interner Fehler aufgetreten.
+modal:
+  loading:
+    title: Anmelden
+    description: Die eingegebenen Daten werden überprüft, die Anmeldung kann einige Sekunden dauern.
+  error:
+    title: Anmeldung fehlgeschlagen
+    description: Die Anmeldung ist fehlgeschlagen, denn ...

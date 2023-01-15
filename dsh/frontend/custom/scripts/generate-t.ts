@@ -44,10 +44,10 @@ for (const dirName of fs.readdirSync(_packages)) {
     key: t.key.replace(pkg.name + ':', ''),
   }));
 
-  const tsconfigPaths = globby.sync(path.join(dir, '!(node_modules)/**/tsconfig.json'));
+  const tsconfigPaths = globby.sync(path.join(dir, '**/tsconfig.json'));
 
   for (const tsconfigPath of tsconfigPaths) {
-    console.log(tsconfigPath, pkg.name, pkgStrings)
+    if (tsconfigPath.includes('node_modules')) continue;
     const tsconfig = readJsonSync(tsconfigPath);
     const extendsPath = tsconfig.extends as string;
     if (!extendsPath) continue;

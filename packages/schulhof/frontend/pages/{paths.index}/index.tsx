@@ -4,6 +4,7 @@ import { Col } from '@dsh/ui/Col';
 import { Flex } from '@dsh/ui/Flex';
 import { Heading } from '@dsh/ui/Heading';
 import { NextPage } from 'next';
+import Link from 'next/link';
 import { useRequireLogin } from '../..';
 
 const Page: NextPage = () => {
@@ -25,13 +26,15 @@ const Page: NextPage = () => {
           {t('schulhof.lastLogin', {
             lastLogin: new Date(),
             TheftLink: (c) => (
-              <a
-                href={`/${t('paths.index')}/${t('myAccount.index')}/${t(
-                  'myAccount.reportTheft'
+              <Link
+                href={`/${t('paths.index')}/${t('paths.account')}/${t(
+                  'paths.myAccount'
+                )}/${t(
+                  'paths.reportTheft'
                 )}`}
               >
                 {c}
-              </a>
+              </Link>
             ),
           })}
         </p>

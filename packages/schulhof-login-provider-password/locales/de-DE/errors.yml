@@ -1,5 +1,4 @@
-error:
   invalidCredentials:
    - der Benutzername wurde nicht gefunden oder
    - das Passwort passt nicht zum Benutzernamen oder
-   - das Passwort ist nicht mehr gültig
+   - das Passwort ist nicht mehr gültig.

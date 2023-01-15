@@ -13,6 +13,7 @@ export const Alert = styled.div<AlertProps>(
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
     min-height: 42px;
+    width: 100%;
 
     border-left: 4px solid ${theme.accents[variant].hover.background};
     background-color: ${theme.accents[variant].regular.background};

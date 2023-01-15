@@ -1,5 +1,9 @@
+import { useT } from '@dsh/core/frontend';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
+import { Heading } from '../Heading';
+import { Loading } from '../Loading';
 
 export interface ModalProps {
   onClose?: () => void;
@@ -9,20 +13,38 @@ export const Modal = ({
   onClose,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & ModalProps) => {
-  return (
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return isMounted ? (
     <>
       {createPortal(<ModalOverlay onClick={onClose} />, document.body)}
       {createPortal(<ModalContainer {...props} />, document.body)}
     </>
-  );
+  ) : null;
 };
 
-export const LoadingModal = () => {
+export interface LoadingModalProps {
+  title: string;
+  description: string;
+}
+
+export const LoadingModal: React.FC<LoadingModalProps> = ({
+  title,
+  description,
+}) => {
+  const t = useT();
+
   return (
-    <>
-      {createPortal(<ModalOverlay />, document.body)}
-      {createPortal(<ModalContainer>...</ModalContainer>, document.body)}
-    </>
+    <Modal>
+      <Heading size="2">{title}</Heading>
+      <p>{t('@dsh/core:generic.wait')}</p>
+      <Loading />
+      <p>{description}</p>
+    </Modal>
   );
 };
 
@@ -32,7 +54,7 @@ const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(200, 200, 200, 0.75);
+  background-color: #c8c8c8bf;
   z-index: 1000;
 `;
 
@@ -46,7 +68,12 @@ const ModalContainer = styled.div`
   color: ${({ theme }) => theme.colors.text};
   border-radius: 10px;
   z-index: 1001;
+  box-shadow: 0px 0px 20px #212121;
 
-  text-align: center;
   padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
 `;

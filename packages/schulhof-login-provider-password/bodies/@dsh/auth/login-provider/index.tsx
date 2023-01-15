@@ -13,8 +13,7 @@ const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
   const t = useT();
 
   const { setJWT } = useAuth();
-  const [{ fetching: isLoading }, executeLoginMutation] =
-    useMutation(LoginDocument);
+  const [{ fetching: isLoading }, doLoginMutation] = useMutation(LoginDocument);
 
   const [errorCode, setError] = useState<LoginErrorCode | null>(null);
 
@@ -23,7 +22,7 @@ const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
 
   const doLogin = useCallback(async () => {
     try {
-      const res = await executeLoginMutation({
+      const res = await doLoginMutation({
         username: usernameRef.current!.value,
         password: passwordRef.current!.value,
       });
@@ -40,13 +39,18 @@ const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
       setError(LoginErrorCode.InternalError);
       return;
     }
-  }, [executeLoginMutation, usernameRef, passwordRef, setJWT]);
+  }, [doLoginMutation, usernameRef, passwordRef, setJWT]);
 
   const loadingComponent = useMemo(() => {
     if (!isLoading) return null;
 
-    return <LoadingModal />;
-  }, [isLoading]);
+    return (
+      <LoadingModal
+        title={t('@dsh/schulhof:login.modal.loading.title')}
+        description={t('@dsh/schulhof:login.modal.loading.description')}
+      />
+    );
+  }, [isLoading, t]);
 
   const errorComponent = useMemo(() => {
     if (!errorCode) return null;
@@ -54,14 +58,14 @@ const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
     return (
       <Modal onClose={() => setError(null)}>
         <Alert variant="error">
-          <Heading size="4">{t('@dsh/schulhof:login.error.title')}</Heading>
-          <p>{t('@dsh/schulhof:login.error.description')}</p>
+          <Heading size="4">{t('@dsh/schulhof:login.modal.error.title')}</Heading>
+          <p>{t('@dsh/schulhof:login.modal.error.description')}</p>
           <ul>
             {errorCode === LoginErrorCode.InternalError
-              ? t('@dsh/schulhof:login.error.codes.internal').map((s, i) => (
+              ? t('@dsh/core:errors.list.internal').map((s, i) => (
                   <li key={i}>{s}</li>
                 ))
-              : t('login.error.invalidCredentials').map((s, i) => (
+              : t('errors.invalidCredentials').map((s, i) => (
                   <li key={i}>{s}</li>
                 ))}
           </ul>
