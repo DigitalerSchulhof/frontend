@@ -1,1 +1,0 @@
-- @dsh/frontend; make sure that all locales' structure matches (paths and string/array)

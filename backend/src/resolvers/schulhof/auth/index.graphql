@@ -1,0 +1,18 @@
+extend type RootMutation {
+  loginPassword(username: String!, password: String!): LoginPasswordResponse!
+}
+
+union LoginPasswordResponse = LoginPasswordResponseSuccess | LoginPasswordResponseError
+
+type LoginPasswordResponseSuccess {
+  jwt: String!
+}
+
+type LoginPasswordResponseError {
+  code: LoginPasswordErrorCode!
+}
+
+enum LoginPasswordErrorCode {
+  INTERNAL_ERROR
+  INVALID_CREDENTIALS
+}

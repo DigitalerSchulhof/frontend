@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "Node",
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "jsx": "preserve",
+    "paths": {
+      "@i18n": ["./src/i18n"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@UI": ["./src/ui"],
+      "@UI/*": ["./src/ui/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules/**", "next/**/*"]
+}

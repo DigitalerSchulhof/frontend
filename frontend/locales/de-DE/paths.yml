@@ -1,0 +1,9 @@
+privacy: Datenschutz
+schulhof:
+  index: Schulhof
+  login: Anmeldung
+  account:
+    index: Nutzerkonto
+    profile:
+      index: Profil
+      theft: Identitätsdiebstahl

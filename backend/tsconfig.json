@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist",
+    "moduleResolution": "Node",
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "types": ["node"]
+  },
+  "ts-node": {
+    "swc": true
+  }
+}
