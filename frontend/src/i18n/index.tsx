@@ -17,13 +17,14 @@ export function useT(): TFunc {
     // The way it is typed ("as TFunc") is merely for proper type checking & completion before we transform it.
     // This function's actual purpose is merely to fill in the ICU message syntax stuff.
     const flattenedData = flattenKeys(data);
+    let i = 0;
 
     try {
       // Array return values are already converted to an array of t-calls, so we technically _always_ return strings
       // even though our function signature says otherwise.
       const r = new IntlMessageFormat(ast, settings.locale).format<ReactNode>({
-        i: (c) => c.map((e, i) => <i key={i}>{e}</i>),
-        b: (c) => c.map((e, i) => <b key={i}>{e}</b>),
+        i: (c) => c.map((e) => <i key={i++}>{e}</i>),
+        b: (c) => c.map((e) => <b key={i++}>{e}</b>),
         ...flattenedData,
       }) as any;
       if (typeof r === 'string') return r as any;

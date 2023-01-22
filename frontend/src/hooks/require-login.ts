@@ -1,7 +1,7 @@
-import { useAuth } from '@dsh/auth/frontend';
-import { useT } from '@dsh/core/frontend';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useT } from "@i18n";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useAuth } from "../schulhof/auth";
 
 export const useRequireLogin = (shouldBeLoggedIn: boolean = true) => {
   const { isLoggedIn } = useAuth();
@@ -11,9 +11,9 @@ export const useRequireLogin = (shouldBeLoggedIn: boolean = true) => {
   useEffect(() => {
     if (isLoggedIn !== shouldBeLoggedIn) {
       if (shouldBeLoggedIn) {
-        router.push(`/${t('paths.index')}/${t('paths.login')}`);
+        router.push(`/${t('paths.schulhof')}/${t('paths.schulhof.login')}`);
       } else {
-        router.push(`/${t('paths.index')}`);
+        router.push(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}`);
       }
     }
   }, [router, t, shouldBeLoggedIn, isLoggedIn]);

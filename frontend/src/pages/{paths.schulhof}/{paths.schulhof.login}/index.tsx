@@ -1,3 +1,4 @@
+import { useRequireLogin } from '@hooks/require-login';
 import { useT } from '@i18n';
 import { Breadcrumbs } from '@UI/Breadcrumbs';
 import { Col } from '@UI/Col';
@@ -24,7 +25,7 @@ const LoginProviderPassword = dynamic(() =>
 const Page: NextPage = () => {
   const t = useT();
   const settings = useSettings();
-  // useRequireLogin(false);
+  useRequireLogin(false);
 
   // TODO: Dynamically load login provider
   const LoginProvider = (

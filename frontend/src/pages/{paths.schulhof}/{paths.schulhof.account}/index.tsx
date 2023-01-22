@@ -1,3 +1,4 @@
+import { useRequireLogin } from '@hooks/require-login';
 import { useT } from '@i18n';
 import { Breadcrumbs } from '@UI/Breadcrumbs';
 import { Col } from '@UI/Col';
@@ -8,7 +9,7 @@ import { NextPage } from 'next';
 
 const Page: NextPage = () => {
   const t = useT();
-  // useRequireLogin();
+  useRequireLogin();
 
   return (
     <Flex>

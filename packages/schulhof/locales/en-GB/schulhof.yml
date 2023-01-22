@@ -1,2 +1,0 @@
-welcome: Welcome, {user_name}!
-lastLogin: Your last login was on <b>{lastLogin, date, long}</b> at <b>{lastLogin, time, short}</b>. Wrong? <TheftLink><b>Report identity theft</b> and change your password!</TheftLink>

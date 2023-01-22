@@ -1,7 +1,0 @@
-import { DataType } from '@dsh/core/frontend';
-
-export type Strings = { '@dsh/core:errors.internal': string; '@dsh/core:errors.list.internal': string[]; '@dsh/core:generic.back': string; '@dsh/core:generic.wait': string; 'login.welcome': string; 'login.title': string; 'login.description': string; 'login.buttons.login': string; 'login.buttons.password': string; 'login.buttons.register': string; 'login.privacy': string[]; 'login.app.title': string; 'login.app.ios': string; 'login.app.android': string; 'login.app.pwa': string; 'login.changelog.title': string; 'login.changelog.heading': string; 'login.changelog.specific.show': string; 'login.changelog.specific.hide': string; 'login.changelog.all.show': string; 'login.changelog.all.hide': string; 'login.system.version': string; 'login.system.cookies': string; 'login.system.javascript': string; 'login.system.one_user': string; 'login.system.check.yes': string; 'login.system.check.no': string; 'login.modal.loading.title': string; 'login.modal.loading.description': string; 'login.modal.error.title': string; 'login.modal.error.description': string; 'myAccount.index': string; 'paths.privacy': string; 'paths.index': string; 'paths.login': string; 'schulhof.welcome': string; 'schulhof.lastLogin': string; '@dsh/schulhof-login-provider-password:errors.invalidCredentials': string[] };
-
-declare module '@dsh/core/frontend' {
-  export function useT(): <K extends keyof Strings>(key: K, data?: DataType) => Strings[K];
-}
