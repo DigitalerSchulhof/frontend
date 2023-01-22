@@ -2,9 +2,11 @@ import {
   MessageFormatElement,
   parse,
 } from '@formatjs/icu-messageformat-parser';
+import chokidar from 'chokidar';
 import fs from 'fs';
 import globby from 'globby';
 import path from 'path';
+import { EventEmitter } from 'stream';
 import yaml from 'yaml';
 import { flattenObject, __frontend, __root } from '.';
 
@@ -81,59 +83,70 @@ function loadLocaleTranslations(
     cwd: path.join(_locales, locale),
   });
 
-  for (const translationFile of translationFiles) {
-    const translationPathPrefix = translationFile
-      .substring(0, translationFile.length - '.yml'.length)
-      .replace(/\//g, '.');
-
-    const translation = yaml.parse(
-      fs.readFileSync(path.join(_locales, locale, translationFile), 'utf-8')
-    );
-
-    const translations = flattenObject(translation, '.') as Record<
-      string,
-      string | string[]
-    >;
-
-    for (const [key, value] of Object.entries(translations)) {
-      let translationKey = (
-        translationPathPrefix.replace(/\.index$/, '') +
-        '.' +
-        key
-      ).replace(/(^\.|\.index\.?$|\.$)/g, '');
-
-      const entry = {
-        file: path.join(_locales, locale, translationFile),
-        key: translationKey,
-      };
-
-      if (typeof value === 'string') {
-        localeTranslations[translationKey] = {
-          ...entry,
-          type: 'string',
-          value,
-          ast: parse(value),
-        };
-      } else {
-        localeTranslations[translationKey] = {
-          ...entry,
-          type: 'array',
-          ...value.reduce<
-            Pick<TranslationEntry & { type: 'array' }, 'values' | 'asts'>
-          >(
-            (acc, v) => {
-              acc.values.push(v);
-              acc.asts.push(parse(v));
-              return acc;
-            },
-            { values: [], asts: [] }
-          ),
-        };
-      }
-    }
+  for (const translationPath of translationFiles) {
+    loadTranslationFile(locale, translationPath, localeTranslations);
   }
 
   return localeTranslations;
+}
+
+/**
+ * Side effects: localeTranslations
+ */
+function loadTranslationFile(
+  locale: string,
+  translationPath: string,
+  localeTranslations: Record<string, TranslationEntry>
+) {
+  const translationPathPrefix = translationPath
+    .substring(0, translationPath.length - '.yml'.length)
+    .replace(/\//g, '.');
+
+  const translation = yaml.parse(
+    fs.readFileSync(path.join(_locales, locale, translationPath), 'utf-8')
+  );
+
+  const translations = flattenObject(translation, '.') as Record<
+    string,
+    string | string[]
+  >;
+
+  for (const [key, value] of Object.entries(translations)) {
+    let translationKey = (
+      translationPathPrefix.replace(/\.index$/, '') +
+      '.' +
+      key
+    ).replace(/(^\.|\.index\.?$|\.$)/g, '');
+
+    const entry = {
+      file: path.join(_locales, locale, translationPath),
+      key: translationKey,
+    };
+
+    if (typeof value === 'string') {
+      localeTranslations[translationKey] = {
+        ...entry,
+        type: 'string',
+        value,
+        ast: parse(value),
+      };
+    } else {
+      localeTranslations[translationKey] = {
+        ...entry,
+        type: 'array',
+        ...value.reduce<
+          Pick<TranslationEntry & { type: 'array' }, 'values' | 'asts'>
+        >(
+          (acc, v) => {
+            acc.values.push(v);
+            acc.asts.push(parse(v));
+            return acc;
+          },
+          { values: [], asts: [] }
+        ),
+      };
+    }
+  }
 }
 
 export function getTranslation(
@@ -143,4 +156,64 @@ export function getTranslation(
   const translations = getTranslations(locale);
 
   return translations[key];
+}
+
+interface TranslationsWatcher extends EventEmitter {
+  on(event: 'change', listener: (locale: string) => void): this;
+}
+
+export function watchTranslations(): TranslationsWatcher {
+  const emitter = new EventEmitter();
+
+  const watcher = chokidar
+    .watch('.', {
+      cwd: _locales,
+      ignoreInitial: true,
+      persistent: true,
+    })
+    .on('add', (p) => {
+      const [locale, ...translationsPath] = p.split(path.sep);
+
+      loadTranslationFile(
+        locale,
+        translationsPath.join(path.sep),
+        translations[locale]
+      );
+      emitter.emit('change', locale);
+    })
+    .on('change', (p) => {
+      const [locale, ...translationsPath] = p.split(path.sep);
+
+      // Delete old translations
+      for (const key of Object.keys(translations[locale])) {
+        if (translations[locale][key].file === path.join(_locales, p)) {
+          delete translations[locale][key];
+        }
+      }
+
+      loadTranslationFile(
+        locale,
+        translationsPath.join(path.sep),
+        translations[locale]
+      );
+      emitter.emit('change', locale);
+    })
+    .on('unlink', (p) => {
+      const [locale] = p.split(path.sep);
+
+      // Delete old translations
+      for (const key of Object.keys(translations[locale])) {
+        if (translations[locale][key].file === path.join(_locales, p)) {
+          delete translations[locale][key];
+        }
+      }
+
+      emitter.emit('change', locale);
+    });
+
+  process.on('exit', () => {
+    watcher.close();
+  });
+
+  return emitter;
 }

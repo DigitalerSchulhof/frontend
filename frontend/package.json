@@ -4,7 +4,9 @@
   "scripts": {
     "dev": "concurrently \"pnpm:dev:*\"",
     "dev:pages": "ts-node -r source-map-support/register _next/custom/scripts/generate-pages --watch",
+    "dev:pages:watch": "nodemon -w _next/custom/ -e ts --exec \"ts-node -r source-map-support/register _next/custom/scripts/generate-pages --watch\"",
     "dev:i18n": "ts-node -r source-map-support/register _next/custom/scripts/generate-i18n --watch",
+    "dev:i18n:watch": "nodemon -w _next/custom/ -e ts --exec \"ts-node -r source-map-support/register _next/custom/scripts/generate-i18n --watch\"",
     "dev:graphql": "graphql-codegen --config _next/custom/codegen.ts --watch",
     "dev:env": "cp .env _next/.env #Todo",
     "dev:next": "cd _next && next dev",
@@ -46,6 +48,7 @@
     "@types/react-dom": "18.0.9",
     "@types/styled-components": "5.1.26",
     "@types/webpack": "5.28.0",
+    "chokidar": "3.5.3",
     "concurrently": "7.6.0",
     "eslint": "8.29.0",
     "globby": "11.1.0",

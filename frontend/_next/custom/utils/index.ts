@@ -40,6 +40,6 @@ export function flattenObject(obj: any, joiner = '_'): any {
   return obj;
 }
 
-export function toBase64(str: string): string {
-  return Buffer.from(str).toString('base64');
+export function isWatchMode(): boolean {
+  return process.argv.includes('--watch');
 }

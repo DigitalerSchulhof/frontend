@@ -6,13 +6,17 @@ import {
   SelectElement,
   TagElement,
   TimeElement,
-  TYPE,
+  TYPE
 } from '@formatjs/icu-messageformat-parser';
 import fs from 'fs';
 import path from 'path';
-import ts, { textChangeRangeNewSpan } from 'typescript';
-import { __src } from '../utils';
-import { getTranslations, TranslationEntry } from '../utils/i18n';
+import ts from 'typescript';
+import { isWatchMode, __src } from '../../utils';
+import {
+  getTranslations,
+  TranslationEntry,
+  watchTranslations
+} from '../../utils/i18n';
 
 export function generateI18n() {
   const printer = ts.createPrinter();
@@ -128,8 +132,9 @@ function generateTranslationEntry([key, value]: [
 ]): ts.TypeElement {
   const parts: ts.TypeNode[] = [];
 
-  const combinedAst = value.type === 'string' ? value.ast : value.asts.flat();
+  const combinedAst = value.type === 'string' ? [...value.ast] : value.asts.flat();
   const args = [];
+  const seen = new Set<string>();
 
   for (let i = 0; i < combinedAst.length; i++) {
     const ast = combinedAst[i];
@@ -189,6 +194,10 @@ function generateTranslationEntry([key, value]: [
       if (INBUILT.includes(name)) {
         continue;
       }
+      if (seen.has(name)) {
+        continue;
+      }
+      seen.add(name);
 
       args.push(
         ts.factory.createPropertySignature(
@@ -237,3 +246,7 @@ function generateTranslationEntry([key, value]: [
 }
 
 generateI18n();
+
+if (isWatchMode()) {
+  watchTranslations().on('change', generateI18n);
+}
