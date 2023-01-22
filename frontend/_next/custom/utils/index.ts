@@ -5,7 +5,7 @@ import path from 'path';
 export const __root = path.resolve(__dirname, '../../../..');
 export const __frontend = path.resolve(__root, 'frontend');
 export const __src = path.resolve(__frontend, 'src');
-export const __next = path.resolve(__frontend, 'next');
+export const __next = path.resolve(__frontend, '_next');
 
 /**
  * Synchronously reads a file as json.

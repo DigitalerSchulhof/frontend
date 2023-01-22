@@ -10,6 +10,9 @@
     "tsconfig.json": "tsconfig.*.json, tsconfig.tsbuildinfo"
   },
   "typescript.enablePromptUseWorkspaceTsdk": false,
-  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.words": [
+    "Jesper"
+  ],
 }

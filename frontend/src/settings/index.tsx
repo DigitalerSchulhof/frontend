@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react';
-import * as settings from '../../../settings.json';
+import settings from '../../../settings.json';
 
-export const useAppSettings = () => useContext(AppSettingsContext);
+export const useSettings = () => useContext(SettingsContext);
 
-export const AppSettingsContext = createContext<typeof settings>(
+export const SettingsContext = createContext<typeof settings>(
   null as any as typeof settings
 );

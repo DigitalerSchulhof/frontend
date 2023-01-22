@@ -1,7 +1,11 @@
+import {
+  MessageFormatElement,
+  parse,
+} from '@formatjs/icu-messageformat-parser';
 import fs from 'fs';
+import globby from 'globby';
 import path from 'path';
 import yaml from 'yaml';
-import globby from 'globby';
 import { flattenObject, __frontend, __root } from '.';
 
 export const DEFAULT_LOCALE = 'de-DE' as string;
@@ -11,15 +15,25 @@ export const LOCALE = require(path.join(__root, 'settings.json'))
 const _locales = path.join(__frontend, 'locales');
 
 export type TranslationEntry = {
-  value: string | string[];
   file: string;
-};
+  key: string;
+} & (
+  | {
+      type: 'string';
+      value: string;
+      ast: MessageFormatElement[];
+    }
+  | {
+      type: 'array';
+      values: string[];
+      asts: MessageFormatElement[][];
+    }
+);
 
 /**
  * @key - the locale
  * @value {
  *   @key - the translation key
- *   @value - the translated value
  * }
  */
 let translations: Record<string, Record<string, TranslationEntry>>;
@@ -82,35 +96,51 @@ function loadLocaleTranslations(
     >;
 
     for (const [key, value] of Object.entries(translations)) {
-      let translationKey = (translationPathPrefix + '.' + key)
-        .split('.')
-        .filter((p) => p !== 'index')
-        .join('.');
+      let translationKey = (
+        translationPathPrefix.replace(/\.index$/, '') +
+        '.' +
+        key
+      ).replace(/(^\.|\.index\.?$|\.$)/g, '');
 
-      localeTranslations[translationKey] = {
-        value,
+      const entry = {
         file: path.join(_locales, locale, translationFile),
+        key: translationKey,
       };
+
+      if (typeof value === 'string') {
+        localeTranslations[translationKey] = {
+          ...entry,
+          type: 'string',
+          value,
+          ast: parse(value),
+        };
+      } else {
+        localeTranslations[translationKey] = {
+          ...entry,
+          type: 'array',
+          ...value.reduce<
+            Pick<TranslationEntry & { type: 'array' }, 'values' | 'asts'>
+          >(
+            (acc, v) => {
+              acc.values.push(v);
+              acc.asts.push(parse(v));
+              return acc;
+            },
+            { values: [], asts: [] }
+          ),
+        };
+      }
     }
   }
 
   return localeTranslations;
 }
 
-export function translate(
+export function getTranslation(
   key: string,
   locale = DEFAULT_LOCALE
-): string | string[] {
+): TranslationEntry | undefined {
   const translations = getTranslations(locale);
 
-  return translations[key]?.value ?? key;
-}
-
-export function getTranslationSource(
-  key: string,
-  locale = DEFAULT_LOCALE
-): string | null {
-  const translations = getTranslations(locale);
-
-  return translations[key]?.file ?? null;
+  return translations[key];
 }

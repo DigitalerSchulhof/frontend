@@ -67,7 +67,7 @@ export const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
               ? t('schulhof.login.modal.error.codes.internal').map((s, i) => (
                   <li key={i}>{s}</li>
                 ))
-              : t('schulhof.login.modal.error.codes.invalidCredentials').map(
+              : t('schulhof.login.modal.error.codes.invalid-credentials').map(
                   (s, i) => <li key={i}>{s}</li>
                 )}
           </ul>

@@ -1,9 +1,9 @@
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from 'styled-components';
 import { Client as UrqlClient, Context as UrqlContext } from 'urql';
-import * as settings from '../../../settings.json';
+import settings from '../../../settings.json';
 import { AuthContextProvider } from '../schulhof/auth';
-import { AppSettingsContext } from '../settings';
+import { SettingsContext } from '../settings';
 import { MainContainer } from '../ui/MainContainer';
 import { GlobalStyles, theme } from '../ui/theme';
 
@@ -21,7 +21,7 @@ export default function App({
   });
 
   return (
-    <AppSettingsContext.Provider value={settings}>
+    <SettingsContext.Provider value={settings}>
       <UrqlContext.Provider value={urqlClient}>
         <AuthContextProvider>
           <ThemeProvider theme={theme}>
@@ -34,7 +34,7 @@ export default function App({
           </ThemeProvider>
         </AuthContextProvider>
       </UrqlContext.Provider>
-    </AppSettingsContext.Provider>
+    </SettingsContext.Provider>
   );
 }
 

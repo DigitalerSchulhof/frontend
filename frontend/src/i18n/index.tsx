@@ -1,37 +1,44 @@
+import type { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 import IntlMessageFormat from 'intl-messageformat';
-import { useAppSettings } from '../settings';
+import React, { ReactNode } from 'react';
+import { useSettings } from '../settings';
 import { Translations } from './translations';
 
-export function useT() {
-  const settings = useAppSettings();
-  const flattenedSettings = flattenKeys(settings);
+type TFunc = <K extends keyof Translations>(
+  key: K,
+  ...args: Translations[K][0]
+) => Translations[K][1];
 
-  return <K extends keyof Translations>(key: K, data?: {}): Translations[K] => {
-    // At runtime, this function actually receives base64-encoded already translated strings.
-    // Its purpose is merely to fill in the ICU message syntax stuff.
+export function useT(): TFunc {
+  const settings = useSettings();
+
+  return ((key: string, ast: MessageFormatElement[], data?: any): any => {
+    // At runtime, this function actually receives the listed set of arguments.
+    // The way it is typed ("as TFunc") is merely for proper type checking & completion before we transform it.
+    // This function's actual purpose is merely to fill in the ICU message syntax stuff.
     const flattenedData = flattenKeys(data);
-    key = fromBase64(key) as K;
 
     try {
       // Array return values are already converted to an array of t-calls, so we technically _always_ return strings
       // even though our function signature says otherwise.
-      return new IntlMessageFormat(key, settings.locale).format({
-        i: (c) => <i>{c}</i>,
-        b: (c) => <b>{c}</b>,
-        ...flattenedSettings,
+      const r = new IntlMessageFormat(ast, settings.locale).format<ReactNode>({
+        i: (c) => c.map((e, i) => <i key={i}>{e}</i>),
+        b: (c) => c.map((e, i) => <b key={i}>{e}</b>),
         ...flattenedData,
       }) as any;
-    } catch (e) {
+      if (typeof r === 'string') return r as any;
+
+      return React.Children.toArray(r) as any;
+    } catch (e: any) {
       console.error('Failed to format translation', {
+        error: e.message,
         key,
-        settings,
-        flattenedSettings,
+        locale: settings.locale,
         data,
-        flattenedData,
       });
       return key as any;
     }
-  };
+  }) as TFunc;
 }
 
 function flattenKeys(obj: any): any {
@@ -55,22 +62,4 @@ function flattenKeys(obj: any): any {
     }, {});
   }
   return obj;
-}
-
-// https://stackoverflow.com/a/30106551/12405307
-export function fromBase64(str: string): string {
-  try {
-    return decodeURIComponent(
-      atob(str)
-        .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join('')
-    );
-  } catch (e) {
-    console.log('Error decoding %s', str);
-    console.error(e);
-    return str;
-  }
 }

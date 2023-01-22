@@ -27,7 +27,7 @@ system:
   version: Version {version}
   cookies: Cookies aktiv?
   javascript: JavaScript aktiv?
-  one_user: Nur ein Nutzer pro Browser zur selben Zeit.
+  one-user: Nur ein Nutzer pro Browser zur selben Zeit.
   check:
     yes: Der Browser unterstützt alle Funktionen des Digitalen Schulhofs.
     no: Der Browser unterstützt womöglich nicht alle Funktionen des Digitalen Schulhofs.
@@ -41,7 +41,7 @@ modal:
     codes:
       internal:
         - es ist ein interner Fehler aufgetreten.
-      invalidCredentials:
+      invalid-credentials:
         - der Benutzername wurde nicht gefunden oder
         - das Passwort passt nicht zum Benutzernamen oder
         - das Passwort ist nicht mehr gültig.

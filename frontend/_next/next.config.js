@@ -40,6 +40,8 @@ module.exports = {
       type: 'javascript/auto',
     });
 
+    config.resolve.alias['@formatjs/icu-messageformat-parser'] =
+      '@formatjs/icu-messageformat-parser/no-parser';
     config.module.rules.push(loader);
     return config;
   },

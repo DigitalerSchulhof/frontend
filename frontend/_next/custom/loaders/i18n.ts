@@ -1,10 +1,12 @@
+import {
+  MessageFormatElement,
+  parse
+} from '@formatjs/icu-messageformat-parser';
 import ts from 'typescript';
 import type { DshTransformerFactory } from '.';
-import { toBase64 } from '../utils';
 import {
-  getTranslationSource,
-  loadTranslations,
-  translate,
+  getTranslation,
+  loadTranslations
 } from '../utils/i18n';
 
 export const transformerFactory: DshTransformerFactory =
@@ -30,23 +32,21 @@ export const transformerFactory: DshTransformerFactory =
           if (ts.isStringLiteral(arg)) {
             const i18nKey = arg.text;
 
-            const file = getTranslationSource(i18nKey);
-            const translation = translate(i18nKey);
+            let translation = getTranslation(i18nKey) ?? {
+              type: 'string',
+              key: i18nKey,
+              value: i18nKey,
+              ast: parse(i18nKey),
+              file: null,
+            };
 
-            if (file !== null) addDependency(file);
+            if (translation.file !== null) addDependency(translation.file);
 
-            if (typeof translation === 'string') {
-              return factory.createCallExpression(
-                factory.createIdentifier('t'),
-                undefined,
-                [
-                  factory.createStringLiteral(toBase64(translation)),
-                  data,
-                ].filter(Boolean)
-              );
+            if (translation.type === 'string') {
+              return createTExpression(translation, data);
             } else {
               // If data is passed, instead of transforming `t('x.y', { ... }).map(...)` directly to
-              // `[t('x.y.2', { ... }), t('x.y.1', { ... }), ...].map(...)`, potentially causing side-effects if { ... } is a function with side-effects,
+              // `[t('x.y.2', { ... }), t('x.y.1', { ... }), ...].map(...)`, potentially causing side-effects if { ... } is/contains a function with side-effects,
               // we wrap it in a temporary IIFE, so that it's only evaluated once:
               // `(() => {let _temp = { ... }; return [t('x.y.0', _temp), t('x.y.1', _temp), ...]})().map(...)`
 
@@ -89,14 +89,13 @@ export const transformerFactory: DshTransformerFactory =
 
               return dataWrapper(
                 factory.createArrayLiteralExpression(
-                  translation.map((t) =>
-                    factory.createCallExpression(
-                      factory.createIdentifier('t'),
-                      undefined,
-                      [
-                        factory.createStringLiteral(toBase64(t)),
-                        dataRef,
-                      ].filter(Boolean)
+                  translation.asts.map((ast) =>
+                    createTExpression(
+                      {
+                        key: translation.key,
+                        ast,
+                      },
+                      dataRef
                     )
                   )
                 )
@@ -113,3 +112,46 @@ export const transformerFactory: DshTransformerFactory =
 
     return ts.visitNode(sourceFile, visitor);
   };
+
+function createTExpression(
+  translation: { key: string; ast: MessageFormatElement[] },
+  data: ts.Expression
+): ts.Expression {
+  return ts.factory.createCallExpression(
+    ts.factory.createIdentifier('t'),
+    undefined,
+    [
+      ts.factory.createStringLiteral(translation.key),
+      jsonToTSAst(translation.ast),
+      data,
+    ].filter(Boolean)
+  );
+}
+
+function jsonToTSAst(json: unknown): ts.Expression {
+  switch (typeof json) {
+    case 'string':
+      return ts.factory.createStringLiteral(json);
+    case 'number':
+      return ts.factory.createNumericLiteral(json);
+    case 'boolean':
+      return json ? ts.factory.createTrue() : ts.factory.createFalse();
+    case 'object':
+      if (json === null) {
+        return ts.factory.createNull();
+      }
+      if (Array.isArray(json)) {
+        return ts.factory.createArrayLiteralExpression(json.map(jsonToTSAst));
+      }
+      return ts.factory.createObjectLiteralExpression(
+        Object.entries(json).map(([key, value]) =>
+          ts.factory.createPropertyAssignment(
+            ts.factory.createStringLiteral(key),
+            jsonToTSAst(value)
+          )
+        )
+      );
+    default:
+      throw new Error(`Unexpected type ${typeof json}`);
+  }
+}

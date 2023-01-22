@@ -7,6 +7,7 @@ import { Link } from '@UI/Link';
 import { Note } from '@UI/Note';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
+import { useSettings } from '../../../settings';
 
 export interface LoginProviderProps {
   privacyNote: JSX.Element;
@@ -22,6 +23,7 @@ const LoginProviderPassword = dynamic(() =>
 
 const Page: NextPage = () => {
   const t = useT();
+  const settings = useSettings();
   // useRequireLogin(false);
 
   // TODO: Dynamically load login provider
@@ -35,7 +37,12 @@ const Page: NextPage = () => {
     <Flex>
       <Col nr="1">
         <Breadcrumbs path={[t('paths.schulhof'), t('paths.schulhof.login')]} />
-        <Heading size="1">{t('schulhof.login.welcome')}</Heading>
+        <Heading size="1">
+          {t('schulhof.login.welcome', {
+            school_name_genus: settings.school.name.genus,
+            school_name_genitive: settings.school.name.genitive,
+          })}
+        </Heading>
       </Col>
       <Col nr="3">
         <Heading size="2">{t('schulhof.login.login.title')}</Heading>
@@ -44,9 +51,8 @@ const Page: NextPage = () => {
           privacyNote={
             <>
               {t('schulhof.login.login.privacy', {
-                PrivacyLink: (c) => (
-                  <Link href={`/${t('paths.privacy')}`}>{c}</Link>
-                ),
+                PrivacyLink: (c) =>
+                  c.map((e) => <Link href={[t('paths.privacy')]}>{e}</Link>),
               }).map((s, i) => (
                 <Note key={i}>{s}</Note>
               ))}

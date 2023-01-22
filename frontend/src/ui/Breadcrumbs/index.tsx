@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '../Link';
 import React, { Fragment, useMemo } from 'react';
 import styled from 'styled-components';
 
@@ -59,6 +59,4 @@ export const StyledBreadcrumbs = styled.p`
   color: ${({ theme }) => theme.colors.textMuted};
 `;
 
-export const StyledBreadcrumbItem = styled(Link)`
-  color: ${({ theme }) => theme.colors.textLink};
-`;
+export const StyledBreadcrumbItem = Link;
