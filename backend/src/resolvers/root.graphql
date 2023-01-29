@@ -10,3 +10,90 @@ type RootQuery {
 type RootMutation {
   _: Boolean
 }
+
+# Scalars
+
+scalar Date
+
+# Misc
+
+enum Gender {
+  Male
+  Female
+  Other
+}
+
+input GenderFilter {
+  eq: Gender
+  ne: Gender
+  in: [Gender!]
+  nin: [Gender!]
+}
+
+# Pagination
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: ID
+  endCursor: ID
+}
+
+# Filters
+
+input StringFilter {
+  eq: String
+  ne: String
+  in: [String!]
+  nin: [String!]
+}
+
+input IntFilter {
+  eq: Int
+  ne: Int
+  gt: Int
+  gte: Int
+  lt: Int
+  lte: Int
+  in: [Int!]
+  nin: [Int!]
+}
+
+input FloatFilter {
+  eq: Float
+  ne: Float
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  in: [Float!]
+  nin: [Float!]
+}
+
+input BooleanFilter {
+  eq: Boolean
+  ne: Boolean
+}
+
+input IDFilter {
+  eq: ID
+  ne: ID
+  in: [ID!]
+  nin: [ID!]
+}
+
+input DateFilter {
+  eq: Date
+  ne: Date
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+  in: [Date!]
+  nin: [Date!]
+}

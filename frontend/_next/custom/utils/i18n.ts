@@ -110,6 +110,8 @@ function loadTranslationFile(
     string,
     string | string[]
   >;
+  // Empty translation file
+  if (!translations) return;
 
   for (const [key, value] of Object.entries(translations)) {
     let translationKey = (

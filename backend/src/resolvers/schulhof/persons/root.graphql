@@ -1,0 +1,18 @@
+extend type RootQuery {
+  persons(
+    limit: Int = 25
+    after: ID
+    sort: [PersonSort!]
+    filter: PersonFilters
+  ): RootQueryPersonsConnection!
+}
+
+type RootQueryPersonsConnection {
+  edges: [RootQueryPersonsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type RootQueryPersonsEdge {
+  cursor: ID!
+  node: Person!
+}

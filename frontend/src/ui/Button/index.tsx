@@ -1,3 +1,4 @@
+import React, { HTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
 import { Variant } from '../utils';
 
@@ -34,3 +35,11 @@ export const Button = styled.button<ButtonProps>(
     }
   `
 );
+
+export interface IconButtonProps
+  extends ButtonProps,
+    HTMLAttributes<HTMLButtonElement> {}
+
+export const IconButton: React.FC<IconButtonProps> = ({ ...props }) => {
+  return <Button {...props}></Button>;
+};

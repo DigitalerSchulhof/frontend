@@ -15,7 +15,7 @@ export const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
   const t = useT();
 
   const { setJWT } = useAuth();
-  const [{ fetching: isLoading }, doLoginMutation] = useMutation(LoginPasswordDocument);
+  const [{ fetching }, doLoginMutation] = useMutation(LoginPasswordDocument);
 
   const [errorCode, setError] = useState<LoginPasswordErrorCode | null>(null);
 
@@ -44,7 +44,7 @@ export const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
   }, [doLoginMutation, usernameRef, passwordRef, setJWT]);
 
   const loadingComponent = useMemo(() => {
-    if (!isLoading) return null;
+    if (!fetching) return null;
 
     return (
       <LoadingModal
@@ -52,7 +52,7 @@ export const PasswordLoginProvider: LoginProvider = ({ privacyNote }) => {
         description={t('schulhof.login.modal.loading.description')}
       />
     );
-  }, [isLoading, t]);
+  }, [fetching, t]);
 
   const errorComponent = useMemo(() => {
     if (!errorCode) return null;

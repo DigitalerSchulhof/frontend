@@ -1,13 +1,10 @@
 import {
   MessageFormatElement,
-  parse
+  parse,
 } from '@formatjs/icu-messageformat-parser';
 import ts from 'typescript';
 import type { DshTransformerFactory } from '.';
-import {
-  getTranslation,
-  loadTranslations
-} from '../utils/i18n';
+import { getTranslation, loadTranslations } from '../utils/i18n';
 
 export const transformerFactory: DshTransformerFactory =
   ({ options: { isDev }, addDependency }) =>
@@ -17,92 +14,56 @@ export const transformerFactory: DshTransformerFactory =
       loadTranslations();
     }
 
-    const { factory } = context;
-
     function visitor(node: ts.Node): ts.Node {
       if (ts.isCallExpression(node)) {
         let {
           expression,
-          arguments: [arg, data],
+          arguments: [key, data],
         } = node;
-        // Make sure we also visit the body
+        // Make sure we also visit the body (if provided)
         if (data) data = visitor(data) as ts.Expression;
 
-        if (ts.isIdentifier(expression) && expression.text === 't') {
-          if (ts.isStringLiteral(arg)) {
-            const i18nKey = arg.text;
+        if (ts.isIdentifier(expression)) {
+          if (expression.text === 't') {
+            if (ts.isStringLiteral(key)) {
+              const i18nKey = key.text;
 
-            let translation = getTranslation(i18nKey) ?? {
-              type: 'string',
-              key: i18nKey,
-              value: i18nKey,
-              ast: parse(i18nKey),
-              file: null,
-            };
+              let translation = getTranslation(i18nKey) ?? {
+                type: 'string',
+                key: i18nKey,
+                value: i18nKey,
+                ast: parse(i18nKey),
+                file: null,
+              };
 
-            if (translation.file !== null) addDependency(translation.file);
+              if (translation.file !== null) addDependency(translation.file);
 
-            if (translation.type === 'string') {
-              return createTExpression(translation, data);
-            } else {
-              // If data is passed, instead of transforming `t('x.y', { ... }).map(...)` directly to
-              // `[t('x.y.2', { ... }), t('x.y.1', { ... }), ...].map(...)`, potentially causing side-effects if { ... } is/contains a function with side-effects,
-              // we wrap it in a temporary IIFE, so that it's only evaluated once:
-              // `(() => {let _temp = { ... }; return [t('x.y.0', _temp), t('x.y.1', _temp), ...]})().map(...)`
-
-              const dataRef = data ? factory.createUniqueName('data') : data;
-              const dataWrapper = data
-                ? (e: ts.Expression) =>
-                    factory.createCallExpression(
-                      factory.createParenthesizedExpression(
-                        factory.createArrowFunction(
-                          undefined,
-                          undefined,
-                          [],
-                          undefined,
-                          factory.createToken(
-                            ts.SyntaxKind.EqualsGreaterThanToken
-                          ),
-                          factory.createBlock([
-                            factory.createVariableStatement(
-                              undefined,
-                              factory.createVariableDeclarationList(
-                                [
-                                  factory.createVariableDeclaration(
-                                    dataRef as ts.Identifier,
-                                    undefined,
-                                    undefined,
-                                    data
-                                  ),
-                                ],
-                                ts.NodeFlags.Const
-                              )
-                            ),
-                            factory.createReturnStatement(e),
-                          ])
-                        )
-                      ),
-                      undefined,
-                      []
-                    )
-                : (e: ts.Expression) => e;
-
-              return dataWrapper(
-                factory.createArrayLiteralExpression(
-                  translation.asts.map((ast) =>
-                    createTExpression(
-                      {
-                        key: translation.key,
-                        ast,
-                      },
-                      dataRef
-                    )
-                  )
-                )
+              return ts.factory.createCallExpression(
+                ts.factory.createIdentifier('t'),
+                undefined,
+                [createTranslationAstObject(translation), data].filter(Boolean)
               );
+            } else {
+              // Can be called with an expression that evaluates to a `TranslationAST` in which case there is no need to do anything
             }
-          } else {
-            throw new Error('t() argument must be a string');
+          } else if (expression.text === 'getTranslation') {
+            if (ts.isStringLiteral(key)) {
+              const i18nKey = key.text;
+
+              let translation = getTranslation(i18nKey) ?? {
+                type: 'string',
+                key: i18nKey,
+                value: i18nKey,
+                ast: parse(i18nKey),
+                file: null,
+              };
+
+              if (translation.file !== null) addDependency(translation.file);
+
+              return createTranslationAstObject(translation);
+            } else {
+              throw new Error('getTranslation() key argument must be a string');
+            }
           }
         }
       }
@@ -113,18 +74,34 @@ export const transformerFactory: DshTransformerFactory =
     return ts.visitNode(sourceFile, visitor);
   };
 
-function createTExpression(
-  translation: { key: string; ast: MessageFormatElement[] },
-  data: ts.Expression
-): ts.Expression {
-  return ts.factory.createCallExpression(
-    ts.factory.createIdentifier('t'),
-    undefined,
+function createTranslationAstObject(
+  translation: {
+    key: string;
+  } & (
+    | {
+        ast: MessageFormatElement[];
+      }
+    | {
+        asts: MessageFormatElement[][];
+      }
+  )
+): ts.ObjectLiteralExpression {
+  return ts.factory.createObjectLiteralExpression(
     [
-      ts.factory.createStringLiteral(translation.key),
-      jsonToTSAst(translation.ast),
-      data,
-    ].filter(Boolean)
+      ts.factory.createPropertyAssignment(
+        ts.factory.createIdentifier('key'),
+        ts.factory.createStringLiteral(translation.key)
+      ),
+      ts.factory.createPropertyAssignment(
+        ts.factory.createIdentifier('ast'),
+        'ast' in translation
+          ? jsonToTSAst(translation.ast)
+          : ts.factory.createArrayLiteralExpression(
+              translation.asts.map(jsonToTSAst)
+            )
+      ),
+    ],
+    true
   );
 }
 

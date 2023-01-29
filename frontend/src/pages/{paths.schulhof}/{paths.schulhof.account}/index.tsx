@@ -40,6 +40,9 @@ const Page: NextPage = () => {
             ),
           })}
         </p>
+        <Link href={[t('paths.schulhof'), t('paths.schulhof.administration')]}>
+          Verwaltung
+        </Link>
       </Col>
     </Flex>
   );

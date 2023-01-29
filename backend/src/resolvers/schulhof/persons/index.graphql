@@ -1,0 +1,44 @@
+type Person {
+  id: ID!
+
+  birthdate: Date
+  firstname: String
+  gender: Gender
+  lastname: String
+  type: PersonType
+}
+
+input PersonSort {
+  by: PersonSortOption!
+  direction: SortDirection!
+}
+
+enum PersonSortOption {
+  birthdate
+  firstname
+  lastname
+}
+
+input PersonFilters {
+  birthdate: DateFilter
+  firstname: StringFilter
+  gender: GenderFilter
+  lastname: StringFilter
+  type: PersonTypeFilter
+}
+
+
+enum PersonType {
+  Student
+  Teacher
+  Parent
+  Administration
+  Other
+}
+
+input PersonTypeFilter {
+  eq: PersonType
+  neq: PersonType
+  in: [PersonType!]
+  nin: [PersonType!]
+}

@@ -17,6 +17,7 @@ for (const query of queries) {
     schema: path.join(__root, 'backend/src/resolvers/**/*.graphql'),
     config: {
       addUnderscoreToArgsType: true,
+      skipTypename: true,
       immutableTypes: true,
       strictScalars: true,
       scalars: {

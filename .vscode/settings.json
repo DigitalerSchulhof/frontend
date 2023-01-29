@@ -11,8 +11,5 @@
   },
   "typescript.enablePromptUseWorkspaceTsdk": false,
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": [
-    "Jesper"
-  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

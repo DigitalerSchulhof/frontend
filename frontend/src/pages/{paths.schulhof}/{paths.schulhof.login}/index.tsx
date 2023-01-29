@@ -16,7 +16,7 @@ export interface LoginProviderProps {
 
 export type LoginProvider = React.ComponentType<LoginProviderProps>;
 
-const LoginProviderPassword = dynamic(() =>
+const LoginProviderPassword = dynamic(
   import('../../../schulhof/login/providers/password').then(
     (res) => res.PasswordLoginProvider
   )
