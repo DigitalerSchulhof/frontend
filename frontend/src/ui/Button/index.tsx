@@ -1,3 +1,4 @@
+import { Icon } from '@UI/Icon';
 import React, { HTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
 import { Variant } from '../utils';
@@ -38,8 +39,19 @@ export const Button = styled.button<ButtonProps>(
 
 export interface IconButtonProps
   extends ButtonProps,
-    HTMLAttributes<HTMLButtonElement> {}
+    HTMLAttributes<HTMLButtonElement> {
+  icon: React.ReactNode;
+}
 
-export const IconButton: React.FC<IconButtonProps> = ({ ...props }) => {
-  return <Button {...props}></Button>;
+const UnstyledIconButton: React.FC<IconButtonProps> = ({ icon, ...props }) => {
+  return <Button {...props}>{icon}</Button>;
 };
+
+export const IconButton = styled(UnstyledIconButton)`
+  padding: 0;
+  margin: 2px;
+
+  & > ${Icon} {
+    margin: 1px;
+  }
+`;

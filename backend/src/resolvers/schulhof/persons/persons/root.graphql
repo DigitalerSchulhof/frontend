@@ -1,10 +1,12 @@
 extend type RootQuery {
   persons(
     limit: Int = 25
-    after: ID
+    offset: Int = 0
     sort: [PersonSort!]
     filter: PersonFilters
   ): RootQueryPersonsConnection!
+
+  person(id: ID!): Person
 }
 
 type RootQueryPersonsConnection {
@@ -13,6 +15,5 @@ type RootQueryPersonsConnection {
 }
 
 type RootQueryPersonsEdge {
-  cursor: ID!
   node: Person!
 }

@@ -1,25 +1,26 @@
-import { createYoga } from 'graphql-yoga';
-import { createServer } from 'http';
-import { loadConfig } from './config';
-import { createContext, CreateContextContext } from './context';
-import { createSchema } from './schema';
+import * as Koa from 'koa';
+import * as compress from 'koa-compress';
+import { createYoga } from './yoga';
 
-const config = loadConfig();
+const app = new Koa();
+const yoga = createYoga();
 
-const createContextContext: CreateContextContext = {
-  config,
-};
+app.use(compress());
 
-const server = createServer(
-  createYoga({
-    batching: true,
-    schema: createSchema(),
-    context: createContext(createContextContext),
-    landingPage: false,
-    graphqlEndpoint: '/',
-  })
-);
+app.use(async (ctx, next) => {
+  const response = await yoga.handleNodeRequest(ctx.req, ctx);
 
-server.listen(4000, () => {
+  ctx.status = response.status;
+
+  response.headers.forEach((value, key) => {
+    ctx.append(key, value);
+  });
+
+  ctx.body = response.body;
+
+  next();
+});
+
+app.listen(4000, () => {
   console.log('🚀 Server ready');
 });

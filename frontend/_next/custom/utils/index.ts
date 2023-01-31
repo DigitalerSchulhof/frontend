@@ -1,6 +1,6 @@
-import fs from 'fs';
-import JSON5 from 'json5';
-import path from 'path';
+import * as fs from 'fs';
+import * as JSON5 from 'json5';
+import * as path from 'path';
 
 export const __root = path.resolve(__dirname, '../../../..');
 export const __frontend = path.resolve(__root, 'frontend');

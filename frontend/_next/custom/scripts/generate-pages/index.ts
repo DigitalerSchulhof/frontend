@@ -1,6 +1,6 @@
-import chokidar from 'chokidar';
-import fs from 'fs';
-import path from 'path';
+import * as chokidar from 'chokidar';
+import * as fs from 'fs';
+import * as path from 'path';
 import { isWatchMode, __next, __src } from '../../utils';
 import { generatePage, generatePages, getTranslatedPagePath } from './page';
 

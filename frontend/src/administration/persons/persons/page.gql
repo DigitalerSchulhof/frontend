@@ -1,10 +1,10 @@
-query Page($limit: Int!, $after: ID, $sort: [PersonSort!], $filter: PersonFilters) {
-  persons(
-    after: $after,
-    limit: $limit,
-    sort: $sort,
-    filter: $filter
-  ) {
+query Page(
+  $limit: Int!
+  $after: ID
+  $sort: [PersonSort!]
+  $filter: PersonFilters
+) {
+  persons(after: $after, limit: $limit, sort: $sort, filter: $filter) {
     edges {
       node {
         id

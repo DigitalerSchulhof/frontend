@@ -1,4 +1,4 @@
-import ts from 'typescript';
+import * as ts from 'typescript';
 import { LoaderDefinitionFunction } from 'webpack';
 import { transformerFactory as transformFactoryI18n } from './i18n';
 

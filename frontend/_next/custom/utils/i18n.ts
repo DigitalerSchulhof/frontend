@@ -2,12 +2,12 @@ import {
   MessageFormatElement,
   parse,
 } from '@formatjs/icu-messageformat-parser';
-import chokidar from 'chokidar';
-import fs from 'fs';
-import globby from 'globby';
-import path from 'path';
+import * as chokidar from 'chokidar';
+import * as fs from 'fs';
+import * as globby from 'globby';
+import * as path from 'path';
 import { EventEmitter } from 'stream';
-import yaml from 'yaml';
+import * as yaml from 'yaml';
 import { flattenObject, __frontend, __root } from '.';
 
 export const DEFAULT_LOCALE = 'de-DE' as string;

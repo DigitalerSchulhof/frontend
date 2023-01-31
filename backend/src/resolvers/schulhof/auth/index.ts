@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { BackendContext } from '../../types';
 
 export async function createJwt(

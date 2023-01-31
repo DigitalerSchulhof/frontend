@@ -1,3 +1,5 @@
+import { Button } from '@UI/Button';
+import { Icon } from '@UI/Icon';
 import styled, { css } from 'styled-components';
 
 const cellProps = css`
@@ -5,11 +7,18 @@ const cellProps = css`
   border-left: 0;
   border-right: 0;
 
-  padding: 3px 7px;
+  padding: 3px;
   text-align: left;
   vertical-align: middle;
 
-  height: 24px;
+  & > ${Icon} {
+    margin: 2px;
+  }
+
+  & > ${Button} {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 `;
 
 export const TableList = styled.table`
@@ -25,6 +34,7 @@ export const TableListRow = styled.tr``;
 export const TableListHeader = styled.th`
   font-weight: bold;
   line-height: 1.5em;
+  height: 28px;
 
   ${cellProps}
 `;
@@ -38,12 +48,14 @@ export const TableListIconHeader = styled(TableListHeader)<{
   nr?: number;
 }>(
   ({ nr = 1 }) => css`
-    width: ${nr * 24 + /* padding */ 2 * 7}px;
+    width: ${nr * 24 - 4 + /* padding */ 2 * 3}px;
   `
 );
 
 export const TableListBody = styled.tbody``;
 
 export const TableListCell = styled.td`
+  height: 26px;
+
   ${cellProps}
 `;

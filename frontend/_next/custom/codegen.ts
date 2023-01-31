@@ -2,8 +2,8 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 import type { TypeScriptTypedDocumentNodesConfig } from '@graphql-codegen/typed-document-node';
 import type { TypeScriptPluginConfig } from '@graphql-codegen/typescript';
 import type { TypeScriptDocumentsPluginConfig } from '@graphql-codegen/typescript-operations';
-import globby from 'globby';
-import path from 'path';
+import * as globby from 'globby';
+import * as path from 'path';
 import { __root, __src } from './utils';
 
 const generates: CodegenConfig['generates'] = {};

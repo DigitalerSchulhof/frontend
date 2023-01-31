@@ -1,11 +1,34 @@
 import { useT } from '@i18n';
 import { Breadcrumbs } from '@UI/Breadcrumbs';
+import { IconButton } from '@UI/Button';
 import { Col } from '@UI/Col';
 import { Flex } from '@UI/Flex';
 import { Heading } from '@UI/Heading';
 import {
-  TableList, TableListBody,
-  TableListCell, TableListHead, TableListHeader, TableListIconHeader, TableListRow
+  IconGenderFemale,
+  IconGenderMale,
+  IconGenderOther,
+  IconPersonAdministrator,
+  IconPersonChangeTeacherIdAction,
+  IconPersonDeleteAccountAction,
+  IconPersonDeletePersonWithAction,
+  IconPersonMailAction,
+  IconPersonOther,
+  IconPersonParent,
+  IconPersonPermissionsAction,
+  IconPersonStudent,
+  IconPersonTeacher,
+} from '@UI/Icon';
+import { Loading } from '@UI/Loading';
+import { Note } from '@UI/Note';
+import {
+  TableList,
+  TableListBody,
+  TableListCell,
+  TableListHead,
+  TableListHeader,
+  TableListIconHeader,
+  TableListRow,
 } from '@UI/TableList';
 import { breadcrumbs } from '.';
 
@@ -13,55 +36,6 @@ export const Page = () => {
   const t = useT();
   // const { hasPermission } = usePermissions();
   const hasPermission = () => true;
-
-  // const table = useMakeTable({
-  //   document: PageDocument,
-  //   pathToConnection: ['persons', 'edges'],
-  // })({
-  //   rowId: (row) => row.id,
-  // columns: [
-  //   {
-  //     field: 'type',
-  //     title: null,
-  //     render: (row) => {
-  //       return <span>{row.type}</span>;
-  //     },
-  //     sortable: false,
-  //     permission: 'schulhof.administration.persons.type.view',
-  //   },
-  //   {
-  //     field: 'lastname',
-  //     title: getTranslation(
-  //       'schulhof.administration.persons.persons.page.table.columns.lastname'
-  //     ),
-  //     render: (row) => {
-  //       return <span>{row.lastname}</span>;
-  //     },
-  //     sortable: true,
-  //     permission: 'schulhof.administration.persons.lastname.view',
-  //   },
-  //   {
-  //     field: 'firstname',
-  //     title: getTranslation(
-  //       'schulhof.administration.persons.persons.page.table.columns.firstname'
-  //     ),
-  //     render: (row) => {
-  //       return <span>{row.firstname}</span>;
-  //     },
-  //     sortable: true,
-  //     permission: 'schulhof.administration.persons.firstname.view',
-  //   },
-  //   {
-  //     field: 'gender',
-  //     title: null,
-  //     render: (row) => {
-  //       return <span>{row.gender}</span>;
-  //     },
-  //     sortable: false,
-  //     permission: 'schulhof.administration.persons.gender.view',
-  //   },
-  // ],
-  // });
 
   return (
     <Flex>
@@ -76,11 +50,11 @@ export const Page = () => {
         <TableList>
           <TableListHead>
             <TableListRow>
-              {hasPermission('schulhof.administration.persons.type.view') ? (
+              {hasPermission('schulhof.administration.persons.type.read') ? (
                 <TableListIconHeader />
               ) : null}
               {hasPermission(
-                'schulhof.administration.persons.lastname.view'
+                'schulhof.administration.persons.lastname.read'
               ) ? (
                 <TableListHeader>
                   {t(
@@ -89,7 +63,7 @@ export const Page = () => {
                 </TableListHeader>
               ) : null}
               {hasPermission(
-                'schulhof.administration.persons.firstname.view'
+                'schulhof.administration.persons.firstname.read'
               ) ? (
                 <TableListHeader>
                   {t(
@@ -97,100 +71,162 @@ export const Page = () => {
                   )}
                 </TableListHeader>
               ) : null}
-              {hasPermission('schulhof.administration.persons.gender.view') ? (
+              {hasPermission('schulhof.administration.persons.gender.read') ? (
                 <TableListIconHeader />
               ) : null}
+              <TableListIconHeader nr={5} />
             </TableListRow>
           </TableListHead>
           <TableListBody>
             <TableListRow>
               <TableListCell>
-                S
+                <IconPersonStudent />
+              </TableListCell>
+              <TableListCell>Engberg</TableListCell>
+              <TableListCell>Jesper</TableListCell>
+              <TableListCell>
+                <IconGenderMale />
               </TableListCell>
               <TableListCell>
-                Engberg
-              </TableListCell>
-              <TableListCell>
-                Jesper
-              </TableListCell>
-              <TableListCell>
-                M
+                <IconButton icon={<IconPersonMailAction />} />
+                <IconButton icon={<IconPersonPermissionsAction />} />
+                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
+                <IconButton
+                  icon={<IconPersonDeleteAccountAction />}
+                  variant="error"
+                />
+                <IconButton
+                  icon={<IconPersonDeletePersonWithAction />}
+                  variant="error"
+                />
               </TableListCell>
             </TableListRow>
             <TableListRow>
               <TableListCell>
-                S
+                <IconPersonTeacher />
+              </TableListCell>
+              <TableListCell>Engberg</TableListCell>
+              <TableListCell>Jesper</TableListCell>
+              <TableListCell>
+                <IconGenderFemale />
               </TableListCell>
               <TableListCell>
-                Engberg
-              </TableListCell>
-              <TableListCell>
-                Jesper
-              </TableListCell>
-              <TableListCell>
-                M
+                <IconButton icon={<IconPersonMailAction />} />
+                <IconButton icon={<IconPersonPermissionsAction />} />
+                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
+                <IconButton
+                  icon={<IconPersonDeleteAccountAction />}
+                  variant="error"
+                />
+                <IconButton
+                  icon={<IconPersonDeletePersonWithAction />}
+                  variant="error"
+                />
               </TableListCell>
             </TableListRow>
             <TableListRow>
               <TableListCell>
-                S
+                <IconPersonParent />
+              </TableListCell>
+              <TableListCell>Engberg</TableListCell>
+              <TableListCell>Jesper</TableListCell>
+              <TableListCell>
+                <IconGenderMale />
               </TableListCell>
               <TableListCell>
-                Engberg
-              </TableListCell>
-              <TableListCell>
-                Jesper
-              </TableListCell>
-              <TableListCell>
-                M
+                <IconButton icon={<IconPersonMailAction />} />
+                <IconButton icon={<IconPersonPermissionsAction />} />
+                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
+                <IconButton
+                  icon={<IconPersonDeleteAccountAction />}
+                  variant="error"
+                />
+                <IconButton
+                  icon={<IconPersonDeletePersonWithAction />}
+                  variant="error"
+                />
               </TableListCell>
             </TableListRow>
             <TableListRow>
               <TableListCell>
-                S
+                <IconPersonAdministrator />
+              </TableListCell>
+              <TableListCell>Engberg</TableListCell>
+              <TableListCell>Jesper</TableListCell>
+              <TableListCell>
+                <IconGenderMale />
               </TableListCell>
               <TableListCell>
-                Engberg
-              </TableListCell>
-              <TableListCell>
-                Jesper
-              </TableListCell>
-              <TableListCell>
-                M
+                <IconButton icon={<IconPersonMailAction />} />
+                <IconButton icon={<IconPersonPermissionsAction />} />
+                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
+                <IconButton
+                  icon={<IconPersonDeleteAccountAction />}
+                  variant="error"
+                />
+                <IconButton
+                  icon={<IconPersonDeletePersonWithAction />}
+                  variant="error"
+                />
               </TableListCell>
             </TableListRow>
-            {/* {data.fetching ? (
-              <TableListRow>
-                <TableListCell>
-                  <Flex justifyContent="center">
-                    <Loading />
-                  </Flex>
-                </TableListCell>
-              </TableListRow>
-            ) : data.error ? (
-              <TableListRow>
-                <TableListCell
-                  colSpan={
-                    visibleColumns.length +
-                    (tableOptions.actions?.length ? 1 : 0)
-                  }
-                >
-                  <Flex justifyContent="center">Fetch error</Flex>
-                </TableListCell>
-              </TableListRow>
-            ) : data.data ? (
-              data.data.map((row: any) => (
-                <TableListRow key={tableOptions.rowId(row)}>
-                  {visibleColumns.map((column) => (
-                    <TableListCell key={column.field}>
-                      {column.render(row)}
-                    </TableListCell>
-                  ))}
-                </TableListRow>
-              ))
-            ) : (
-              <>Invalid State</>
-            )}  */}
+            <TableListRow>
+              <TableListCell>
+                <IconPersonOther />
+              </TableListCell>
+              <TableListCell>Engberg</TableListCell>
+              <TableListCell>Jesper</TableListCell>
+              <TableListCell>
+                <IconGenderMale />
+              </TableListCell>
+              <TableListCell>
+                <IconButton icon={<IconPersonMailAction />} />
+                <IconButton icon={<IconPersonPermissionsAction />} />
+                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
+                <IconButton
+                  icon={<IconPersonDeleteAccountAction />}
+                  variant="error"
+                />
+                <IconButton
+                  icon={<IconPersonDeletePersonWithAction />}
+                  variant="error"
+                />
+              </TableListCell>
+            </TableListRow>
+            <TableListRow>
+              <TableListCell colSpan={5}>
+                <Flex flexDirection="column" alignItems="center">
+                  <Loading />
+                  <Note>
+                    {t(
+                      'schulhof.administration.persons.persons.page.table.loading'
+                    )}
+                  </Note>
+                </Flex>
+              </TableListCell>
+            </TableListRow>
+            <TableListRow>
+              <TableListCell colSpan={5}>
+                <Flex justifyContent="center">
+                  <Note variant="error">
+                    {t(
+                      'schulhof.administration.persons.persons.page.table.error'
+                    )}
+                  </Note>
+                </Flex>
+              </TableListCell>
+            </TableListRow>
+            <TableListRow>
+              <TableListCell colSpan={5}>
+                <Flex justifyContent="center">
+                  <Note>
+                    {t(
+                      'schulhof.administration.persons.persons.page.table.empty'
+                    )}
+                  </Note>
+                </Flex>
+              </TableListCell>
+            </TableListRow>
           </TableListBody>
         </TableList>
       </Col>

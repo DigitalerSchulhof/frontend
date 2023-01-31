@@ -1,0 +1,7 @@
+extend type Person {
+  account: Account
+}
+
+extend type Account {
+  person: Person!
+}

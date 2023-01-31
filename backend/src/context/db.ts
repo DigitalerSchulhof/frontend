@@ -18,6 +18,6 @@ export function createDbContext(context: CreateContextContext): DbContext {
 
   return {
     db,
-    query: (...args) => db.query(aql(...args)),
+    query: (...args) => db.query(aql(...args), { fullCount: true }),
   };
 }

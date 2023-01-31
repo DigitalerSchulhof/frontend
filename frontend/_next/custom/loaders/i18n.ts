@@ -2,7 +2,7 @@ import {
   MessageFormatElement,
   parse,
 } from '@formatjs/icu-messageformat-parser';
-import ts from 'typescript';
+import * as ts from 'typescript';
 import type { DshTransformerFactory } from '.';
 import { getTranslation, loadTranslations } from '../utils/i18n';
 

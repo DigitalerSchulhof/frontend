@@ -8,9 +8,9 @@ import {
   TimeElement,
   TYPE
 } from '@formatjs/icu-messageformat-parser';
-import fs from 'fs';
-import path from 'path';
-import ts from 'typescript';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as ts from 'typescript';
 import { isWatchMode, __src } from '../../utils';
 import {
   getTranslations,

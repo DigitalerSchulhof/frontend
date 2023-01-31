@@ -27,12 +27,11 @@ input PersonFilters {
   type: PersonTypeFilter
 }
 
-
 enum PersonType {
   Student
   Teacher
   Parent
-  Administration
+  Administrator
   Other
 }
 

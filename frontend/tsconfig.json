@@ -4,6 +4,7 @@
     "moduleResolution": "Node",
     "target": "ESNext",
     "lib": ["ESNext", "DOM"],
+    "esModuleInterop": true,
     "jsx": "preserve",
     "paths": {
       "@i18n": ["./src/i18n"],
@@ -11,7 +12,7 @@
       "@UI": ["./src/ui"],
       "@UI/*": ["./src/ui/*"],
       "@hooks": ["./src/hooks"],
-      "@hooks/*": ["./src/hooks/*"],
+      "@hooks/*": ["./src/hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

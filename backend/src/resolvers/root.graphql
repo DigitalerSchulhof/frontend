@@ -40,8 +40,9 @@ enum SortDirection {
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
-  startCursor: ID
-  endCursor: ID
+  nextPageOffset: Int
+  previousPageOffset: Int
+  totalPages: Int!
 }
 
 # Filters

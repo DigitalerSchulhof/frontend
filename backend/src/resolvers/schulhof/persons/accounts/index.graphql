@@ -1,0 +1,16 @@
+type Account {
+  username: String
+}
+
+input AccountSort {
+  by: AccountSortOption!
+  direction: SortDirection!
+}
+
+enum AccountSortOption {
+  username
+}
+
+input AccountFilters {
+  username: StringFilter
+}

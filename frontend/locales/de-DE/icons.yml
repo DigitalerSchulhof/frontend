@@ -1,0 +1,20 @@
+person:
+  type:
+    student: Schüler
+    teacher: Lehrer
+    parent: Elternteil
+    administrator: Verwaltungsangestellter
+    other: Extern
+  action:
+    mail: Nachricht schreiben
+    permissions: Rechte und Rollen vergeben
+    changeTeacherId: Lehrerkürzel ändern
+    delete:
+      account: Nutzerkonto löschen
+      person:
+        only: Person löschen
+        with: Person und Nutzerkonto löschen
+  gender:
+    male: Männlich
+    female: Weiblich
+    other: Divers
