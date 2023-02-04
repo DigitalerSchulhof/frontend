@@ -1,8 +1,8 @@
-import { GraphQLError, Kind, print } from 'graphql';
+import { hasPermissionResolver } from './resolvers';
 import {
-  DateScalarConfig,
+  FieldAccessResolvers,
   RootMutationResolvers,
-  RootQueryResolvers,
+  RootQueryResolvers
 } from './types';
 
 export const RootQuery = {
@@ -12,3 +12,8 @@ export const RootQuery = {
 export const RootMutation = {
   _: () => null,
 } satisfies RootMutationResolvers;
+
+export const FieldAccess = {
+  read: hasPermissionResolver((p) => p.read),
+  write: hasPermissionResolver((p) => p.write),
+} satisfies FieldAccessResolvers;

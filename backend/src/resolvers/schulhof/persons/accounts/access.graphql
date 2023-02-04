@@ -1,0 +1,11 @@
+extend type Account {
+  access: AccountAccess!
+}
+
+type AccountAccess {
+  fields: AccountFieldsAccess!
+}
+
+type AccountFieldsAccess {
+  username: FieldAccess!
+}

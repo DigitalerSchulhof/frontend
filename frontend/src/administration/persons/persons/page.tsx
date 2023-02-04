@@ -30,12 +30,18 @@ import {
   TableListIconHeader,
   TableListRow,
 } from '@UI/TableList';
+import { useQuery } from 'urql';
 import { breadcrumbs } from '.';
+import { Gender, PageDocument, PersonType } from './page.query';
 
 export const Page = () => {
   const t = useT();
   // const { hasPermission } = usePermissions();
-  const hasPermission = () => true;
+  const hasPermission = (_: string) => true;
+
+  const [{ data, fetching }] = useQuery({
+    query: PageDocument,
+  });
 
   return (
     <Flex>
@@ -50,172 +56,102 @@ export const Page = () => {
         <TableList>
           <TableListHead>
             <TableListRow>
-              {hasPermission('schulhof.administration.persons.type.read') ? (
-                <TableListIconHeader />
-              ) : null}
-              {hasPermission(
-                'schulhof.administration.persons.lastname.read'
-              ) ? (
+              {canSeeColumn.type ? <TableListIconHeader /> : null}
+              {canSeeColumn.lastname ? (
                 <TableListHeader>
                   {t(
                     'schulhof.administration.persons.persons.page.table.columns.lastname'
                   )}
                 </TableListHeader>
               ) : null}
-              {hasPermission(
-                'schulhof.administration.persons.firstname.read'
-              ) ? (
+              {canSeeColumn.firstname ? (
                 <TableListHeader>
                   {t(
                     'schulhof.administration.persons.persons.page.table.columns.firstname'
                   )}
                 </TableListHeader>
               ) : null}
-              {hasPermission('schulhof.administration.persons.gender.read') ? (
-                <TableListIconHeader />
-              ) : null}
+              {canSeeColumn.gender ? <TableListIconHeader /> : null}
               <TableListIconHeader nr={5} />
             </TableListRow>
           </TableListHead>
           <TableListBody>
-            <TableListRow>
-              <TableListCell>
-                <IconPersonStudent />
-              </TableListCell>
-              <TableListCell>Engberg</TableListCell>
-              <TableListCell>Jesper</TableListCell>
-              <TableListCell>
-                <IconGenderMale />
-              </TableListCell>
-              <TableListCell>
-                <IconButton icon={<IconPersonMailAction />} />
-                <IconButton icon={<IconPersonPermissionsAction />} />
-                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
-                <IconButton
-                  icon={<IconPersonDeleteAccountAction />}
-                  variant="error"
-                />
-                <IconButton
-                  icon={<IconPersonDeletePersonWithAction />}
-                  variant="error"
-                />
-              </TableListCell>
-            </TableListRow>
-            <TableListRow>
-              <TableListCell>
-                <IconPersonTeacher />
-              </TableListCell>
-              <TableListCell>Engberg</TableListCell>
-              <TableListCell>Jesper</TableListCell>
-              <TableListCell>
-                <IconGenderFemale />
-              </TableListCell>
-              <TableListCell>
-                <IconButton icon={<IconPersonMailAction />} />
-                <IconButton icon={<IconPersonPermissionsAction />} />
-                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
-                <IconButton
-                  icon={<IconPersonDeleteAccountAction />}
-                  variant="error"
-                />
-                <IconButton
-                  icon={<IconPersonDeletePersonWithAction />}
-                  variant="error"
-                />
-              </TableListCell>
-            </TableListRow>
-            <TableListRow>
-              <TableListCell>
-                <IconPersonParent />
-              </TableListCell>
-              <TableListCell>Engberg</TableListCell>
-              <TableListCell>Jesper</TableListCell>
-              <TableListCell>
-                <IconGenderMale />
-              </TableListCell>
-              <TableListCell>
-                <IconButton icon={<IconPersonMailAction />} />
-                <IconButton icon={<IconPersonPermissionsAction />} />
-                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
-                <IconButton
-                  icon={<IconPersonDeleteAccountAction />}
-                  variant="error"
-                />
-                <IconButton
-                  icon={<IconPersonDeletePersonWithAction />}
-                  variant="error"
-                />
-              </TableListCell>
-            </TableListRow>
-            <TableListRow>
-              <TableListCell>
-                <IconPersonAdministrator />
-              </TableListCell>
-              <TableListCell>Engberg</TableListCell>
-              <TableListCell>Jesper</TableListCell>
-              <TableListCell>
-                <IconGenderMale />
-              </TableListCell>
-              <TableListCell>
-                <IconButton icon={<IconPersonMailAction />} />
-                <IconButton icon={<IconPersonPermissionsAction />} />
-                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
-                <IconButton
-                  icon={<IconPersonDeleteAccountAction />}
-                  variant="error"
-                />
-                <IconButton
-                  icon={<IconPersonDeletePersonWithAction />}
-                  variant="error"
-                />
-              </TableListCell>
-            </TableListRow>
-            <TableListRow>
-              <TableListCell>
-                <IconPersonOther />
-              </TableListCell>
-              <TableListCell>Engberg</TableListCell>
-              <TableListCell>Jesper</TableListCell>
-              <TableListCell>
-                <IconGenderMale />
-              </TableListCell>
-              <TableListCell>
-                <IconButton icon={<IconPersonMailAction />} />
-                <IconButton icon={<IconPersonPermissionsAction />} />
-                <IconButton icon={<IconPersonChangeTeacherIdAction />} />
-                <IconButton
-                  icon={<IconPersonDeleteAccountAction />}
-                  variant="error"
-                />
-                <IconButton
-                  icon={<IconPersonDeletePersonWithAction />}
-                  variant="error"
-                />
-              </TableListCell>
-            </TableListRow>
-            <TableListRow>
-              <TableListCell colSpan={5}>
-                <Flex flexDirection="column" alignItems="center">
-                  <Loading />
-                  <Note>
-                    {t(
-                      'schulhof.administration.persons.persons.page.table.loading'
-                    )}
-                  </Note>
-                </Flex>
-              </TableListCell>
-            </TableListRow>
-            <TableListRow>
-              <TableListCell colSpan={5}>
-                <Flex justifyContent="center">
-                  <Note variant="error">
-                    {t(
-                      'schulhof.administration.persons.persons.page.table.error'
-                    )}
-                  </Note>
-                </Flex>
-              </TableListCell>
-            </TableListRow>
+            {fetching ? (
+              <TableListRow>
+                <TableListCell colSpan={5}>
+                  <Flex flexDirection="column" alignItems="center">
+                    <Loading />
+                    <Note>
+                      {t(
+                        'schulhof.administration.persons.persons.page.table.loading'
+                      )}
+                    </Note>
+                  </Flex>
+                </TableListCell>
+              </TableListRow>
+            ) : data ? (
+              data.persons.edges.map(({ node }) => (
+                <TableListRow>
+                  {canSeeColumn.type ? (
+                    <TableListCell>
+                      {node.type
+                        ? {
+                            [PersonType.Student]: <IconPersonStudent />,
+                            [PersonType.Teacher]: <IconPersonTeacher />,
+                            [PersonType.Parent]: <IconPersonParent />,
+                            [PersonType.Administrator]: (
+                              <IconPersonAdministrator />
+                            ),
+                            [PersonType.Other]: <IconPersonOther />,
+                          }[node.type]
+                        : null}
+                    </TableListCell>
+                  ) : null}
+                  {canSeeColumn.lastname ? (
+                    <TableListCell>{node.lastname}</TableListCell>
+                  ) : null}
+                  {canSeeColumn.firstname ? (
+                    <TableListCell>{node.firstname}</TableListCell>
+                  ) : null}
+                  {canSeeColumn.gender ? (
+                    <TableListCell>
+                      {node.gender
+                        ? {
+                            [Gender.Male]: <IconGenderMale />,
+                            [Gender.Female]: <IconGenderFemale />,
+                            [Gender.Other]: <IconGenderOther />,
+                          }[node.gender]
+                        : null}
+                    </TableListCell>
+                  ) : null}
+                  <TableListCell>
+                    <IconButton icon={<IconPersonMailAction />} />
+                    <IconButton icon={<IconPersonPermissionsAction />} />
+                    <IconButton icon={<IconPersonChangeTeacherIdAction />} />
+                    <IconButton
+                      icon={<IconPersonDeleteAccountAction />}
+                      variant="error"
+                    />
+                    <IconButton
+                      icon={<IconPersonDeletePersonWithAction />}
+                      variant="error"
+                    />
+                  </TableListCell>
+                </TableListRow>
+              ))
+            ) : (
+              <TableListRow>
+                <TableListCell colSpan={5}>
+                  <Flex justifyContent="center">
+                    <Note variant="error">
+                      {t(
+                        'schulhof.administration.persons.persons.page.table.error'
+                      )}
+                    </Note>
+                  </Flex>
+                </TableListCell>
+              </TableListRow>
+            )}
             <TableListRow>
               <TableListCell colSpan={5}>
                 <Flex justifyContent="center">

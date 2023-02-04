@@ -1,6 +1,5 @@
 type Person {
   id: ID!
-
   birthdate: Date
   firstname: String
   gender: Gender

@@ -1,0 +1,28 @@
+schulhof:
+  administration:
+    person:
+      add:
+      delete:
+      read:
+        - birthdate
+        - type
+        - lastname
+        - firstname
+        - gender
+        - permissions
+        - teacherId
+      write:
+        - birthdate
+        - type
+        - lastname
+        - firstname
+        - gender
+        - permissions
+        - teacherId
+  mail:
+    send:
+      - student
+      - teacher
+      - parent
+      - administrator
+      - other

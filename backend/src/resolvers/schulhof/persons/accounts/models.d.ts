@@ -14,3 +14,6 @@ export interface Account extends Collection {
  * @edge persons_accounts
  */
 export interface PersonsAccounts extends Edge<Person, Account> {}
+
+export type AccountAccess = Account;
+export type AccountFieldsAccess = Account;

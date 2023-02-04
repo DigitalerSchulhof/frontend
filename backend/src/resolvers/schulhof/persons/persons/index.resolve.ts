@@ -1,32 +1,32 @@
+import { withPermission } from '../../../resolvers';
 import { Gender, PersonResolvers, PersonType } from '../../../types';
-import { withPermission } from '../../../utils';
 
 export const Person = {
   id: (p) => p._key,
 
   birthdate: withPermission(
-    'schulhof.administration.persons.persons.type.read',
+    'schulhof.administration.persons.persons.read.birthdate',
     (p) => p.birthdate
   ),
   firstname: withPermission(
-    'schulhof.administration.persons.persons.firstname.read',
+    'schulhof.administration.persons.persons.read.firstname',
     (p) => p.firstname
   ),
   lastname: withPermission(
-    'schulhof.administration.persons.persons.lastname.read',
+    'schulhof.administration.persons.persons.read.lastname',
     (p) => p.lastname
   ),
   gender: withPermission(
-    'schulhof.administration.persons.persons.gender.read',
+    'schulhof.administration.persons.persons.read.gender',
     (p) =>
       ({
-        m: Gender.Male,
-        f: Gender.Female,
-        o: Gender.Other,
+        male: Gender.Male,
+        female: Gender.Female,
+        other: Gender.Other,
       }[p.gender])
   ),
   type: withPermission(
-    'schulhof.administration.persons.persons.type.read',
+    'schulhof.administration.persons.persons.read.type',
     (p) =>
       ({
         student: PersonType.Student,

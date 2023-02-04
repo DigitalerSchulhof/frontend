@@ -1,16 +1,16 @@
 import * as aql from 'arangojs/aql';
 import { ArrayCursor } from 'arangojs/cursor';
 import * as graphql from 'graphql';
-import {
-  BackendContext,
-  InputMaybe,
-  ResolverFn,
-  ResolversParentTypes,
-  Scalars,
-  SortDirection,
-} from './types';
+import { InputMaybe, ResolversParentTypes, SortDirection } from './types';
 
 export type MaybeArray<T> = T | T[];
+
+/**
+ * The identity function.
+ */
+export function identity<T>(x: T): T {
+  return x;
+}
 
 /**
  * Returns the given value, but replaces `null` with `undefined`.
@@ -41,6 +41,8 @@ export function isNotNullOrUndefined<T>(val: T | null | undefined): val is T {
   return val !== null && val !== undefined;
 }
 
+const REFERENCE_COMPARATOR = <T>(a: T, b: T) => a === b;
+
 /**
  * Filters out duplicate values with an optional comparator function and returns the new array.
  * @param comparator A function that takes two values and returns `true` if they should be considered identical
@@ -53,8 +55,12 @@ export function isNotNullOrUndefined<T>(val: T | null | undefined): val is T {
  */
 export function unique<T>(
   arr: readonly T[],
-  comparator: (a: T, b: T) => boolean = (a, b) => a === b
+  comparator: (a: T, b: T) => boolean = REFERENCE_COMPARATOR
 ): T[] {
+  if (arr.length === 0) return [];
+  // If the comparator is the default one, we can use a Set to filter out duplicates since it's much faster
+  if (comparator === REFERENCE_COMPARATOR) return [...new Set(arr)];
+
   return arr.filter((val, i) => arr.findIndex((v) => comparator(v, val)) === i);
 }
 
@@ -74,12 +80,15 @@ export function toArray<T>(maybeArray: MaybeArray<T>): T[] {
 export function castToNumber(val: string | number): number {
   if (typeof val === 'number') return val;
 
-  if (!/^-?(\d+|\d*\.\d+)$/.test(val)) {
+  const nr = Number(val);
+
+  if (Number.isNaN(nr)) {
     throw new graphql.GraphQLError(
       `Expected a numeric string, but got: '${val}'`
     );
   }
-  return parseFloat(val);
+
+  return nr;
 }
 
 /**
@@ -499,16 +508,5 @@ export async function paginateResult<T>(
       previousPageOffset: hasPreviousPage ? offset - limit : null,
       totalPages: cursor.extra.stats.fullCount,
     },
-  };
-}
-
-export function withPermission<TParent extends {}, TArgs extends {}, TReturn>(
-  permission: string,
-  getValue: ResolverFn<TReturn, TParent, BackendContext, TArgs>
-): ResolverFn<TReturn, TParent, BackendContext, TArgs> {
-  return async function withPermissionWorker(p, args, ctx, info) {
-    // TODO: Check Permission
-
-    return getValue(p, args, ctx, info);
   };
 }

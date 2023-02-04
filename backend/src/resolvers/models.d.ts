@@ -1,3 +1,5 @@
+import { BackendContext, ResolverFn } from './types';
+
 export interface Collection {
   _key: string;
   _id: string;
@@ -7,4 +9,9 @@ export interface Collection {
 export interface Edge extends Collection<From, To> {
   _from: string;
   _to: string;
+}
+
+export interface FieldAccess {
+  read: boolean | string;
+  write: boolean | string;
 }

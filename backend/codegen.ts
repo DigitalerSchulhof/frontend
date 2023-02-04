@@ -17,13 +17,14 @@ for (const modelFile of modelFiles) {
     path.join(_resolvers, modelFile),
     'utf-8'
   );
-  const models = modelsFileContent.matchAll(
-    /export interface (\w+)(?:\n  | )extends Collection {/g
-  );
+  const models = [
+    ...modelsFileContent.matchAll(/export interface (\w+)/g),
+    ...modelsFileContent.matchAll(/export type (\w+)/g),
+  ];
 
   for (const model of models) {
     const [, modelName] = model;
-    if (modelName === 'Edge') continue;
+    if (modelName === 'Collection' || modelName === 'Edge') continue;
 
     mappers[modelName] = `./${modelFile.replace(/\.d\.ts$/, '')}#${modelName}`;
   }

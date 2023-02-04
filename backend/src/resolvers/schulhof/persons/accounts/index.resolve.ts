@@ -1,5 +1,5 @@
+import { withPermission } from '../../../resolvers';
 import { AccountResolvers } from '../../../types';
-import { withPermission } from '../../../utils';
 
 export const Account = {
   username: withPermission(

@@ -1,0 +1,23 @@
+extend type Person {
+  access: PersonAccess!
+}
+
+type PersonAccess {
+  fields: PersonFieldsAccess!
+  actions: PersonActionsAccess!
+}
+
+type PersonFieldsAccess {
+  birthdate: FieldAccess!
+  firstname: FieldAccess!
+  gender: FieldAccess!
+  lastname: FieldAccess!
+  type: FieldAccess!
+}
+
+type PersonActionsAccess {
+  mail: Boolean!
+  permissions: Boolean!
+  changeTeacherId: Boolean!
+  delete: Boolean!
+}

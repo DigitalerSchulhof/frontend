@@ -1,16 +1,17 @@
 import { createJwt } from '.';
 import { LoginPasswordErrorCode, RootMutationResolvers } from '../../types';
+import { Account } from '../persons/accounts/models';
 
 export const RootMutation = {
   loginPassword: async (_, args, ctx) => {
     const { username, password } = args;
 
-    const user = await ctx.query<Pick<User, '_key'>>`
-      FOR user IN users
-        FILTER user.username == ${username}
-        FILTER SHA512(CONCAT(${password}, user.salt)) == user.password
+    const user = await ctx.query<Pick<Account, '_key'>>`
+      FOR a IN accounts
+        FILTER a.username == ${username}
+        FILTER SHA512(CONCAT(${password}, a.salt)) == a.password
         LIMIT 1
-        RETURN KEEP(user, '_key')
+        RETURN KEEP(a, '_key')
     `.then((c) => c.next());
 
     if (!user) {

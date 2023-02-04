@@ -1,10 +1,10 @@
 query Page(
-  $limit: Int!
-  $after: ID
+  $limit: Int
+  $offset: Int
   $sort: [PersonSort!]
   $filter: PersonFilters
 ) {
-  persons(after: $after, limit: $limit, sort: $sort, filter: $filter) {
+  persons(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
     edges {
       node {
         id
@@ -16,7 +16,7 @@ query Page(
     }
     pageInfo {
       hasNextPage
-      endCursor
+      nextPageOffset
     }
   }
 }

@@ -30,6 +30,11 @@ input GenderFilter {
   nin: [Gender!]
 }
 
+type FieldAccess {
+  read: Boolean!
+  write: Boolean!
+}
+
 # Pagination
 
 enum SortDirection {
