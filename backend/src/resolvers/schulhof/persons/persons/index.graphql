@@ -1,10 +1,10 @@
 type Person {
   id: ID!
-  birthdate: Date
-  firstname: String
-  gender: Gender
-  lastname: String
-  type: PersonType
+  birthdate: Date!
+  firstname: String!
+  gender: Gender!
+  lastname: String!
+  type: PersonType!
 }
 
 input PersonSort {
@@ -13,12 +13,15 @@ input PersonSort {
 }
 
 enum PersonSortOption {
+  id
   birthdate
   firstname
   lastname
+  type
 }
 
 input PersonFilters {
+  id: IDFilter
   birthdate: DateFilter
   firstname: StringFilter
   gender: GenderFilter

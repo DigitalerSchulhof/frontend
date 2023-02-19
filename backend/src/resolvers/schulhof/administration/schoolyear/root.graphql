@@ -1,0 +1,19 @@
+extend type RootQuery {
+  schoolyears(
+    limit: Int
+    offset: Int = 0
+    sort: [SchoolyearSort!]
+    filter: SchoolyearFilters
+  ): RootQuerySchoolyearsConnection!
+
+  schoolyear(id: ID!): Schoolyear
+}
+
+type RootQuerySchoolyearsConnection {
+  edges: [RootQuerySchoolyearsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type RootQuerySchoolyearsEdge {
+  node: Schoolyear!
+}

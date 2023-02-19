@@ -1,6 +1,6 @@
 extend type RootQuery {
   persons(
-    limit: Int = 25
+    limit: Int
     offset: Int = 0
     sort: [PersonSort!]
     filter: PersonFilters

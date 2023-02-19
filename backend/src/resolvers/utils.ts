@@ -94,7 +94,7 @@ export function castToNumber(val: string | number): number {
 /**
  * Returns the first value of an argument of a field (replaces null values with undefined)
  *
- * **Note**: If the referenced parameter, the `Maybe<R>` type from `src/resolvers/types.ts` must be added manually.
+ * **Note**: If the referenced parameter is optional, the `Maybe<R>` type from `src/resolvers/types.ts` must be added manually.
  *
  * @see getFieldArguments for retrieving all values
  *
@@ -129,7 +129,7 @@ export function getFieldArgument<R = unknown>(
 /**
  * Returns all values of an argument of a field (strips null values)
  *
- * **Note**: If the referenced parameter, the `Maybe<R>` type from `src/resolvers/types.ts` must be added manually.
+ * **Note**: If the referenced parameter is optional, the `Maybe<R>` type from `src/resolvers/types.ts` must be added manually.
  *
  * @see getFieldArgument for retrieving only the first value
  *
@@ -357,156 +357,21 @@ export function getValue<R = unknown>(
   }
 }
 
-const EMPTY_AQL = aql.aql``;
-
-export function filterToQuery(
-  filters:
-    | InputMaybe<{
-        [K in string]?: InputMaybe<{
-          eq?: InputMaybe<string | number | boolean | Date>;
-          neq?: InputMaybe<string | number | boolean | Date>;
-          gt?: InputMaybe<number | Date>;
-          gte?: InputMaybe<number | Date>;
-          lt?: InputMaybe<number | Date>;
-          lte?: InputMaybe<number | Date>;
-          in?: InputMaybe<ReadonlyArray<string | number | boolean | Date>>;
-          nin?: InputMaybe<ReadonlyArray<string | number | boolean | Date>>;
-        }>;
-      }>
-    | undefined
-): aql.GeneratedAqlQuery {
-  if (!filters || !Object.keys(filters).length) return EMPTY_AQL;
-
-  const filterClauses = Object.entries(filters)
-    .map(([key, filter]) => {
-      if (!filter) return EMPTY_AQL;
-
-      return Object.entries(filter).map(([op, value]) => {
-        if (value === null || value === undefined) return EMPTY_AQL;
-
-        switch (op) {
-          case 'eq':
-            return aql.aql`${aql.literal(key)} == ${aql.aql`${value}`}`;
-          case 'neq':
-            return aql.aql`${aql.literal(key)} != ${aql.aql`${value}`}`;
-          case 'gt':
-            return aql.aql`${aql.literal(key)} > ${aql.aql`${value}`}`;
-          case 'gte':
-            return aql.aql`${aql.literal(key)} >= ${aql.aql`${value}`}`;
-          case 'lt':
-            return aql.aql`${aql.literal(key)} < ${aql.aql`${value}`}`;
-          case 'lte':
-            return aql.aql`${aql.literal(key)} <= ${aql.aql`${value}`}`;
-          case 'in':
-            return aql.aql`${aql.literal(key)} IN ${aql.aql`${value}`}`;
-          case 'nin':
-            return aql.aql`${aql.literal(key)} NOT IN ${aql.aql`${value}`}`;
-        }
-      });
-    })
-    .flat();
-
-  return aql.join(filterClauses);
-}
-
-const sortDirectionMap = {
-  [SortDirection.Asc]: aql.aql`ASC`,
-  [SortDirection.Desc]: aql.aql`DESC`,
-};
-
-export function sortToQuery(
-  sorts:
-    | InputMaybe<
-        ReadonlyArray<{
-          by: string;
-          direction: SortDirection;
-        }>
-      >
-    | undefined
-): aql.GeneratedAqlQuery {
-  if (!sorts || !sorts.length) return EMPTY_AQL;
-
-  const sortClauses = sorts.map(
-    (sort) =>
-      aql.aql`${aql.literal(sort.by)} ${sortDirectionMap[sort.direction]}`
-  );
-
-  return aql.aql`
-    SORT ${(aql.join(sortClauses), ', ')}
-  `;
-}
-
-export function paginationToQuery(args: {
-  limit: number;
-  offset: number;
-  filters?: InputMaybe<{
-    [K in string]?: InputMaybe<{
-      eq?: InputMaybe<string | number | boolean | Date>;
-      neq?: InputMaybe<string | number | boolean | Date>;
-      gt?: InputMaybe<number | Date>;
-      gte?: InputMaybe<number | Date>;
-      lt?: InputMaybe<number | Date>;
-      lte?: InputMaybe<number | Date>;
-      in?: InputMaybe<ReadonlyArray<string | number | boolean | Date>>;
-      nin?: InputMaybe<ReadonlyArray<string | number | boolean | Date>>;
-    }>;
-  }>;
-  sort?: InputMaybe<
-    ReadonlyArray<{
-      by: string;
-      direction: SortDirection;
-    }>
-  >;
-}) {
-  const { limit, offset, filters, sort } = args;
-
-  const filterQuery = filterToQuery(filters);
-  const sortQuery = sortToQuery(sort);
-
-  // Always add a limit of 1 more than the requested limit to determine if there is a next page
-  return aql.aql`
-    ${filterQuery}
-    ${sortQuery}
-    LIMIT ${aql.aql`${offset}, ${limit + 1}`}
-  `;
-}
-
-export interface Paginated<T> {
-  edges: {
-    node: T;
-  }[];
-  pageInfo: ResolversParentTypes['PageInfo'];
-}
-
-export async function paginateResult<T>(
-  res: Promise<ArrayCursor<T>>,
-  args: {
-    limit: number;
-    offset: number;
+export class TypedGraphQLError extends graphql.GraphQLError {
+  constructor(message: string, code: string) {
+    super(message, {
+      extensions: {
+        code,
+      },
+    });
   }
-): Promise<Paginated<T>> {
-  const { limit, offset } = args;
-  const cursor = await res;
+}
 
-  const nodes = await cursor.all();
-  const hasNextPage = nodes.length > limit;
-  const hasPreviousPage = offset > 0;
-
-  if (cursor.extra.stats?.fullCount === undefined) {
-    throw new Error('Pagination requires fullCount to be set');
+export class GraphQLPermissionError extends TypedGraphQLError {
+  constructor() {
+    super(
+      'You do not have permission to perform this action',
+      'PERMISSION_DENIED'
+    );
   }
-
-  return {
-    // We query for one more than the limit to determine if there is a next page
-    edges: nodes.slice(0, limit).map((node) => ({
-      node,
-    })),
-    pageInfo: {
-      hasNextPage,
-      hasPreviousPage,
-      nextPageOffset: hasNextPage ? offset + limit : null,
-      previousPageOffset: hasPreviousPage ? offset - limit : null,
-      totalPages: cursor.extra.stats.fullCount,
-    },
-  };
 }

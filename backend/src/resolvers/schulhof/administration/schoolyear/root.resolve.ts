@@ -1,26 +1,26 @@
 import { RootQueryResolvers } from '../../../types';
 import { paginationToQuery, paginateResult, unique } from '../../../utils';
-import { Person } from './models';
+import { Schoolyear } from './models';
 
 export const RootQuery = {
-  persons: async (_, args, ctx) => {
+  schoolyears: async (_, args, ctx) => {
     const paginationQuery = paginationToQuery(args);
 
-    const res = ctx.query<Person>`
-      FOR p IN persons
+    const res = ctx.query<Schoolyear>`
+      FOR s IN schoolyears
         ${paginationQuery}
 
-        RETURN p
+        RETURN s
     `;
 
     return paginateResult(res, args);
   },
-  person: async (_, args, ctx) => {
-    const res = await ctx.query<Person>`
-      FOR p IN persons
-        FILTER p._key == ${args.id}
+  schoolyear: async (_, args, ctx) => {
+    const res = await ctx.query<Schoolyear>`
+      FOR s IN schoolyears
+        FILTER s._key == ${args.id}
 
-        RETURN p
+        RETURN s
     `;
     return (await res.next()) ?? null;
   },

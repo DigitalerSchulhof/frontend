@@ -32,7 +32,7 @@ for (const modelFile of modelFiles) {
 
 export default {
   generates: {
-    [path.join(_resolvers, 'types.ts')]: {
+    [path.join(_resolvers, 'types.d.ts')]: {
       plugins: ['./codegen-plugin', 'typescript', 'typescript-resolvers'],
       schema: path.join(_resolvers, '**/*.graphql'),
       config: {
@@ -42,6 +42,7 @@ export default {
         showUnusedMappers: true,
         immutableTypes: true,
         strictScalars: true,
+        enumsAsTypes: true,
         scalars: {
           Date: 'number',
         },

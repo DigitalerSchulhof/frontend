@@ -1,5 +1,6 @@
 import { BackendContext } from '../context';
 import { ResolverFn } from './types';
+import { GraphQLPermissionError } from './utils';
 
 /**
  * Returns a resolver that checks if the user has the given permission.
@@ -39,7 +40,7 @@ export function hasPermissionResolver<TParent extends {}, TArgs extends {}>(
 }
 
 /**
- * Executes the given resolver only if the user has the given permission. The resolver returns `null` otherwise.
+ * Executes the given resolver only if the user has the given permission. Throws a GraphQLPermissionError if not.
  *
  * @example
  * ```ts
@@ -57,10 +58,13 @@ export function withPermission<TReturn, TParent extends {}, TArgs extends {}>(
     | boolean
     | ResolverFn<string | boolean, TParent, BackendContext, TArgs>,
   getValue: ResolverFn<TReturn, TParent, BackendContext, TArgs>
-): ResolverFn<TReturn | null, TParent, BackendContext, TArgs> {
+): ResolverFn<TReturn, TParent, BackendContext, TArgs> {
   return async function withPermissionWorker(p, args, ctx, info) {
     if (typeof permissionOrGetPermission === 'boolean') {
-      return permissionOrGetPermission ? getValue(p, args, ctx, info) : null;
+      if (permissionOrGetPermission) {
+        return getValue(p, args, ctx, info);
+      }
+      throw new GraphQLPermissionError();
     }
 
     const permission =
@@ -76,6 +80,6 @@ export function withPermission<TReturn, TParent extends {}, TArgs extends {}>(
       return getValue(p, args, ctx, info);
     }
 
-    return null;
+    throw new GraphQLPermissionError();
   };
 }

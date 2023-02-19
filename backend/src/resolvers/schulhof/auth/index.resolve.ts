@@ -1,5 +1,6 @@
 import { createJwt } from '.';
-import { LoginPasswordErrorCode, RootMutationResolvers } from '../../types';
+import { RootMutationResolvers } from '../../types';
+import { TypedGraphQLError } from '../../utils';
 import { Account } from '../persons/accounts/models';
 
 export const RootMutation = {
@@ -15,14 +16,10 @@ export const RootMutation = {
     `.then((c) => c.next());
 
     if (!user) {
-      return {
-        __typename: 'LoginPasswordResponseError',
-        code: LoginPasswordErrorCode.InvalidCredentials,
-      };
+      throw new TypedGraphQLError('Invalid credentials', 'INVALID_CREDENTIALS');
     }
 
     return {
-      __typename: 'LoginPasswordResponseSuccess',
       jwt: await createJwt(ctx, user),
     };
   },

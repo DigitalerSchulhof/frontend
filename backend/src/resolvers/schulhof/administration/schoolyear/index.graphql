@@ -1,0 +1,22 @@
+type Schoolyear {
+  id: ID!
+  school: School!
+  name: String!
+}
+
+input SchoolyearSort {
+  by: SchoolyearSortOption!
+  direction: SortDirection!
+}
+
+enum SchoolyearSortOption {
+  id
+  school
+  name
+}
+
+input SchoolyearFilters {
+  id: IDFilter
+  school: IDFilter
+  name: StringFilter
+}

@@ -1,5 +1,3 @@
-import { useGraphQlJit as useGraphQLJit } from '@envelop/graphql-jit';
-import { EnvelopArmorPlugin } from '@escape.tech/graphql-armor';
 import { loadFilesSync } from '@graphql-tools/load-files';
 import { mergeResolvers } from '@graphql-tools/merge';
 import { makeExecutableSchema } from '@graphql-tools/schema';
@@ -7,8 +5,9 @@ import { createYoga as realCreateYoga } from 'graphql-yoga';
 import * as path from 'path';
 import { loadConfig } from './config';
 import { createContext, CreateContextContext } from './context';
+import { Database } from 'arangojs';
 
-export function createSchema() {
+function createSchema() {
   const resolvers = mergeResolvers(
     loadFilesSync(path.join(__dirname, 'resolvers/**/*.resolve.ts'))
   );
@@ -24,8 +23,14 @@ export function createSchema() {
 
 const config = loadConfig();
 
+const db = new Database({
+  url: config.db.url,
+  databaseName: config.db.databaseName,
+});
+
 const createContextContext: CreateContextContext = {
   config,
+  db,
 };
 
 export function createYoga() {
@@ -35,6 +40,5 @@ export function createYoga() {
     context: createContext(createContextContext),
     landingPage: false,
     graphqlEndpoint: '/',
-    plugins: [useGraphQLJit(), EnvelopArmorPlugin()],
   });
 }

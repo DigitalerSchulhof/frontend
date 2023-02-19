@@ -1,28 +1,19 @@
 schulhof:
   administration:
     person:
-      add:
+      create:
       delete:
       read:
-        - birthdate
-        - type
-        - lastname
-        - firstname
-        - gender
-        - permissions
-        - teacherId
       write:
-        - birthdate
-        - type
-        - lastname
-        - firstname
-        - gender
-        - permissions
-        - teacherId
+    account:
+      create:
+      delete:
+      read:
+      write:
   mail:
     send:
-      - student
-      - teacher
-      - parent
-      - administrator
-      - other
+      student:
+      teacher:
+      parent:
+      administrator:
+      other:

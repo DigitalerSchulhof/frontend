@@ -1,5 +1,5 @@
 type Account {
-  username: String
+  username: String!
 }
 
 input AccountSort {

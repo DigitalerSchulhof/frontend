@@ -1,2 +1,2 @@
-/src/resolvers/types.ts
+/src/resolvers/types.d.ts
 /.env
