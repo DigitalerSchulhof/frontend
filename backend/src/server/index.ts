@@ -21,6 +21,10 @@ app.use(async (ctx, next) => {
   next();
 });
 
-app.listen(4000, () => {
+const server = app.listen(4000, () => {
   console.log('🚀 Server ready');
+});
+
+process.on('exit', () => {
+  server.close();
 });

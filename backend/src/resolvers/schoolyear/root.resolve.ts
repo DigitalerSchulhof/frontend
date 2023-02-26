@@ -6,8 +6,10 @@ import {
 import { mapRepositoryFieldToGraphQLField } from '.';
 import { withoutNull } from '../../utils';
 import {
-  GraphQLCannotCreateError,
+  GraphQLCannotCreateDuplicateFieldsError,
+  GraphQLCannotDeleteIdNotFoundError,
   GraphQLCannotUpdateDuplicateFieldsError,
+  GraphQLCannotUpdateIdNotFoundError,
   GraphQLCannotUpdateRevMismatchError,
 } from '../errors';
 import { RootMutationResolvers, RootQueryResolvers } from '../types';
@@ -53,7 +55,7 @@ export const RootMutation = {
       return await ctx.services.schoolyear.create(post);
     } catch (error) {
       if (error instanceof DuplicateFieldsError) {
-        throw new GraphQLCannotCreateError(
+        throw new GraphQLCannotCreateDuplicateFieldsError(
           error.conflictingFields.map(mapRepositoryFieldToGraphQLField)
         );
       }
@@ -74,7 +76,7 @@ export const RootMutation = {
         throw new GraphQLCannotUpdateRevMismatchError();
       }
       if (error instanceof IdDoesNotExistError) {
-        return null;
+        throw new GraphQLCannotUpdateIdNotFoundError();
       }
       if (error instanceof DuplicateFieldsError) {
         throw new GraphQLCannotUpdateDuplicateFieldsError(
@@ -98,7 +100,7 @@ export const RootMutation = {
         throw new GraphQLCannotUpdateRevMismatchError();
       }
       if (error instanceof IdDoesNotExistError) {
-        return null;
+        throw new GraphQLCannotDeleteIdNotFoundError();
       }
       throw error;
     }

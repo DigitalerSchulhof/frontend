@@ -15,6 +15,6 @@ type RootQuerySchoolyearsEdge {
 
 extend type RootMutation {
   createSchoolyear(post: CreateSchoolyearInput!): Schoolyear!
-  updateSchoolyear(id: ID!, patch: UpdateSchoolyearInput!, ifRev: ID): Schoolyear
-  deleteSchoolyear(id: ID!, ifRev: ID): Schoolyear
+  updateSchoolyear(id: ID!, patch: UpdateSchoolyearInput!, ifRev: ID): Schoolyear!
+  deleteSchoolyear(id: ID!, ifRev: ID): Schoolyear!
 }
