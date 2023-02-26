@@ -6,9 +6,20 @@
     "moduleResolution": "Node",
     "target": "ESNext",
     "lib": ["ESNext"],
-    "types": ["node"]
+    "types": ["node"],
+
+    "baseUrl": "./src",
+    "paths": {
+      "@caches/*": ["caches/*"],
+      "@config": ["config"],
+      "@repositories/*": ["repositories/*"],
+      "@loaders/*": ["loaders/*"],
+      "@services/*": ["services/*"],
+      "@utils": ["utils"]
+    }
   },
   "ts-node": {
-    "swc": true
+    "swc": true,
+    "require": ["tsconfig-paths/register"]
   }
 }

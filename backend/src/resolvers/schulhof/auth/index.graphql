@@ -1,7 +1,0 @@
-extend type RootMutation {
-  loginPassword(username: String!, password: String!): LoginPasswordResponse!
-}
-
-type LoginPasswordResponse {
-  jwt: String!
-}

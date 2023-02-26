@@ -30,11 +30,6 @@ input GenderFilter {
   nin: [Gender!]
 }
 
-type FieldAccess {
-  read: Boolean!
-  write: Boolean!
-}
-
 # Pagination
 
 enum SortDirection {
@@ -43,11 +38,15 @@ enum SortDirection {
 }
 
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  nextPageOffset: Int
-  previousPageOffset: Int
-  totalPages: Int!
+# TODO
+
+#  hasNextPage: Boolean!
+#  hasPreviousPage: Boolean!
+#  nextPageOffset: Int
+#  previousPageOffset: Int
+#  totalPages: Int!
+
+  totalResults: Int!
 }
 
 # Filters

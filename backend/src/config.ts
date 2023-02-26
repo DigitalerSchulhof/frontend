@@ -2,14 +2,19 @@ import { Parse, v } from 'vality';
 import { loadEnv } from 'vality-env';
 
 const config = {
-  db: {
-    url: v.env('DATABASE_URL', v.string),
-    databaseName: v.env('DATABASE_NAME', v.string),
+  cache: {
+    engine: ['void', 'memory', 'redis'],
+    'redis?': {
+      host: v.string,
+      port: v.number,
+      password: v.string,
+    },
   },
-  jwt: {
-    privateKey: v.string,
+  database: {
+    host: v.string,
+    name: v.string,
   },
-};
+} as const;
 
 export type Config = Parse<typeof config>;
 

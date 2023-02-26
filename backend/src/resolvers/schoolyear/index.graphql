@@ -1,0 +1,20 @@
+type Schoolyear {
+  id: ID!
+  rev: ID!
+
+  name: String!
+  start: Date!
+  end: Date!
+}
+
+input CreateSchoolyearInput {
+  name: String!
+  start: Date!
+  end: Date!
+}
+
+input UpdateSchoolyearInput {
+  name: String
+  start: Date
+  end: Date
+}

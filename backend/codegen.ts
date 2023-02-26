@@ -36,7 +36,7 @@ export default {
       plugins: ['./codegen-plugin', 'typescript', 'typescript-resolvers'],
       schema: path.join(_resolvers, '**/*.graphql'),
       config: {
-        contextType: '../context#BackendContext',
+        contextType: '../server/context#BackendContext',
         addUnderscoreToArgsType: true,
         mapperTypeSuffix: '_DSH_Model',
         showUnusedMappers: true,
