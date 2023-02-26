@@ -4,12 +4,11 @@ import { ArangoError } from 'arangojs/error';
 import {
   ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND,
   ARANGO_ERROR_NUM_REV_MISMATCH,
-  DuplicateFieldsError,
   IdDoesNotExistError,
   MakePatch,
   paginateCursor,
   Paginated,
-  RevMismatchError,
+  RevMismatchError
 } from './utils';
 
 export interface SchoolyearRepository {
@@ -65,8 +64,6 @@ export class SchoolyearRepositoryImpl implements SchoolyearRepository {
   }
 
   async create(post: SchoolyearInput): Promise<Schoolyear> {
-    await this.assertCanCreate(post);
-
     const res = await this.db.query<Schoolyear>(
       aql`
         INSERT ${post} INTO schoolyears
@@ -89,8 +86,6 @@ export class SchoolyearRepositoryImpl implements SchoolyearRepository {
     patch: MakePatch<SchoolyearInput>,
     ifRev?: string
   ): Promise<Schoolyear> {
-    await this.assertCanUpdate(id, patch);
-
     let res;
     try {
       res = await this.db.query<Schoolyear>(
@@ -158,56 +153,5 @@ export class SchoolyearRepositoryImpl implements SchoolyearRepository {
     }
 
     return (await res.next())!;
-  }
-
-  private async assertCanCreate(post: SchoolyearInput): Promise<void> {
-    const res = await this.db.query<Record<string, boolean>>(
-      aql`
-        LET name = LENGTH(
-          FOR schoolyear IN schoolyears
-            FILTER schoolyear.name == ${post.name}
-            LIMIT 1
-            RETURN schoolyear
-        ) > 0
-
-        RETURN {
-          name
-        }
-      `
-    );
-
-    const duplicates = (await res.next())!;
-    const fields = Object.keys(duplicates).filter((key) => duplicates[key]);
-
-    if (fields.length) {
-      throw new DuplicateFieldsError(fields);
-    }
-  }
-
-  private async assertCanUpdate(
-    id: string,
-    patch: MakePatch<SchoolyearInput>
-  ): Promise<void> {
-    const res = await this.db.query<Record<string, boolean>>(
-      aql`
-        LET name = LENGTH(
-          FOR schoolyear IN schoolyears
-            FILTER schoolyear._key != ${id} && schoolyear.name == ${patch.name}
-            LIMIT 1
-            RETURN schoolyear
-        ) == 1
-
-        RETURN {
-          name
-        }
-      `
-    );
-
-    const duplicates = (await res.next())!;
-    const fields = Object.keys(duplicates).filter((key) => duplicates[key]);
-
-    if (fields.length) {
-      throw new DuplicateFieldsError(fields);
-    }
   }
 }

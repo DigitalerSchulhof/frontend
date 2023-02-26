@@ -2,7 +2,7 @@ import { ArrayCursor } from 'arangojs/cursor';
 import { ToCatchError } from '../utils';
 
 export type MakePatch<T> = {
-  [P in keyof T]?: MakePatch<T[P]> | null;
+  [P in keyof T]?: MakePatch<T[P]>;
 };
 
 export type Paginated<T> = {
@@ -31,12 +31,6 @@ export class RevMismatchError extends ToCatchError {
 
 export class IdDoesNotExistError extends ToCatchError {
   constructor() {
-    super();
-  }
-}
-
-export class DuplicateFieldsError extends ToCatchError {
-  constructor(readonly conflictingFields: string[]) {
     super();
   }
 }

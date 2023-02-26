@@ -1,6 +1,7 @@
 import { ObjectCache } from '@caches/object-cache';
 import { SchoolyearRepository } from '@repositories/schoolyear';
 import { MakePatch, Paginated } from '@repositories/utils';
+import { SchoolyearValidator } from '../validators/schoolyear';
 import { getByIdsCachedOrLoad } from './utils';
 
 export interface Schoolyear {
@@ -20,8 +21,11 @@ export interface SchoolyearInput {
 export class SchoolyearService {
   constructor(
     private readonly repository: SchoolyearRepository,
-    private readonly cache: ObjectCache<Schoolyear>
-  ) {}
+    private readonly cache: ObjectCache<Schoolyear>,
+    private readonly validator: SchoolyearValidator
+  ) {
+    this.validator.setService(this);
+  }
 
   async getById(id: string): Promise<Schoolyear | null> {
     return (await this.getByIds([id]))[0];
@@ -36,7 +40,13 @@ export class SchoolyearService {
   }
 
   async create(post: SchoolyearInput): Promise<Schoolyear> {
-    return this.repository.create(post);
+    await this.validator.assertCanCreate(post);
+
+    const res = await this.repository.create(post);
+
+    await this.cache.set(res.id, res);
+
+    return res;
   }
 
   async update(
@@ -44,10 +54,20 @@ export class SchoolyearService {
     patch: MakePatch<SchoolyearInput>,
     ifRev?: string
   ): Promise<Schoolyear> {
-    return this.repository.update(id, patch, ifRev);
+    await this.validator.assertCanUpdate(id, patch);
+
+    const res = await this.repository.update(id, patch, ifRev);
+
+    await this.cache.set(res.id, res);
+
+    return res;
   }
 
   async delete(id: string, ifRev?: string): Promise<Schoolyear> {
-    return this.repository.delete(id, ifRev);
+    const res = this.repository.delete(id, ifRev);
+
+    await this.cache.delete(id);
+
+    return res;
   }
 }

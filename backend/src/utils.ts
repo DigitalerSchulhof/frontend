@@ -8,6 +8,15 @@ export function identity<T>(x: T): T {
 }
 
 /**
+ * Returns whether the given `PromiseSettledResult` is a `PromiseRejectedResult`.
+ */
+export function isPromiseRejectedResult<T>(
+  val: PromiseSettledResult<T>
+): val is PromiseRejectedResult {
+  return val.status === 'rejected';
+}
+
+/**
  * Returns the given value, but replaces `null` with `undefined`.
  *
  * @example
@@ -69,5 +78,11 @@ export class ToCatchError extends Error {
       message ??
         'This error should be caught and handled. If you see this, there is an error handler missing.'
     );
+  }
+}
+
+export class MissingDependencyError extends Error {
+  constructor(name: string) {
+    super(`Missing dependency: ${name}`);
   }
 }

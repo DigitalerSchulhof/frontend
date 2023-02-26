@@ -15,6 +15,7 @@
       "@repositories/*": ["repositories/*"],
       "@loaders/*": ["loaders/*"],
       "@services/*": ["services/*"],
+      "@validators/*": ["validators/*"],
       "@utils": ["utils"]
     }
   },
