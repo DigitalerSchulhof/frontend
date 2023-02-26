@@ -37,19 +37,19 @@ export class RedisCacheAdapter implements CacheAdapter {
     return res.map(this.deserialize<T>);
   }
 
-  async set<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
-    await this.client.set(key, this.serialize(value), 'EX', ttlSeconds);
+  async set<T>(key: string, value: T, ttlMs: number): Promise<void> {
+    await this.client.set(key, this.serialize(value), 'PX', ttlMs);
   }
 
   async setMany<T>(
     entries: readonly [string, T][],
-    ttlSeconds: number
+    ttlMs: number
   ): Promise<void> {
     const args = entries.flatMap(([key, value]) => [
       key,
       this.serialize(value),
-      'EX',
-      ttlSeconds,
+      'PX',
+      ttlMs,
     ]);
 
     await this.client.mset(...args);
