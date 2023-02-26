@@ -17,7 +17,7 @@ export function createCacheAdapter(config: Config): CacheAdapter {
         config.cache.redis.password
       );
     case 'memory':
-      return new MemoryCacheAdapter(100);
+      return new MemoryCacheAdapter();
     case 'void':
       return new VoidCacheAdapter();
   }

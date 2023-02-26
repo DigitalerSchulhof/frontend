@@ -1,11 +1,11 @@
-import * as LRUCache from 'lru-cache';
+import * as TTLCache from '@isaacs/ttlcache';
 import { CacheAdapter } from '.';
 
 export class MemoryCacheAdapter implements CacheAdapter {
-  private readonly cache: LRUCache<string, unknown>;
+  private readonly cache;
 
-  constructor(max: number) {
-    this.cache = new LRUCache({ max });
+  constructor() {
+    this.cache = new TTLCache<string, unknown>();
   }
 
   async get<T>(key: string): Promise<T | undefined> {
@@ -16,12 +16,21 @@ export class MemoryCacheAdapter implements CacheAdapter {
     return keys.map((key) => this.cache.get(key) as T | undefined);
   }
 
-  async set<T>(key: string, value: T): Promise<void> {
-    this.cache.set(key, value);
+  async set<T>(key: string, value: T, ttlMs?: number): Promise<void> {
+    this.cache.set(key, value, {
+      ttl: ttlMs,
+    });
   }
 
-  async setMany<T>(entries: readonly [string, T][]): Promise<void> {
-    entries.forEach(([key, value]) => this.cache.set(key, value));
+  async setMany<T>(
+    entries: readonly [string, T][],
+    ttlMs?: number
+  ): Promise<void> {
+    entries.forEach(([key, value]) =>
+      this.cache.set(key, value, {
+        ttl: ttlMs,
+      })
+    );
   }
 
   async delete(key: string): Promise<boolean> {
