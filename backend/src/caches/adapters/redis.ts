@@ -1,15 +1,15 @@
-import * as Redis from 'ioredis';
+import { Redis } from 'ioredis';
 import { CacheAdapter } from '.';
 
 export class RedisCacheAdapter implements CacheAdapter {
-  private readonly client: Redis.Redis;
+  private readonly client: Redis;
 
   constructor(
     readonly host: string,
     readonly port: number,
     readonly password: string
   ) {
-    this.client = new Redis.Redis({
+    this.client = new Redis({
       host,
       port,
       password,
