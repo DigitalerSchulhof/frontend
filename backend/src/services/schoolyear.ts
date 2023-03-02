@@ -4,18 +4,16 @@ import { MakePatch, Paginated } from '@repositories/utils';
 import { SchoolyearValidator } from '../validators/schoolyear';
 import { getByIdsCachedOrLoad } from './utils';
 
-export interface Schoolyear {
-  id: string;
-  rev: string;
-  name: string;
-  start: number;
-  end: number;
-}
 
 export interface SchoolyearInput {
   name: string;
   start: number;
   end: number;
+}
+
+export interface Schoolyear extends SchoolyearInput{
+  id: string;
+  rev: string;
 }
 
 export class SchoolyearService {

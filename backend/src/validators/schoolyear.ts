@@ -1,6 +1,6 @@
 import { IdDoesNotExistError, MakePatch } from '@repositories/utils';
 import { SchoolyearInput, SchoolyearService } from '@services/schoolyear';
-import { MissingDependencyError } from '@utils';
+import { isNotNullOrUndefined, MissingDependencyError } from '@utils';
 import { aggregateValidationErrors, InputValidationError } from './utils';
 
 export const SCHOOLYEAR_START_BEFORE_END = 'SCHOOLYEAR_START_BEFORE_END';
@@ -31,12 +31,10 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
   }
 
   async assertCanCreate(post: SchoolyearInput): Promise<void | never> {
-    const promises = await Promise.allSettled([
+    const error = aggregateValidationErrors([
       this.assertStartBeforeEnd(post.start, post.end),
       this.assertExistsNoneWithName(post.name),
     ]);
-
-    const error = aggregateValidationErrors(promises);
 
     if (error) throw error;
   }
@@ -51,17 +49,15 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
       throw new IdDoesNotExistError();
     }
 
-    const promises = await Promise.allSettled([
+    const error = await aggregateValidationErrors([
       this.assertStartBeforeEnd(
         patch.start ?? base.start,
         patch.end ?? base.end
       ),
-      patch.name !== undefined
+      isNotNullOrUndefined(patch.name)
         ? this.assertExistsNoneWithNameExceptId(patch.name, id)
-        : undefined,
+        : null,
     ]);
-
-    const error = aggregateValidationErrors(promises);
 
     if (error) throw error;
   }
@@ -76,13 +72,12 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
   }
 
   private async assertExistsNoneWithName(name: string): Promise<void | never> {
-    // TODO: Search service for schoolyear with name and throw error if found
-    // throw new InputValidationError(SCHOOLYEAR_NAME_EXISTS);
+    this.assertExistsNoneWithNameExceptId(name, null);
   }
 
   private async assertExistsNoneWithNameExceptId(
     name: string,
-    id: string
+    id: string | null
   ): Promise<void | never> {
     // TODO: Search service for schoolyear with name and different id and throw error if found
     // throw new InputValidationError(SCHOOLYEAR_NAME_EXISTS);

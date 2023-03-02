@@ -7,7 +7,7 @@ const config = {
     'redis?': {
       host: v.string,
       port: v.number,
-      password: v.string,
+      'password?': v.string,
     },
   },
   database: {

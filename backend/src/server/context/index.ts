@@ -18,21 +18,25 @@ export interface ContextCreatorContext {
   cacheAdapter: CacheAdapter;
 }
 
-export interface ContextCreatorUserContext extends ContextCreatorContext {}
+export interface UserContextCreatorContext extends ContextCreatorContext {}
 
 export function createContextCreator(config: Config) {
-  const createContextContext = createContextCreatorContext(config);
+  const contextCreatorContext = createContextCreatorContext(config);
 
-  const servicesContext = createServicesContext(createContextContext);
+  const servicesContext = createServicesContext(contextCreatorContext);
+
+  const persistentContext = {
+    ...servicesContext
+  }
 
   return (): BackendContext => {
-    const createContextUserContext = {
-      ...createContextContext,
+    const userContextCreatorContext: UserContextCreatorContext = {
+      ...contextCreatorContext,
     };
 
     return {
-      ...servicesContext,
-      ...createPermissionsContext(createContextUserContext),
+      ...persistentContext,
+      ...createPermissionsContext(userContextCreatorContext),
     };
   };
 }

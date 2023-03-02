@@ -5,6 +5,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { createYoga as realCreateYoga } from 'graphql-yoga';
 import * as path from 'path';
 import { createContextCreator } from './context';
+import { useValidationErrors } from './plugins/use-validation-errors';
 
 function createSchema() {
   const resolvers = mergeResolvers(
@@ -29,5 +30,6 @@ export function createYoga() {
     context: createContextCreator(config),
     landingPage: false,
     graphqlEndpoint: '/',
+    plugins: [useValidationErrors()],
   });
 }

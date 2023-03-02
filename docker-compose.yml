@@ -1,4 +1,6 @@
+name: digitaler-schulhof
 version: "3.8"
+
 services:
   arangodb:
     image: arangodb:3.10

@@ -1,6 +1,7 @@
 import { Schoolyear, SchoolyearInput } from '@services/schoolyear';
-import { aql, Database } from 'arangojs';
+import { aql } from 'arangojs';
 import { ArangoError } from 'arangojs/error';
+import { ArangoRepository } from './arango';
 import {
   ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND,
   ARANGO_ERROR_NUM_REV_MISMATCH,
@@ -23,9 +24,10 @@ export interface SchoolyearRepository {
   delete(id: string, ifRev?: string): Promise<Schoolyear>;
 }
 
-export class SchoolyearRepositoryImpl implements SchoolyearRepository {
-  constructor(private readonly db: Database) {}
-
+export class SchoolyearRepositoryImpl
+  extends ArangoRepository
+  implements SchoolyearRepository
+{
   async getByIds(ids: readonly string[]): Promise<(Schoolyear | null)[]> {
     const res = await this.db.query<Schoolyear | null>(
       aql`

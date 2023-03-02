@@ -1,17 +1,4 @@
-import {
-  DuplicateFieldsError,
-  IdDoesNotExistError,
-  RevMismatchError,
-} from '@repositories/utils';
-import { mapRepositoryFieldToGraphQLField } from '.';
 import { withoutNull } from '../../utils';
-import {
-  GraphQLCannotCreateDuplicateFieldsError,
-  GraphQLCannotDeleteIdNotFoundError,
-  GraphQLCannotUpdateDuplicateFieldsError,
-  GraphQLCannotUpdateIdNotFoundError,
-  GraphQLCannotUpdateRevMismatchError,
-} from '../errors';
 import { RootMutationResolvers, RootQueryResolvers } from '../types';
 import { getPageInfo } from '../utils';
 
@@ -51,16 +38,7 @@ export const RootMutation = {
     await ctx.assertPermission('schulhof.schoolyear.getById');
     await ctx.assertPermission('schulhof.schoolyear.create');
 
-    try {
-      return await ctx.services.schoolyear.create(post);
-    } catch (error) {
-      if (error instanceof DuplicateFieldsError) {
-        throw new GraphQLCannotCreateDuplicateFieldsError(
-          error.conflictingFields.map(mapRepositoryFieldToGraphQLField)
-        );
-      }
-      throw error;
-    }
+    return ctx.services.schoolyear.create(post);
   },
   updateSchoolyear: async (_, args, ctx) => {
     const { id, patch } = args;
@@ -69,22 +47,7 @@ export const RootMutation = {
     await ctx.assertPermission('schulhof.schoolyear.getById');
     await ctx.assertPermission('schulhof.schoolyear.update');
 
-    try {
-      return await ctx.services.schoolyear.update(id, patch, ifRev);
-    } catch (error) {
-      if (error instanceof RevMismatchError) {
-        throw new GraphQLCannotUpdateRevMismatchError();
-      }
-      if (error instanceof IdDoesNotExistError) {
-        throw new GraphQLCannotUpdateIdNotFoundError();
-      }
-      if (error instanceof DuplicateFieldsError) {
-        throw new GraphQLCannotUpdateDuplicateFieldsError(
-          error.conflictingFields.map(mapRepositoryFieldToGraphQLField)
-        );
-      }
-      throw error;
-    }
+    return ctx.services.schoolyear.update(id, patch, ifRev);
   },
   deleteSchoolyear: async (_, args, ctx) => {
     const { id } = args;
@@ -93,16 +56,6 @@ export const RootMutation = {
     await ctx.assertPermission('schulhof.schoolyear.getById');
     await ctx.assertPermission('schulhof.schoolyear.delete');
 
-    try {
-      return await ctx.services.schoolyear.delete(id, ifRev);
-    } catch (error) {
-      if (error instanceof RevMismatchError) {
-        throw new GraphQLCannotUpdateRevMismatchError();
-      }
-      if (error instanceof IdDoesNotExistError) {
-        throw new GraphQLCannotDeleteIdNotFoundError();
-      }
-      throw error;
-    }
+    return ctx.services.schoolyear.delete(id, ifRev);
   },
 } satisfies RootMutationResolvers;

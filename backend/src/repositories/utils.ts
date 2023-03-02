@@ -2,7 +2,7 @@ import { ArrayCursor } from 'arangojs/cursor';
 import { ToCatchError } from '../utils';
 
 export type MakePatch<T> = {
-  [P in keyof T]?: MakePatch<T[P]>;
+  [P in keyof T]?: MakePatch<T[P]> | null;
 };
 
 export type Paginated<T> = {

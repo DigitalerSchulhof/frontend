@@ -1,16 +1,16 @@
-import { ContextCreatorUserContext } from '.';
-import { GraphQLNoPermissionError } from '../../resolvers/utils';
+import { UserContextCreatorContext } from '.';
+import { GraphQLNoPermissionError } from '../../resolvers/errors';
 
 export interface BackendPermissionsContext {
   /**
-   * Throws a GraphQLError if the user does not have the given permission.
+   * Throws a GraphQLNoPermissionError if the user does not have the given permission.
    */
   assertPermission: (permission: string) => Promise<void>;
 
   hasPermission: (permission: string) => Promise<boolean>;
 }
 
-export function createPermissionsContext(context: ContextCreatorUserContext) {
+export function createPermissionsContext(context: UserContextCreatorContext) {
   async function hasPermission(permission: string): Promise<boolean> {
     return true;
   }
