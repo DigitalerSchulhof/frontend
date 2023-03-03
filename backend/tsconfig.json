@@ -11,12 +11,9 @@
     "baseUrl": "./src",
     "paths": {
       "@caches/*": ["caches/*"],
-      "@config": ["config"],
-      "@repositories/*": ["repositories/*"],
-      "@loaders/*": ["loaders/*"],
-      "@services/*": ["services/*"],
-      "@validators/*": ["validators/*"],
-      "@utils": ["utils"]
+      "@repositories/*": ["repositories/content/*"],
+      "@services/*": ["services/content/*"],
+      "@validators/*": ["validators/content/*"],
     }
   },
   "ts-node": {

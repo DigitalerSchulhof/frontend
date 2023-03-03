@@ -1,9 +1,8 @@
 import {
-  OnExecuteDoneHookResultOnNextHook,
-  useErrorHandler,
+  OnExecuteDoneHookResultOnNextHook
 } from '@envelop/core';
 import { GraphQLError } from 'graphql';
-import { handleStreamOrSingleExecutionResult, Plugin } from 'graphql-yoga';
+import { Plugin, handleStreamOrSingleExecutionResult } from 'graphql-yoga';
 import {
   AggregatedInputValidationError,
   InputValidationError,

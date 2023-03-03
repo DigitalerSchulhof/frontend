@@ -1,6 +1,6 @@
 import { CacheAdapter } from '@caches/adapters';
-import { Config } from '@config';
 import { Database } from 'arangojs';
+import { Config } from '../../config';
 import {
   BackendPermissionsContext,
   createPermissionsContext,

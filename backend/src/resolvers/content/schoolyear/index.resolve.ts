@@ -1,4 +1,4 @@
-import { SchoolyearResolvers } from '../types';
+import { SchoolyearResolvers } from '../../types';
 
 export const Schoolyear = {
   id: (p) => p.id,

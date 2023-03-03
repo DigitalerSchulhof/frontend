@@ -1,8 +1,8 @@
 import { ObjectCache } from '@caches/object-cache';
 import { SchoolyearRepository } from '@repositories/schoolyear';
-import { MakePatch, Paginated } from '@repositories/utils';
-import { SchoolyearValidator } from '../validators/schoolyear';
-import { getByIdsCachedOrLoad } from './utils';
+import { SchoolyearValidator } from '@validators/schoolyear';
+import { MakePatch, Paginated } from '../../repositories/utils';
+import { getByIdsCachedOrLoad } from '../utils';
 
 
 export interface SchoolyearInput {

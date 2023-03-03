@@ -7,7 +7,7 @@ export class RedisCacheAdapter implements CacheAdapter {
   constructor(
     readonly host: string,
     readonly port: number,
-    readonly password: string
+    readonly password?: string
   ) {
     this.client = new Redis({
       host,

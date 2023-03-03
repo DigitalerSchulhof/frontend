@@ -1,7 +1,7 @@
-import { IdDoesNotExistError, MakePatch } from '@repositories/utils';
 import { SchoolyearInput, SchoolyearService } from '@services/schoolyear';
-import { isNotNullOrUndefined, MissingDependencyError } from '@utils';
-import { aggregateValidationErrors, InputValidationError } from './utils';
+import { IdDoesNotExistError, MakePatch } from '../../repositories/utils';
+import { MissingDependencyError, isNotNullOrUndefined } from '../../utils';
+import { InputValidationError, aggregateValidationErrors } from '../utils';
 
 export const SCHOOLYEAR_START_BEFORE_END = 'SCHOOLYEAR_START_BEFORE_END';
 export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';

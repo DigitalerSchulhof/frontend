@@ -1,6 +1,6 @@
-import { withoutNull } from '../../utils';
-import { RootMutationResolvers, RootQueryResolvers } from '../types';
-import { getPageInfo } from '../utils';
+import { withoutNull } from '../../../utils';
+import { RootMutationResolvers, RootQueryResolvers } from '../../types';
+import { getPageInfo } from '../../utils';
 
 export const RootQuery = {
   schoolyear: async (_, args, ctx) => {

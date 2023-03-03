@@ -1,6 +1,6 @@
 import { SchoolyearService } from '@services/schoolyear';
 import { ContextCreatorContext } from '..';
-import { createSchoolyearService } from './schoolyear';
+import { createSchoolyearService } from './content/schoolyear';
 
 export interface BackendServicesContext {
   services: {

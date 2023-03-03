@@ -1,16 +1,16 @@
 import { Schoolyear, SchoolyearInput } from '@services/schoolyear';
 import { aql } from 'arangojs';
 import { ArangoError } from 'arangojs/error';
-import { ArangoRepository } from './arango';
+import { ArangoRepository } from '../arango';
 import {
   ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND,
   ARANGO_ERROR_NUM_REV_MISMATCH,
   IdDoesNotExistError,
   MakePatch,
-  paginateCursor,
   Paginated,
-  RevMismatchError
-} from './utils';
+  RevMismatchError,
+  paginateCursor
+} from '../utils';
 
 export interface SchoolyearRepository {
   getByIds(ids: readonly string[]): Promise<(Schoolyear | null)[]>;

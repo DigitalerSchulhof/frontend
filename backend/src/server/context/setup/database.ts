@@ -1,5 +1,5 @@
-import { Config } from '@config';
 import { Database } from 'arangojs';
+import { Config } from '../../../config';
 
 export function createContextDatabase(config: Config) {
   const db = new Database({

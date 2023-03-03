@@ -1,4 +1,4 @@
-import { isPromiseRejectedResult } from '@utils';
+import { isPromiseRejectedResult } from '../utils';
 
 export class InputValidationError extends Error {
   constructor(readonly code: string) {

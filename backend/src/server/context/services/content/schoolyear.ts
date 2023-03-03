@@ -2,8 +2,8 @@ import { CacheAdapter } from '@caches/adapters';
 import { ObjectCache } from '@caches/object-cache';
 import { SchoolyearRepositoryImpl } from '@repositories/schoolyear';
 import { Schoolyear, SchoolyearService } from '@services/schoolyear';
+import { SchoolyearValidatorImpl } from '@validators/schoolyear';
 import { Database } from 'arangojs';
-import { SchoolyearValidatorImpl } from '../../../validators/schoolyear';
 
 export function createSchoolyearService(
   db: Database,
