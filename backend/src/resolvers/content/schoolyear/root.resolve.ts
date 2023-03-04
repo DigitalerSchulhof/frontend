@@ -1,4 +1,4 @@
-import { withoutNull } from '../../../utils';
+import { deepWithoutNull, withoutNull } from '../../../utils';
 import { RootMutationResolvers, RootQueryResolvers } from '../../types';
 import { getPageInfo, unwrapInput } from '../../utils';
 
@@ -13,8 +13,10 @@ export const RootQuery = {
 
     return ctx.services.schoolyear.getByIds(ids);
   },
-  schoolyears: async (_, __, ctx) => {
-    const schoolyears = await ctx.services.schoolyear.getAll();
+  schoolyears: async (_, args, ctx) => {
+    const searchArgs = deepWithoutNull(args);
+
+    const schoolyears = await ctx.services.schoolyear.search(searchArgs);
 
     return {
       edges: schoolyears.nodes.map((schoolyear) => ({

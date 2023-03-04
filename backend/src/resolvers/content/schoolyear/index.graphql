@@ -18,3 +18,21 @@ input UpdateSchoolyearInput {
   start: NonNullDateInput
   end: NonNullDateInput
 }
+
+input SchoolyearFilter {
+  name: StringFilter
+  start: DateFilter
+  end: DateFilter
+}
+
+enum SchoolyearSortOption {
+  id
+  name
+  start
+  end
+}
+
+input SchoolyearSort {
+  by: SchoolyearSortOption!
+  direction: SortDirection!
+}

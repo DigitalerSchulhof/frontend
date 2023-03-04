@@ -15,7 +15,7 @@ export type MakeFilters<T, K extends keyof T> = {
 
 export type MakeSort<T, K extends keyof T> = readonly {
   by: K;
-  direction: 'asc' | 'desc';
+  direction: keyof typeof sortDirectionMap;
 }[];
 
 export type SearchFilter =
@@ -26,16 +26,16 @@ export type SearchFilter =
 
 export interface StringSearchFilter {
   eq?: string;
-  neq?: string;
-  in?: string[];
-  nin?: string[];
+  ne?: string;
+  in?: readonly string[];
+  nin?: readonly string[];
 }
 
 export interface NumberSearchFilter {
   eq?: number;
-  neq?: number;
-  in?: number[];
-  nin?: number[];
+  ne?: number;
+  in?: readonly number[];
+  nin?: readonly number[];
   gt?: number;
   gte?: number;
   lt?: number;
@@ -44,9 +44,9 @@ export interface NumberSearchFilter {
 
 export interface DateSearchFilter {
   eq?: number;
-  neq?: number;
-  in?: number[];
-  nin?: number[];
+  ne?: number;
+  in?: readonly number[];
+  nin?: readonly number[];
   gt?: number;
   gte?: number;
   lt?: number;
@@ -54,8 +54,8 @@ export interface DateSearchFilter {
 }
 
 export interface BooleanSearchFilter {
-  eq?: boolean[];
-  neq?: boolean[];
+  eq?: boolean;
+  ne?: boolean;
 }
 
 export interface Paginated<T> {
@@ -78,7 +78,7 @@ export interface AnonymousSearchQuery {
   filters?: Record<string, SearchFilter>;
   sort?: readonly {
     by: string;
-    direction: 'asc' | 'desc';
+    direction: 'asc' | 'desc' | 'ASC' | 'DESC';
   }[];
   limit?: number;
   offset?: number;
@@ -134,7 +134,7 @@ function searchFiltersToArangoQuery(
         switch (op) {
           case 'eq':
             return aql.aql`FILTER ${fieldAqlLiteral} == ${valueAql}`;
-          case 'neq':
+          case 'ne':
             return aql.aql`FILTER ${fieldAqlLiteral} != ${valueAql}`;
           case 'gt':
             return aql.aql`FILTER ${fieldAqlLiteral} > ${valueAql}`;
@@ -158,7 +158,11 @@ function searchFiltersToArangoQuery(
 
 const sortDirectionMap = {
   asc: aql.aql`ASC`,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  ASC: aql.aql`ASC`,
   desc: aql.aql`DESC`,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  DESC: aql.aql`DESC`,
 };
 
 export function searchSortToArangoQuery(

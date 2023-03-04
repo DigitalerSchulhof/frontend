@@ -1,7 +1,12 @@
 extend type RootQuery {
   schoolyear(id: ID!): Schoolyear
   schoolyearsByIds(ids: [ID!]!): [Schoolyear]!
-  schoolyears: RootQuerySchoolyearsConnection!
+  schoolyears(
+    filters: SchoolyearFilter
+    sort: [SchoolyearSort!]
+    offset: Int
+    limit: Int
+  ): RootQuerySchoolyearsConnection!
 }
 
 type RootQuerySchoolyearsConnection {

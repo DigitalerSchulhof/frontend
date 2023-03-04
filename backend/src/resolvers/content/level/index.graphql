@@ -14,3 +14,19 @@ input CreateLevelInput {
 input UpdateLevelInput {
   name: NonNullStringInput
 }
+
+input LevelFilter {
+  schoolyearId: IDFilter
+  name: StringFilter
+}
+
+enum LevelSortOption {
+  id
+  schoolyearId
+  name
+}
+
+input LevelSort {
+  by: LevelSortOption!
+  direction: SortDirection!
+}

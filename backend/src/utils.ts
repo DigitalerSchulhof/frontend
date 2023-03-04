@@ -1,4 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type MaybeArray<T> = T | T[];
+export type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+export type DeepNonNull<T> = T extends object
+  ? { [K in keyof T]-?: DeepNonNull<NonNullable<T[K]>> }
+  : NonNullable<T>;
 
 /**
  * The identity function.
@@ -30,6 +35,23 @@ export function withoutNull<T>(value: NonNullable<T>): T;
 export function withoutNull<T>(value: T | null): T | undefined;
 export function withoutNull<T>(val: T | null): T | undefined {
   return val === null ? undefined : val;
+}
+
+export function deepWithoutNull<T>(val: NonNullable<T>): DeepNonNull<T>;
+export function deepWithoutNull<T>(val: T | null): DeepNonNull<T> | undefined;
+export function deepWithoutNull<T>(val: T | null): DeepNonNull<T> | undefined {
+  if (val === null) return undefined;
+
+  if (typeof val === 'object') {
+    const result: any = {};
+    for (const key in val) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      result[key] = deepWithoutNull(val[key]);
+    }
+    return result;
+  }
+
+  return val as any;
 }
 
 /**

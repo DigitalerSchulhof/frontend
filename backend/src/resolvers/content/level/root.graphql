@@ -1,7 +1,12 @@
 extend type RootQuery {
   level(id: ID!): Level
   levelsByIds(ids: [ID!]!): [Level]!
-  levels: RootQueryLevelsConnection!
+  levels(
+    filters: LevelFilter
+    sort: [LevelSort!]
+    offset: Int
+    limit: Int
+  ): RootQueryLevelsConnection!
 }
 
 type RootQueryLevelsConnection {
