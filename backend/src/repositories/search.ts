@@ -63,7 +63,7 @@ export interface Paginated<T> {
   total: number;
 }
 
-export interface SearchQuery<
+export interface MakeSearchQuery<
   Base,
   FilterableKeys extends keyof Base,
   SortableKeys extends keyof Base = FilterableKeys
@@ -74,7 +74,7 @@ export interface SearchQuery<
   offset?: number;
 }
 
-interface AnonymousSearchQuery {
+export interface AnonymousSearchQuery {
   filters?: Record<string, SearchFilter>;
   sort?: readonly {
     by: string;
@@ -88,7 +88,7 @@ const EMPTY_AQL = aql.aql``;
 export const DEFAULT_LIMIT = 25;
 
 export function searchQueryToArangoQuery(
-  collectionName: string,
+  documentName: string,
   query: AnonymousSearchQuery,
   modelKeyToArangoKey: (key: string) => string = identity
 ): aql.GeneratedAqlQuery {
@@ -97,12 +97,12 @@ export function searchQueryToArangoQuery(
   const offset = query.offset ?? 0;
 
   const filterQuery = searchFiltersToArangoQuery(
-    collectionName,
+    documentName,
     modelKeyToArangoKey,
     filters
   );
   const sortQuery = searchSortToArangoQuery(
-    collectionName,
+    documentName,
     modelKeyToArangoKey,
     sort
   );
@@ -115,7 +115,7 @@ export function searchQueryToArangoQuery(
 }
 
 function searchFiltersToArangoQuery(
-  collectionName: string,
+  documentName: string,
   modelKeyToArangoKey: (key: string) => string,
   filters: AnonymousSearchQuery['filters']
 ): aql.GeneratedAqlQuery {
@@ -127,7 +127,7 @@ function searchFiltersToArangoQuery(
         if (value === undefined) return EMPTY_AQL;
 
         const fieldAqlLiteral = aql.literal(
-          `${collectionName}.${modelKeyToArangoKey(key)}`
+          `${documentName}.${modelKeyToArangoKey(key)}`
         );
         const valueAql = aql.aql`${value}`;
 
@@ -162,7 +162,7 @@ const sortDirectionMap = {
 };
 
 export function searchSortToArangoQuery(
-  collectionName: string,
+  documentName: string,
   modelKeyToArangoKey: (key: string) => string,
   sort: AnonymousSearchQuery['sort']
 ): aql.GeneratedAqlQuery {
@@ -171,7 +171,7 @@ export function searchSortToArangoQuery(
   const sortClauses = sort.map(
     (sort) =>
       aql.aql`${aql.literal(
-        `${collectionName}.${modelKeyToArangoKey(sort.by)}`
+        `${documentName}.${modelKeyToArangoKey(sort.by)}`
       )} ${sortDirectionMap[sort.direction]}`
   );
 
