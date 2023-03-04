@@ -15,14 +15,8 @@
     // I know what I'm doing:
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/no-invalid-void-type": "off",
 
-    "@typescript-eslint/no-invalid-void-type": [
-      // No idea why it's false by default
-      "warn",
-      {
-        "allowAsThisParameter": true
-      }
-    ],
     "@typescript-eslint/no-unsafe-return": "off", // Covered by @typescript-eslint/no-explicit-any
     "@typescript-eslint/no-empty-interface": "off", // There is no difference between interface/type in these cases, and the once I chose expresses what I want better
 
@@ -41,7 +35,9 @@
     {
       "files": ["*.test.ts"],
       "rules": {
-        "@typescript-eslint/no-unsafe-assignment": "off"
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-invalid-void-type": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
       }
     }
   ]

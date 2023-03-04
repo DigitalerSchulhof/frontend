@@ -5,7 +5,8 @@ import {
   SchoolyearRepository,
 } from '@repositories/schoolyear';
 import { SchoolyearValidator } from '@validators/schoolyear';
-import { MakePatch, Paginated } from '../../repositories/utils';
+import { Paginated } from '../../repositories/search';
+import { MakePatch } from '../../repositories/utils';
 import { getByIdsCachedOrLoad } from '../utils';
 
 export class SchoolyearService {
@@ -13,9 +14,7 @@ export class SchoolyearService {
     private readonly repository: SchoolyearRepository,
     private readonly cache: ObjectCache<Schoolyear>,
     private readonly validator: SchoolyearValidator
-  ) {
-    this.validator.setService(this);
-  }
+  ) {}
 
   async getById(id: string): Promise<Schoolyear | null> {
     return (await this.getByIds([id]))[0];

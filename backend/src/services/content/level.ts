@@ -1,7 +1,8 @@
 import { ObjectCache } from '@caches/object-cache';
 import { Level, LevelBase, LevelRepository } from '@repositories/level';
 import { LevelValidator } from '@validators/level';
-import { MakePatch, Paginated } from '../../repositories/utils';
+import { Paginated } from '../../repositories/search';
+import { MakePatch } from '../../repositories/utils';
 import { getByIdsCachedOrLoad } from '../utils';
 
 export class LevelService {
@@ -9,9 +10,7 @@ export class LevelService {
     private readonly repository: LevelRepository,
     private readonly cache: ObjectCache<Level>,
     private readonly validator: LevelValidator
-  ) {
-    this.validator.setService(this);
-  }
+  ) {}
 
   async getById(id: string): Promise<Level | null> {
     return (await this.getByIds([id]))[0];

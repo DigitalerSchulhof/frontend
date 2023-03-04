@@ -1,23 +1,22 @@
 import { aql } from 'arangojs';
 import { ArangoRepository } from '../arango';
-import {
-  MakePatch,
-  Paginated,
-  handleArangoError,
-  paginateCursor,
-} from '../utils';
+import { Paginated, SearchQuery, searchQueryToArangoQuery } from '../search';
+import { MakePatch, handleArangoError, paginateCursor } from '../utils';
 
 export interface LevelBase {
-  readonly name: string;
-  readonly schoolyearId: string;
+  name: string;
+  schoolyearId: string;
 }
 
 export type LevelPatch = MakePatch<Omit<LevelBase, 'schoolyearId'>>;
 
 export interface Level extends LevelBase {
-  readonly id: string;
-  readonly rev: string;
+  id: string;
+  rev: string;
 }
+
+export interface LevelSearchQuery
+  extends SearchQuery<Level, 'id' | 'name' | 'schoolyearId'> {}
 
 export interface LevelRepository {
   getByIds(ids: readonly string[]): Promise<(Level | null)[]>;
@@ -25,6 +24,7 @@ export interface LevelRepository {
   create(post: LevelBase): Promise<Level>;
   update(id: string, patch: LevelPatch, ifRev?: string): Promise<Level>;
   delete(id: string, ifRev?: string): Promise<Level>;
+  search(query: LevelSearchQuery): Promise<Paginated<Level>>;
 }
 
 export class LevelRepositoryImpl
@@ -138,5 +138,25 @@ export class LevelRepositoryImpl
     }
 
     return (await res.next())!;
+  }
+
+  async search(query: LevelSearchQuery): Promise<Paginated<Level>> {
+    const res = await this.db.query<Level>(
+      aql`
+        FOR level IN levels
+          ${searchQueryToArangoQuery('level', query)}
+
+          RETURN MERGE(
+            UNSET(level, "_key", "_id", "_rev"),
+            {
+              id: level._key,
+              rev: level._rev
+            }
+          )
+      `,
+      { fullCount: true }
+    );
+
+    return paginateCursor(res);
   }
 }

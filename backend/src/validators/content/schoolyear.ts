@@ -1,33 +1,12 @@
 import { SchoolyearBase, SchoolyearPatch } from '@repositories/schoolyear';
-import { SchoolyearService } from '@services/schoolyear';
 import { IdNotFoundError } from '../../repositories/utils';
-import { MissingDependencyError } from '../../utils';
+import { Validator } from '../base';
 import { InputValidationError, aggregateValidationErrors } from '../utils';
 
 export const SCHOOLYEAR_START_BEFORE_END = 'SCHOOLYEAR_START_BEFORE_END';
 export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';
 
-export interface SchoolyearValidator {
-  setService(service: SchoolyearService): void;
-  assertCanCreate(post: SchoolyearBase): Promise<void | never>;
-  assertCanUpdate(id: string, patch: SchoolyearPatch): Promise<void | never>;
-}
-
-export class SchoolyearValidatorImpl implements SchoolyearValidator {
-  private service: SchoolyearService | null = null;
-
-  setService(service: SchoolyearService): void {
-    this.service = service;
-  }
-
-  getService(): SchoolyearService {
-    if (!this.service) {
-      throw new MissingDependencyError('SchoolyearService');
-    }
-
-    return this.service;
-  }
-
+export class SchoolyearValidator extends Validator {
   async assertCanCreate(post: SchoolyearBase): Promise<void | never> {
     const error = await aggregateValidationErrors([
       this.assertStartBeforeEnd(post.start, post.end),
@@ -41,7 +20,7 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
     id: string,
     patch: SchoolyearPatch
   ): Promise<void | never> {
-    const base = await this.getService().getById(id);
+    const base = await this.services.schoolyear.getById(id);
 
     if (!base) {
       throw new IdNotFoundError();
@@ -70,14 +49,26 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
   }
 
   private async assertExistsNoneWithName(name: string): Promise<void | never> {
-    return this.assertExistsNoneWithNameExceptId(name, null);
+    return this.assertExistsNoneWithNameExceptId(name);
   }
 
   private async assertExistsNoneWithNameExceptId(
     name: string,
-    id: string | null
+    id?: string
   ): Promise<void | never> {
-    // TODO: Search service for schoolyear with name and different id and throw error if found
-    // throw new InputValidationError(SCHOOLYEAR_NAME_EXISTS);
+    const schoolyears = await this.repositories.schoolyear.search({
+      filters: {
+        name: {
+          eq: name,
+        },
+        id: {
+          neq: id,
+        },
+      },
+    });
+
+    if (schoolyears.nodes.length) {
+      throw new InputValidationError(SCHOOLYEAR_NAME_EXISTS);
+    }
   }
 }

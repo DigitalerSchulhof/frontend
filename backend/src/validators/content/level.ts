@@ -1,33 +1,12 @@
 import { LevelBase, LevelPatch } from '@repositories/level';
-import { LevelService } from '@services/level';
 import { IdNotFoundError } from '../../repositories/utils';
-import { MissingDependencyError } from '../../utils';
-import { aggregateValidationErrors } from '../utils';
+import { Validator } from '../base';
+import { InputValidationError, aggregateValidationErrors } from '../utils';
 
 export const SCHOOLYEAR_DOES_NOT_EXIST = 'SCHOOLYEAR_DOES_NOT_EXIST';
 export const LEVEL_NAME_EXISTS = 'LEVEL_NAME_EXISTS';
 
-export interface LevelValidator {
-  setService(service: LevelService): void;
-  assertCanCreate(post: LevelBase): Promise<void | never>;
-  assertCanUpdate(id: string, patch: LevelPatch): Promise<void | never>;
-}
-
-export class LevelValidatorImpl implements LevelValidator {
-  private service: LevelService | null = null;
-
-  setService(service: LevelService): void {
-    this.service = service;
-  }
-
-  getService(): LevelService {
-    if (!this.service) {
-      throw new MissingDependencyError('LevelService');
-    }
-
-    return this.service;
-  }
-
+export class LevelValidator extends Validator {
   async assertCanCreate(post: LevelBase): Promise<void | never> {
     await this.assertSchoolyearExists(post.schoolyearId);
 
@@ -39,7 +18,7 @@ export class LevelValidatorImpl implements LevelValidator {
   }
 
   async assertCanUpdate(id: string, patch: LevelPatch): Promise<void | never> {
-    const base = await this.getService().getById(id);
+    const base = await this.services.level.getById(id);
 
     if (!base) {
       throw new IdNotFoundError();
@@ -61,8 +40,11 @@ export class LevelValidatorImpl implements LevelValidator {
   private async assertSchoolyearExists(
     schoolyearId: string
   ): Promise<void | never> {
-    // TODO: Query schoolyear service for schoolyear with id and throw error if not found
-    // throw new InputValidationError(SCHOOLYEAR_DOES_NOT_EXIST);
+    const schoolyear = await this.services.schoolyear.getById(schoolyearId);
+
+    if (!schoolyear) {
+      throw new InputValidationError(SCHOOLYEAR_DOES_NOT_EXIST);
+    }
   }
 
   private async assertExistsNoneInSchoolyearWithName(
@@ -71,17 +53,31 @@ export class LevelValidatorImpl implements LevelValidator {
   ): Promise<void | never> {
     return this.assertExistsNoneInSchoolyearWithNameExceptId(
       schoolyearId,
-      name,
-      null
+      name
     );
   }
 
   private async assertExistsNoneInSchoolyearWithNameExceptId(
     schoolyearId: string,
     name: string,
-    id: string | null
+    id?: string
   ): Promise<void | never> {
-    // TODO: Search service for level with name and different id and throw error if found
-    // throw new InputValidationError(LEVEL_NAME_EXISTS);
+    const level = await this.repositories.level.search({
+      filters: {
+        name: {
+          eq: name,
+        },
+        schoolyearId: {
+          neq: schoolyearId,
+        },
+        id: {
+          neq: id,
+        },
+      },
+    });
+
+    if (level.nodes.length) {
+      throw new InputValidationError(LEVEL_NAME_EXISTS);
+    }
   }
 }

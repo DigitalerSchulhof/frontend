@@ -14,7 +14,7 @@ export class AggregatedInputValidationError extends Error {
 
 export async function aggregateValidationErrors(
   promises: (Promise<unknown> | null)[]
-): Promise<undefined | AggregatedInputValidationError> {
+): Promise<void | AggregatedInputValidationError> {
   const results = await Promise.allSettled(promises);
 
   const errors = results.filter(isPromiseRejectedResult);
@@ -24,7 +24,7 @@ export async function aggregateValidationErrors(
 
 function aggregateValidationErrorsReasons(
   reasons: PromiseRejectedResult[]
-): undefined | AggregatedInputValidationError {
+): void | AggregatedInputValidationError {
   const errors = reasons.reduce<InputValidationError[]>((arr, acc) => {
     if (acc.reason instanceof InputValidationError) {
       arr.push(acc.reason);

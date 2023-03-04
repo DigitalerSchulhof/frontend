@@ -1,15 +1,11 @@
 import { ArrayCursor } from 'arangojs/cursor';
 import { ArangoError } from 'arangojs/error';
 import { ToCatchError } from '../utils';
+import { Paginated } from './search';
 
 export type MakePatch<T> = {
   [P in keyof T]?: MakePatch<T[P]>;
 };
-
-export interface Paginated<T> {
-  nodes: T[];
-  total: number;
-}
 
 export async function paginateCursor<T>(
   cursor: ArrayCursor<T>
