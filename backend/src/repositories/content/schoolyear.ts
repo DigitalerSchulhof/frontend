@@ -153,7 +153,11 @@ export class SchoolyearRepositoryImpl
     const res = await this.db.query<Schoolyear>(
       aql`
         FOR schoolyear IN schoolyears
-          ${searchQueryToArangoQuery('schoolyear', query)}
+          ${searchQueryToArangoQuery(
+            'schoolyear',
+            query,
+            this.modelKeyToArangoKey
+          )}
 
           RETURN MERGE(
             UNSET(schoolyear, "_key", "_id", "_rev"),

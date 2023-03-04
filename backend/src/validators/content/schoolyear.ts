@@ -3,7 +3,8 @@ import { IdNotFoundError } from '../../repositories/utils';
 import { Validator } from '../base';
 import { InputValidationError, aggregateValidationErrors } from '../utils';
 
-export const SCHOOLYEAR_START_BEFORE_END = 'SCHOOLYEAR_START_BEFORE_END';
+export const SCHOOLYEAR_START_NOT_BEFORE_END =
+  'SCHOOLYEAR_START_NOT_BEFORE_END';
 export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';
 
 export class SchoolyearValidator extends Validator {
@@ -20,7 +21,7 @@ export class SchoolyearValidator extends Validator {
     id: string,
     patch: SchoolyearPatch
   ): Promise<void | never> {
-    const base = await this.services.schoolyear.getById(id);
+    const [base] = await this.repositories.schoolyear.getByIds([id]);
 
     if (!base) {
       throw new IdNotFoundError();
@@ -44,7 +45,7 @@ export class SchoolyearValidator extends Validator {
     end: number
   ): Promise<void | never> {
     if (start >= end) {
-      throw new InputValidationError(SCHOOLYEAR_START_BEFORE_END);
+      throw new InputValidationError(SCHOOLYEAR_START_NOT_BEFORE_END);
     }
   }
 
@@ -65,6 +66,7 @@ export class SchoolyearValidator extends Validator {
           neq: id,
         },
       },
+      limit: 1,
     });
 
     if (schoolyears.nodes.length) {

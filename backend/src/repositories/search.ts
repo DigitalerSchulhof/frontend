@@ -1,4 +1,5 @@
 import * as aql from 'arangojs/aql';
+import { identity } from '../utils';
 
 export type MakeFilters<T, K extends keyof T> = {
   [P in K]?: T[P] extends string
@@ -88,14 +89,23 @@ export const DEFAULT_LIMIT = 25;
 
 export function searchQueryToArangoQuery(
   collectionName: string,
-  query: AnonymousSearchQuery
+  query: AnonymousSearchQuery,
+  modelKeyToArangoKey: (key: string) => string = identity
 ): aql.GeneratedAqlQuery {
   const { filters, sort } = query;
   const limit = query.limit ?? DEFAULT_LIMIT;
   const offset = query.offset ?? 0;
 
-  const filterQuery = searchFiltersToArangoQuery(collectionName, filters);
-  const sortQuery = searchSortToArangoQuery(collectionName, sort);
+  const filterQuery = searchFiltersToArangoQuery(
+    collectionName,
+    modelKeyToArangoKey,
+    filters
+  );
+  const sortQuery = searchSortToArangoQuery(
+    collectionName,
+    modelKeyToArangoKey,
+    sort
+  );
 
   return aql.aql`
     ${filterQuery}
@@ -106,6 +116,7 @@ export function searchQueryToArangoQuery(
 
 function searchFiltersToArangoQuery(
   collectionName: string,
+  modelKeyToArangoKey: (key: string) => string,
   filters: AnonymousSearchQuery['filters']
 ): aql.GeneratedAqlQuery {
   if (!filters || !Object.keys(filters).length) return EMPTY_AQL;
@@ -115,7 +126,9 @@ function searchFiltersToArangoQuery(
       return Object.entries(filter).map(([op, value]) => {
         if (value === undefined) return EMPTY_AQL;
 
-        const fieldAqlLiteral = aql.literal(`${collectionName}.${key}`);
+        const fieldAqlLiteral = aql.literal(
+          `${collectionName}.${modelKeyToArangoKey(key)}`
+        );
         const valueAql = aql.aql`${value}`;
 
         switch (op) {
@@ -150,15 +163,16 @@ const sortDirectionMap = {
 
 export function searchSortToArangoQuery(
   collectionName: string,
+  modelKeyToArangoKey: (key: string) => string,
   sort: AnonymousSearchQuery['sort']
 ): aql.GeneratedAqlQuery {
   if (!sort?.length) return EMPTY_AQL;
 
   const sortClauses = sort.map(
     (sort) =>
-      aql.aql`${aql.literal(`${collectionName}.${sort.by}`)} ${
-        sortDirectionMap[sort.direction]
-      }`
+      aql.aql`${aql.literal(
+        `${collectionName}.${modelKeyToArangoKey(sort.by)}`
+      )} ${sortDirectionMap[sort.direction]}`
   );
 
   return aql.aql`

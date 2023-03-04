@@ -144,7 +144,7 @@ export class LevelRepositoryImpl
     const res = await this.db.query<Level>(
       aql`
         FOR level IN levels
-          ${searchQueryToArangoQuery('level', query)}
+          ${searchQueryToArangoQuery('level', query, this.modelKeyToArangoKey)}
 
           RETURN MERGE(
             UNSET(level, "_key", "_id", "_rev"),

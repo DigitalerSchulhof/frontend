@@ -40,7 +40,9 @@ export class LevelValidator extends Validator {
   private async assertSchoolyearExists(
     schoolyearId: string
   ): Promise<void | never> {
-    const schoolyear = await this.services.schoolyear.getById(schoolyearId);
+    const [schoolyear] = await this.repositories.schoolyear.getByIds([
+      schoolyearId,
+    ]);
 
     if (!schoolyear) {
       throw new InputValidationError(SCHOOLYEAR_DOES_NOT_EXIST);
@@ -74,6 +76,7 @@ export class LevelValidator extends Validator {
           neq: id,
         },
       },
+      limit: 1,
     });
 
     if (level.nodes.length) {
