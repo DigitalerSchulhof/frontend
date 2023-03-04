@@ -24,14 +24,15 @@ export interface SimpleRepository<
   search(query: SearchQuery): Promise<Paginated<BaseWithId>>;
 }
 
-type ExtractRepositoryArgs<Repository> = Repository extends SimpleRepository<
-  infer BaseWithId,
-  infer Base,
-  infer Patch,
-  infer SearchQuery
->
-  ? [BaseWithId, Base, Patch, SearchQuery]
-  : never;
+export type ExtractRepositoryArgs<Repository> =
+  Repository extends SimpleRepository<
+    infer BaseWithId,
+    infer Base,
+    infer Patch,
+    infer SearchQuery
+  >
+    ? [BaseWithId, Base, Patch, SearchQuery]
+    : never;
 
 export class SimpleArangoRepository<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

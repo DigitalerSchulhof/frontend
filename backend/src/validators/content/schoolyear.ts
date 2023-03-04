@@ -2,12 +2,16 @@ import { SchoolyearBase, SchoolyearPatch } from '@repositories/schoolyear';
 import { IdNotFoundError } from '../../repositories/utils';
 import { Validator } from '../base';
 import { InputValidationError, aggregateValidationErrors } from '../utils';
+import { SimpleValidator } from '../simple';
 
 export const SCHOOLYEAR_START_NOT_BEFORE_END =
   'SCHOOLYEAR_START_NOT_BEFORE_END';
 export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';
 
-export class SchoolyearValidator extends Validator {
+export class SchoolyearValidator
+  extends Validator
+  implements SimpleValidator<SchoolyearBase, SchoolyearPatch>
+{
   async assertCanCreate(post: SchoolyearBase): Promise<void | never> {
     const error = await aggregateValidationErrors([
       this.assertStartBeforeEnd(post.start, post.end),

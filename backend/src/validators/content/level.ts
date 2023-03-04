@@ -1,12 +1,16 @@
 import { LevelBase, LevelPatch } from '@repositories/level';
 import { IdNotFoundError } from '../../repositories/utils';
 import { Validator } from '../base';
+import { SimpleValidator } from '../simple';
 import { InputValidationError, aggregateValidationErrors } from '../utils';
 
 export const SCHOOLYEAR_DOES_NOT_EXIST = 'SCHOOLYEAR_DOES_NOT_EXIST';
 export const LEVEL_NAME_EXISTS = 'LEVEL_NAME_EXISTS';
 
-export class LevelValidator extends Validator {
+export class LevelValidator
+  extends Validator
+  implements SimpleValidator<LevelBase, LevelPatch>
+{
   async assertCanCreate(post: LevelBase): Promise<void | never> {
     await this.assertSchoolyearExists(post.schoolyearId);
 

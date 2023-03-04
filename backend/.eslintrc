@@ -16,7 +16,6 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/require-await": "off",
     "@typescript-eslint/no-invalid-void-type": "off",
-    "@typescript-eslint/no-unsafe-call": "off",
 
     "@typescript-eslint/no-unsafe-return": "off", // Covered by @typescript-eslint/no-explicit-any
     "@typescript-eslint/no-empty-interface": "off", // There is no difference between interface/type in these cases, and the once I chose expresses what I want better

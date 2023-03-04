@@ -1,5 +1,5 @@
 import * as graphql from 'graphql';
-import { Paginated } from '../repositories/utils';
+import { Paginated } from '../repositories/search';
 import { isNotNullOrUndefined } from '../utils';
 import { ResolversParentTypes } from './types';
 
