@@ -1,6 +1,6 @@
 import { withoutNull } from '../../../utils';
 import { RootMutationResolvers, RootQueryResolvers } from '../../types';
-import { getPageInfo } from '../../utils';
+import { getPageInfo, unwrapInput } from '../../utils';
 
 export const RootQuery = {
   schoolyear: async (_, args, ctx) => {
@@ -33,7 +33,7 @@ export const RootQuery = {
 
 export const RootMutation = {
   createSchoolyear: async (_, args, ctx) => {
-    const { post } = args;
+    const post = unwrapInput(args.post);
 
     await ctx.assertPermission('schulhof.schoolyear.getById');
     await ctx.assertPermission('schulhof.schoolyear.create');
@@ -41,7 +41,8 @@ export const RootMutation = {
     return ctx.services.schoolyear.create(post);
   },
   updateSchoolyear: async (_, args, ctx) => {
-    const { id, patch } = args;
+    const { id } = args;
+    const patch = unwrapInput(args.patch);
     const ifRev = withoutNull(args.ifRev);
 
     await ctx.assertPermission('schulhof.schoolyear.getById');

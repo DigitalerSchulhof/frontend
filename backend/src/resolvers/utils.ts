@@ -276,3 +276,21 @@ export function getPageInfo<T>(
     totalResults: paginated.total,
   };
 }
+
+type InputField = {
+  [K in string]?: { value: unknown } | null;
+};
+
+type UnwrapInput<T extends InputField> = {
+  [K in keyof T]: T[K] extends { value: infer V } ? V : never;
+};
+
+export function unwrapInput<T extends InputField>(input: T): UnwrapInput<T> {
+  const result: any = {};
+  for (const key in input) {
+    if (input[key]) {
+      result[key] = input[key]!.value;
+    }
+  }
+  return result;
+}

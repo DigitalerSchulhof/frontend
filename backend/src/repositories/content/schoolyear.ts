@@ -7,13 +7,13 @@ import {
   paginateCursor
 } from '../utils';
 
-export interface SchoolyearInput {
+export interface SchoolyearBase {
   name: string;
   start: number;
   end: number;
 }
 
-export interface Schoolyear extends SchoolyearInput {
+export interface Schoolyear extends SchoolyearBase {
   id: string;
   rev: string;
 }
@@ -21,10 +21,10 @@ export interface Schoolyear extends SchoolyearInput {
 export interface SchoolyearRepository {
   getByIds(ids: readonly string[]): Promise<(Schoolyear | null)[]>;
   getAll(): Promise<Paginated<Schoolyear>>;
-  create(post: SchoolyearInput): Promise<Schoolyear>;
+  create(post: SchoolyearBase): Promise<Schoolyear>;
   update(
     id: string,
-    patch: MakePatch<SchoolyearInput>,
+    patch: MakePatch<SchoolyearBase>,
     ifRev?: string
   ): Promise<Schoolyear>;
   delete(id: string, ifRev?: string): Promise<Schoolyear>;
@@ -71,7 +71,7 @@ export class SchoolyearRepositoryImpl
     return paginateCursor(res);
   }
 
-  async create(post: SchoolyearInput): Promise<Schoolyear> {
+  async create(post: SchoolyearBase): Promise<Schoolyear> {
     const res = await this.db.query<Schoolyear>(
       aql`
         INSERT ${post} INTO schoolyears
@@ -91,7 +91,7 @@ export class SchoolyearRepositoryImpl
 
   async update(
     id: string,
-    patch: MakePatch<SchoolyearInput>,
+    patch: MakePatch<SchoolyearBase>,
     ifRev?: string
   ): Promise<Schoolyear> {
     let res;

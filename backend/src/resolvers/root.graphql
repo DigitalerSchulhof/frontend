@@ -102,3 +102,53 @@ input DateFilter {
   in: [Date!]
   nin: [Date!]
 }
+
+# Inputs
+
+input StringInput {
+  value: String
+}
+
+input NonNullStringInput {
+  value: String!
+}
+
+input IntInput {
+  value: Int
+}
+
+input NonNullIntInput {
+  value: Int!
+}
+
+input FloatInput {
+  value: Float
+}
+
+input NonNullFloatInput {
+  value: Float!
+}
+
+input BooleanInput {
+  value: Boolean
+}
+
+input NonNullBooleanInput {
+  value: Boolean!
+}
+
+input IDInput {
+  value: ID
+}
+
+input NonNullIDInput {
+  value: ID!
+}
+
+input DateInput {
+  value: Date
+}
+
+input NonNullDateInput {
+  value: Date!
+}

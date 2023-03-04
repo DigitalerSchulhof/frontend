@@ -8,13 +8,13 @@ type Schoolyear {
 }
 
 input CreateSchoolyearInput {
-  name: String!
-  start: Date!
-  end: Date!
+  name: NonNullStringInput!
+  start: NonNullDateInput!
+  end: NonNullDateInput!
 }
 
 input UpdateSchoolyearInput {
-  name: String
-  start: Date
-  end: Date
+  name: NonNullStringInput
+  start: NonNullDateInput
+  end: NonNullDateInput
 }

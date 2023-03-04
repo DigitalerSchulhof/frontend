@@ -1,5 +1,5 @@
 import { ObjectCache } from '@caches/object-cache';
-import { Schoolyear, SchoolyearInput, SchoolyearRepository } from '@repositories/schoolyear';
+import { Schoolyear, SchoolyearBase, SchoolyearRepository } from '@repositories/schoolyear';
 import { SchoolyearValidator } from '@validators/schoolyear';
 import { MakePatch, Paginated } from '../../repositories/utils';
 import { getByIdsCachedOrLoad } from '../utils';
@@ -25,7 +25,7 @@ export class SchoolyearService {
     return this.repository.getAll();
   }
 
-  async create(post: SchoolyearInput): Promise<Schoolyear> {
+  async create(post: SchoolyearBase): Promise<Schoolyear> {
     await this.validator.assertCanCreate(post);
 
     const res = await this.repository.create(post);
@@ -37,7 +37,7 @@ export class SchoolyearService {
 
   async update(
     id: string,
-    patch: MakePatch<SchoolyearInput>,
+    patch: MakePatch<SchoolyearBase>,
     ifRev?: string
   ): Promise<Schoolyear> {
     await this.validator.assertCanUpdate(id, patch);
