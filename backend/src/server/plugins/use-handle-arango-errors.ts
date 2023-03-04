@@ -40,7 +40,8 @@ export function useHandleArangoErrors(): Plugin {
                 return acc;
               }
 
-              throw new Error('Unhandled ArangoError: ' + err.originalError);
+              acc.push(err);
+              return acc;
             }, []);
 
             setResult({
