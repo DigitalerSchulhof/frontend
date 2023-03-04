@@ -17,7 +17,6 @@ export interface SimpleRepository<
   SearchQuery extends AnonymousSearchQuery
 > {
   getByIds(ids: readonly string[]): Promise<(BaseWithId | null)[]>;
-  getAll(): Promise<Paginated<BaseWithId>>;
   create(post: Base): Promise<BaseWithId>;
   update(id: string, patch: Patch, ifRev?: string): Promise<BaseWithId>;
   delete(id: string, ifRev?: string): Promise<BaseWithId>;
@@ -75,24 +74,6 @@ export class SimpleArangoRepository<
     );
 
     return res.all();
-  }
-
-  async getAll(): Promise<Paginated<BaseWithId>> {
-    const res = await this.db.query<BaseWithId>(
-      aql`
-        FOR doc IN ${this.collectionNameAqlLiteral}
-          RETURN MERGE(
-            UNSET(doc, "_key", "_id", "_rev"),
-            {
-              id: doc._key,
-              rev: doc._rev
-            }
-          )
-      `,
-      { fullCount: true }
-    );
-
-    return paginateCursor(res);
   }
 
   async create(post: Base): Promise<BaseWithId> {

@@ -39,10 +39,6 @@ export class SimpleService<
     return getByIdsCachedOrLoad(this.cache, this.repository, ids);
   }
 
-  async getAll(): Promise<Paginated<BaseWithId>> {
-    return this.repository.getAll();
-  }
-
   async create(post: Base): Promise<BaseWithId> {
     await this.validator.assertCanCreate(post);
 
