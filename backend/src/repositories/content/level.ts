@@ -23,11 +23,7 @@ export interface LevelRepository {
   getByIds(ids: readonly string[]): Promise<(Level | null)[]>;
   getAll(): Promise<Paginated<Level>>;
   create(post: LevelBase): Promise<Level>;
-  update(
-    id: string,
-    patch: LevelPatch,
-    ifRev?: string
-  ): Promise<Level>;
+  update(id: string, patch: LevelPatch, ifRev?: string): Promise<Level>;
   delete(id: string, ifRev?: string): Promise<Level>;
 }
 
@@ -90,11 +86,7 @@ export class LevelRepositoryImpl
     return (await res.next())!;
   }
 
-  async update(
-    id: string,
-    patch: LevelPatch,
-    ifRev?: string
-  ): Promise<Level> {
+  async update(id: string, patch: LevelPatch, ifRev?: string): Promise<Level> {
     let res;
     try {
       res = await this.db.query<Level>(
@@ -102,7 +94,9 @@ export class LevelRepositoryImpl
           UPDATE {
             _key: ${id},
             _rev: ${ifRev ?? ''}
-           } WITH ${patch} IN levels OPTIONS { ignoreRevs: ${ifRev === undefined} }
+           } WITH ${patch} IN levels OPTIONS { ignoreRevs: ${
+          ifRev === undefined
+        } }
 
           RETURN MERGE(
             UNSET(NEW, "_key", "_id", "_rev"),

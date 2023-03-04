@@ -10,10 +10,7 @@ export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';
 export interface SchoolyearValidator {
   setService(service: SchoolyearService): void;
   assertCanCreate(post: SchoolyearBase): Promise<void | never>;
-  assertCanUpdate(
-    id: string,
-    patch: SchoolyearPatch
-  ): Promise<void | never>;
+  assertCanUpdate(id: string, patch: SchoolyearPatch): Promise<void | never>;
 }
 
 export class SchoolyearValidatorImpl implements SchoolyearValidator {
@@ -32,7 +29,7 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
   }
 
   async assertCanCreate(post: SchoolyearBase): Promise<void | never> {
-    const error = aggregateValidationErrors([
+    const error = await aggregateValidationErrors([
       this.assertStartBeforeEnd(post.start, post.end),
       this.assertExistsNoneWithName(post.name),
     ]);
@@ -73,7 +70,7 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
   }
 
   private async assertExistsNoneWithName(name: string): Promise<void | never> {
-    this.assertExistsNoneWithNameExceptId(name, null);
+    return this.assertExistsNoneWithNameExceptId(name, null);
   }
 
   private async assertExistsNoneWithNameExceptId(

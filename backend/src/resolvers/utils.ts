@@ -207,7 +207,7 @@ export function* yieldFieldNodes(
 
 export function isExcludedByDirective(
   node: graphql.SelectionNode,
-  variables: Record<string, any>
+  variables: Record<string, unknown>
 ): boolean {
   return (
     node.directives?.some((directive) => {
@@ -237,13 +237,13 @@ export function isExcludedByDirective(
  * Returns the actual value of a `ValueNode`
  */
 export function getValue<R = unknown>(
-  variables: Record<string, any>,
+  variables: Record<string, unknown>,
   valueNode: graphql.ValueNode
 ): R {
   // We have to use this many assertions since `R` does in fact override the actual "unknown" return value
   switch (valueNode.kind) {
     case graphql.Kind.VARIABLE:
-      return variables[valueNode.name.value] as unknown as R;
+      return variables[valueNode.name.value] as R;
     case graphql.Kind.NULL:
       return null as unknown as R;
     case graphql.Kind.LIST:
@@ -286,9 +286,11 @@ type UnwrapInput<T extends InputField> = {
 };
 
 export function unwrapInput<T extends InputField>(input: T): UnwrapInput<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result: any = {};
   for (const key in input) {
     if (input[key]) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       result[key] = input[key]!.value;
     }
   }

@@ -12,14 +12,14 @@ export function useHandleValidationErrors(): Plugin {
     async onExecute() {
       return {
         onExecuteDone(payload) {
-          const handleResult: OnExecuteDoneHookResultOnNextHook<{}> = ({
+          const handleResult: OnExecuteDoneHookResultOnNextHook<unknown> = ({
             result,
             setResult,
           }) => {
             if (!result.errors) return;
 
-            const newErrors = result.errors.reduce<any[]>((acc, err) => {
-              if (err instanceof GraphQLError === false) {
+            const newErrors = result.errors.reduce<unknown[]>((acc, err) => {
+              if (!(err instanceof GraphQLError)) {
                 acc.push(err);
                 return acc;
               }
@@ -51,7 +51,9 @@ export function useHandleValidationErrors(): Plugin {
   };
 }
 
-function handleInputValidationError(error: GraphQLError): any {
+function handleInputValidationError(
+  error: GraphQLError
+): GraphQLValidationError {
   const validationError = error.originalError as InputValidationError;
 
   return new GraphQLValidationError(
@@ -61,7 +63,9 @@ function handleInputValidationError(error: GraphQLError): any {
   );
 }
 
-function handleAggregatedInputValidationError(error: GraphQLError): any[] {
+function handleAggregatedInputValidationError(
+  error: GraphQLError
+): GraphQLValidationError[] {
   const aggregatedError = error.originalError as AggregatedInputValidationError;
 
   return aggregatedError.errors.map((err) => {

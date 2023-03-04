@@ -31,7 +31,7 @@ export class LevelValidatorImpl implements LevelValidator {
   async assertCanCreate(post: LevelBase): Promise<void | never> {
     await this.assertSchoolyearExists(post.schoolyearId);
 
-    const error = aggregateValidationErrors([
+    const error = await aggregateValidationErrors([
       this.assertExistsNoneInSchoolyearWithName(post.schoolyearId, post.name),
     ]);
 
@@ -69,7 +69,11 @@ export class LevelValidatorImpl implements LevelValidator {
     schoolyearId: string,
     name: string
   ): Promise<void | never> {
-    this.assertExistsNoneInSchoolyearWithNameExceptId(schoolyearId, name, null);
+    return this.assertExistsNoneInSchoolyearWithNameExceptId(
+      schoolyearId,
+      name,
+      null
+    );
   }
 
   private async assertExistsNoneInSchoolyearWithNameExceptId(

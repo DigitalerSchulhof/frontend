@@ -1,5 +1,5 @@
 import { GraphQLScalarType, Kind } from 'graphql';
-import { getValue } from './utils';
+import { getValue } from '../utils';
 
 export const Date = new GraphQLScalarType({
   name: 'Date',
@@ -9,13 +9,17 @@ export const Date = new GraphQLScalarType({
     if (typeof value === 'number') {
       return value;
     }
-    throw new Error('Date cannot represent non-integer value: ' + value);
+    throw new Error(
+      `Date cannot represent non-integer value: ${String(value)}`
+    );
   },
   parseValue(value) {
     if (typeof value === 'number') {
       return value;
     }
-    throw new Error('Date cannot represent non-integer value: ' + value);
+    throw new Error(
+      `Date cannot represent non-integer value: ${String(value)}`
+    );
   },
   parseLiteral(ast, variables) {
     if (ast.kind === Kind.INT) {
@@ -25,8 +29,9 @@ export const Date = new GraphQLScalarType({
       return parseInt(ast.value, 10);
     }
     throw new Error(
-      'Date cannot represent non-integer value: ' +
+      `Date cannot represent non-integer value: ${String(
         getValue(variables ?? {}, ast)
+      )}`
     );
   },
 });

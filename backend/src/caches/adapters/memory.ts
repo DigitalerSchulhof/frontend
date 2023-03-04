@@ -9,11 +9,11 @@ export class MemoryCacheAdapter implements CacheAdapter {
   }
 
   async get<T>(key: string): Promise<T | undefined> {
-    return this.cache.get(key) as T | undefined;
+    return this.cache.get(key);
   }
 
   async getMany<T>(keys: readonly string[]): Promise<(T | undefined)[]> {
-    return keys.map((key) => this.cache.get(key) as T | undefined);
+    return keys.map((key) => this.cache.get(key));
   }
 
   async set<T>(key: string, value: T, ttlMs?: number): Promise<void> {

@@ -11,10 +11,6 @@ type RootMutation {
   _: Boolean
 }
 
-# Scalars
-
-scalar Date
-
 # Misc
 
 enum Gender {

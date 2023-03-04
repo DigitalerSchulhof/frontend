@@ -1,5 +1,9 @@
 import { ObjectCache } from '@caches/object-cache';
-import { Schoolyear, SchoolyearBase, SchoolyearRepository } from '@repositories/schoolyear';
+import {
+  Schoolyear,
+  SchoolyearBase,
+  SchoolyearRepository,
+} from '@repositories/schoolyear';
 import { SchoolyearValidator } from '@validators/schoolyear';
 import { MakePatch, Paginated } from '../../repositories/utils';
 import { getByIdsCachedOrLoad } from '../utils';

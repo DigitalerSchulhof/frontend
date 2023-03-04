@@ -103,7 +103,9 @@ export class SchoolyearRepositoryImpl
           UPDATE {
             _key: ${id},
             _rev: ${ifRev ?? ''}
-           } WITH ${patch} IN schoolyears OPTIONS { ignoreRevs: ${ifRev === undefined} }
+           } WITH ${patch} IN schoolyears OPTIONS { ignoreRevs: ${
+          ifRev === undefined
+        } }
 
           RETURN MERGE(
             UNSET(NEW, "_key", "_id", "_rev"),

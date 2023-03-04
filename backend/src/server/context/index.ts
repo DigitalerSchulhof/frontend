@@ -26,8 +26,8 @@ export function createContextCreator(config: Config) {
   const servicesContext = createServicesContext(contextCreatorContext);
 
   const persistentContext = {
-    ...servicesContext
-  }
+    ...servicesContext,
+  };
 
   return (): BackendContext => {
     const userContextCreatorContext: UserContextCreatorContext = {

@@ -18,7 +18,7 @@ app.use(async (ctx, next) => {
 
   ctx.body = response.body;
 
-  next();
+  return next();
 });
 
 const server = app.listen(4000, () => {

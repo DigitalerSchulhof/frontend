@@ -6,10 +6,10 @@ export type MakePatch<T> = {
   [P in keyof T]?: MakePatch<T[P]>;
 };
 
-export type Paginated<T> = {
+export interface Paginated<T> {
   nodes: T[];
   total: number;
-};
+}
 
 export async function paginateCursor<T>(
   cursor: ArrayCursor<T>
@@ -24,17 +24,9 @@ export async function paginateCursor<T>(
   };
 }
 
-export class RevMismatchError extends ToCatchError {
-  constructor() {
-    super();
-  }
-}
+export class RevMismatchError extends ToCatchError {}
 
-export class IdNotFoundError extends ToCatchError {
-  constructor() {
-    super();
-  }
-}
+export class IdNotFoundError extends ToCatchError {}
 
 export const ARANGO_ERROR_NUM_REV_MISMATCH = 1200;
 export const ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND = 1202;

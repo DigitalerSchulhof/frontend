@@ -1,31 +1,25 @@
 import { OnExecuteDoneHookResultOnNextHook } from '@envelop/core';
 import { GraphQLError } from 'graphql';
 import { Plugin, handleStreamOrSingleExecutionResult } from 'graphql-yoga';
-import {
-  AggregatedInputValidationError,
-  InputValidationError,
-} from '../../validators/utils';
+import { IdNotFoundError, RevMismatchError } from '../../repositories/utils';
 import {
   GraphQLIdNotFoundError,
   GraphQLRevMismatchError,
-  GraphQLValidationError,
 } from '../../resolvers/errors';
-import { ArangoError } from 'arangojs/error';
-import { IdNotFoundError, RevMismatchError } from '../../repositories/utils';
 
 export function useHandleArangoErrors(): Plugin {
   return {
     async onExecute() {
       return {
         onExecuteDone(payload) {
-          const handleResult: OnExecuteDoneHookResultOnNextHook<{}> = ({
+          const handleResult: OnExecuteDoneHookResultOnNextHook<unknown> = ({
             result,
             setResult,
           }) => {
             if (!result.errors) return;
 
-            const newErrors = result.errors.reduce<any[]>((acc, err) => {
-              if (err instanceof GraphQLError === false) {
+            const newErrors = result.errors.reduce<unknown[]>((acc, err) => {
+              if (!(err instanceof GraphQLError)) {
                 acc.push(err);
                 return acc;
               }

@@ -20,7 +20,7 @@ export class RedisCacheAdapter implements CacheAdapter {
     return JSON.stringify(value);
   }
 
-  private deserialize<T>(value: string | null): T | undefined {
+  private deserialize<T>(this: void, value: string | null): T | undefined {
     if (value === null) return undefined;
     return JSON.parse(value) as T;
   }

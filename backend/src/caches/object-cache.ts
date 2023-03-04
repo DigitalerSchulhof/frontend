@@ -29,7 +29,7 @@ export class ObjectCache<T> {
 
   async setMany(
     keys: readonly string[],
-    values: readonly (T| null)[],
+    values: readonly (T | null)[],
     ttlMs: number = this.DEFAULT_TTL_MS
   ): Promise<void> {
     if (keys.length !== values.length) {
@@ -47,7 +47,7 @@ export class ObjectCache<T> {
   }
 
   async deleteMany(keys: readonly string[]): Promise<boolean> {
-    return this.adapter.deleteMany(keys.map(this.addPrefix));
+    return this.adapter.deleteMany(keys.map((k) => this.addPrefix(k)));
   }
 
   async clear(): Promise<void> {
