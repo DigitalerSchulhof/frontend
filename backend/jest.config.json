@@ -1,5 +1,5 @@
 {
-  "coverageReporters": ["lcov"],
+  "coverageReporters": ["lcov", "text"],
   "verbose": true,
   "transform": {
     "^.+\\.ts?$": "@swc/jest"

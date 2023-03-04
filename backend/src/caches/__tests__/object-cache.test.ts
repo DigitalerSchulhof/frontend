@@ -61,6 +61,14 @@ describe('Cache', () => {
       expect(mockCacheAdapter.get).toHaveBeenCalledWith('mock-cache:1:foo');
       expect(mockCacheAdapter.get).toHaveBeenCalledWith('mock-cache:2:foo');
     });
+
+    it("uses default version if it's not provided", async () => {
+      const cache = new ObjectCache(mockCacheAdapter, 'mock-cache');
+
+      await cache.get('foo');
+
+      expect(mockCacheAdapter.get).toHaveBeenCalledWith('mock-cache:1:foo');
+    });
   });
 
   describe('getMany', () => {
@@ -131,6 +139,17 @@ describe('Cache', () => {
         'mock-cache:2:bar',
       ]);
     });
+
+    it("uses default version if it's not provided", async () => {
+      const cache = new ObjectCache(mockCacheAdapter, 'mock-cache');
+
+      await cache.getMany(['foo', 'bar']);
+
+      expect(mockCacheAdapter.getMany).toHaveBeenCalledWith([
+        'mock-cache:1:foo',
+        'mock-cache:1:bar',
+      ]);
+    });
   });
 
   describe('set', () => {
@@ -198,6 +217,23 @@ describe('Cache', () => {
       expect(mockCacheAdapter.set).toHaveBeenCalledWith(
         'mock-cache:2:foo',
         'baz',
+        420
+      );
+    });
+
+    it("uses default version if it's not provided", async () => {
+      const cache = new ObjectCache(
+        mockCacheAdapter,
+        'mock-cache',
+        undefined,
+        420
+      );
+
+      await cache.set('foo', 'bar');
+
+      expect(mockCacheAdapter.set).toHaveBeenCalledWith(
+        'mock-cache:1:foo',
+        'bar',
         420
       );
     });
@@ -291,6 +327,25 @@ describe('Cache', () => {
         'Keys and values must be the same length'
       );
     });
+
+    it("uses default version if it's not provided", async () => {
+      const cache = new ObjectCache(
+        mockCacheAdapter,
+        'mock-cache',
+        undefined,
+        420
+      );
+
+      await cache.setMany(['foo', 'bar'], ['baz', 'qux']);
+
+      expect(mockCacheAdapter.setMany).toHaveBeenCalledWith(
+        [
+          ['mock-cache:1:foo', 'baz'],
+          ['mock-cache:1:bar', 'qux'],
+        ],
+        420
+      );
+    });
   });
 
   describe('has', () => {
@@ -331,6 +386,14 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.has).toHaveBeenCalledWith('mock-cache:1:foo');
       expect(mockCacheAdapter.has).toHaveBeenCalledWith('mock-cache:2:foo');
+    });
+
+    it("uses default version if it's not provided", async () => {
+      const cache = new ObjectCache(mockCacheAdapter, 'mock-cache');
+
+      await cache.has('foo');
+
+      expect(mockCacheAdapter.has).toHaveBeenCalledWith('mock-cache:1:foo');
     });
   });
 
@@ -406,6 +469,17 @@ describe('Cache', () => {
         'mock-cache:2:bar',
       ]);
     });
+
+    it("uses default version if it's not provided", async () => {
+      const cache = new ObjectCache(mockCacheAdapter, 'mock-cache');
+
+      await cache.hasMany(['foo', 'bar']);
+
+      expect(mockCacheAdapter.hasMany).toHaveBeenCalledWith([
+        'mock-cache:1:foo',
+        'mock-cache:1:bar',
+      ]);
+    });
   });
 
   describe('delete', () => {
@@ -435,6 +509,14 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.delete).toHaveBeenCalledWith('mock-cache:1:foo');
       expect(mockCacheAdapter.delete).toHaveBeenCalledWith('mock-cache:2:foo');
+    });
+
+    it("uses default version if it's not provided", async () => {
+      const cache = new ObjectCache(mockCacheAdapter, 'mock-cache');
+
+      await cache.delete('foo');
+
+      expect(mockCacheAdapter.delete).toHaveBeenCalledWith('mock-cache:1:foo');
     });
   });
 
@@ -479,6 +561,17 @@ describe('Cache', () => {
       expect(mockCacheAdapter.deleteMany).toHaveBeenCalledWith([
         'mock-cache:2:foo',
         'mock-cache:2:bar',
+      ]);
+    });
+
+    it("uses default version if it's not provided", async () => {
+      const cache = new ObjectCache(mockCacheAdapter, 'mock-cache');
+
+      await cache.deleteMany(['foo', 'bar']);
+
+      expect(mockCacheAdapter.deleteMany).toHaveBeenCalledWith([
+        'mock-cache:1:foo',
+        'mock-cache:1:bar',
       ]);
     });
   });
