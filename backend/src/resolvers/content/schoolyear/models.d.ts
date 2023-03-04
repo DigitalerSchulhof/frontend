@@ -1,3 +1,3 @@
-import { Schoolyear as TSchoolyear } from '@services/schoolyear';
+import { Schoolyear as TSchoolyear } from '@repositories/schoolyear';
 
 export type Schoolyear = TSchoolyear;

@@ -1,14 +1,13 @@
-import {
-  OnExecuteDoneHookResultOnNextHook
-} from '@envelop/core';
+import { OnExecuteDoneHookResultOnNextHook } from '@envelop/core';
 import { GraphQLError } from 'graphql';
 import { Plugin, handleStreamOrSingleExecutionResult } from 'graphql-yoga';
 import {
   AggregatedInputValidationError,
   InputValidationError,
 } from '../../validators/utils';
+import { GraphQLValidationError } from '../../resolvers/errors';
 
-export function useValidationErrors(): Plugin {
+export function useHandleValidationErrors(): Plugin {
   return {
     async onExecute() {
       return {
@@ -52,32 +51,20 @@ export function useValidationErrors(): Plugin {
   };
 }
 
-export const VALIDATION_ERROR = 'VALIDATION_ERROR';
-
 function handleInputValidationError(error: GraphQLError): any {
   const validationError = error.originalError as InputValidationError;
 
-  return new GraphQLError(validationError.message, {
-    ...error,
-    extensions: {
-      ...error.extensions,
-      code: VALIDATION_ERROR,
-      errorCode: validationError.code,
-    },
-  });
+  return new GraphQLValidationError(
+    validationError.message,
+    validationError.code,
+    error
+  );
 }
 
 function handleAggregatedInputValidationError(error: GraphQLError): any[] {
   const aggregatedError = error.originalError as AggregatedInputValidationError;
 
   return aggregatedError.errors.map((err) => {
-    return new GraphQLError(err.message, {
-      ...error,
-      extensions: {
-        ...error.extensions,
-        code: VALIDATION_ERROR,
-        errorCode: err.code,
-      },
-    });
+    return new GraphQLValidationError(err.message, err.code, error);
   });
 }

@@ -1,6 +1,7 @@
-import { SchoolyearInput, SchoolyearService } from '@services/schoolyear';
-import { IdDoesNotExistError, MakePatch } from '../../repositories/utils';
-import { MissingDependencyError, isNotNullOrUndefined } from '../../utils';
+import { SchoolyearBase, SchoolyearPatch } from '@repositories/schoolyear';
+import { SchoolyearService } from '@services/schoolyear';
+import { IdNotFoundError } from '../../repositories/utils';
+import { MissingDependencyError } from '../../utils';
 import { InputValidationError, aggregateValidationErrors } from '../utils';
 
 export const SCHOOLYEAR_START_BEFORE_END = 'SCHOOLYEAR_START_BEFORE_END';
@@ -8,10 +9,10 @@ export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';
 
 export interface SchoolyearValidator {
   setService(service: SchoolyearService): void;
-  assertCanCreate(post: SchoolyearInput): Promise<void | never>;
+  assertCanCreate(post: SchoolyearBase): Promise<void | never>;
   assertCanUpdate(
     id: string,
-    patch: MakePatch<SchoolyearInput>
+    patch: SchoolyearPatch
   ): Promise<void | never>;
 }
 
@@ -30,7 +31,7 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
     return this.service;
   }
 
-  async assertCanCreate(post: SchoolyearInput): Promise<void | never> {
+  async assertCanCreate(post: SchoolyearBase): Promise<void | never> {
     const error = aggregateValidationErrors([
       this.assertStartBeforeEnd(post.start, post.end),
       this.assertExistsNoneWithName(post.name),
@@ -41,12 +42,12 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
 
   async assertCanUpdate(
     id: string,
-    patch: MakePatch<SchoolyearInput>
+    patch: SchoolyearPatch
   ): Promise<void | never> {
     const base = await this.getService().getById(id);
 
     if (!base) {
-      throw new IdDoesNotExistError();
+      throw new IdNotFoundError();
     }
 
     const error = await aggregateValidationErrors([
@@ -54,9 +55,9 @@ export class SchoolyearValidatorImpl implements SchoolyearValidator {
         patch.start ?? base.start,
         patch.end ?? base.end
       ),
-      isNotNullOrUndefined(patch.name)
-        ? this.assertExistsNoneWithNameExceptId(patch.name, id)
-        : null,
+      patch.name === undefined
+        ? null
+        : this.assertExistsNoneWithNameExceptId(patch.name, id),
     ]);
 
     if (error) throw error;

@@ -4,7 +4,7 @@ import {
   MakePatch,
   Paginated,
   handleArangoError,
-  paginateCursor
+  paginateCursor,
 } from '../utils';
 
 export interface SchoolyearBase {
@@ -12,6 +12,8 @@ export interface SchoolyearBase {
   start: number;
   end: number;
 }
+
+export type SchoolyearPatch = MakePatch<SchoolyearBase>;
 
 export interface Schoolyear extends SchoolyearBase {
   id: string;
@@ -24,7 +26,7 @@ export interface SchoolyearRepository {
   create(post: SchoolyearBase): Promise<Schoolyear>;
   update(
     id: string,
-    patch: MakePatch<SchoolyearBase>,
+    patch: SchoolyearPatch,
     ifRev?: string
   ): Promise<Schoolyear>;
   delete(id: string, ifRev?: string): Promise<Schoolyear>;
@@ -91,7 +93,7 @@ export class SchoolyearRepositoryImpl
 
   async update(
     id: string,
-    patch: MakePatch<SchoolyearBase>,
+    patch: SchoolyearPatch,
     ifRev?: string
   ): Promise<Schoolyear> {
     let res;
@@ -100,8 +102,8 @@ export class SchoolyearRepositoryImpl
         aql`
           UPDATE {
             _key: ${id},
-            _rev: ${ifRev}
-           } WITH ${patch} IN schoolyears OPTIONS { ignoreRevs: false }
+            _rev: ${ifRev ?? ''}
+           } WITH ${patch} IN schoolyears OPTIONS { ignoreRevs: ${ifRev === undefined} }
 
           RETURN MERGE(
             UNSET(NEW, "_key", "_id", "_rev"),
@@ -126,8 +128,8 @@ export class SchoolyearRepositoryImpl
         aql`
           REMOVE {
             _key: ${id},
-            _rev: ${ifRev}
-           } IN schoolyears OPTIONS { ignoreRevs: false }
+            _rev: ${ifRev ?? ''}
+           } IN schoolyears OPTIONS { ignoreRevs: ${ifRev === undefined} }
 
            RETURN MERGE(
             UNSET(OLD, "_key", "_id", "_rev"),

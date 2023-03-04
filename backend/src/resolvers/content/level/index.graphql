@@ -1,0 +1,16 @@
+type Level {
+  id: ID!
+  rev: ID!
+
+  schoolyear: Schoolyear!
+  name: String!
+}
+
+input CreateLevelInput {
+  schoolyearId: NonNullIDInput!
+  name: NonNullStringInput!
+}
+
+input UpdateLevelInput {
+  name: NonNullStringInput
+}

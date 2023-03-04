@@ -12,66 +12,42 @@ export class TypedGraphQLError extends GraphQLError {
   }
 }
 
-export const CANNOT_CREATE_DUPLICATE_FIELDS = 'CANNOT_CREATE_DUPLICATE_FIELDS';
-
-export const CANNOT_UPDATE_REV_MISMATCH = 'CANNOT_UPDATE_REV_MISMATCH';
-export const CANNOT_UPDATE_ID_NOT_FOUND = 'CANNOT_UPDATE_ID_NOT_FOUND';
-export const CANNOT_UPDATE_DUPLICATE_FIELDS = 'CANNOT_UPDATE_DUPLICATE_FIELDS';
-
-export const CANNOT_DELETE_REV_MISMATCH = 'CANNOT_DELETE_REV_MISMATCH';
-export const CANNOT_DELETE_ID_NOT_FOUND = 'CANNOT_DELETE_ID_NOT_FOUND';
-
+export const REV_MISMATCH = 'REV_MISMATCH';
+export const ID_NOT_FOUND = 'ID_NOT_FOUND';
 export const NO_PERMISSION = 'NO_PERMISSION';
+export const VALIDATION_ERROR = 'VALIDATION_ERROR';
 
-export class GraphQLCannotCreateDuplicateFieldsError extends TypedGraphQLError {
-  constructor(readonly duplicateFields: string[]) {
-    super("Can't create!", CANNOT_CREATE_DUPLICATE_FIELDS, {
-      extensions: {
-        duplicateFields,
-      },
-    });
+export class GraphQLRevMismatchError extends TypedGraphQLError {
+  constructor(options?: GraphQLErrorOptions) {
+    super("Revisions don't match!", REV_MISMATCH, options);
   }
 }
 
-export class GraphQLCannotUpdateRevMismatchError extends TypedGraphQLError {
-  constructor() {
-    super("Can't update!", CANNOT_UPDATE_REV_MISMATCH);
-  }
-}
-
-export class GraphQLCannotUpdateIdNotFoundError extends TypedGraphQLError {
-  constructor() {
-    super("Can't update!", CANNOT_UPDATE_ID_NOT_FOUND);
-  }
-}
-
-export class GraphQLCannotUpdateDuplicateFieldsError extends TypedGraphQLError {
-  constructor(readonly duplicateFields: string[]) {
-    super("Can't update!", CANNOT_UPDATE_DUPLICATE_FIELDS, {
-      extensions: {
-        duplicateFields,
-      },
-    });
-  }
-}
-
-export class GraphQLCannotDeleteRevMismatchError extends TypedGraphQLError {
-  constructor() {
-    super("Can't delete!", CANNOT_DELETE_REV_MISMATCH);
-  }
-}
-
-export class GraphQLCannotDeleteIdNotFoundError extends TypedGraphQLError {
-  constructor() {
-    super("Can't delete!", CANNOT_DELETE_ID_NOT_FOUND);
+export class GraphQLIdNotFoundError extends TypedGraphQLError {
+  constructor(options?: GraphQLErrorOptions) {
+    super('ID not found!', ID_NOT_FOUND, options);
   }
 }
 
 export class GraphQLNoPermissionError extends TypedGraphQLError {
-  constructor(permission: string) {
+  constructor(permission: string, options?: GraphQLErrorOptions) {
     super(`No permission!`, NO_PERMISSION, {
+      ...options,
       extensions: {
+        ...options?.extensions,
         permission,
+      },
+    });
+  }
+}
+
+export class GraphQLValidationError extends TypedGraphQLError {
+  constructor(message: string, code: string, options?: GraphQLErrorOptions) {
+    super(message, VALIDATION_ERROR, {
+      ...options,
+      extensions: {
+        ...options?.extensions,
+        errorCode: code,
       },
     });
   }

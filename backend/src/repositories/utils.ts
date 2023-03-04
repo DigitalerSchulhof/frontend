@@ -30,7 +30,7 @@ export class RevMismatchError extends ToCatchError {
   }
 }
 
-export class IdDoesNotExistError extends ToCatchError {
+export class IdNotFoundError extends ToCatchError {
   constructor() {
     super();
   }
@@ -45,7 +45,7 @@ export function handleArangoError(error: unknown): never {
       throw new RevMismatchError();
     }
     if (error.errorNum === ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND) {
-      throw new IdDoesNotExistError();
+      throw new IdNotFoundError();
     }
   }
 
