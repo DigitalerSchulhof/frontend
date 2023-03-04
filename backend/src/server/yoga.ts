@@ -24,6 +24,7 @@ function createSchema() {
 
 const config = loadConfig();
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function createYoga() {
   return realCreateYoga({
     batching: true,

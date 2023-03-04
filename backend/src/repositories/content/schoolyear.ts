@@ -8,16 +8,16 @@ import {
 } from '../utils';
 
 export interface SchoolyearBase {
-  name: string;
-  start: number;
-  end: number;
+  readonly name: string;
+  readonly start: number;
+  readonly end: number;
 }
 
 export type SchoolyearPatch = MakePatch<SchoolyearBase>;
 
 export interface Schoolyear extends SchoolyearBase {
-  id: string;
-  rev: string;
+  readonly id: string;
+  readonly rev: string;
 }
 
 export interface SchoolyearRepository {

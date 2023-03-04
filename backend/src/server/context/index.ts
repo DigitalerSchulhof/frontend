@@ -20,7 +20,7 @@ export interface ContextCreatorContext {
 
 export interface UserContextCreatorContext extends ContextCreatorContext {}
 
-export function createContextCreator(config: Config) {
+export function createContextCreator(config: Config): () => BackendContext {
   const contextCreatorContext = createContextCreatorContext(config);
 
   const servicesContext = createServicesContext(contextCreatorContext);

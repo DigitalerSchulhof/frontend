@@ -30,6 +30,7 @@ for (const modelFile of modelFiles) {
   }
 }
 
+/* eslint-disable @typescript-eslint/naming-convention */
 export default {
   generates: {
     [path.join(_resolvers, 'types.d.ts')]: {
@@ -51,3 +52,4 @@ export default {
     },
   },
 } satisfies CodegenConfig;
+/* eslint-enable @typescript-eslint/naming-convention */

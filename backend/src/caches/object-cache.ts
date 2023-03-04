@@ -4,7 +4,7 @@ export class ObjectCache<T> {
   constructor(
     private readonly adapter: CacheAdapter,
     private readonly prefix: string,
-    private readonly DEFAULT_TTL_MS: number = 1000 * 60 * 5
+    private readonly defaultTtlMs: number = 1000 * 60 * 5
   ) {}
 
   private addPrefix(key: string): string {
@@ -22,7 +22,7 @@ export class ObjectCache<T> {
   async set(
     key: string,
     value: T | null,
-    ttlMs: number = this.DEFAULT_TTL_MS
+    ttlMs: number = this.defaultTtlMs
   ): Promise<void> {
     return this.adapter.set(this.addPrefix(key), value, ttlMs);
   }
@@ -30,7 +30,7 @@ export class ObjectCache<T> {
   async setMany(
     keys: readonly string[],
     values: readonly (T | null)[],
-    ttlMs: number = this.DEFAULT_TTL_MS
+    ttlMs: number = this.defaultTtlMs
   ): Promise<void> {
     if (keys.length !== values.length) {
       throw new Error('keys and values must have the same length');

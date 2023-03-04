@@ -8,15 +8,15 @@ import {
 } from '../utils';
 
 export interface LevelBase {
-  name: string;
-  schoolyearId: string;
+  readonly name: string;
+  readonly schoolyearId: string;
 }
 
 export type LevelPatch = MakePatch<Omit<LevelBase, 'schoolyearId'>>;
 
 export interface Level extends LevelBase {
-  id: string;
-  rev: string;
+  readonly id: string;
+  readonly rev: string;
 }
 
 export interface LevelRepository {

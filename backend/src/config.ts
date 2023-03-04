@@ -1,6 +1,7 @@
 import { Parse, v } from 'vality';
 import { loadEnv } from 'vality-env';
 
+/* eslint-disable @typescript-eslint/naming-convention */
 const config = {
   cache: {
     engine: ['void', 'memory', 'redis'],
@@ -15,6 +16,7 @@ const config = {
     name: v.string,
   },
 } as const;
+/* eslint-enable @typescript-eslint/naming-convention */
 
 export type Config = Parse<typeof config>;
 
