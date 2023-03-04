@@ -5,8 +5,9 @@ export interface CacheAdapter {
   set<T>(key: string, value: T, ttlMs?: number): Promise<void>;
   setMany<T>(entries: readonly [string, T][], ttlMs?: number): Promise<void>;
 
-  delete(key: string): Promise<boolean>;
-  deleteMany(keys: readonly string[]): Promise<boolean>;
+  has(key: string): Promise<boolean>;
+  hasMany(keys: readonly string[]): Promise<boolean[]>;
 
-  clear(): Promise<void>;
+  delete(key: string): Promise<boolean>;
+  deleteMany(keys: readonly string[]): Promise<boolean[]>;
 }

@@ -33,15 +33,19 @@ export class MemoryCacheAdapter implements CacheAdapter {
     );
   }
 
+  async has(key: string): Promise<boolean> {
+    return this.cache.has(key);
+  }
+
+  async hasMany(keys: readonly string[]): Promise<boolean[]> {
+    return keys.map((key) => this.cache.has(key));
+  }
+
   async delete(key: string): Promise<boolean> {
     return this.cache.delete(key);
   }
 
-  async deleteMany(keys: readonly string[]): Promise<boolean> {
-    return keys.map((key) => this.cache.delete(key)).every((r) => r);
-  }
-
-  async clear(): Promise<void> {
-    this.cache.clear();
+  async deleteMany(keys: readonly string[]): Promise<boolean[]> {
+    return keys.map((key) => this.cache.delete(key));
   }
 }

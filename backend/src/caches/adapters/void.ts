@@ -17,15 +17,19 @@ export class VoidCacheAdapter implements CacheAdapter {
     // Do nothing
   }
 
+  async has(): Promise<boolean> {
+    return false;
+  }
+
+  async hasMany(keys: readonly string[]): Promise<boolean[]> {
+    return keys.map(() => false);
+  }
+
   async delete(): Promise<boolean> {
     return true;
   }
 
-  async deleteMany(): Promise<boolean> {
-    return true;
-  }
-
-  async clear(): Promise<void> {
-    // Do nothing
+  async deleteMany(keys: readonly string[]): Promise<boolean[]> {
+    return keys.map(() => true);
   }
 }

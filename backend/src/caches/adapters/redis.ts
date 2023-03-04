@@ -55,15 +55,25 @@ export class RedisCacheAdapter implements CacheAdapter {
     await this.client.mset(...args);
   }
 
+  async has(key: string): Promise<boolean> {
+    return (await this.client.exists(key)) === 1;
+  }
+
+  async hasMany(keys: readonly string[]): Promise<boolean[]> {
+    // TODO: Verify this assertion
+    const res = (await this.client.exists(...keys)) as unknown as number[];
+
+    return res.map((r) => r === 1);
+  }
+
   async delete(key: string): Promise<boolean> {
     return (await this.client.del(key)) === 1;
   }
 
-  async deleteMany(keys: readonly string[]): Promise<boolean> {
-    return (await this.client.del(...keys)) === keys.length;
-  }
+  async deleteMany(keys: readonly string[]): Promise<boolean[]> {
+    // TODO: Verify this assertion
+    const res = (await this.client.del(...keys)) as unknown as number[];
 
-  async clear(): Promise<void> {
-    await this.client.flushall();
+    return res.map((r) => r === 1);
   }
 }
