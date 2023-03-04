@@ -37,6 +37,12 @@
       "rules": {
         "@typescript-eslint/naming-convention": "off"
       }
+    },
+    {
+      "files": ["*.test.ts"],
+      "rules": {
+        "@typescript-eslint/no-unsafe-assignment": "off"
+      }
     }
   ]
 }
