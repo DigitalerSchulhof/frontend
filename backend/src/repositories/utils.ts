@@ -1,8 +1,9 @@
 import { ArrayCursor } from 'arangojs/cursor';
+import { ArangoError } from 'arangojs/error';
 import { ToCatchError } from '../utils';
 
 export type MakePatch<T> = {
-  [P in keyof T]?: MakePatch<T[P]> | null;
+  [P in keyof T]?: MakePatch<T[P]>;
 };
 
 export type Paginated<T> = {
@@ -35,5 +36,18 @@ export class IdDoesNotExistError extends ToCatchError {
   }
 }
 
-export const ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND = 1202;
 export const ARANGO_ERROR_NUM_REV_MISMATCH = 1200;
+export const ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND = 1202;
+
+export function handleArangoError(error: unknown): never {
+  if (error instanceof ArangoError) {
+    if (error.errorNum === ARANGO_ERROR_NUM_REV_MISMATCH) {
+      throw new RevMismatchError();
+    }
+    if (error.errorNum === ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND) {
+      throw new IdDoesNotExistError();
+    }
+  }
+
+  throw error;
+}

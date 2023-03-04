@@ -1,20 +1,8 @@
 import { ObjectCache } from '@caches/object-cache';
-import { SchoolyearRepository } from '@repositories/schoolyear';
+import { Schoolyear, SchoolyearInput, SchoolyearRepository } from '@repositories/schoolyear';
 import { SchoolyearValidator } from '@validators/schoolyear';
 import { MakePatch, Paginated } from '../../repositories/utils';
 import { getByIdsCachedOrLoad } from '../utils';
-
-
-export interface SchoolyearInput {
-  name: string;
-  start: number;
-  end: number;
-}
-
-export interface Schoolyear extends SchoolyearInput{
-  id: string;
-  rev: string;
-}
 
 export class SchoolyearService {
   constructor(

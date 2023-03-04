@@ -1,16 +1,22 @@
-import { Schoolyear, SchoolyearInput } from '@services/schoolyear';
 import { aql } from 'arangojs';
-import { ArangoError } from 'arangojs/error';
 import { ArangoRepository } from '../arango';
 import {
-  ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND,
-  ARANGO_ERROR_NUM_REV_MISMATCH,
-  IdDoesNotExistError,
   MakePatch,
   Paginated,
-  RevMismatchError,
+  handleArangoError,
   paginateCursor
 } from '../utils';
+
+export interface SchoolyearInput {
+  name: string;
+  start: number;
+  end: number;
+}
+
+export interface Schoolyear extends SchoolyearInput {
+  id: string;
+  rev: string;
+}
 
 export interface SchoolyearRepository {
   getByIds(ids: readonly string[]): Promise<(Schoolyear | null)[]>;
@@ -107,16 +113,7 @@ export class SchoolyearRepositoryImpl
         `
       );
     } catch (err) {
-      if (err instanceof ArangoError) {
-        if (err.errorNum === ARANGO_ERROR_NUM_REV_MISMATCH) {
-          throw new RevMismatchError();
-        }
-        if (err.errorNum === ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND) {
-          throw new IdDoesNotExistError();
-        }
-      }
-
-      throw err;
+      handleArangoError(err);
     }
 
     return (await res.next())!;
@@ -142,16 +139,7 @@ export class SchoolyearRepositoryImpl
         `
       );
     } catch (err) {
-      if (err instanceof ArangoError) {
-        if (err.errorNum === ARANGO_ERROR_NUM_REV_MISMATCH) {
-          throw new RevMismatchError();
-        }
-        if (err.errorNum === ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND) {
-          throw new IdDoesNotExistError();
-        }
-      }
-
-      throw err;
+      handleArangoError(err);
     }
 
     return (await res.next())!;
