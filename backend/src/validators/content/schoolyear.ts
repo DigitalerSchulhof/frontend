@@ -67,7 +67,7 @@ export class SchoolyearValidator
           eq: name,
         },
         id: {
-          neq: id,
+          ne: id,
         },
       },
       limit: 1,

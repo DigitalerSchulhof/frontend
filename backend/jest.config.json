@@ -3,5 +3,10 @@
   "verbose": true,
   "transform": {
     "^.+\\.ts?$": "@swc/jest"
-  }
+  },
+  "testPathIgnorePatterns": [
+    "<rootDir>/node_modules/",
+    "<rootDir>/dist/",
+    "__tests__/utils.ts"
+  ]
 }

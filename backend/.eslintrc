@@ -33,11 +33,14 @@
       }
     },
     {
-      "files": ["*.test.ts"],
+      "files": ["**/__tests__/**/*"],
       "rules": {
-        "@typescript-eslint/no-unsafe-assignment": "off",
         "@typescript-eslint/no-invalid-void-type": "off",
-        "@typescript-eslint/ban-ts-comment": "off"
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off"
       }
     }
   ]

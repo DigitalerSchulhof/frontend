@@ -30,16 +30,9 @@ export function createServicesContext(
     schoolyear: createSchoolyearService(
       context.db,
       context.cacheAdapter,
-      repositories,
-      services
+      repositories
     ),
-    level: createLevelService(
-      context.db,
-
-      context.cacheAdapter,
-      repositories,
-      services
-    ),
+    level: createLevelService(context.db, context.cacheAdapter, repositories),
   };
 
   Object.assign(repositories, {

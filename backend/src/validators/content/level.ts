@@ -22,7 +22,7 @@ export class LevelValidator
   }
 
   async assertCanUpdate(id: string, patch: LevelPatch): Promise<void | never> {
-    const base = await this.services.level.getById(id);
+    const [base] = await this.repositories.level.getByIds([id]);
 
     if (!base) {
       throw new IdNotFoundError();
@@ -74,10 +74,10 @@ export class LevelValidator
           eq: name,
         },
         schoolyearId: {
-          neq: schoolyearId,
+          ne: schoolyearId,
         },
         id: {
-          neq: id,
+          ne: id,
         },
       },
       limit: 1,
