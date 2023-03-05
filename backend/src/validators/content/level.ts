@@ -74,7 +74,7 @@ export class LevelValidator
           eq: name,
         },
         schoolyearId: {
-          ne: schoolyearId,
+          eq: schoolyearId,
         },
         id: {
           ne: id,

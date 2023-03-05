@@ -32,10 +32,12 @@ export class SchoolyearValidator
     }
 
     const error = await aggregateValidationErrors([
-      this.assertStartBeforeEnd(
-        patch.start ?? base.start,
-        patch.end ?? base.end
-      ),
+      patch.start === undefined && patch.end === undefined
+        ? null
+        : this.assertStartBeforeEnd(
+            patch.start ?? base.start,
+            patch.end ?? base.end
+          ),
       patch.name === undefined
         ? null
         : this.assertExistsNoneWithNameExceptId(patch.name, id),
