@@ -1,5 +1,3 @@
-/// <reference types="jest" />
-
 import { IdNotFoundError } from '../../../repositories/utils';
 import {
   SCHOOLYEAR_NAME_EXISTS,

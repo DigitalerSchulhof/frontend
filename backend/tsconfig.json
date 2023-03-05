@@ -6,7 +6,7 @@
     "moduleResolution": "Node",
     "target": "ESNext",
     "lib": ["ESNext"],
-    "types": ["node"],
+    "types": ["node", "jest"],
 
     "baseUrl": "./src",
     "paths": {

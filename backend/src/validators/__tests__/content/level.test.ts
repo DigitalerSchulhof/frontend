@@ -1,5 +1,3 @@
-/// <reference types="jest" />
-
 import { IdNotFoundError } from '../../../repositories/utils';
 import {
   LEVEL_NAME_EXISTS,

@@ -1,4 +1,3 @@
-/// <reference types="jest" />
 import { CacheAdapter } from '../adapters';
 import { ObjectCache } from '../object-cache';
 

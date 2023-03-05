@@ -67,8 +67,6 @@ export function isNotNullOrUndefined<T>(val: T | null | undefined): val is T {
   return val !== null && val !== undefined;
 }
 
-const REFERENCE_COMPARATOR = <T>(a: T, b: T) => a === b;
-
 /**
  * Filters out duplicate values with an optional comparator function and returns the new array.
  * @param comparator A function that takes two values and returns `true` if they should be considered identical
@@ -81,11 +79,11 @@ const REFERENCE_COMPARATOR = <T>(a: T, b: T) => a === b;
  */
 export function unique<T>(
   arr: readonly T[],
-  comparator: (a: T, b: T) => boolean = REFERENCE_COMPARATOR
+  comparator?: (a: T, b: T) => boolean
 ): T[] {
   if (arr.length === 0) return [];
   // If the comparator is the default one, we can use a Set to filter out duplicates since it's much faster
-  if (comparator === REFERENCE_COMPARATOR) return [...new Set(arr)];
+  if (!comparator) return [...new Set(arr)];
 
   return arr.filter((val, i) => arr.findIndex((v) => comparator(v, val)) === i);
 }

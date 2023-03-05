@@ -1,5 +1,3 @@
-/// <reference types="jest" />
-
 export function makeSimpleMockRepository() {
   return {
     getByIds: jest.fn(),
