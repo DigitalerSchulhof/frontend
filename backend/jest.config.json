@@ -4,9 +4,13 @@
   "transform": {
     "^.+\\.ts?$": "@swc/jest"
   },
-  "testPathIgnorePatterns": [
-    "<rootDir>/node_modules/",
-    "<rootDir>/dist/",
-    "/__utils__/"
+  "collectCoverageFrom": [
+    "src/**/*.{js,jsx,ts,tsx}",
+    "!**/__utils__/**/*"
+  ],
+  "testMatch": [
+    "**/__tests__/**/*.[jt]s?(x)",
+    "**/?(*.)+(spec|test).[jt]s?(x)",
+    "!**/__utils__/**/*"
   ]
 }
