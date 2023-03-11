@@ -29,6 +29,6 @@ export interface MakeSimpleRepository<
   create(post: Base): Promise<BaseWithId>;
   update(id: string, patch: Patch, ifRev?: string): Promise<BaseWithId>;
   delete(id: string, ifRev?: string): Promise<BaseWithId>;
-  filterDelete(filters: Filter<Base>[]): Promise<BaseWithId[]>;
+  filterDelete(filters: Filter<BaseWithId>[]): Promise<BaseWithId[]>;
   search(query: SearchQuery): Promise<Paginated<BaseWithId>>;
 }
