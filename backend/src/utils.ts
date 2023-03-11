@@ -92,15 +92,6 @@ export function toArray<T>(maybeArray: MaybeArray<T>): T[] {
   return Array.isArray(maybeArray) ? maybeArray : [maybeArray];
 }
 
-export class ToCatchError extends Error {
-  constructor(message?: string) {
-    super(
-      message ??
-        'This error should be caught and handled. If you see this, there is an error handler missing.'
-    );
-  }
-}
-
 export class MissingDependencyError extends Error {
   constructor(name: string) {
     super(`Missing dependency: ${name}`);

@@ -3,33 +3,26 @@ type Schoolyear {
   rev: ID!
 
   name: String!
-  start: Date!
-  end: Date!
 }
 
 input CreateSchoolyearInput {
   name: NonNullStringInput!
-  start: NonNullDateInput!
-  end: NonNullDateInput!
 }
 
 input UpdateSchoolyearInput {
   name: NonNullStringInput
-  start: NonNullDateInput
-  end: NonNullDateInput
 }
 
 input SchoolyearFilter {
+  id: IDFilter
+
   name: StringFilter
-  start: DateFilter
-  end: DateFilter
 }
 
 enum SchoolyearSortOption {
   id
+
   name
-  start
-  end
 }
 
 input SchoolyearSort {

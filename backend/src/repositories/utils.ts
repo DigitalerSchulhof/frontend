@@ -1,7 +1,5 @@
 import { ArrayCursor } from 'arangojs/cursor';
-import { ArangoError } from 'arangojs/error';
-import { ToCatchError } from '../utils';
-import { Paginated } from './search';
+import { MakeSearchQuery, Paginated } from './search';
 
 export type MakePatch<T> = {
   [P in keyof T]?: MakePatch<T[P]>;
@@ -20,22 +18,15 @@ export async function paginateCursor<T>(
   };
 }
 
-export class RevMismatchError extends ToCatchError {}
-
-export class IdNotFoundError extends ToCatchError {}
-
-export const ARANGO_ERROR_NUM_REV_MISMATCH = 1200;
-export const ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND = 1202;
-
-export function handleArangoError(error: unknown): never {
-  if (error instanceof ArangoError) {
-    if (error.errorNum === ARANGO_ERROR_NUM_REV_MISMATCH) {
-      throw new RevMismatchError();
-    }
-    if (error.errorNum === ARANGO_ERROR_NUM_DOCUMENT_NOT_FOUND) {
-      throw new IdNotFoundError();
-    }
-  }
-
-  throw error;
+export interface MakeSimpleRepository<
+  BaseWithId,
+  Base,
+  Patch,
+  SearchQuery extends MakeSearchQuery<unknown>
+> {
+  getByIds(ids: readonly string[]): Promise<(BaseWithId | null)[]>;
+  create(post: Base): Promise<BaseWithId>;
+  update(id: string, patch: Patch, ifRev?: string): Promise<BaseWithId>;
+  delete(id: string, ifRev?: string): Promise<BaseWithId>;
+  search(query: SearchQuery): Promise<Paginated<BaseWithId>>;
 }

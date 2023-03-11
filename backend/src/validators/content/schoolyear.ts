@@ -4,6 +4,8 @@ import { Validator } from '../base';
 import { InputValidationError, aggregateValidationErrors } from '../utils';
 import { SimpleValidator } from '../simple';
 
+// TODO: Check name is not empty
+
 export const SCHOOLYEAR_START_NOT_BEFORE_END =
   'SCHOOLYEAR_START_NOT_BEFORE_END';
 export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';

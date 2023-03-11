@@ -1,0 +1,17 @@
+extend type Class {
+  level: Level!
+  courses: ClassCoursesConnection!
+}
+
+type ClassCoursesConnection {
+  edges: [ClassCoursesEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ClassCoursesEdge {
+  node: Course!
+}
+
+extend input ClassFilter {
+  level: LevelFilter
+}

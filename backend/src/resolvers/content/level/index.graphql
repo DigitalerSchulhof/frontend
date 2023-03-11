@@ -2,28 +2,32 @@ type Level {
   id: ID!
   rev: ID!
 
-  schoolyear: Schoolyear!
   name: String!
+  schoolyearId: ID!
 }
 
 input CreateLevelInput {
-  schoolyearId: NonNullIDInput!
   name: NonNullStringInput!
+  schoolyearId: NonNullIDInput!
 }
 
 input UpdateLevelInput {
   name: NonNullStringInput
+  schoolyearId: NonNullIDInput
 }
 
 input LevelFilter {
-  schoolyearId: IDFilter
+  id: IDFilter
+
   name: StringFilter
+  schoolyearId: IDFilter
 }
 
 enum LevelSortOption {
   id
-  schoolyearId
+
   name
+  schoolyearId
 }
 
 input LevelSort {

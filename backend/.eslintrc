@@ -12,15 +12,23 @@
   },
   "rules": {
     "prettier/prettier": "error",
-    // I know what I'm doing:
+    // I know what I'm doing
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/require-await": "off",
     "@typescript-eslint/no-invalid-void-type": "off",
 
-    "@typescript-eslint/no-unsafe-return": "off", // Covered by @typescript-eslint/no-explicit-any
-    "@typescript-eslint/no-empty-interface": "off", // There is no difference between interface/type in these cases, and the once I chose expresses what I want better
+    // Mostly handled by TS warnings
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
 
-    // Want these:
+    // Covered by @typescript-eslint/no-explicit-any
+    "@typescript-eslint/no-unsafe-return": "off",
+    // There is no difference between interface/type in these cases, and the once I chose expresses what I want better
+    "@typescript-eslint/no-empty-interface": "off",
+
+    // Want these
     "@typescript-eslint/explicit-module-boundary-types": "warn",
     "@typescript-eslint/naming-convention": "warn",
     "@typescript-eslint/switch-exhaustiveness-check": "warn"
@@ -36,11 +44,7 @@
       "files": ["**/__tests__/**/*"],
       "rules": {
         "@typescript-eslint/no-invalid-void-type": "off",
-        "@typescript-eslint/no-unsafe-assignment": "off",
-        "@typescript-eslint/no-unsafe-call": "off",
-        "@typescript-eslint/no-unsafe-argument": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-unsafe-member-access": "off",
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off"
       }

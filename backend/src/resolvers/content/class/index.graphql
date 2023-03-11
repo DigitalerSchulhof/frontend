@@ -1,0 +1,36 @@
+type Class {
+  id: ID!
+  rev: ID!
+
+  name: String!
+  levelId: ID!
+}
+
+input CreateClassInput {
+  name: NonNullStringInput!
+  levelId: NonNullIDInput!
+}
+
+input UpdateClassInput {
+  name: NonNullStringInput
+  levelId: NonNullIDInput
+}
+
+input ClassFilter {
+  id: IDFilter
+
+  name: StringFilter
+  levelId: IDFilter
+}
+
+enum ClassSortOption {
+  id
+
+  name
+  levelId
+}
+
+input ClassSort {
+  by: ClassSortOption!
+  direction: SortDirection!
+}

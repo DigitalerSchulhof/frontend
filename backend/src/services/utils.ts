@@ -17,7 +17,7 @@ export async function getByIdsCachedOrLoad<T>(
 
   const loadedMap = await loadAndCache(cache, repository, remainingIds);
 
-  return mapFromCacheOrLoaded(cached, loadedMap, ids);
+  return mapIdsFromCacheOrLoaded(ids, cached, loadedMap);
 }
 
 async function getCachedAndRemainingIds<T>(
@@ -46,10 +46,10 @@ async function loadAndCache<T>(
   return new Map(ids.map((id, i) => [id, loaded[i]]));
 }
 
-function mapFromCacheOrLoaded<T>(
+function mapIdsFromCacheOrLoaded<T>(
+  ids: readonly string[],
   cached: (T | null | undefined)[],
-  loadedMap: ReadonlyMap<string, T | null>,
-  ids: readonly string[]
+  loadedMap: ReadonlyMap<string, T | null>
 ): (T | null)[] {
   return ids.map((id, i) => cached[i] ?? loadedMap.get(id) ?? null);
 }
