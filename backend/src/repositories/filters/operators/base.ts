@@ -1,94 +1,88 @@
 import * as aql from 'arangojs/aql';
 import { MaybeArray } from '../../../utils';
 
-export abstract class FilterOperator {
-  // TODO: Restrict implementing classes to only allow certain operators/value types
-  constructor(
-    private readonly operator: Operator,
-    private readonly value: MaybeArray<string | number | boolean>
-  ) {}
+export abstract class FilterOperator<
+  Value extends MaybeArray<string | number | boolean>
+> {
+  protected abstract readonly operator: string;
 
-  private getOperator(): aql.AqlLiteral {
-    switch (this.operator) {
-      case Operator.eq:
-        return aql.literal('==');
-      case Operator.neq:
-        return aql.literal('!=');
-      case Operator.gt:
-        return aql.literal('>');
-      case Operator.gte:
-        return aql.literal('>=');
-      case Operator.lt:
-        return aql.literal('<');
-      case Operator.lte:
-        return aql.literal('<=');
-      case Operator.in:
-        return aql.literal('IN');
-      case Operator.nin:
-        return aql.literal('NOT IN');
-    }
-  }
-
-  private getValue(): aql.GeneratedAqlQuery {
-    return aql.aql`${this.value}`;
-  }
+  constructor(private readonly value: Value) {}
 
   apply(): aql.GeneratedAqlQuery {
-    this.assertValueIsValid();
-
-    return aql.aql`${this.getOperator()} ${this.getValue()}`;
-  }
-
-  private assertValueIsValid(): void | never {
-    switch (this.operator) {
-      case Operator.eq:
-      case Operator.neq:
-        this.assertValueIsNonArray();
-        break;
-      case Operator.lt:
-      case Operator.gt:
-      case Operator.gte:
-      case Operator.lte:
-        this.assertValueIsNonArray();
-        this.assertValueIsNumber();
-        break;
-      case Operator.in:
-      case Operator.nin:
-        this.assertValueIsArray();
-        break;
-    }
-  }
-
-  private assertValueIsNonArray(): void | never {
-    if (Array.isArray(this.value)) {
-      throw new Error(
-        `Filter operator ${this.operator} does not support array values`
-      );
-    }
-  }
-
-  private assertValueIsArray(): void | never {
-    if (!Array.isArray(this.value)) {
-      throw new Error(`Filter operator ${this.operator} requires array values`);
-    }
-  }
-
-  private assertValueIsNumber(): void | never {
-    if (typeof this.value !== 'number') {
-      throw new Error(
-        `Filter operator ${this.operator} requires number values`
-      );
-    }
+    return aql.aql`${aql.literal(this.operator)} ${this.value}`;
   }
 }
 
-export enum Operator {
-  eq,
-  neq,
-  gt,
-  gte,
-  lt,
-  lte,
-  in,
-  nin,
+export class EqFilterOperator<
+  Value extends string | number | boolean
+> extends FilterOperator<Value> {
+  protected readonly operator = '==';
 }
+
+export class NeqFilterOperator<
+  Value extends string | number | boolean
+> extends FilterOperator<Value> {
+  protected readonly operator = '!=';
+}
+
+export class GtFilterOperator<
+  Value extends number
+> extends FilterOperator<Value> {
+  protected readonly operator = '>';
+}
+
+export class GteFilterOperator<
+  Value extends number
+> extends FilterOperator<Value> {
+  protected readonly operator = '>=';
+}
+
+export class LtFilterOperator<
+  Value extends number
+> extends FilterOperator<Value> {
+  protected readonly operator = '<';
+}
+
+export class LteFilterOperator<
+  Value extends number
+> extends FilterOperator<Value> {
+  protected readonly operator = '<=';
+}
+
+export class InFilterOperator<
+  Value extends string | number | boolean
+> extends FilterOperator<Value[]> {
+  protected readonly operator = 'IN';
+}
+
+export class NinFilterOperator<
+  Value extends string | number | boolean
+> extends FilterOperator<Value[]> {
+  protected readonly operator = 'NOT IN';
+}
+
+export type IDFilterOperator =
+  | EqFilterOperator<string>
+  | NeqFilterOperator<string>
+  | InFilterOperator<string>
+  | NinFilterOperator<string>;
+
+export type StringFilterOperator =
+  | EqFilterOperator<string>
+  | NeqFilterOperator<string>
+  | InFilterOperator<string>
+  | NinFilterOperator<string>;
+
+export type NumberFilterOperator =
+  | EqFilterOperator<number>
+  | NeqFilterOperator<number>
+  | GtFilterOperator<number>
+  | GteFilterOperator<number>
+  | LtFilterOperator<number>
+  | LteFilterOperator<number>
+  | InFilterOperator<number>
+  | NinFilterOperator<number>;
+
+export type BooleanFilterOperator =
+  | EqFilterOperator<boolean>
+  | NeqFilterOperator<boolean>;

@@ -1,7 +1,7 @@
 import { OnExecuteDoneHookResultOnNextHook } from '@envelop/core';
 import { GraphQLError } from 'graphql';
-import { Plugin, handleStreamOrSingleExecutionResult } from 'graphql-yoga';
-import { IdNotFoundError, RevMismatchError } from '../../repositories/utils';
+import { handleStreamOrSingleExecutionResult, Plugin } from 'graphql-yoga';
+import { IdNotFoundError, RevMismatchError } from '../../repositories/errors';
 import {
   GraphQLIdNotFoundError,
   GraphQLRevMismatchError,

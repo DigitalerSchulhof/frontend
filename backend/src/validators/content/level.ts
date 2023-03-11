@@ -1,13 +1,22 @@
 import { LevelBase, LevelPatch } from '@repositories/level';
-import { IdNotFoundError } from '../../repositories/utils';
+import {
+  LevelIdFilter,
+  LevelNameFilter,
+  LevelSchoolyearIdFilter,
+} from '@repositories/level/filters';
+import { IdNotFoundError } from '../../repositories/errors';
+import { AndFilter } from '../../repositories/filters';
+import {
+  EqFilterOperator,
+  NeqFilterOperator,
+} from '../../repositories/filters/operators/base';
 import { Validator } from '../base';
 import { SimpleValidator } from '../simple';
-import { InputValidationError, aggregateValidationErrors } from '../utils';
+import { aggregateValidationErrors, InputValidationError } from '../utils';
 
 export const SCHOOLYEAR_DOES_NOT_EXIST = 'SCHOOLYEAR_DOES_NOT_EXIST';
+export const LEVEL_NAME_INVALID = 'LEVEL_NAME_INVALID';
 export const LEVEL_NAME_EXISTS = 'LEVEL_NAME_EXISTS';
-
-// TODO: Check name is not empty
 
 export class LevelValidator
   extends Validator
@@ -17,7 +26,7 @@ export class LevelValidator
     await this.assertSchoolyearExists(post.schoolyearId);
 
     const error = await aggregateValidationErrors([
-      this.assertExistsNoneInSchoolyearWithName(post.schoolyearId, post.name),
+      this.assertNameValid(post.schoolyearId, post.name),
     ]);
 
     if (error) throw error;
@@ -33,11 +42,7 @@ export class LevelValidator
     const error = await aggregateValidationErrors([
       patch.name === undefined
         ? null
-        : this.assertExistsNoneInSchoolyearWithNameExceptId(
-            base.schoolyearId,
-            patch.name,
-            id
-          ),
+        : this.assertNameValid(base.schoolyearId, patch.name, id),
     ]);
 
     if (error) throw error;
@@ -55,33 +60,35 @@ export class LevelValidator
     }
   }
 
-  private async assertExistsNoneInSchoolyearWithName(
+  private async assertNameValid(
     schoolyearId: string,
-    name: string
+    name: string,
+    exceptId?: string
   ): Promise<void | never> {
-    return this.assertExistsNoneInSchoolyearWithNameExceptId(
+    if (!name.length) {
+      throw new InputValidationError(LEVEL_NAME_INVALID);
+    }
+
+    await this.assertExistsNoneInSchoolyearWithName(
       schoolyearId,
-      name
+      name,
+      exceptId
     );
   }
 
-  private async assertExistsNoneInSchoolyearWithNameExceptId(
+  private async assertExistsNoneInSchoolyearWithName(
     schoolyearId: string,
     name: string,
-    id?: string
+    exceptId?: string
   ): Promise<void | never> {
     const level = await this.repositories.level.search({
-      filters: {
-        name: {
-          eq: name,
-        },
-        schoolyearId: {
-          eq: schoolyearId,
-        },
-        id: {
-          ne: id,
-        },
-      },
+      filter: new AndFilter(
+        new LevelNameFilter(new EqFilterOperator(name)),
+        new LevelSchoolyearIdFilter(new EqFilterOperator(schoolyearId)),
+        exceptId === undefined
+          ? null
+          : new LevelIdFilter(new NeqFilterOperator(exceptId))
+      ),
       limit: 1,
     });
 

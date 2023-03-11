@@ -1,7 +1,7 @@
-import { IdNotFoundError } from '../../../repositories/utils';
+import { IdNotFoundError } from '../../../repositories/errors';
 import {
-  LEVEL_NAME_EXISTS,
   LevelValidator,
+  LEVEL_NAME_EXISTS,
   SCHOOLYEAR_DOES_NOT_EXIST,
 } from '../../content/level';
 import {

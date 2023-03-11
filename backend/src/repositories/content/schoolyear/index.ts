@@ -11,15 +11,18 @@ import { SchoolyearFilter } from './filters';
 
 export interface SchoolyearBase {
   name: string;
+  start: number;
+  end: number;
 }
 
 export type Schoolyear = WithId<SchoolyearBase>;
 
 export type SchoolyearPatch = MakePatch<SchoolyearBase>;
 
-export type SchoolyearSearchQuery = MakeSearchQuery<Schoolyear>;
+export type SchoolyearSearchQuery = MakeSearchQuery<'schoolyear', Schoolyear>;
 
 export type SchoolyearRepository = MakeSimpleRepository<
+  'schoolyear',
   Schoolyear,
   SchoolyearBase,
   SchoolyearPatch,
@@ -115,11 +118,11 @@ export class SchoolyearRepositoryImpl
     return (await res.next())!;
   }
 
-  async filterDelete(filters: SchoolyearFilter[]): Promise<Schoolyear[]> {
+  async filterDelete(filter: SchoolyearFilter): Promise<Schoolyear[]> {
     const res = await this.query<Schoolyear>(
       aql`
         FOR schoolyear IN schoolyears
-          ${filtersToArangoQuery('schoolyear', filters)}
+          ${filtersToArangoQuery('schoolyear', filter)}
 
           REMOVE schoolyear IN schoolyears
 

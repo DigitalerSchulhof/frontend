@@ -1,11 +1,12 @@
 import * as aql from 'arangojs/aql';
-import { Level } from '.';
 import { Filter } from '../../filters';
-import { IDFilterOperator } from '../../filters/operators/id';
-import { StringFilterOperator } from '../../filters/operators/string';
+import {
+  IDFilterOperator,
+  StringFilterOperator,
+} from '../../filters/operators/base';
 import { SchoolyearFilter } from '../schoolyear/filters';
 
-export abstract class LevelFilter extends Filter<Level> {}
+export abstract class LevelFilter extends Filter<'level'> {}
 
 export class LevelIdFilter extends LevelFilter {
   constructor(private readonly filterOperator: IDFilterOperator) {
@@ -13,7 +14,7 @@ export class LevelIdFilter extends LevelFilter {
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`FILTER ${variableName}._key ${this.filterOperator.apply()}`;
+    return aql.aql`${variableName}._key ${this.filterOperator.apply()}`;
   }
 }
 
@@ -23,7 +24,7 @@ export class LevelNameFilter extends LevelFilter {
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`FILTER ${variableName}.name ${this.filterOperator.apply()}`;
+    return aql.aql`${variableName}.name ${this.filterOperator.apply()}`;
   }
 }
 
@@ -33,7 +34,7 @@ export class LevelSchoolyearIdFilter extends LevelFilter {
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`FILTER ${variableName}.schoolyearId ${this.filterOperator.apply()}`;
+    return aql.aql`${variableName}.schoolyearId ${this.filterOperator.apply()}`;
   }
 }
 
@@ -49,9 +50,9 @@ export class LevelSchoolyearFilter extends LevelFilter {
     const nextVariableName = this.getFreeVariableName(freeVariableNameCounter);
 
     return aql.aql`
-      FILTER ${variableName}.schoolyearId IN (
+      ${variableName}.schoolyearId IN (
         FOR ${nextVariableName} IN schoolyears
-          ${this.schoolyearFilter.apply(
+          FILTER ${this.schoolyearFilter.apply(
             nextVariableName,
             freeVariableNameCounter + 1
           )}

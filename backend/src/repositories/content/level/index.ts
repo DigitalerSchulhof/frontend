@@ -18,9 +18,10 @@ export type Level = WithId<LevelBase>;
 
 export type LevelPatch = MakePatch<LevelBase>;
 
-export type LevelSearchQuery = MakeSearchQuery<Level>;
+export type LevelSearchQuery = MakeSearchQuery<'level', Level>;
 
 export type LevelRepository = MakeSimpleRepository<
+  'level',
   Level,
   LevelBase,
   LevelPatch,
@@ -112,11 +113,11 @@ export class LevelRepositoryImpl
     return (await res.next())!;
   }
 
-  async filterDelete(filters: LevelFilter[]): Promise<Level[]> {
+  async filterDelete(filter: LevelFilter): Promise<Level[]> {
     const res = await this.query<Level>(
       aql`
         FOR level IN levels
-          ${filtersToArangoQuery('level', filters)}
+          ${filtersToArangoQuery('level', filter)}
 
           REMOVE level IN levels
 

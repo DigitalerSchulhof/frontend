@@ -1,11 +1,12 @@
 import * as aql from 'arangojs/aql';
-import { Course } from '.';
 import { Filter } from '../../filters';
-import { IDFilterOperator } from '../../filters/operators/id';
-import { StringFilterOperator } from '../../filters/operators/string';
+import {
+  IDFilterOperator,
+  StringFilterOperator,
+} from '../../filters/operators/base';
 import { ClassFilter } from '../class/filters';
 
-export abstract class CourseFilter extends Filter<Course> {}
+export abstract class CourseFilter extends Filter<'course'> {}
 
 export class CourseIdFilter extends CourseFilter {
   constructor(private readonly filterOperator: IDFilterOperator) {
@@ -13,7 +14,7 @@ export class CourseIdFilter extends CourseFilter {
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`FILTER ${variableName}._key ${this.filterOperator.apply()}`;
+    return aql.aql`${variableName}._key ${this.filterOperator.apply()}`;
   }
 }
 
@@ -23,7 +24,7 @@ export class CourseNameFilter extends CourseFilter {
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`FILTER ${variableName}.name ${this.filterOperator.apply()}`;
+    return aql.aql`${variableName}.name ${this.filterOperator.apply()}`;
   }
 }
 
@@ -33,7 +34,7 @@ export class CourseClassIdFilter extends CourseFilter {
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`FILTER ${variableName}.classId ${this.filterOperator.apply()}`;
+    return aql.aql`${variableName}.classId ${this.filterOperator.apply()}`;
   }
 }
 
@@ -49,9 +50,9 @@ export class CourseClassFilter extends CourseFilter {
     const nextVariableName = this.getFreeVariableName(freeVariableNameCounter);
 
     return aql.aql`
-      FILTER ${variableName}.classId IN (
+      ${variableName}.classId IN (
         FOR ${nextVariableName} IN classes
-          ${this.classFilter.apply(
+          FILTER ${this.classFilter.apply(
             nextVariableName,
             freeVariableNameCounter + 1
           )}

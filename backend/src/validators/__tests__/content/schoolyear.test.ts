@@ -1,8 +1,8 @@
-import { IdNotFoundError } from '../../../repositories/utils';
+import { IdNotFoundError } from '../../../repositories/errors';
 import {
+  SchoolyearValidator,
   SCHOOLYEAR_NAME_EXISTS,
   SCHOOLYEAR_START_NOT_BEFORE_END,
-  SchoolyearValidator,
 } from '../../content/schoolyear';
 import {
   expectAggregatedInputValidationError,

@@ -1,13 +1,21 @@
 import { SchoolyearBase, SchoolyearPatch } from '@repositories/schoolyear';
-import { IdNotFoundError } from '../../repositories/utils';
+import {
+  SchoolyearIdFilter,
+  SchoolyearNameFilter,
+} from '@repositories/schoolyear/filters';
+import { IdNotFoundError } from '../../repositories/errors';
+import { AndFilter } from '../../repositories/filters';
+import {
+  EqFilterOperator,
+  NeqFilterOperator,
+} from '../../repositories/filters/operators/base';
 import { Validator } from '../base';
-import { InputValidationError, aggregateValidationErrors } from '../utils';
 import { SimpleValidator } from '../simple';
-
-// TODO: Check name is not empty
+import { aggregateValidationErrors, InputValidationError } from '../utils';
 
 export const SCHOOLYEAR_START_NOT_BEFORE_END =
   'SCHOOLYEAR_START_NOT_BEFORE_END';
+export const SCHOOLYEAR_NAME_INVALID = 'SCHOOLYEAR_NAME_INVALID';
 export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';
 
 export class SchoolyearValidator
@@ -17,7 +25,7 @@ export class SchoolyearValidator
   async assertCanCreate(post: SchoolyearBase): Promise<void | never> {
     const error = await aggregateValidationErrors([
       this.assertStartBeforeEnd(post.start, post.end),
-      this.assertExistsNoneWithName(post.name),
+      this.assertNameValid(post.name),
     ]);
 
     if (error) throw error;
@@ -40,9 +48,7 @@ export class SchoolyearValidator
             patch.start ?? base.start,
             patch.end ?? base.end
           ),
-      patch.name === undefined
-        ? null
-        : this.assertExistsNoneWithNameExceptId(patch.name, id),
+      patch.name === undefined ? null : this.assertNameValid(patch.name, id),
     ]);
 
     if (error) throw error;
@@ -57,23 +63,28 @@ export class SchoolyearValidator
     }
   }
 
-  private async assertExistsNoneWithName(name: string): Promise<void | never> {
-    return this.assertExistsNoneWithNameExceptId(name);
+  private async assertNameValid(
+    name: string,
+    exceptId?: string
+  ): Promise<void | never> {
+    if (!name.length) {
+      throw new InputValidationError(SCHOOLYEAR_NAME_INVALID);
+    }
+
+    await this.assertExistsNoneWithName(name, exceptId);
   }
 
-  private async assertExistsNoneWithNameExceptId(
+  private async assertExistsNoneWithName(
     name: string,
-    id?: string
+    exceptId?: string
   ): Promise<void | never> {
     const schoolyears = await this.repositories.schoolyear.search({
-      filters: {
-        name: {
-          eq: name,
-        },
-        id: {
-          ne: id,
-        },
-      },
+      filter: new AndFilter(
+        new SchoolyearNameFilter(new EqFilterOperator(name)),
+        exceptId === undefined
+          ? null
+          : new SchoolyearIdFilter(new NeqFilterOperator(exceptId))
+      ),
       limit: 1,
     });
 

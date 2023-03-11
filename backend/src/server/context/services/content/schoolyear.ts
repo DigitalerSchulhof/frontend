@@ -8,16 +8,17 @@ import {
 import { SchoolyearService } from '@services/schoolyear';
 import { SchoolyearValidator } from '@validators/schoolyear';
 import { Database } from 'arangojs';
-import { Repositories } from '..';
+import { Repositories, Services } from '..';
 
 export function createSchoolyearService(
   db: Database,
   cacheAdapter: CacheAdapter,
+  services: Services,
   repositories: Repositories
 ): [SchoolyearRepository, SchoolyearService] {
   const repo = new SchoolyearRepositoryImpl(db);
   const cache = new ObjectCache<Schoolyear>(cacheAdapter, 'schoolyears');
   const validator = new SchoolyearValidator(repositories);
 
-  return [repo, new SchoolyearService(repo, cache, validator)];
+  return [repo, new SchoolyearService(repo, cache, validator, services)];
 }

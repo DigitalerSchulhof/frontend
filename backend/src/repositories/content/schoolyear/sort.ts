@@ -23,3 +23,23 @@ export class SchoolyearNameSort extends SchoolyearSort {
     `;
   }
 }
+
+export class SchoolyearStartSort extends SchoolyearSort {
+  apply(documentName: aql.AqlLiteral): aql.GeneratedAqlQuery {
+    return aql.aql`
+      SORT ${documentName}.start ${
+      SchoolyearIdSort.sortDirectionMap[this.direction]
+    }
+    `;
+  }
+}
+
+export class SchoolyearEndSort extends SchoolyearSort {
+  apply(documentName: aql.AqlLiteral): aql.GeneratedAqlQuery {
+    return aql.aql`
+      SORT ${documentName}.end ${
+      SchoolyearIdSort.sortDirectionMap[this.direction]
+    }
+    `;
+  }
+}

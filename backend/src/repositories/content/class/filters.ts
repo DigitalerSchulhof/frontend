@@ -1,11 +1,12 @@
 import * as aql from 'arangojs/aql';
-import { Class } from '.';
 import { Filter } from '../../filters';
-import { IDFilterOperator } from '../../filters/operators/id';
-import { StringFilterOperator } from '../../filters/operators/string';
+import {
+  IDFilterOperator,
+  StringFilterOperator,
+} from '../../filters/operators/base';
 import { LevelFilter } from '../level/filters';
 
-export abstract class ClassFilter extends Filter<Class> {}
+export abstract class ClassFilter extends Filter<'class'> {}
 
 export class ClassIdFilter extends ClassFilter {
   constructor(private readonly filterOperator: IDFilterOperator) {
@@ -13,7 +14,7 @@ export class ClassIdFilter extends ClassFilter {
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`FILTER ${variableName}._key ${this.filterOperator.apply()}`;
+    return aql.aql`${variableName}._key ${this.filterOperator.apply()}`;
   }
 }
 
@@ -23,7 +24,7 @@ export class ClassNameFilter extends ClassFilter {
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`FILTER ${variableName}.name ${this.filterOperator.apply()}`;
+    return aql.aql`${variableName}.name ${this.filterOperator.apply()}`;
   }
 }
 
@@ -33,7 +34,7 @@ export class ClassLevelIdFilter extends ClassFilter {
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`FILTER ${variableName}.levelId ${this.filterOperator.apply()}`;
+    return aql.aql`${variableName}.levelId ${this.filterOperator.apply()}`;
   }
 }
 
@@ -49,9 +50,9 @@ export class ClassLevelFilter extends ClassFilter {
     const nextVariableName = this.getFreeVariableName(freeVariableNameCounter);
 
     return aql.aql`
-      FILTER ${variableName}.levelId IN (
+      ${variableName}.levelId IN (
         FOR ${nextVariableName} IN levels
-          ${this.levelFilter.apply(
+          FILTER ${this.levelFilter.apply(
             nextVariableName,
             freeVariableNameCounter + 1
           )}

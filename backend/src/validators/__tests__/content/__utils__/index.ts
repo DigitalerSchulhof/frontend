@@ -4,6 +4,7 @@ export function makeSimpleMockRepository() {
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    filterDelete: jest.fn(),
     search: jest.fn(),
   };
 }
@@ -12,6 +13,8 @@ export function makeMockRepositories() {
   return {
     schoolyear: makeSimpleMockRepository(),
     level: makeSimpleMockRepository(),
+    class: makeSimpleMockRepository(),
+    course: makeSimpleMockRepository(),
   };
 }
 

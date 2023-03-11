@@ -20,15 +20,16 @@ export async function paginateCursor<T>(
 }
 
 export interface MakeSimpleRepository<
+  Name extends string,
   BaseWithId,
   Base,
   Patch,
-  SearchQuery extends MakeSearchQuery<unknown>
+  SearchQuery extends MakeSearchQuery<Name, BaseWithId>
 > {
   getByIds(ids: readonly string[]): Promise<(BaseWithId | null)[]>;
   create(post: Base): Promise<BaseWithId>;
   update(id: string, patch: Patch, ifRev?: string): Promise<BaseWithId>;
   delete(id: string, ifRev?: string): Promise<BaseWithId>;
-  filterDelete(filters: Filter<BaseWithId>[]): Promise<BaseWithId[]>;
+  filterDelete(filter: Filter<Name>): Promise<BaseWithId[]>;
   search(query: SearchQuery): Promise<Paginated<BaseWithId>>;
 }

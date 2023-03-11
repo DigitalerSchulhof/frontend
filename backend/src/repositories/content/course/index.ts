@@ -18,9 +18,10 @@ export type Course = WithId<CourseBase>;
 
 export type CoursePatch = MakePatch<CourseBase>;
 
-export type CourseSearchQuery = MakeSearchQuery<Course>;
+export type CourseSearchQuery = MakeSearchQuery<'course', Course>;
 
 export type CourseRepository = MakeSimpleRepository<
+  'course',
   Course,
   CourseBase,
   CoursePatch,
@@ -116,11 +117,11 @@ export class CourseRepositoryImpl
     return (await res.next())!;
   }
 
-  async filterDelete(filters: CourseFilter[]): Promise<Course[]> {
+  async filterDelete(filter: CourseFilter): Promise<Course[]> {
     const res = await this.query<Course>(
       aql`
         FOR course IN courses
-          ${filtersToArangoQuery('course', filters)}
+          ${filtersToArangoQuery('course', filter)}
 
           REMOVE course IN courses
 

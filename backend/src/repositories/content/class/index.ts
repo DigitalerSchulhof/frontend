@@ -18,9 +18,10 @@ export type Class = WithId<ClassBase>;
 
 export type ClassPatch = MakePatch<ClassBase>;
 
-export type ClassSearchQuery = MakeSearchQuery<Class>;
+export type ClassSearchQuery = MakeSearchQuery<'class', Class>;
 
 export type ClassRepository = MakeSimpleRepository<
+  'class',
   Class,
   ClassBase,
   ClassPatch,
@@ -112,7 +113,7 @@ export class ClassRepositoryImpl
     return (await res.next())!;
   }
 
-  async filterDelete(filters: ClassFilter[]): Promise<Class[]> {
+  async filterDelete(filters: ClassFilter): Promise<Class[]> {
     const res = await this.query<Class>(
       aql`
         FOR class IN classes
