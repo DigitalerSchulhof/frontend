@@ -2,6 +2,7 @@ import { IdNotFoundError } from '../../../repositories/errors';
 import {
   LevelValidator,
   LEVEL_NAME_EXISTS,
+  LEVEL_NAME_INVALID,
   SCHOOLYEAR_DOES_NOT_EXIST,
 } from '../../content/level';
 import {
@@ -40,6 +41,26 @@ describe('LevelValidator', () => {
     });
 
     it("doesn't throw if the schoolyear exists", async () => {
+      await expect(
+        validator.assertCanCreate({
+          schoolyearId: '1',
+          name: 'test',
+        })
+      ).resolves.toBeUndefined();
+    });
+
+    it("throws if the level's name is invalid", async () => {
+      await expect(
+        validator.assertCanCreate({
+          schoolyearId: '1',
+          name: '',
+        })
+      ).rejects.toThrow(
+        expectAggregatedInputValidationError(LEVEL_NAME_INVALID)
+      );
+    });
+
+    it("doesn't throw if the level's name is valid", async () => {
       await expect(
         validator.assertCanCreate({
           schoolyearId: '1',
@@ -121,6 +142,24 @@ describe('LevelValidator', () => {
 
     it("doesn't throw if the level exists", async () => {
       await expect(validator.assertCanUpdate('1', {})).resolves.toBeUndefined();
+    });
+
+    it("throws if the level's name is invalid", async () => {
+      await expect(
+        validator.assertCanUpdate('1', {
+          name: '',
+        })
+      ).rejects.toThrow(
+        expectAggregatedInputValidationError(LEVEL_NAME_INVALID)
+      );
+    });
+
+    it("doesn't throw if the level's name is valid", async () => {
+      await expect(
+        validator.assertCanUpdate('1', {
+          name: 'test',
+        })
+      ).resolves.toBeUndefined();
     });
 
     it('throws if a level with the same name exists in the same schoolyear', async () => {

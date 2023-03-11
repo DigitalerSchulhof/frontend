@@ -2,6 +2,7 @@ import { IdNotFoundError } from '../../../repositories/errors';
 import {
   SchoolyearValidator,
   SCHOOLYEAR_NAME_EXISTS,
+  SCHOOLYEAR_NAME_INVALID,
   SCHOOLYEAR_START_NOT_BEFORE_END,
 } from '../../content/schoolyear';
 import {
@@ -44,6 +45,28 @@ describe('SchoolyearValidator', () => {
     });
 
     it("doesn't throw if the start date is before the end date", async () => {
+      await expect(
+        validator.assertCanCreate({
+          name: 'test',
+          start: 1,
+          end: 2,
+        })
+      ).resolves.toBeUndefined();
+    });
+
+    it("throws if the schoolyear's name is invalid", async () => {
+      await expect(
+        validator.assertCanCreate({
+          name: '',
+          start: 1,
+          end: 2,
+        })
+      ).rejects.toThrow(
+        expectAggregatedInputValidationError(SCHOOLYEAR_NAME_INVALID)
+      );
+    });
+
+    it("doesn't throw if the schoolyear's name is valid", async () => {
       await expect(
         validator.assertCanCreate({
           name: 'test',
@@ -154,6 +177,24 @@ describe('SchoolyearValidator', () => {
       ).rejects.toThrow(
         expectAggregatedInputValidationError(SCHOOLYEAR_START_NOT_BEFORE_END)
       );
+    });
+
+    it("throws if the schoolyear's name is invalid", async () => {
+      await expect(
+        validator.assertCanUpdate('1', {
+          name: '',
+        })
+      ).rejects.toThrow(
+        expectAggregatedInputValidationError(SCHOOLYEAR_NAME_INVALID)
+      );
+    });
+
+    it("doesn't throw if the schoolyear's name is valid", async () => {
+      await expect(
+        validator.assertCanUpdate('1', {
+          name: 'test',
+        })
+      ).resolves.toBeUndefined();
     });
 
     it('throws if a schoolyear with the same name exists', async () => {
