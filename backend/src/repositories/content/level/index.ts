@@ -1,11 +1,13 @@
 import { aql } from 'arangojs';
 import { ArangoRepository, WithId } from '../../arango';
 import {
+  filtersToArangoQuery,
   MakeSearchQuery,
   Paginated,
   searchQueryToArangoQuery,
 } from '../../search';
 import { MakePatch, MakeSimpleRepository, paginateCursor } from '../../utils';
+import { LevelFilter } from './filters';
 
 export interface LevelBase {
   name: string;
@@ -108,6 +110,27 @@ export class LevelRepositoryImpl
     );
 
     return (await res.next())!;
+  }
+
+  async filterDelete(filters: LevelFilter[]): Promise<Level[]> {
+    const res = await this.query<Level>(
+      aql`
+        FOR level IN levels
+          ${filtersToArangoQuery('level', filters)}
+
+          REMOVE level IN levels
+
+          RETURN MERGE(
+            UNSET(OLD, "_key", "_id", "_rev"),
+            {
+              id: OLD._key,
+              rev: OLD._rev
+            }
+          )
+      `
+    );
+
+    return res.all();
   }
 
   async search(query: LevelSearchQuery): Promise<Paginated<Level>> {

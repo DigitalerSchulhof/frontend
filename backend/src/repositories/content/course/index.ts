@@ -1,11 +1,13 @@
 import { aql } from 'arangojs';
 import { ArangoRepository, WithId } from '../../arango';
 import {
+  filtersToArangoQuery,
   MakeSearchQuery,
   Paginated,
   searchQueryToArangoQuery,
 } from '../../search';
 import { MakePatch, MakeSimpleRepository, paginateCursor } from '../../utils';
+import { CourseFilter } from './filters';
 
 export interface CourseBase {
   name: string;
@@ -112,6 +114,27 @@ export class CourseRepositoryImpl
     );
 
     return (await res.next())!;
+  }
+
+  async filterDelete(filters: CourseFilter[]): Promise<Course[]> {
+    const res = await this.query<Course>(
+      aql`
+        FOR course IN courses
+          ${filtersToArangoQuery('course', filters)}
+
+          REMOVE course IN courses
+
+          RETURN MERGE(
+            UNSET(OLD, "_key", "_id", "_rev"),
+            {
+              id: OLD._key,
+              rev: OLD._rev
+            }
+          )
+      `
+    );
+
+    return res.all();
   }
 
   async search(query: CourseSearchQuery): Promise<Paginated<Course>> {

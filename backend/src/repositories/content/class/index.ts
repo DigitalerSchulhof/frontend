@@ -1,11 +1,13 @@
 import { aql } from 'arangojs';
 import { ArangoRepository, WithId } from '../../arango';
 import {
+  filtersToArangoQuery,
   MakeSearchQuery,
   Paginated,
   searchQueryToArangoQuery,
 } from '../../search';
 import { MakePatch, MakeSimpleRepository, paginateCursor } from '../../utils';
+import { ClassFilter } from './filters';
 
 export interface ClassBase {
   name: string;
@@ -108,6 +110,27 @@ export class ClassRepositoryImpl
     );
 
     return (await res.next())!;
+  }
+
+  async filterDelete(filters: ClassFilter[]): Promise<Class[]> {
+    const res = await this.query<Class>(
+      aql`
+        FOR class IN classes
+          ${filtersToArangoQuery('class', filters)}
+
+          REMOVE class IN classes
+
+          RETURN MERGE(
+            UNSET(OLD, "_key", "_id", "_rev"),
+            {
+              id: OLD._key,
+              rev: OLD._rev
+            }
+          )
+      `
+    );
+
+    return res.all();
   }
 
   async search(query: ClassSearchQuery): Promise<Paginated<Class>> {

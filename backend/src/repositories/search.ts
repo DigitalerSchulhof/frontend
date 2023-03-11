@@ -26,16 +26,40 @@ export function searchQueryToArangoQuery(
 
   const documentNameLiteral = aql.literal(documentName);
 
-  const filterQuery = filters
-    ? aql.join(filters.map((f) => f.apply(documentNameLiteral)))
-    : undefined;
-  const sortQuery = sort
-    ? aql.join(sort.map((s) => s.apply(documentNameLiteral)))
-    : undefined;
+  const filterQuery = filtersToArangoQuery(documentNameLiteral, filters);
+  const sortQuery = sortsToArangoQuery(documentNameLiteral, sort);
 
   return aql.aql`
     ${filterQuery}
     ${sortQuery}
     LIMIT ${offset}, ${limit}
   `;
+}
+
+export function filtersToArangoQuery(
+  documentNameMaybeLiteral: string | aql.AqlLiteral,
+  filters?: Filter<unknown>[]
+): aql.GeneratedAqlQuery | undefined {
+  if (!filters?.length) return undefined;
+
+  const documentNameLiteral =
+    typeof documentNameMaybeLiteral === 'string'
+      ? aql.literal(documentNameMaybeLiteral)
+      : documentNameMaybeLiteral;
+
+  return aql.join(filters.map((f) => f.apply(documentNameLiteral)));
+}
+
+export function sortsToArangoQuery(
+  documentNameMaybeLiteral: string | aql.AqlLiteral,
+  sort?: Sort<unknown>[]
+): aql.GeneratedAqlQuery | undefined {
+  if (!sort?.length) return undefined;
+
+  const documentNameLiteral =
+    typeof documentNameMaybeLiteral === 'string'
+      ? aql.literal(documentNameMaybeLiteral)
+      : documentNameMaybeLiteral;
+
+  return aql.join(sort.map((s) => s.apply(documentNameLiteral)));
 }

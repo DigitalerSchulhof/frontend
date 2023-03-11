@@ -1,11 +1,13 @@
 import { aql } from 'arangojs';
 import { ArangoRepository, WithId } from '../../arango';
 import {
+  filtersToArangoQuery,
   MakeSearchQuery,
   Paginated,
   searchQueryToArangoQuery,
 } from '../../search';
 import { MakePatch, MakeSimpleRepository, paginateCursor } from '../../utils';
+import { SchoolyearFilter } from './filters';
 
 export interface SchoolyearBase {
   name: string;
@@ -111,6 +113,27 @@ export class SchoolyearRepositoryImpl
     );
 
     return (await res.next())!;
+  }
+
+  async filterDelete(filters: SchoolyearFilter[]): Promise<Schoolyear[]> {
+    const res = await this.query<Schoolyear>(
+      aql`
+        FOR schoolyear IN schoolyears
+          ${filtersToArangoQuery('schoolyear', filters)}
+
+          REMOVE schoolyear IN schoolyears
+
+          RETURN MERGE(
+            UNSET(OLD, "_key", "_id", "_rev"),
+            {
+              id: OLD._key,
+              rev: OLD._rev
+            }
+          )
+      `
+    );
+
+    return res.all();
   }
 
   async search(query: SchoolyearSearchQuery): Promise<Paginated<Schoolyear>> {
