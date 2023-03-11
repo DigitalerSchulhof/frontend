@@ -1,63 +1,37 @@
-import * as aql from 'arangojs/aql';
-import { Filter } from '../../filters';
+import { MaybeArray } from '../../../utils';
+import { Filter, RelationalFilter, ScalarFilter } from '../../filters';
 import {
+  FilterOperator,
   IDFilterOperator,
   StringFilterOperator,
-} from '../../filters/operators/base';
+} from '../../filters/operators';
 import { ClassFilter } from '../class/filters';
 
 export abstract class CourseFilter extends Filter<'course'> {}
 
-export class CourseIdFilter extends CourseFilter {
-  constructor(private readonly filterOperator: IDFilterOperator) {
-    super();
-  }
+export abstract class ScalarCourseFilter<
+  FilterOperatorType extends FilterOperator<
+    MaybeArray<string | number | boolean>
+  >
+> extends ScalarFilter<'course', FilterOperatorType> {}
 
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}._key ${this.filterOperator.apply()}`;
-  }
+export abstract class RelationalCourseFilter<
+  RelatedFilter extends Filter<unknown>
+> extends RelationalFilter<'course', RelatedFilter> {}
+
+export class CourseIdFilter extends ScalarCourseFilter<IDFilterOperator> {
+  protected readonly propertyName = '_key';
 }
 
-export class CourseNameFilter extends CourseFilter {
-  constructor(private readonly filterOperator: StringFilterOperator) {
-    super();
-  }
-
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}.name ${this.filterOperator.apply()}`;
-  }
+export class CourseNameFilter extends ScalarCourseFilter<StringFilterOperator> {
+  protected readonly propertyName = 'name';
 }
 
-export class CourseClassIdFilter extends CourseFilter {
-  constructor(private readonly filterOperator: IDFilterOperator) {
-    super();
-  }
-
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}.classId ${this.filterOperator.apply()}`;
-  }
+export class CourseClassIdFilter extends ScalarCourseFilter<IDFilterOperator> {
+  protected readonly propertyName = 'classId';
 }
 
-export class CourseClassFilter extends CourseFilter {
-  constructor(private readonly classFilter: ClassFilter) {
-    super();
-  }
-
-  apply(
-    variableName: aql.AqlLiteral,
-    freeVariableNameCounter = 0
-  ): aql.GeneratedAqlQuery {
-    const nextVariableName = this.getFreeVariableName(freeVariableNameCounter);
-
-    return aql.aql`
-      ${variableName}.classId IN (
-        FOR ${nextVariableName} IN classes
-          FILTER ${this.classFilter.apply(
-            nextVariableName,
-            freeVariableNameCounter + 1
-          )}
-          RETURN ${nextVariableName}._key
-      )
-    `;
-  }
+export class CourseClassFilter extends RelationalCourseFilter<ClassFilter> {
+  protected readonly propertyName = 'classId';
+  protected readonly relatedCollection = 'classes';
 }

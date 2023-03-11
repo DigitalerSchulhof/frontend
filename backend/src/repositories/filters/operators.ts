@@ -1,5 +1,5 @@
 import * as aql from 'arangojs/aql';
-import { MaybeArray } from '../../../utils';
+import { MaybeArray } from '../../utils';
 
 export abstract class FilterOperator<
   Value extends MaybeArray<string | number | boolean>

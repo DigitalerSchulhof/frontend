@@ -12,7 +12,7 @@ import { SchoolyearValidator } from '@validators/schoolyear';
 import {
   EqFilterOperator,
   InFilterOperator,
-} from '../../repositories/filters/operators/base';
+} from '../../repositories/filters/operators';
 import { Paginated } from '../../repositories/search';
 import { Services } from '../../server/context/services';
 import { getByIdsCachedOrLoad } from '../utils';

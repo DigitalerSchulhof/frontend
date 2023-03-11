@@ -1,63 +1,37 @@
-import * as aql from 'arangojs/aql';
-import { Filter } from '../../filters';
+import { MaybeArray } from '../../../utils';
+import { Filter, RelationalFilter, ScalarFilter } from '../../filters';
 import {
+  FilterOperator,
   IDFilterOperator,
   StringFilterOperator,
-} from '../../filters/operators/base';
+} from '../../filters/operators';
 import { SchoolyearFilter } from '../schoolyear/filters';
 
 export abstract class LevelFilter extends Filter<'level'> {}
 
-export class LevelIdFilter extends LevelFilter {
-  constructor(private readonly filterOperator: IDFilterOperator) {
-    super();
-  }
+export abstract class ScalarLevelFilter<
+  FilterOperatorType extends FilterOperator<
+    MaybeArray<string | number | boolean>
+  >
+> extends ScalarFilter<'level', FilterOperatorType> {}
 
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}._key ${this.filterOperator.apply()}`;
-  }
+export abstract class RelationalLevelFilter<
+  RelatedFilter extends Filter<unknown>
+> extends RelationalFilter<'level', RelatedFilter> {}
+
+export class LevelIdFilter extends ScalarLevelFilter<IDFilterOperator> {
+  protected readonly propertyName = '_key';
 }
 
-export class LevelNameFilter extends LevelFilter {
-  constructor(private readonly filterOperator: StringFilterOperator) {
-    super();
-  }
-
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}.name ${this.filterOperator.apply()}`;
-  }
+export class LevelNameFilter extends ScalarLevelFilter<StringFilterOperator> {
+  protected readonly propertyName = 'name';
 }
 
-export class LevelSchoolyearIdFilter extends LevelFilter {
-  constructor(private readonly filterOperator: IDFilterOperator) {
-    super();
-  }
-
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}.schoolyearId ${this.filterOperator.apply()}`;
-  }
+export class LevelSchoolyearIdFilter extends ScalarLevelFilter<IDFilterOperator> {
+  protected readonly propertyName = 'schoolyearId';
 }
 
-export class LevelSchoolyearFilter extends LevelFilter {
-  constructor(private readonly schoolyearFilter: SchoolyearFilter) {
-    super();
-  }
-
-  apply(
-    variableName: aql.AqlLiteral,
-    freeVariableNameCounter = 0
-  ): aql.GeneratedAqlQuery {
-    const nextVariableName = this.getFreeVariableName(freeVariableNameCounter);
-
-    return aql.aql`
-      ${variableName}.schoolyearId IN (
-        FOR ${nextVariableName} IN schoolyears
-          FILTER ${this.schoolyearFilter.apply(
-            nextVariableName,
-            freeVariableNameCounter + 1
-          )}
-          RETURN ${nextVariableName}._key
-      )
-    `;
-  }
+export class LevelSchoolyearFilter extends RelationalLevelFilter<SchoolyearFilter> {
+  protected readonly propertyName = 'schoolyearId';
+  protected readonly relatedCollection = 'schoolyears';
 }

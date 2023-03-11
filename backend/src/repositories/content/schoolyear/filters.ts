@@ -1,49 +1,36 @@
-import * as aql from 'arangojs/aql';
-import { Filter } from '../../filters';
+import { MaybeArray } from '../../../utils';
+import { Filter, RelationalFilter, ScalarFilter } from '../../filters';
 import {
+  FilterOperator,
   IDFilterOperator,
   NumberFilterOperator,
   StringFilterOperator,
-} from '../../filters/operators/base';
+} from '../../filters/operators';
 
 export abstract class SchoolyearFilter extends Filter<'schoolyear'> {}
 
-export class SchoolyearIdFilter extends SchoolyearFilter {
-  constructor(private readonly filterOperator: IDFilterOperator) {
-    super();
-  }
+export abstract class ScalarSchoolyearFilter<
+  FilterOperatorType extends FilterOperator<
+    MaybeArray<string | number | boolean>
+  >
+> extends ScalarFilter<'schoolyear', FilterOperatorType> {}
 
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}._key ${this.filterOperator.apply()}`;
-  }
+export abstract class RelationalSchoolyearFilter<
+  RelatedFilter extends Filter<unknown>
+> extends RelationalFilter<'schoolyear', RelatedFilter> {}
+
+export class SchoolyearIdFilter extends ScalarSchoolyearFilter<IDFilterOperator> {
+  protected readonly propertyName = '_key';
 }
 
-export class SchoolyearNameFilter extends SchoolyearFilter {
-  constructor(private readonly filterOperator: StringFilterOperator) {
-    super();
-  }
-
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}.name ${this.filterOperator.apply()}`;
-  }
+export class SchoolyearNameFilter extends ScalarSchoolyearFilter<StringFilterOperator> {
+  protected readonly propertyName = 'name';
 }
 
-export class SchoolyearStartFilter extends SchoolyearFilter {
-  constructor(private readonly filterOperator: NumberFilterOperator) {
-    super();
-  }
-
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}.start ${this.filterOperator.apply()}`;
-  }
+export class SchoolyearStartFilter extends ScalarSchoolyearFilter<NumberFilterOperator> {
+  protected readonly propertyName = 'start';
 }
 
-export class SchoolyearEndFilter extends SchoolyearFilter {
-  constructor(private readonly filterOperator: NumberFilterOperator) {
-    super();
-  }
-
-  apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
-    return aql.aql`${variableName}.end ${this.filterOperator.apply()}`;
-  }
+export class SchoolyearEndFilter extends ScalarSchoolyearFilter<NumberFilterOperator> {
+  protected readonly propertyName = 'end';
 }

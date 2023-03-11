@@ -9,7 +9,7 @@ import { AndFilter } from '../../repositories/filters';
 import {
   EqFilterOperator,
   NeqFilterOperator,
-} from '../../repositories/filters/operators/base';
+} from '../../repositories/filters/operators';
 import { Validator } from '../base';
 import { SimpleValidator } from '../simple';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
