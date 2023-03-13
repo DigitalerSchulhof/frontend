@@ -72,6 +72,7 @@ describe('unique()', () => {
     const a = { foo: 1 };
     const b = { foo: 1 };
     const c = { foo: 1 };
+
     expect(unique([a, b, c, a, b, c])).toEqual([a, b, c]);
   });
 
@@ -79,6 +80,7 @@ describe('unique()', () => {
     const a = { foo: 1 };
     const b = { foo: 1 };
     const c = { foo: 2 };
+
     expect(unique([a, b, c, a, b, c], (a, b) => a.foo === b.foo)).toEqual([
       a,
       c,

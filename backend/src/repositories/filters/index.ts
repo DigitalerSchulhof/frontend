@@ -4,7 +4,7 @@ import { FilterOperator } from './operators';
 
 export abstract class Filter<Collection> {
   // This is in order to fake this being a nominal type.
-  // Filter<'schoolyears'> should not be assignable to Filter<'courses'> despite Filter itself being the same structure (ie. empty).
+  // SchoolyearIdFilter should not be assignable to LevelIdFilter despite both *-IdFilter being the same structure.
   private readonly _collection: Collection | undefined;
 
   abstract apply(

@@ -1,6 +1,5 @@
 import { ArrayCursor } from 'arangojs/cursor';
-import { Filter } from './filters';
-import { MakeSearchQuery, Paginated } from './search';
+import { Paginated } from './search';
 
 export type MakePatch<T> = {
   [P in keyof T]?: MakePatch<T[P]>;
@@ -17,19 +16,4 @@ export async function paginateCursor<T>(
     nodes: await cursor.all(),
     total: cursor.extra.stats.fullCount,
   };
-}
-
-export interface MakeSimpleRepository<
-  Name extends string,
-  BaseWithId,
-  Base,
-  Patch,
-  SearchQuery extends MakeSearchQuery<Name, BaseWithId>
-> {
-  getByIds(ids: readonly string[]): Promise<(BaseWithId | null)[]>;
-  create(post: Base): Promise<BaseWithId>;
-  update(id: string, patch: Patch, ifRev?: string): Promise<BaseWithId>;
-  delete(id: string, ifRev?: string): Promise<BaseWithId>;
-  filterDelete(filter: Filter<Name>): Promise<BaseWithId[]>;
-  search(query: SearchQuery): Promise<Paginated<BaseWithId>>;
 }

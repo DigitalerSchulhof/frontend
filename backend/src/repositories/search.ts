@@ -1,5 +1,5 @@
 import * as aql from 'arangojs/aql';
-import { Filter } from './filters';
+import { Filter as FilterBase } from './filters';
 import { Sort } from './sort';
 
 export interface Paginated<T> {
@@ -7,8 +7,8 @@ export interface Paginated<T> {
   total: number;
 }
 
-export interface MakeSearchQuery<Name extends string, Base> {
-  filter?: Filter<Name>;
+export interface MakeSearchQuery<Base, Filter extends FilterBase<unknown>> {
+  filter?: Filter;
   sort?: readonly Sort<Base>[];
   limit?: number;
   offset?: number;
@@ -17,16 +17,14 @@ export interface MakeSearchQuery<Name extends string, Base> {
 export const DEFAULT_LIMIT = 25;
 
 export function searchQueryToArangoQuery(
-  documentName: string,
-  query: MakeSearchQuery<string, unknown>
+  documentNameLiteral: aql.AqlLiteral,
+  query: MakeSearchQuery<unknown, FilterBase<unknown>>
 ): aql.GeneratedAqlQuery {
   const { filter, sort } = query;
   const limit = query.limit ?? DEFAULT_LIMIT;
   const offset = query.offset ?? 0;
 
-  const documentNameLiteral = aql.literal(documentName);
-
-  const filterQuery = filtersToArangoQuery(documentNameLiteral, filter);
+  const filterQuery = filterToArangoQuery(documentNameLiteral, filter);
   const sortQuery = sortsToArangoQuery(documentNameLiteral, sort);
 
   return aql.aql`
@@ -36,30 +34,23 @@ export function searchQueryToArangoQuery(
   `;
 }
 
-export function filtersToArangoQuery(
-  documentNameMaybeLiteral: string | aql.AqlLiteral,
-  filter?: Filter<unknown>
+export function filterToArangoQuery(
+  documentNameLiteral: aql.AqlLiteral,
+  filter?: FilterBase<unknown>
 ): aql.GeneratedAqlQuery | undefined {
   if (!filter) return undefined;
-
-  const documentNameLiteral =
-    typeof documentNameMaybeLiteral === 'string'
-      ? aql.literal(documentNameMaybeLiteral)
-      : documentNameMaybeLiteral;
 
   return aql.aql`FILTER ${filter.apply(documentNameLiteral)}`;
 }
 
 export function sortsToArangoQuery(
-  documentNameMaybeLiteral: string | aql.AqlLiteral,
+  documentNameLiteral: aql.AqlLiteral,
   sort?: readonly Sort<unknown>[]
 ): aql.GeneratedAqlQuery | undefined {
   if (!sort?.length) return undefined;
 
-  const documentNameLiteral =
-    typeof documentNameMaybeLiteral === 'string'
-      ? aql.literal(documentNameMaybeLiteral)
-      : documentNameMaybeLiteral;
-
-  return aql.join(sort.map((s) => s.apply(documentNameLiteral)));
+  return aql.aql`SORT ${aql.join(
+    sort.map((s) => s.apply(documentNameLiteral)),
+    ', '
+  )}`;
 }
