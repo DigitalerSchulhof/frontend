@@ -10,7 +10,6 @@ import {
   NeqFilterOperator,
 } from '../../repositories/filters/operators';
 import { Validator } from '../base';
-import { SimpleValidator } from '../simple';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 
 export const SCHOOLYEAR_START_NOT_BEFORE_END =
@@ -18,10 +17,7 @@ export const SCHOOLYEAR_START_NOT_BEFORE_END =
 export const SCHOOLYEAR_NAME_INVALID = 'SCHOOLYEAR_NAME_INVALID';
 export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';
 
-export class SchoolyearValidator
-  extends Validator
-  implements SimpleValidator<SchoolyearBase, SchoolyearPatch>
-{
+export class SchoolyearValidator extends Validator {
   async assertCanCreate(post: SchoolyearBase): Promise<void | never> {
     const error = await aggregateValidationErrors([
       this.assertStartBeforeEnd(post.start, post.end),

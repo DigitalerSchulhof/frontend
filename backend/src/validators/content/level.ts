@@ -11,17 +11,13 @@ import {
   NeqFilterOperator,
 } from '../../repositories/filters/operators';
 import { Validator } from '../base';
-import { SimpleValidator } from '../simple';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 
 export const SCHOOLYEAR_DOES_NOT_EXIST = 'SCHOOLYEAR_DOES_NOT_EXIST';
 export const LEVEL_NAME_INVALID = 'LEVEL_NAME_INVALID';
 export const LEVEL_NAME_EXISTS = 'LEVEL_NAME_EXISTS';
 
-export class LevelValidator
-  extends Validator
-  implements SimpleValidator<LevelBase, LevelPatch>
-{
+export class LevelValidator extends Validator {
   async assertCanCreate(post: LevelBase): Promise<void | never> {
     await this.assertSchoolyearExists(post.schoolyearId);
 

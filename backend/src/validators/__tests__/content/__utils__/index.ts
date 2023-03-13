@@ -1,3 +1,8 @@
+import { ClassRepository } from '@repositories/class';
+import { CourseRepository } from '@repositories/course';
+import { LevelRepository } from '@repositories/level';
+import { SchoolyearRepository } from '@repositories/schoolyear';
+
 export function makeSimpleMockRepository() {
   return {
     getByIds: jest.fn(),
@@ -9,17 +14,21 @@ export function makeSimpleMockRepository() {
   };
 }
 
+type SimpleMockRepository = ReturnType<typeof makeSimpleMockRepository>;
+
 export function makeMockRepositories() {
   return {
-    schoolyear: makeSimpleMockRepository(),
-    level: makeSimpleMockRepository(),
-    class: makeSimpleMockRepository(),
-    course: makeSimpleMockRepository(),
+    schoolyear: makeSimpleMockRepository() as SimpleMockRepository &
+      SchoolyearRepository,
+    level: makeSimpleMockRepository() as SimpleMockRepository & LevelRepository,
+    class: makeSimpleMockRepository() as SimpleMockRepository & ClassRepository,
+    course: makeSimpleMockRepository() as SimpleMockRepository &
+      CourseRepository,
   };
 }
 
 export function setMockRepositoryDataset(
-  mockRepository: ReturnType<typeof makeSimpleMockRepository>,
+  mockRepository: SimpleMockRepository,
   nodes: any[]
 ) {
   mockRepository.getByIds.mockImplementation(async (ids) =>
