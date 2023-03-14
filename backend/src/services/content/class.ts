@@ -1,20 +1,20 @@
-import { ObjectCache } from '@caches/object-cache';
+import { ObjectCache } from '#/caches/object-cache';
 import {
   Class,
   ClassBase,
   ClassPatch,
   ClassRepository,
   ClassSearchQuery,
-} from '@repositories/class';
-import { ClassFilter } from '@repositories/class/filters';
-import { CourseClassIdFilter } from '@repositories/course/filters';
-import { ClassValidator } from '@validators/class';
+} from '#/repositories/content/class';
+import { ClassFilter } from '#/repositories/content/class/filters';
+import { CourseClassIdFilter } from '#/repositories/content/course/filters';
 import {
   EqFilterOperator,
   InFilterOperator,
-} from '../../repositories/filters/operators';
-import { Paginated } from '../../repositories/search';
-import { Services } from '../../server/context/services';
+} from '#/repositories/filters/operators';
+import { Paginated } from '#/repositories/search';
+import { Services } from '#/server/context/services';
+import { ClassValidator } from '#/validators/content/class';
 import { getByIdsCachedOrLoad } from '../utils';
 
 export class ClassService {

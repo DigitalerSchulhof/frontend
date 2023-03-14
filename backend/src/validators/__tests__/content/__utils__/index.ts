@@ -1,7 +1,7 @@
-import { ClassRepository } from '@repositories/class';
-import { CourseRepository } from '@repositories/course';
-import { LevelRepository } from '@repositories/level';
-import { SchoolyearRepository } from '@repositories/schoolyear';
+import { ClassRepository } from '#/repositories/content/class';
+import { CourseRepository } from '#/repositories/content/course';
+import { LevelRepository } from '#/repositories/content/level';
+import { SchoolyearRepository } from '#/repositories/content/schoolyear';
 
 export function makeSimpleMockRepository() {
   return {

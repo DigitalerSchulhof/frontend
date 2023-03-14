@@ -1,12 +1,11 @@
-import { CacheAdapter } from '@caches/adapters';
-import { ObjectCache } from '@caches/object-cache';
+import { CacheAdapter } from '#/caches/adapters';
+import { ObjectCache } from '#/caches/object-cache';
 import {
   Schoolyear,
   SchoolyearRepository,
-  SchoolyearRepositoryImpl,
-} from '@repositories/schoolyear';
-import { SchoolyearService } from '@services/schoolyear';
-import { SchoolyearValidator } from '@validators/schoolyear';
+} from '#/repositories/content/schoolyear';
+import { SchoolyearService } from '#/services/content/schoolyear';
+import { SchoolyearValidator } from '#/validators/content/schoolyear';
 import { Database } from 'arangojs';
 import { Repositories, Services } from '..';
 
@@ -16,7 +15,7 @@ export function createSchoolyearService(
   services: Services,
   repositories: Repositories
 ): [SchoolyearRepository, SchoolyearService] {
-  const repo = new SchoolyearRepositoryImpl(db);
+  const repo = new SchoolyearRepository(db);
   const cache = new ObjectCache<Schoolyear>(cacheAdapter, 'schoolyears');
   const validator = new SchoolyearValidator(repositories);
 

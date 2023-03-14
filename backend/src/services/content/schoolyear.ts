@@ -1,14 +1,14 @@
-import { ObjectCache } from '@caches/object-cache';
-import { LevelSchoolyearIdFilter } from '@repositories/level/filters';
+import { ObjectCache } from '#/caches/object-cache';
+import { LevelSchoolyearIdFilter } from '#/repositories/content/level/filters';
 import {
   Schoolyear,
   SchoolyearBase,
   SchoolyearPatch,
   SchoolyearRepository,
   SchoolyearSearchQuery,
-} from '@repositories/schoolyear';
-import { SchoolyearFilter } from '@repositories/schoolyear/filters';
-import { SchoolyearValidator } from '@validators/schoolyear';
+} from '#/repositories/content/schoolyear';
+import { SchoolyearFilter } from '#/repositories/content/schoolyear/filters';
+import { SchoolyearValidator } from '#/validators/content/schoolyear';
 import {
   EqFilterOperator,
   InFilterOperator,

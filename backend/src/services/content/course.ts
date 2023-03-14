@@ -1,13 +1,13 @@
-import { ObjectCache } from '@caches/object-cache';
+import { ObjectCache } from '#/caches/object-cache';
 import {
   Course,
   CourseBase,
   CoursePatch,
   CourseRepository,
   CourseSearchQuery,
-} from '@repositories/course';
-import { CourseFilter } from '@repositories/course/filters';
-import { CourseValidator } from '@validators/course';
+} from '#/repositories/content/course';
+import { CourseFilter } from '#/repositories/content/course/filters';
+import { CourseValidator } from '#/validators/content/course';
 import { Paginated } from '../../repositories/search';
 import { getByIdsCachedOrLoad } from '../utils';
 

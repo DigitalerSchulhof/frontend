@@ -1,14 +1,17 @@
-import { SchoolyearBase, SchoolyearPatch } from '@repositories/schoolyear';
+import {
+  SchoolyearBase,
+  SchoolyearPatch,
+} from '#/repositories/content/schoolyear';
 import {
   SchoolyearIdFilter,
   SchoolyearNameFilter,
-} from '@repositories/schoolyear/filters';
-import { IdNotFoundError } from '../../repositories/errors';
-import { AndFilter } from '../../repositories/filters';
+} from '#/repositories/content/schoolyear/filters';
+import { IdNotFoundError } from '#/repositories/errors';
+import { AndFilter } from '#/repositories/filters';
 import {
   EqFilterOperator,
   NeqFilterOperator,
-} from '../../repositories/filters/operators';
+} from '#/repositories/filters/operators';
 import { Validator } from '../base';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 

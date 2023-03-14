@@ -1,15 +1,15 @@
-import { CourseBase, CoursePatch } from '@repositories/course';
+import { CourseBase, CoursePatch } from '#/repositories/content/course';
 import {
   CourseClassIdFilter,
   CourseIdFilter,
   CourseNameFilter,
-} from '@repositories/course/filters';
-import { IdNotFoundError } from '../../repositories/errors';
-import { AndFilter } from '../../repositories/filters';
+} from '#/repositories/content/course/filters';
+import { IdNotFoundError } from '#/repositories/errors';
+import { AndFilter } from '#/repositories/filters';
 import {
   EqFilterOperator,
   NeqFilterOperator,
-} from '../../repositories/filters/operators';
+} from '#/repositories/filters/operators';
 import { Validator } from '../base';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 

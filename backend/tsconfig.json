@@ -10,10 +10,7 @@
 
     "baseUrl": "./src",
     "paths": {
-      "@caches/*": ["caches/*"],
-      "@repositories/*": ["repositories/content/*"],
-      "@services/*": ["services/content/*"],
-      "@validators/*": ["validators/content/*"],
+      "#/*": ["*"]
     }
   },
   "ts-node": {

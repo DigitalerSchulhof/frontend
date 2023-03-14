@@ -1,12 +1,8 @@
-import { CacheAdapter } from '@caches/adapters';
-import { ObjectCache } from '@caches/object-cache';
-import {
-  Level,
-  LevelRepository,
-  LevelRepositoryImpl,
-} from '@repositories/level';
-import { LevelService } from '@services/level';
-import { LevelValidator } from '@validators/level';
+import { CacheAdapter } from '#/caches/adapters';
+import { ObjectCache } from '#/caches/object-cache';
+import { Level, LevelRepository } from '#/repositories/content/level';
+import { LevelService } from '#/services/content/level';
+import { LevelValidator } from '#/validators/content/level';
 import { Database } from 'arangojs';
 import { Repositories, Services } from '..';
 
@@ -16,7 +12,7 @@ export function createLevelService(
   services: Services,
   repositories: Repositories
 ): [LevelRepository, LevelService] {
-  const repo = new LevelRepositoryImpl(db);
+  const repo = new LevelRepository(db);
   const cache = new ObjectCache<Level>(cacheAdapter, 'levels');
   const validator = new LevelValidator(repositories);
 

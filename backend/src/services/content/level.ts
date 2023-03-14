@@ -1,14 +1,14 @@
-import { ObjectCache } from '@caches/object-cache';
-import { ClassLevelIdFilter } from '@repositories/class/filters';
+import { ObjectCache } from '#/caches/object-cache';
+import { ClassLevelIdFilter } from '#/repositories/content/class/filters';
 import {
   Level,
   LevelBase,
   LevelPatch,
   LevelRepository,
   LevelSearchQuery,
-} from '@repositories/level';
-import { LevelFilter } from '@repositories/level/filters';
-import { LevelValidator } from '@validators/level';
+} from '#/repositories/content/level';
+import { LevelFilter } from '#/repositories/content/level/filters';
+import { LevelValidator } from '#/validators/content/level';
 import {
   EqFilterOperator,
   InFilterOperator,

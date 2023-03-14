@@ -1,15 +1,15 @@
-import { ClassBase, ClassPatch } from '@repositories/class';
+import { ClassBase, ClassPatch } from '#/repositories/content/class';
 import {
   ClassIdFilter,
   ClassLevelIdFilter,
   ClassNameFilter,
-} from '@repositories/class/filters';
-import { IdNotFoundError } from '../../repositories/errors';
-import { AndFilter } from '../../repositories/filters';
+} from '#/repositories/content/class/filters';
+import { IdNotFoundError } from '#/repositories/errors';
+import { AndFilter } from '#/repositories/filters';
 import {
   EqFilterOperator,
   NeqFilterOperator,
-} from '../../repositories/filters/operators';
+} from '#/repositories/filters/operators';
 import { Validator } from '../base';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 

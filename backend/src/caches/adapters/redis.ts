@@ -16,29 +16,20 @@ export class RedisCacheAdapter implements CacheAdapter {
     });
   }
 
-  private serialize<T>(value: T): string {
-    return JSON.stringify(value);
-  }
-
-  private deserialize<T>(this: void, value: string | null): T | undefined {
-    if (value === null) return undefined;
-    return JSON.parse(value) as T;
-  }
-
   async get<T>(key: string): Promise<T | undefined> {
     const res = await this.client.get(key);
 
-    return this.deserialize<T>(res);
+    return deserialize(res);
   }
 
   async getMany<T>(keys: readonly string[]): Promise<(T | undefined)[]> {
     const res = await this.client.mget(...keys);
 
-    return res.map(this.deserialize<T>);
+    return res.map(deserialize<T>);
   }
 
   async set<T>(key: string, value: T, ttlMs: number): Promise<void> {
-    await this.client.set(key, this.serialize(value), 'PX', ttlMs);
+    await this.client.set(key, serialize(value), 'PX', ttlMs);
   }
 
   async setMany<T>(
@@ -47,7 +38,7 @@ export class RedisCacheAdapter implements CacheAdapter {
   ): Promise<void> {
     const args = entries.flatMap(([key, value]) => [
       key,
-      this.serialize(value),
+      serialize(value),
       'PX',
       ttlMs,
     ]);
@@ -76,4 +67,13 @@ export class RedisCacheAdapter implements CacheAdapter {
 
     return res.map((r) => r === 1);
   }
+}
+
+function serialize<T>(value: T): string {
+  return JSON.stringify(value);
+}
+
+function deserialize<T>(value: string | null): T | undefined {
+  if (value === null) return undefined;
+  return JSON.parse(value) as T;
 }

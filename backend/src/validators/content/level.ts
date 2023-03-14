@@ -1,15 +1,15 @@
-import { LevelBase, LevelPatch } from '@repositories/level';
+import { LevelBase, LevelPatch } from '#/repositories/content/level';
 import {
   LevelIdFilter,
   LevelNameFilter,
   LevelSchoolyearIdFilter,
-} from '@repositories/level/filters';
-import { IdNotFoundError } from '../../repositories/errors';
-import { AndFilter } from '../../repositories/filters';
+} from '#/repositories/content/level/filters';
+import { IdNotFoundError } from '#/repositories/errors';
+import { AndFilter } from '#/repositories/filters';
 import {
   EqFilterOperator,
   NeqFilterOperator,
-} from '../../repositories/filters/operators';
+} from '#/repositories/filters/operators';
 import { Validator } from '../base';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 

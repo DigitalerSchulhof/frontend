@@ -1,8 +1,8 @@
-import { CacheAdapter } from '@caches/adapters';
-import { MemoryCacheAdapter } from '@caches/adapters/memory';
-import { RedisCacheAdapter } from '@caches/adapters/redis';
-import { VoidCacheAdapter } from '@caches/adapters/void';
-import { Config } from '../../../config';
+import { CacheAdapter } from '#/caches/adapters';
+import { MemoryCacheAdapter } from '#/caches/adapters/memory';
+import { RedisCacheAdapter } from '#/caches/adapters/redis';
+import { VoidCacheAdapter } from '#/caches/adapters/void';
+import { Config } from '#/config';
 
 export function createCacheAdapter(config: Config): CacheAdapter {
   switch (config.cache.engine) {
