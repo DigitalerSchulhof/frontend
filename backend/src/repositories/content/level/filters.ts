@@ -7,17 +7,17 @@ import {
 } from '../../filters/operators';
 import { SchoolyearFilter } from '../schoolyear/filters';
 
-export abstract class LevelFilter extends Filter<'level'> {}
+export abstract class LevelFilter extends Filter<'levels'> {}
 
 export abstract class ScalarLevelFilter<
   FilterOperatorType extends FilterOperator<
     MaybeArray<string | number | boolean>
   >
-> extends ScalarFilter<'level', FilterOperatorType> {}
+> extends ScalarFilter<'levels', FilterOperatorType> {}
 
 export abstract class RelationalLevelFilter<
   RelatedFilter extends Filter<unknown>
-> extends RelationalFilter<'level', RelatedFilter> {}
+> extends RelationalFilter<'levels', RelatedFilter> {}
 
 export class LevelIdFilter extends ScalarLevelFilter<IDFilterOperator> {
   protected readonly propertyName = '_key';

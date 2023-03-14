@@ -6,6 +6,7 @@
     "incremental": true,
     "module": "CommonJS",
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "noImplicitOverride": true
   }
 }

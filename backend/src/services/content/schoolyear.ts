@@ -1,93 +1,38 @@
-import { ObjectCache } from '#/caches/object-cache';
+import { WithId } from '#/repositories/arango';
 import { LevelSchoolyearIdFilter } from '#/repositories/content/level/filters';
-import {
-  Schoolyear,
-  SchoolyearBase,
-  SchoolyearPatch,
-  SchoolyearRepository,
-  SchoolyearSearchQuery,
-} from '#/repositories/content/schoolyear';
+import { SchoolyearBase } from '#/repositories/content/schoolyear';
 import { SchoolyearFilter } from '#/repositories/content/schoolyear/filters';
-import { SchoolyearValidator } from '#/validators/content/schoolyear';
 import {
   EqFilterOperator,
   InFilterOperator,
-} from '../../repositories/filters/operators';
-import { Paginated } from '../../repositories/search';
-import { Services } from '../../server/context/services';
-import { getByIdsCachedOrLoad } from '../utils';
+} from '#/repositories/filters/operators';
+import { Service } from '../base';
 
-export class SchoolyearService {
-  constructor(
-    private readonly repository: SchoolyearRepository,
-    private readonly cache: ObjectCache<Schoolyear>,
-    private readonly validator: SchoolyearValidator,
-    private readonly services: Services
-  ) {}
-
-  async getById(id: string): Promise<Schoolyear | null> {
-    return (await this.getByIds([id]))[0];
-  }
-
-  async getByIds(ids: readonly string[]): Promise<(Schoolyear | null)[]> {
-    return getByIdsCachedOrLoad(this.cache, this.repository, ids);
-  }
-
-  async create(post: SchoolyearBase): Promise<Schoolyear> {
-    await this.validator.assertCanCreate(post);
-
-    const res = await this.repository.create(post);
-
-    await this.cache.set(res.id, res);
-
-    return res;
-  }
-
-  async update(
+export class SchoolyearService extends Service<'schoolyears', SchoolyearBase> {
+  override async delete(
     id: string,
-    patch: SchoolyearPatch,
-    ifRev?: string
-  ): Promise<Schoolyear> {
-    await this.validator.assertCanUpdate(id, patch);
+    ifRev?: string | undefined
+  ): Promise<WithId<SchoolyearBase>> {
+    const res = await super.delete(id, ifRev);
 
-    const res = await this.repository.update(id, patch, ifRev);
-
-    await this.cache.set(res.id, res);
-
-    return res;
-  }
-
-  async delete(id: string, ifRev?: string): Promise<Schoolyear> {
-    const res = await this.repository.delete(id, ifRev);
-
-    await Promise.all([
-      this.cache.delete(id),
-
-      this.services.level.filterDelete(
-        new LevelSchoolyearIdFilter(new EqFilterOperator(id))
-      ),
-    ]);
+    await this.services.level.filterDelete(
+      new LevelSchoolyearIdFilter(new EqFilterOperator(id))
+    );
 
     return res;
   }
 
-  async filterDelete(filter: SchoolyearFilter): Promise<Schoolyear[]> {
-    const res = await this.repository.filterDelete(filter);
+  override async filterDelete(
+    filter: SchoolyearFilter
+  ): Promise<WithId<SchoolyearBase>[]> {
+    const res = await super.filterDelete(filter);
 
     const schoolyearIds = res.map((r) => r.id);
 
-    await Promise.all([
-      this.cache.deleteMany(schoolyearIds),
-
-      await this.services.level.filterDelete(
-        new LevelSchoolyearIdFilter(new InFilterOperator(schoolyearIds))
-      ),
-    ]);
+    await this.services.level.filterDelete(
+      new LevelSchoolyearIdFilter(new InFilterOperator(schoolyearIds))
+    );
 
     return res;
-  }
-
-  async search(query: SchoolyearSearchQuery): Promise<Paginated<Schoolyear>> {
-    return this.repository.search(query);
   }
 }

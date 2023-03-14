@@ -1,4 +1,4 @@
-import { LevelBase, LevelPatch } from '#/repositories/content/level';
+import { LevelBase } from '#/repositories/content/level';
 import {
   LevelIdFilter,
   LevelNameFilter,
@@ -10,6 +10,7 @@ import {
   EqFilterOperator,
   NeqFilterOperator,
 } from '#/repositories/filters/operators';
+import { MakePatch } from '#/repositories/utils';
 import { Validator } from '../base';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 
@@ -17,8 +18,8 @@ export const SCHOOLYEAR_DOES_NOT_EXIST = 'SCHOOLYEAR_DOES_NOT_EXIST';
 export const LEVEL_NAME_INVALID = 'LEVEL_NAME_INVALID';
 export const LEVEL_NAME_EXISTS = 'LEVEL_NAME_EXISTS';
 
-export class LevelValidator extends Validator {
-  async assertCanCreate(post: LevelBase): Promise<void | never> {
+export class LevelValidator extends Validator<'levels', LevelBase> {
+  override async assertCanCreate(post: LevelBase): Promise<void | never> {
     await this.assertSchoolyearExists(post.schoolyearId);
 
     const error = await aggregateValidationErrors([
@@ -28,7 +29,10 @@ export class LevelValidator extends Validator {
     if (error) throw error;
   }
 
-  async assertCanUpdate(id: string, patch: LevelPatch): Promise<void | never> {
+  override async assertCanUpdate(
+    id: string,
+    patch: MakePatch<LevelBase>
+  ): Promise<void | never> {
     const [base] = await this.repositories.level.getByIds([id]);
 
     if (!base) {

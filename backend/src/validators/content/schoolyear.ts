@@ -1,7 +1,4 @@
-import {
-  SchoolyearBase,
-  SchoolyearPatch,
-} from '#/repositories/content/schoolyear';
+import { SchoolyearBase } from '#/repositories/content/schoolyear';
 import {
   SchoolyearIdFilter,
   SchoolyearNameFilter,
@@ -12,6 +9,7 @@ import {
   EqFilterOperator,
   NeqFilterOperator,
 } from '#/repositories/filters/operators';
+import { MakePatch } from '#/repositories/utils';
 import { Validator } from '../base';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 
@@ -20,8 +18,11 @@ export const SCHOOLYEAR_START_NOT_BEFORE_END =
 export const SCHOOLYEAR_NAME_INVALID = 'SCHOOLYEAR_NAME_INVALID';
 export const SCHOOLYEAR_NAME_EXISTS = 'SCHOOLYEAR_NAME_EXISTS';
 
-export class SchoolyearValidator extends Validator {
-  async assertCanCreate(post: SchoolyearBase): Promise<void | never> {
+export class SchoolyearValidator extends Validator<
+  'schoolyears',
+  SchoolyearBase
+> {
+  override async assertCanCreate(post: SchoolyearBase): Promise<void | never> {
     const error = await aggregateValidationErrors([
       this.assertStartBeforeEnd(post.start, post.end),
       this.assertNameValid(post.name),
@@ -30,9 +31,9 @@ export class SchoolyearValidator extends Validator {
     if (error) throw error;
   }
 
-  async assertCanUpdate(
+  override async assertCanUpdate(
     id: string,
-    patch: SchoolyearPatch
+    patch: MakePatch<SchoolyearBase>
   ): Promise<void | never> {
     const [base] = await this.repositories.schoolyear.getByIds([id]);
 

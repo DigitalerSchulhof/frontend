@@ -1,4 +1,4 @@
-import { CourseBase, CoursePatch } from '#/repositories/content/course';
+import { CourseBase } from '#/repositories/content/course';
 import {
   CourseClassIdFilter,
   CourseIdFilter,
@@ -10,6 +10,7 @@ import {
   EqFilterOperator,
   NeqFilterOperator,
 } from '#/repositories/filters/operators';
+import { MakePatch } from '#/repositories/utils';
 import { Validator } from '../base';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 
@@ -17,8 +18,8 @@ export const CLASS_DOES_NOT_EXIST = 'CLASS_DOES_NOT_EXIST';
 export const COURSE_NAME_INVALID = 'COURSE_NAME_INVALID';
 export const COURSE_NAME_EXISTS = 'COURSE_NAME_EXISTS';
 
-export class CourseValidator extends Validator {
-  async assertCanCreate(post: CourseBase): Promise<void | never> {
+export class CourseValidator extends Validator<'courses', CourseBase> {
+  override async assertCanCreate(post: CourseBase): Promise<void | never> {
     await this.assertClassExists(post.classId);
 
     const error = await aggregateValidationErrors([
@@ -28,7 +29,10 @@ export class CourseValidator extends Validator {
     if (error) throw error;
   }
 
-  async assertCanUpdate(id: string, patch: CoursePatch): Promise<void | never> {
+  override async assertCanUpdate(
+    id: string,
+    patch: MakePatch<CourseBase>
+  ): Promise<void | never> {
     const [base] = await this.repositories.course.getByIds([id]);
 
     if (!base) {

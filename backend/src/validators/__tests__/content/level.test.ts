@@ -1,4 +1,4 @@
-import { IdNotFoundError } from '../../../repositories/errors';
+import { IdNotFoundError } from '#/repositories/errors';
 import {
   LevelValidator,
   LEVEL_NAME_EXISTS,
@@ -11,6 +11,16 @@ import {
   makeMockRepositories,
   setMockRepositoryDataset,
 } from './__utils__';
+
+jest.mock('#/repositories/content/level/filters', () => {
+  const { makeMockFilter } = jest.requireActual('./__utils__');
+
+  return {
+    LevelIdFilter: makeMockFilter('id'),
+    LevelNameFilter: makeMockFilter('name'),
+    LevelSchoolyearIdFilter: makeMockFilter('schoolyearId'),
+  };
+});
 
 const mockRepositories = makeMockRepositories();
 

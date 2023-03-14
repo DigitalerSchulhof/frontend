@@ -1,5 +1,5 @@
 import * as aql from 'arangojs/aql';
-import { Filter as FilterBase } from './filters';
+import { Filter } from './filters';
 import { Sort } from './sort';
 
 export interface Paginated<T> {
@@ -7,9 +7,9 @@ export interface Paginated<T> {
   total: number;
 }
 
-export interface MakeSearchQuery<Base, Filter extends FilterBase<unknown>> {
-  filter?: Filter;
-  sort?: readonly Sort<Base>[];
+export interface MakeSearchQuery<Name> {
+  filter?: Filter<Name>;
+  sort?: readonly Sort<Name>[];
   limit?: number;
   offset?: number;
 }
@@ -18,7 +18,7 @@ export const DEFAULT_LIMIT = 25;
 
 export function searchQueryToArangoQuery(
   documentNameLiteral: aql.AqlLiteral,
-  query: MakeSearchQuery<unknown, FilterBase<unknown>>
+  query: MakeSearchQuery<string>
 ): aql.GeneratedAqlQuery {
   const { filter, sort } = query;
   const limit = query.limit ?? DEFAULT_LIMIT;
@@ -36,7 +36,7 @@ export function searchQueryToArangoQuery(
 
 export function filterToArangoQuery(
   documentNameLiteral: aql.AqlLiteral,
-  filter?: FilterBase<unknown>
+  filter?: Filter<string>
 ): aql.GeneratedAqlQuery | undefined {
   if (!filter) return undefined;
 
@@ -45,7 +45,7 @@ export function filterToArangoQuery(
 
 export function sortsToArangoQuery(
   documentNameLiteral: aql.AqlLiteral,
-  sort?: readonly Sort<unknown>[]
+  sort?: readonly Sort<string>[]
 ): aql.GeneratedAqlQuery | undefined {
   if (!sort?.length) return undefined;
 

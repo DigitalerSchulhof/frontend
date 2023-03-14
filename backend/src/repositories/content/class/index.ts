@@ -1,25 +1,10 @@
-import { ArangoRepository, WithId } from '../../arango';
-import { MakeSearchQuery } from '../../search';
-import { MakePatch } from '../../utils';
-import { ClassFilter } from './filters';
+import { ArangoRepository } from '../../arango';
 
 export type ClassBase = {
   name: string;
   levelId: string;
 };
 
-export type Class = WithId<ClassBase>;
-
-export type ClassPatch = MakePatch<ClassBase>;
-
-export type ClassSearchQuery = MakeSearchQuery<Class, ClassFilter>;
-
-export class ClassRepository extends ArangoRepository<
-  Class,
-  ClassBase,
-  ClassPatch,
-  ClassFilter,
-  ClassSearchQuery
-> {
+export class ClassRepository extends ArangoRepository<'classes', ClassBase> {
   protected readonly collectionName = 'classes';
 }

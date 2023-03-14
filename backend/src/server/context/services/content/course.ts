@@ -1,6 +1,7 @@
 import { CacheAdapter } from '#/caches/adapters';
 import { ObjectCache } from '#/caches/object-cache';
-import { Course, CourseRepository } from '#/repositories/content/course';
+import { WithId } from '#/repositories/arango';
+import { CourseBase, CourseRepository } from '#/repositories/content/course';
 import { CourseService } from '#/services/content/course';
 import { CourseValidator } from '#/validators/content/course';
 import { Database } from 'arangojs';
@@ -13,8 +14,8 @@ export function createCourseService(
   repositories: Repositories
 ): [CourseRepository, CourseService] {
   const repo = new CourseRepository(db);
-  const cache = new ObjectCache<Course>(cacheAdapter, 'courses');
+  const cache = new ObjectCache<WithId<CourseBase>>(cacheAdapter, 'courses');
   const validator = new CourseValidator(repositories);
 
-  return [repo, new CourseService(repo, cache, validator)];
+  return [repo, new CourseService(repo, cache, validator, services)];
 }

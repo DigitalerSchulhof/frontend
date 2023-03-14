@@ -1,7 +1,8 @@
 import { CacheAdapter } from '#/caches/adapters';
 import { ObjectCache } from '#/caches/object-cache';
+import { WithId } from '#/repositories/arango';
 import {
-  Schoolyear,
+  SchoolyearBase,
   SchoolyearRepository,
 } from '#/repositories/content/schoolyear';
 import { SchoolyearService } from '#/services/content/schoolyear';
@@ -16,7 +17,10 @@ export function createSchoolyearService(
   repositories: Repositories
 ): [SchoolyearRepository, SchoolyearService] {
   const repo = new SchoolyearRepository(db);
-  const cache = new ObjectCache<Schoolyear>(cacheAdapter, 'schoolyears');
+  const cache = new ObjectCache<WithId<SchoolyearBase>>(
+    cacheAdapter,
+    'schoolyears'
+  );
   const validator = new SchoolyearValidator(repositories);
 
   return [repo, new SchoolyearService(repo, cache, validator, services)];

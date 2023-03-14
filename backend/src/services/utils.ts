@@ -1,7 +1,28 @@
 import { ObjectCache } from '#/caches/object-cache';
 
 interface RepositoryWithGetByIds<T> {
+  getById(id: string): Promise<T | null>;
   getByIds(ids: readonly string[]): Promise<(T | null)[]>;
+}
+
+export async function getByIdCachedOrLoad<T>(
+  cache: ObjectCache<T>,
+  repository: RepositoryWithGetByIds<T>,
+  id: string
+): Promise<T | null> {
+  const cached = await cache.get(id);
+
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const loaded = await repository.getById(id);
+
+  if (loaded !== null) {
+    await cache.set(id, loaded);
+  }
+
+  return loaded;
 }
 
 export async function getByIdsCachedOrLoad<T>(

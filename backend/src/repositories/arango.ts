@@ -9,25 +9,22 @@ import {
   IdNotFoundError,
   RevMismatchError,
 } from './errors';
-import { Filter as FilterBase } from './filters';
+import { Filter } from './filters';
 import {
   filterToArangoQuery,
   MakeSearchQuery,
   Paginated,
   searchQueryToArangoQuery,
 } from './search';
-import { paginateCursor } from './utils';
+import { MakePatch, paginateCursor } from './utils';
 
 export type WithId<Base> = Base & { id: string; rev: string };
 
 export abstract class ArangoRepository<
-  BaseWithId,
-  Base extends Record<string, string | number | boolean>,
-  Patch extends Record<string, string | number | boolean>,
-  Filter extends FilterBase<unknown>,
-  SearchQuery extends MakeSearchQuery<BaseWithId, Filter>
+  Name extends string,
+  Base extends Record<string, string | number | boolean>
 > {
-  protected abstract readonly collectionName: string;
+  protected abstract readonly collectionName: Name;
 
   private static docLiteral = aql.literal('doc');
 
@@ -42,8 +39,26 @@ export abstract class ArangoRepository<
 
   constructor(private readonly db: Database) {}
 
-  async getByIds(ids: readonly string[]): Promise<(BaseWithId | null)[]> {
-    const res = await this.query<BaseWithId | null>(
+  async getById(id: string): Promise<WithId<Base> | null> {
+    const res = await this.query<WithId<Base> | null>(
+      aql.aql`
+        LET doc = DOCUMENT(${this.collectionNameLiteral}, ${id})
+
+        RETURN doc == null ? null : MERGE(
+          UNSET(doc, "_key", "_id", "_rev"),
+          {
+            id: doc._key,
+            rev: doc._rev
+          }
+        )
+      `
+    );
+
+    return res.next() as Promise<WithId<Base> | null>;
+  }
+
+  async getByIds(ids: readonly string[]): Promise<(WithId<Base> | null)[]> {
+    const res = await this.query<WithId<Base> | null>(
       aql.aql`
         FOR id IN ${ids}
           LET doc = DOCUMENT(${this.collectionNameLiteral}, id)
@@ -61,8 +76,8 @@ export abstract class ArangoRepository<
     return res.all();
   }
 
-  async create(post: Base): Promise<BaseWithId> {
-    const res = await this.query<BaseWithId>(
+  async create(post: Base): Promise<WithId<Base>> {
+    const res = await this.query<WithId<Base>>(
       aql.aql`
         INSERT ${post} INTO ${this.collectionNameLiteral}
 
@@ -79,8 +94,12 @@ export abstract class ArangoRepository<
     return (await res.next())!;
   }
 
-  async update(id: string, patch: Patch, ifRev?: string): Promise<BaseWithId> {
-    const res = await this.query<BaseWithId>(
+  async update(
+    id: string,
+    patch: MakePatch<Base>,
+    ifRev?: string
+  ): Promise<WithId<Base>> {
+    const res = await this.query<WithId<Base>>(
       aql.aql`
         UPDATE {
           _key: ${id},
@@ -102,8 +121,8 @@ export abstract class ArangoRepository<
     return (await res.next())!;
   }
 
-  async delete(id: string, ifRev?: string): Promise<BaseWithId> {
-    const res = await this.query<BaseWithId>(
+  async delete(id: string, ifRev?: string): Promise<WithId<Base>> {
+    const res = await this.query<WithId<Base>>(
       aql.aql`
         REMOVE {
           _key: ${id},
@@ -125,8 +144,8 @@ export abstract class ArangoRepository<
     return (await res.next())!;
   }
 
-  async filterDelete(filters: Filter): Promise<BaseWithId[]> {
-    const res = await this.query<BaseWithId>(
+  async filterDelete(filters: Filter<Name>): Promise<WithId<Base>[]> {
+    const res = await this.query<WithId<Base>>(
       aql.aql`
         FOR doc IN ${this.collectionNameLiteral}
           ${filterToArangoQuery(ArangoRepository.docLiteral, filters)}
@@ -146,8 +165,8 @@ export abstract class ArangoRepository<
     return res.all();
   }
 
-  async search(query: SearchQuery): Promise<Paginated<BaseWithId>> {
-    const res = await this.query<BaseWithId>(
+  async search(query: MakeSearchQuery<Name>): Promise<Paginated<WithId<Base>>> {
+    const res = await this.query<WithId<Base>>(
       aql.aql`
         FOR doc IN ${this.collectionNameLiteral}
           ${searchQueryToArangoQuery(ArangoRepository.docLiteral, query)}

@@ -1,25 +1,10 @@
-import { ArangoRepository, WithId } from '../../arango';
-import { MakeSearchQuery } from '../../search';
-import { MakePatch } from '../../utils';
-import { CourseFilter } from './filters';
+import { ArangoRepository } from '../../arango';
 
 export type CourseBase = {
   name: string;
   classId: string;
 };
 
-export type Course = WithId<CourseBase>;
-
-export type CoursePatch = MakePatch<CourseBase>;
-
-export type CourseSearchQuery = MakeSearchQuery<Course, CourseFilter>;
-
-export class CourseRepository extends ArangoRepository<
-  Course,
-  CourseBase,
-  CoursePatch,
-  CourseFilter,
-  CourseSearchQuery
-> {
+export class CourseRepository extends ArangoRepository<'courses', CourseBase> {
   protected readonly collectionName = 'courses';
 }

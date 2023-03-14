@@ -1,7 +1,4 @@
-import { ArangoRepository, WithId } from '../../arango';
-import { MakeSearchQuery } from '../../search';
-import { MakePatch } from '../../utils';
-import { SchoolyearFilter } from './filters';
+import { ArangoRepository } from '../../arango';
 
 export type SchoolyearBase = {
   name: string;
@@ -9,21 +6,9 @@ export type SchoolyearBase = {
   end: number;
 };
 
-export type Schoolyear = WithId<SchoolyearBase>;
-
-export type SchoolyearPatch = MakePatch<SchoolyearBase>;
-
-export type SchoolyearSearchQuery = MakeSearchQuery<
-  Schoolyear,
-  SchoolyearFilter
->;
-
 export class SchoolyearRepository extends ArangoRepository<
-  Schoolyear,
-  SchoolyearBase,
-  SchoolyearPatch,
-  SchoolyearFilter,
-  SchoolyearSearchQuery
+  'schoolyears',
+  SchoolyearBase
 > {
   protected readonly collectionName = 'schoolyears';
 }

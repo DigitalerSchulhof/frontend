@@ -1,6 +1,7 @@
 import { CacheAdapter } from '#/caches/adapters';
 import { ObjectCache } from '#/caches/object-cache';
-import { Class, ClassRepository } from '#/repositories/content/class';
+import { WithId } from '#/repositories/arango';
+import { ClassBase, ClassRepository } from '#/repositories/content/class';
 import { ClassService } from '#/services/content/class';
 import { ClassValidator } from '#/validators/content/class';
 import { Database } from 'arangojs';
@@ -13,7 +14,7 @@ export function createClassService(
   repositories: Repositories
 ): [ClassRepository, ClassService] {
   const repo = new ClassRepository(db);
-  const cache = new ObjectCache<Class>(cacheAdapter, 'classes');
+  const cache = new ObjectCache<WithId<ClassBase>>(cacheAdapter, 'classes');
   const validator = new ClassValidator(repositories);
 
   return [repo, new ClassService(repo, cache, validator, services)];

@@ -3,6 +3,57 @@ import { CourseRepository } from '#/repositories/content/course';
 import { LevelRepository } from '#/repositories/content/level';
 import { SchoolyearRepository } from '#/repositories/content/schoolyear';
 
+jest.mock('#/repositories/filters', () => ({
+  ...jest.requireActual('#/repositories/filters'),
+  AndFilter: class {
+    private readonly filters: any[];
+
+    constructor(...filters: any[]) {
+      this.filters = filters;
+    }
+
+    apply = (node: any) => {
+      return this.filters.filter((f) => f !== null).every((f) => f.apply(node));
+    };
+  },
+  OrFilter: class {
+    private readonly filters: any[];
+
+    constructor(...filters: any[]) {
+      this.filters = filters;
+    }
+
+    apply(node: any) {
+      return this.filters.filter((f) => f !== null).some((f) => f.apply(node));
+    }
+  },
+  __esModule: true,
+}));
+
+jest.mock('#/repositories/filters/operators', () => ({
+  EqFilterOperator: class {
+    constructor(private readonly value: any) {}
+
+    apply = (node: any) => node === this.value;
+  },
+  NeqFilterOperator: class {
+    constructor(private readonly value: any) {}
+
+    apply = (node: any) => node !== this.value;
+  },
+  __esModule: true,
+}));
+
+export function makeMockFilter(prop: string) {
+  return class {
+    constructor(private readonly operator: any) {}
+
+    apply(node: any) {
+      return this.operator.apply(node[prop]);
+    }
+  };
+}
+
 export function makeSimpleMockRepository() {
   return {
     getByIds: jest.fn(),
@@ -46,25 +97,12 @@ export function setMockRepositoryDataset(
 }
 
 function applySearch(nodes: any[], search: any) {
-  let res = nodes;
-  for (const key in search.filters) {
-    for (const op in search.filters[key]) {
-      switch (op) {
-        case 'eq':
-          if (search.filters[key].eq !== undefined)
-            res = res.filter((n) => n[key] === search.filters[key].eq);
-          break;
-        case 'ne':
-          if (search.filters[key].ne !== undefined)
-            res = res.filter((n) => n[key] !== search.filters[key].ne);
-          break;
-        default:
-          throw new Error(`Unknown operator ${op}`);
-      }
-    }
-  }
+  const { filter, offset, limit } = search;
 
-  return res.slice(search.offset ?? 0, search.limit ?? nodes.length);
+  // We have mocked filters with our test filters that operate on the node directly
+  const res = nodes.filter(filter.apply);
+
+  return res.slice(offset ?? 0, limit ?? nodes.length);
 }
 
 /**

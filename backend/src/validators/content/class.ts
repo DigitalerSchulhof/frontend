@@ -1,4 +1,4 @@
-import { ClassBase, ClassPatch } from '#/repositories/content/class';
+import { ClassBase } from '#/repositories/content/class';
 import {
   ClassIdFilter,
   ClassLevelIdFilter,
@@ -10,6 +10,7 @@ import {
   EqFilterOperator,
   NeqFilterOperator,
 } from '#/repositories/filters/operators';
+import { MakePatch } from '#/repositories/utils';
 import { Validator } from '../base';
 import { aggregateValidationErrors, InputValidationError } from '../utils';
 
@@ -17,8 +18,8 @@ export const LEVEL_DOES_NOT_EXIST = 'LEVEL_DOES_NOT_EXIST';
 export const CLASS_NAME_INVALID = 'CLASS_NAME_INVALID';
 export const CLASS_NAME_EXISTS = 'CLASS_NAME_EXISTS';
 
-export class ClassValidator extends Validator {
-  async assertCanCreate(post: ClassBase): Promise<void | never> {
+export class ClassValidator extends Validator<'classes', ClassBase> {
+  override async assertCanCreate(post: ClassBase): Promise<void | never> {
     await this.assertLevelExists(post.levelId);
 
     const error = await aggregateValidationErrors([
@@ -28,7 +29,10 @@ export class ClassValidator extends Validator {
     if (error) throw error;
   }
 
-  async assertCanUpdate(id: string, patch: ClassPatch): Promise<void | never> {
+  override async assertCanUpdate(
+    id: string,
+    patch: MakePatch<ClassBase>
+  ): Promise<void | never> {
     const [base] = await this.repositories.class.getByIds([id]);
 
     if (!base) {

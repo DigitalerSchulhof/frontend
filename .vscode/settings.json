@@ -15,5 +15,6 @@
     "Arango",
     "schoolyear",
     "schoolyears"
-  ]
+  ],
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }

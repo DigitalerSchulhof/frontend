@@ -4,10 +4,10 @@
   "transform": {
     "^.+\\.ts?$": "@swc/jest"
   },
-  "collectCoverageFrom": [
-    "src/**/*.{js,jsx,ts,tsx}",
-    "!**/__utils__/**/*"
-  ],
+  "moduleNameMapper": {
+    "^#/(.*)": "<rootDir>/src/$1"
+  },
+  "collectCoverageFrom": ["src/**/*.{js,jsx,ts,tsx}", "!**/__utils__/**/*"],
   "testMatch": [
     "**/__tests__/**/*.[jt]s?(x)",
     "**/?(*.)+(spec|test).[jt]s?(x)",
