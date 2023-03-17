@@ -31,7 +31,7 @@ export function isPromiseRejectedResult<T>(
  * ```
  */
 // With these overloads we don't add `undefined` to types that aren't nullable in the first place
-export function withoutNull<T>(value: NonNullable<T>): T;
+export function withoutNull<T>(value: T extends null ? never : T): T;
 export function withoutNull<T>(value: T | null): T | undefined;
 export function withoutNull<T>(val: T | null): T | undefined {
   return val === null ? undefined : val;
@@ -82,7 +82,7 @@ export function unique<T>(
   comparator?: (a: T, b: T) => boolean
 ): T[] {
   if (arr.length === 0) return [];
-  // If the comparator is the default one, we can use a Set to filter out duplicates since it's much faster
+  // If the comparator is the default one (strict equality), we can use a Set to filter out duplicates since it's much faster
   if (!comparator) return [...new Set(arr)];
 
   return arr.filter((val, i) => arr.findIndex((v) => comparator(v, val)) === i);
