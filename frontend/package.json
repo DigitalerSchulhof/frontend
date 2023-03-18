@@ -1,0 +1,30 @@
+{
+  "name": "@dsh/frontend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm:dev:*\"",
+    "dev:next": "cd _next && next dev",
+    "build": "concurrently \"pnpm:build:*(!next|:watch)\" && pnpm run build:next",
+    "build:next": "cd _next && next build",
+    "start": "cd _next && next start"
+  },
+  "dependencies": {
+    "next": "13.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "@typescript-eslint/eslint-plugin": "5.55.0",
+    "@typescript-eslint/parser": "5.55.0",
+    "eslint": "8.36.0",
+    "eslint-config-next": "13.2.4",
+    "eslint-config-prettier": "8.7.0",
+    "eslint-plugin-jsx-a11y": "6.7.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "prettier": "2.8.4",
+    "typescript": "5.0.2"
+  }
+}

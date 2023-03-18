@@ -1,0 +1,11 @@
+mutation loginPassword($username: String!, $password: String!) {
+  login: loginPassword(username: $username, password: $password) {
+    __typename
+    ... on LoginPasswordResponseSuccess {
+      jwt
+    }
+    ... on LoginPasswordResponseError {
+      code
+    }
+  }
+}

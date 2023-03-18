@@ -1,0 +1,22 @@
+query Page(
+  $limit: Int
+  $offset: Int
+  $sort: [PersonSort!]
+  $filter: PersonFilters
+) {
+  persons(offset: $offset, limit: $limit, sort: $sort, filter: $filter) {
+    edges {
+      node {
+        id
+        firstname
+        lastname
+        gender
+        type
+      }
+    }
+    pageInfo {
+      hasNextPage
+      nextPageOffset
+    }
+  }
+}
