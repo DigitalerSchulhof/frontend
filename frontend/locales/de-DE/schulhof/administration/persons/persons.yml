@@ -1,0 +1,37 @@
+card:
+  title: Personen
+  description: <b>Benutzerdaten und -konten</b> von Schülern, Lehrern, Verwaltungsangestellten, Eltern und Externen <b>sehen und verwalten</b>.
+page:
+  title: Personen auf dem Schulhof
+  table:
+    title: Personen
+    loading: Personen werden geladen... Je nach Anzahl der Personen kann dies einige Sekunden dauern.
+    error: Personen konnten nicht geladen werden.
+    empty: "- Es wurden noch keine Personen angelegt. -"
+    columns:
+      firstname: Vorname
+      lastname: Nachname
+    actions:
+      edit:
+        account: Nutzerkonto bearbeiten
+        person: Person bearbeiten
+      delete:
+        account:
+          title: Nutzerkonto löschen
+          description:
+            - "<b>Achtung!</b>{user_form_of_address, select, du {Du bist} sie {Sie sind} other {~}} im Begriff, das Nutzerkonto von <b>{account_firstname} {account_lastname}</b> zu löschen! {user_form_of_address, select, du {Bist du sicher, dass du} sie {Sind Sie sicher, dass Sie} other {~}} fortfahren {user_form_of_address, select, du {möchtest} sie {möchten} other {~}}?"
+            - "Alle Daten, die mit diesem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht! Die Person wird über die Löschung benachrichtigt."
+          action: Nutzerkonto löschen
+        person:
+          only:
+            title: Person löschen
+            description:
+              - "<b>Achtung!</b>{user_form_of_address, select, du {Du bist} sie {Sie sind} other {~}} im Begriff, die Person <b>{account_firstname} {account_lastname}</b> zu löschen! {user_form_of_address, select, du {Bist du sicher, dass du} sie {Sind Sie sicher, dass Sie} other {~}} fortfahren {user_form_of_address, select, du {möchtest} sie {möchten} other {~}}?"
+              - "Alle Daten, die mit dieser Person in Verbindung stehen, werden unwiderruflich gelöscht! Da kein Nutzerkonto hinterlegt ist, wird die Person nicht über die Löschung benachrichtigt."
+            action: Person löschen
+          with:
+            title: Person und Nutzerkonto löschen
+            description:
+              - "<b>Achtung!</b>{user_form_of_address, select, du {Du bist} sie {Sie sind} other {~}} im Begriff, die Person und das Nutzerkonto von <b>{account_firstname} {account_lastname}</b> zu löschen! {user_form_of_address, select, du {Bist du sicher, dass du} sie {Sind Sie sicher, dass Sie} other {~}} fortfahren {user_form_of_address, select, du {möchtest} sie {möchten} other {~}}?"
+              - "Alle Daten, die mit dieser Person und dem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht! Die Person wird über die Löschung benachrichtigt."
+            action: Person und Nutzerkonto löschen

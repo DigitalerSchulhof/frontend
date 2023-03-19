@@ -1,18 +1,22 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:@typescript-eslint/strict",
-    "plugin:jsx-a11y/recommended",
-    "plugin:next",
-    "plugin:prettier/recommended"
-  ],
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": true
   },
-  "rules": {
-    "prettier/prettier": "error"
-  }
+  "overrides": [
+    {
+      "files": ["./src/**/*.ts?(x)"],
+      "extends": [
+        "plugin:jsx-a11y/recommended",
+        "next",
+        "plugin:prettier/recommended"
+      ]
+    },
+    {
+      "files": ["./src/app/**/*.ts?(x)"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/naming-convention": "off"
+      }
+    }
+  ]
 }

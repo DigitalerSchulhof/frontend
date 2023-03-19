@@ -1,0 +1,2 @@
+title: Willkommen {user_firstname} {user_lastname}!
+last-login: Die letzte Anmeldung erfolgte am <b>{last_login, date, long}</b> um <b>{last_login, time, short}</b>. Falsch? <theft-link><b>Identitätsdiebstahl melden</b> und Passwort ändern!</theft-link>

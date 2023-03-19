@@ -5,6 +5,7 @@
     "dev": "concurrently --names f,b --handle-input --default-input-target 1 \"cd frontend && pnpm run dev\" \"cd backend && pnpm run dev\""
   },
   "devDependencies": {
-    "concurrently": "7.6.0"
+    "concurrently": "7.6.0",
+    "typescript": "5.0.2"
   }
 }

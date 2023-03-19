@@ -1,0 +1,6 @@
+{
+  "parserOptions": {
+    "project": true
+  },
+  "extends": ["next"]
+}
