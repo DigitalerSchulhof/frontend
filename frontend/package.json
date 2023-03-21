@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "concurrently \"pnpm:dev:*\"",
     "dev:translate-app-dir": "nodemon -w tools -e ts --exec \"ts-node-transpile-only -r source-map-support/register tools/translate-app-dir --watch\"",
-    "dev:next": "cd next && next dev",
+    "dev:next": "next dev",
     "build": "concurrently \"pnpm:build:*(!next|:watch)\" && pnpm run build:next",
-    "build:next": "cd next && next build",
+    "build:next": "next build",
     "build:translate-app-dir": "ts-node-transpile-only -r source-map-support/register tools/translate-app-dir",
-    "start": "cd next && next start"
+    "start": "next start"
   },
   "dependencies": {
     "@formatjs/icu-messageformat-parser": "2.3.0",

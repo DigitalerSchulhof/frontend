@@ -15,7 +15,7 @@ export class AppDirTranslator {
   }
 
   addAllFiles(): void {
-    const appDirFiles = globby.sync('**/*', { cwd: __app });
+    const appDirFiles = globby.sync('**/*.ts?(x)', { cwd: __app });
 
     for (const appDirFile of appDirFiles) {
       this.addAppDirFile(appDirFile);
@@ -58,7 +58,7 @@ export class AppDirTranslator {
   }
 
   private makeNextAppDirFileContent(appDirFile: string): string {
-    const relativeAppDirFile = `${new Array(1 + appDirFile.split('/').length)
+    const relativeAppDirFile = `${new Array(appDirFile.split('/').length)
       .fill('..')
       .join('/')}/src/app/${appDirFile.substring(
       0,

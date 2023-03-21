@@ -1,3 +1,5 @@
+'use client';
+
 import 'styled-components';
 
 declare module 'styled-components' {

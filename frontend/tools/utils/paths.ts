@@ -5,6 +5,5 @@ export const __frontend = path.resolve(__dirname, '../..');
 export const __locales = path.resolve(__frontend, 'locales');
 export const __src = path.resolve(__frontend, 'src');
 export const __app = path.resolve(__src, 'app');
-export const __next = path.resolve(__frontend, 'next');
-export const __nextApp = path.resolve(__next, 'app');
+export const __nextApp = path.resolve(__frontend, 'app');
 /* eslint-enable @typescript-eslint/naming-convention */
