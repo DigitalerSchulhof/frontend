@@ -18,10 +18,6 @@ export interface Shared {
   fontSizes: {
     regular: string;
     small: string;
-    h1: string;
-    h2: string;
-    h3: string;
-    h4: string;
   };
 }
 
@@ -51,12 +47,8 @@ export interface Theme extends Shared {
 export const shared = {
   pageWidth: '1200px',
   fontSizes: {
-    regular: '16px',
+    regular: '13px',
     small: '80%',
-    h1: '170%',
-    h2: '140%',
-    h3: '120%',
-    h4: '100%',
   },
 } satisfies Shared;
 
@@ -136,7 +128,7 @@ export const themes = {
       success: {
         regular: {
           background: 'rgb(104, 159, 56)',
-          text: 'rgb(255, 255, 255)',
+          text: 'rgb(252, 248, 227)',
         },
         hover: {
           background: 'rgb(174, 213, 129)',
@@ -146,7 +138,7 @@ export const themes = {
       warning: {
         regular: {
           background: 'rgb(255, 160, 0)',
-          text: 'rgb(255, 255, 255)',
+          text: 'rgb(252, 248, 227)',
         },
         hover: {
           background: 'rgb(255, 213, 79)',
@@ -156,7 +148,7 @@ export const themes = {
       error: {
         regular: {
           background: 'rgb(230, 74, 25)',
-          text: 'rgb(255, 255, 255)',
+          text: 'rgb(252, 248, 227)',
         },
         hover: {
           background: 'rgb(255, 138, 101)',
@@ -166,7 +158,7 @@ export const themes = {
       information: {
         regular: {
           background: 'rgb(51, 153, 204)',
-          text: 'rgb(255, 255, 255)',
+          text: 'rgb(252, 248, 227)',
         },
         hover: {
           background: 'rgb(148, 209, 255)',
@@ -176,11 +168,11 @@ export const themes = {
       default: {
         regular: {
           background: 'rgb(85, 85, 85)',
-          text: 'rgb(255, 255, 255)',
+          text: 'rgb(252, 248, 227)',
         },
         hover: {
           background: 'rgb(66, 66, 66)',
-          text: 'rgb(255, 255, 255)',
+          text: 'rgb(252, 248, 227)',
         },
       },
     },

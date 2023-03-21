@@ -1,23 +1,64 @@
 import { Alert } from '#/ui/Alert';
+import { Heading } from '#/ui/Heading';
 
 export default function Page() {
   return (
     <>
       <Alert variant="success">
-        <h2>Moinsen</h2>Michse Meldung
+        <Heading size="4">Seite nicht gefunden</Heading>
+        <p>
+          Die gesuchte Seite existiert nicht oder nicht mehr. Das kann mehrere
+          Gründe haben:
+        </p>
+        <ul>
+          <li>Der verwendete Link ist veraltet.</li>
+          <li>Im Link liegt ein Tippfehler vor.</li>
+        </ul>
       </Alert>
-      {/* <Alert variant="warning">
-        <h2>Moinsen</h2>Michse Meldung
+      <Alert variant="warning">
+        <Heading size="4">Seite nicht gefunden</Heading>
+        <p>
+          Die gesuchte Seite existiert nicht oder nicht mehr. Das kann mehrere
+          Gründe haben:
+        </p>
+        <ul>
+          <li>Der verwendete Link ist veraltet.</li>
+          <li>Im Link liegt ein Tippfehler vor.</li>
+        </ul>
       </Alert>
       <Alert variant="error">
-        <h2>Moinsen</h2>Michse Meldung
+        <Heading size="4">Seite nicht gefunden</Heading>
+        <p>
+          Die gesuchte Seite existiert nicht oder nicht mehr. Das kann mehrere
+          Gründe haben:
+        </p>
+        <ul>
+          <li>Der verwendete Link ist veraltet.</li>
+          <li>Im Link liegt ein Tippfehler vor.</li>
+        </ul>
       </Alert>
       <Alert variant="information">
-        <h2>Moinsen</h2>Michse Meldung
+        <Heading size="4">Seite nicht gefunden</Heading>
+        <p>
+          Die gesuchte Seite existiert nicht oder nicht mehr. Das kann mehrere
+          Gründe haben:
+        </p>
+        <ul>
+          <li>Der verwendete Link ist veraltet.</li>
+          <li>Im Link liegt ein Tippfehler vor.</li>
+        </ul>
       </Alert>
       <Alert variant="default">
-        <h2>Moinsen</h2>Michse Meldung
-      </Alert> */}
+        <Heading size="4">Seite nicht gefunden</Heading>
+        <p>
+          Die gesuchte Seite existiert nicht oder nicht mehr. Das kann mehrere
+          Gründe haben:
+        </p>
+        <ul>
+          <li>Der verwendete Link ist veraltet.</li>
+          <li>Im Link liegt ein Tippfehler vor.</li>
+        </ul>
+      </Alert>
     </>
   );
 }

@@ -1,3 +1,5 @@
+'use client';
+
 import styled, { css } from 'styled-components';
 // import { StyledBreadcrumbs } from '../Breadcrumbs';
 
@@ -11,9 +13,9 @@ const noForwardProps = new Set(['size']);
 
 export const Heading = styled.h1
   .withConfig({
-    shouldForwardProp: (prop, defaultValidatorFn) =>
-      !noForwardProps.has(prop) && defaultValidatorFn(prop),
+    shouldForwardProp: (prop) => !noForwardProps.has(prop),
   })
+  // @ts-expect-error
   .attrs<HeadingProps>(({ size }) => ({
     as: `h${size}`,
   }))<HeadingProps>`
@@ -21,7 +23,7 @@ export const Heading = styled.h1
     const h = `h${size}` as const;
 
     return css`
-      font-size: ${({ theme }) => theme.fontSizes[h]};
+      font-size: ${{ h1: '170%', h2: '140%', h3: '120%', h4: '100%' }[h]};
       font-weight: bold;
 
       margin-top: ${{
@@ -31,12 +33,16 @@ export const Heading = styled.h1
         h4: '30px',
       }[h]};
 
-      margin-bottom: 10px;
+      margin-bottom: ${{
+        h1: '15px',
+        h2: '10px',
+        h3: '10px',
+        h4: '7px',
+      }[h]};
 
       &:first-child {
         margin-top: 0;
       }
-
 
       &:last-child {
         margin-bottom: 0;
