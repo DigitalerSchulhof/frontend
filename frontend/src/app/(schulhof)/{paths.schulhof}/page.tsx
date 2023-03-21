@@ -6,7 +6,7 @@ export default function Page() {
       <Alert variant="success">
         <h2>Moinsen</h2>Michse Meldung
       </Alert>
-      <Alert variant="warning">
+      {/* <Alert variant="warning">
         <h2>Moinsen</h2>Michse Meldung
       </Alert>
       <Alert variant="error">
@@ -17,7 +17,7 @@ export default function Page() {
       </Alert>
       <Alert variant="default">
         <h2>Moinsen</h2>Michse Meldung
-      </Alert>
+      </Alert> */}
     </>
   );
 }

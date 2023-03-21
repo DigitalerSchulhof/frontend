@@ -1,3 +1,5 @@
+import { StyleProvider } from '#/app/style-provider';
+
 export default function RootLayout({
   children,
 }: {
@@ -5,7 +7,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <StyleProvider>{children}</StyleProvider>
+      </body>
     </html>
   );
 }
