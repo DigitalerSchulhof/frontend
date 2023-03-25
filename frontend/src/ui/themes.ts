@@ -23,6 +23,7 @@ export interface Shared {
 
 export interface Theme extends Shared {
   backgroundColor: string;
+  footerBackgroundColor: string;
   colors: {
     text: string;
     textLink: string;
@@ -56,6 +57,7 @@ export const themes = {
   light: {
     ...shared,
     backgroundColor: 'rgb(255, 255, 255)',
+    footerBackgroundColor: 'rgb(24, 24, 24)',
     colors: {
       text: 'rgb(0, 0, 0)',
       textLink: 'rgb(50, 153, 204)',
@@ -118,6 +120,7 @@ export const themes = {
   dark: {
     ...shared,
     backgroundColor: 'rgb(33, 33, 33)',
+    footerBackgroundColor: 'rgb(24, 24, 24)',
     colors: {
       text: 'rgb(252, 248, 227)',
       textLink: 'rgb(50, 153, 204)',

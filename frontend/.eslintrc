@@ -2,6 +2,11 @@
   "parserOptions": {
     "project": true
   },
+  "rules": {
+    // Make no sense with React components
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/naming-convention": "off"
+  },
   "overrides": [
     {
       "files": ["./src/**/*.ts?(x)"],
@@ -10,13 +15,6 @@
         "next",
         "plugin:prettier/recommended"
       ]
-    },
-    {
-      "files": ["./src/{app,ui}/**/*.ts?(x)"],
-      "rules": {
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/naming-convention": "off"
-      }
     }
   ]
 }

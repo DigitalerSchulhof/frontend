@@ -16,7 +16,7 @@ export const StyleProvider = ({ children }: { children: React.ReactNode }) => {
   useServerInsertedHTML(() => {
     const styles = styledComponentsStyleSheet.getStyleElement();
     styledComponentsStyleSheet.instance.clearTag();
-    return <>{styles}</>;
+    return styles;
   });
 
   const theme = themes.dark;

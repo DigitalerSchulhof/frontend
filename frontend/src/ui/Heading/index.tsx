@@ -15,7 +15,7 @@ export const Heading = styled.h1
   .withConfig({
     shouldForwardProp: (prop) => !noForwardProps.has(prop),
   })
-  // @ts-expect-error
+  // @ts-expect-error -- Bug?
   .attrs<HeadingProps>(({ size }) => ({
     as: `h${size}`,
   }))<HeadingProps>`

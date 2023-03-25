@@ -7,7 +7,6 @@ const roboto = Roboto({
   subsets: ['latin'],
 });
 
-
 export const GlobalStyles = createGlobalStyle`
   * {
     box-sizing: border-box;
@@ -21,7 +20,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    background-color: ${({ theme }) => theme.backgroundColor};
+    background-color: ${({ theme }) => theme.footerBackgroundColor};
   }
 
   body, button, input, optgroup, select, textarea {
