@@ -1,7 +1,7 @@
 'use client';
 
+import { StyledBreadcrumbs } from '#/ui/Breadcrumbs';
 import styled, { css } from 'styled-components';
-// import { StyledBreadcrumbs } from '../Breadcrumbs';
 
 export type HeadingSize = '1' | '2' | '3' | '4';
 
@@ -46,6 +46,10 @@ export const Heading = styled.h1
 
       &:last-child {
         margin-bottom: 0;
+      }
+
+      ${StyledBreadcrumbs} + & {
+        margin-top: 10px;
       }
     `;
   }}

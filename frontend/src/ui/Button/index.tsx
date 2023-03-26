@@ -1,57 +1,86 @@
-import { Icon } from '../Icon';
-import React, { HTMLAttributes } from 'react';
-import styled, { css } from 'styled-components';
+'use client';
+
+// import { Icon } from '../Icon';
+// import React, { HTMLAttributes } from 'react';
+import { Link } from '#/ui/Link';
+import styled, {
+  ExecutionContext,
+  IStyledComponent,
+  css,
+} from 'styled-components';
 import { Variant } from '../themes';
 
-export interface ButtonProps {
+export type BaseButtonProps = {
   variant?: Variant;
-}
-
-export const Button = styled.button<ButtonProps>(
-  ({ theme, variant = 'default' }) => css`
-    border: 1px solid transparent;
-    border-radius: 3px;
-    padding: 3px 7px;
-    margin-bottom: 2px;
-    line-height: 1.5em;
-    text-align: center;
-    cursor: pointer;
-    margin: 0 2px;
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-
-    background-color: ${theme.accents[variant].regular.background};
-    color: ${theme.accents[variant].regular.text};
-
-    &:hover {
-      background-color: ${theme.accents[variant].hover.background};
-      color: ${theme.accents[variant].hover.text};
-    }
-
-    &:first-child {
-      margin-left: 0px;
-    }
-
-    &:last-child {
-      margin-right: 0px;
-    }
-  `
-);
-
-export interface IconButtonProps
-  extends ButtonProps,
-    HTMLAttributes<HTMLButtonElement> {
-  icon: React.ReactNode;
-}
-
-const UnstyledIconButton: React.FC<IconButtonProps> = ({ icon, ...props }) => {
-  return <Button {...props}>{icon}</Button>;
 };
 
-export const IconButton = styled(UnstyledIconButton)`
-  padding: 0;
-  margin: 2px;
+const ButtonStyles = ({
+  theme,
+  variant = 'default',
+}: BaseButtonProps & ExecutionContext) => css`
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 3px 7px;
+  margin-bottom: 2px;
+  line-height: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  margin: 0 2px;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
-  & > ${Icon} {
-    margin: 1px;
+  background-color: ${theme.accents[variant].regular.background};
+  color: ${theme.accents[variant].regular.text};
+
+  &:hover {
+    background-color: ${theme.accents[variant].hover.background};
+    color: ${theme.accents[variant].hover.text};
+  }
+
+  &:first-child {
+    margin-left: 0px;
+  }
+
+  &:last-child {
+    margin-right: 0px;
   }
 `;
+
+const StyledButton = styled.button<BaseButtonProps>(ButtonStyles);
+
+const StyledLink = styled(Link)<BaseButtonProps>`
+  ${(props) => ButtonStyles(props)}
+
+  display: inline-block;
+`;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PropsFrom<T> = T extends IStyledComponent<any, any, infer P> ? P : never;
+
+export const Button = (
+  props: PropsFrom<typeof StyledButton> | PropsFrom<typeof StyledLink>
+) => {
+  return 'href' in props ? (
+    <StyledLink {...props} />
+  ) : (
+    <StyledButton {...props} />
+  );
+};
+
+// export interface IconButtonProps
+//   extends ButtonProps,
+//     HTMLAttributes<HTMLButtonElement> {
+//   icon: React.ReactNode;
+// }
+
+// const UnstyledIconButton: React.FC<IconButtonProps> = ({ icon, ...props }) => {
+//   return <Button {...props}>{icon}</Button>;
+// };
+
+// export const IconButton = styled(UnstyledIconButton)`
+//   padding: 0;
+//   margin: 2px;
+
+//   & > ${Icon} {
+//     margin: 1px;
+//   }
+// `;

@@ -4,11 +4,15 @@ login:
   description: Um den Schulhof zu betreten, ist eine Anmeldung nötig.
   buttons:
     login: Anmelden
-    password: Passwort vergessen?
+    forgot-password: Passwort vergessen?
     register: Registrieren
   privacy:
     - "<b>Datenschutzhinweis</b>: Im Schulhof werden Daten anders verarbeitet als auf der normalen Website. Was gespeichert und wie die Daten verarbeitet werden, ist der <PrivacyLink>Datenschutzseite</PrivacyLink> zu entnehmen."
     - "Mit der Anmeldung wird automatisch »Einwilligung A« erteilt."
+  providers:
+    password:
+      username: "Benutzername: "
+      password: "Passwort: "
 apps:
   title: Jetzt auch als App
   ios: iPhone/iPad

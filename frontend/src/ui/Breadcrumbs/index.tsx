@@ -1,16 +1,16 @@
-import { TranslationAST, useT } from '@i18n';
-import React, { Fragment, useMemo } from 'react';
-import styled from 'styled-components';
-import { Link } from '../Link';
+'use client';
 
-export type BreadcrumbItemString = string | TranslationAST<string>;
+import { useTranslations } from '#/i18n';
+import { Link } from '#/ui/Link';
+import React, { Fragment } from 'react';
+import styled from 'styled-components';
 
 /**
  * @example
  * ```ts
  * const breadcrumbs = [
- *   t('paths.schulhof'),
- *   t('paths.schulhof.administration'),
+ *   'paths.schulhof',
+ *   'paths.schulhof.administration',
  * ];
  *
  * // Yields the following breadcrumbs:
@@ -21,17 +21,17 @@ export type BreadcrumbItemString = string | TranslationAST<string>;
  * @example
  * ```ts
  * const breadcrumbs = [
- *   getTranslation('paths.schulhof'),
- *   getTranslation('paths.schulhof.administration'),
+ *   'paths.schulhof',
+ *   'paths.schulhof.administration',
  *   {
- *     title: getTranslation('paths.schulhof.administration.persons.title'),
- *     segment: getTranslation('paths.schulhof.administration.persons'),
+ *     title: 'paths.schulhof.administration.persons.title',
+ *     segment: 'paths.schulhof.administration.persons',
  *     href: [
- *       getTranslation('paths.schulhof'),
- *       getTranslation('paths.schulhof.administration'),
+ *       'paths.schulhof',
+ *       'paths.schulhof.administration',
  *     ],
  *   },
- *   getTranslation('paths.schulhof.administration.persons.persons'),
+ *   'paths.schulhof.administration.persons.persons',
  * ];
  *
  * // Yields the following breadcrumbs:
@@ -42,97 +42,84 @@ export type BreadcrumbItemString = string | TranslationAST<string>;
  * ```
  */
 export type BreadcrumbItem =
-  | BreadcrumbItemString
+  | string
   | {
       /**
        * The title of the breadcrumb item
        */
-      title: BreadcrumbItemString;
+      title: string;
       /**
        * The value to be used for the current item in constructing the href of the succeeding items
        */
-      segment: BreadcrumbItemString;
+      segment: string;
       /**
-       * The href of the breadcrumb item (direct click)
+       * Override the href of the breadcrumb item (direct click)
        */
-      href?: BreadcrumbItemString | BreadcrumbItemString[];
+      hrefOverride?: string[];
     };
 
 export interface BreadcrumbsProps {
   path: BreadcrumbItem[];
 }
 
+type TranslatedBreadcrumbItem = {
+  title: string;
+  href: string;
+  /**
+   * Override the href of the breadcrumb item (direct click)
+   */
+  hrefOverride?: string;
+}[];
+
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ path }) => {
-  const t = useT();
+  const { tIfCurly } = useTranslations();
 
-  // If a path item is a string, its value is simply appended to the previous item's href.
-  const filledPath = useMemo(
-    () =>
-      path.reduce<
-        {
-          title: string;
-          /**
-           * The href of the breadcrumb item constructed from the previous segments and the current item's `segment` value
-           */
-          segmented: string;
-          /**
-           * If provided, the explicit href of the breadcrumb item (overwrites the `segmented` value)
-           */
-          href?: string;
-        }[]
-      >((acc, item) => {
-        let title;
-        let segment;
-        let href: string | undefined;
+  function translateItem(
+    item: BreadcrumbItem
+  ): Exclude<BreadcrumbItem, string> {
+    if (typeof item === 'string') {
+      const translation = tIfCurly(item);
 
-        if (typeof item === 'string') {
-          title = item;
-          segment = item;
-        } else if ('ast' in item) {
-          title = t(item);
-          segment = t(item);
-        } else {
-          title = typeof item.title === 'string' ? item.title : t(item.title);
-          segment =
-            typeof item.segment === 'string' ? item.segment : t(item.segment);
-          if (item.href) {
-            if (typeof item.href === 'string') {
-              href = item.href;
-            } else if ('ast' in item.href) {
-              href = t(item.href);
-            } else {
-              href = `/${item.href
-                .map((h) => (typeof h === 'string' ? h : t(h)))
-                .join('/')}`;
-            }
-          }
-        }
+      return {
+        title: translation,
+        segment: translation,
+      };
+    } else {
+      return {
+        title: tIfCurly(item.title),
+        segment: tIfCurly(item.segment),
+        hrefOverride: item.hrefOverride?.map(tIfCurly),
+      };
+    }
+  }
 
-        const lastItem = acc[acc.length - 1];
-        if (lastItem) {
-          acc.push({
-            title,
-            segmented: `${lastItem.segmented}/${segment}`,
-            href,
-          });
-        } else {
-          acc.push({
-            title,
-            segmented: `/${segment}`,
-            href,
-          });
-        }
-        return acc;
-      }, []),
-    [path]
-  );
+  const filledPath = path.reduce<TranslatedBreadcrumbItem>((acc, item) => {
+    const { title, segment, hrefOverride } = translateItem(item);
+
+    const lastItem = acc[acc.length - 1] as (typeof acc)[number] | undefined;
+
+    if (lastItem) {
+      acc.push({
+        title,
+        href: `${lastItem.href}/${segment}`,
+        hrefOverride: hrefOverride?.join('/'),
+      });
+    } else {
+      acc.push({
+        title,
+        href: `/${segment}`,
+        hrefOverride: hrefOverride?.join('/'),
+      });
+    }
+    return acc;
+  }, []);
 
   return (
     <StyledBreadcrumbs>
       {filledPath.map((item, i) => {
         return (
-          <Fragment key={`${item.title}-${item.href}`}>
-            <StyledBreadcrumbItem href={item.href ?? item.segmented}>
+          <Fragment key={`${item.title}-${item.hrefOverride ?? item.href}`}>
+            <StyledBreadcrumbItem href={item.hrefOverride ?? item.href}>
               {item.title}
             </StyledBreadcrumbItem>
             {i < filledPath.length - 1 ? <> / </> : null}

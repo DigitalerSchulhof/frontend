@@ -1,3 +1,5 @@
+'use client';
+
 import styled, { keyframes } from 'styled-components';
 
 export const Loading = () => {
@@ -14,7 +16,7 @@ export const Loading = () => {
 const LoadingContainer = styled.div`
   display: inline-block;
   position: relative;
-  width: ${3 * 11 + 2 * 9 }px;
+  width: ${3 * 11 + 2 * 9}px;
   height: 11px;
   margin: 4px 0;
 `;

@@ -6,8 +6,8 @@ import * as fs from 'fs';
 import * as globby from 'globby';
 import * as path from 'path';
 import * as yaml from 'yaml';
-import { flattenObject } from '..';
-import { __locales } from '../paths';
+import { flattenObject } from '../utils';
+import { __locales } from '../utils/paths';
 
 export interface BaseTranslationEntry {
   file: string;
@@ -36,8 +36,8 @@ export class TranslationService {
 
   constructor(
     private readonly defaultLocale: string,
-    private readonly loader: TranslationsLoader,
-    private readonly verifier: TranslationsVerifier
+    private readonly loader = new TranslationsLoader(),
+    private readonly verifier = new TranslationsVerifier(defaultLocale)
   ) {
     this.loadTranslations(this.defaultLocale);
   }
@@ -114,10 +114,9 @@ export class TranslationsLoader {
     const translations = flattenObject(translationsObject, '.');
 
     for (const key in translations) {
-      const translationKey = `${translationKeyPrefix}.${key}`.replace(
-        /(^\.|\.index\.?$|\.$)/g,
-        ''
-      );
+      const translationKey = `${translationKeyPrefix}.${key}`
+        .replace(/(^\.|\.$)/g, '')
+        .replace(/\.index|index\./g, '');
       // @ts-expect-error -- Object access
       const translationValue = translations[key];
 

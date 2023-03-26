@@ -1,7 +1,10 @@
+'use client';
+
 import React, { forwardRef, useId } from 'react';
 import styled from 'styled-components';
-import { Input } from '../Input';
-import { Td, Th, Tr } from '../Table';
+import { Input } from '#/ui/Input';
+import { Table } from '#/ui/Table';
+import { useTranslations } from '#/i18n';
 
 export interface FormProps extends React.HTMLAttributes<HTMLFormElement> {}
 
@@ -31,16 +34,17 @@ export interface FormRowProps
 export const FormRow = forwardRef<HTMLInputElement, FormRowProps>(
   function FormRow({ label, ...props }, ref) {
     const id = useId();
+    const { tIfCurly } = useTranslations();
 
     return (
-      <Tr>
-        <Th>
-          <Label htmlFor={id}>{label}</Label>
-        </Th>
-        <Td>
+      <Table.Row>
+        <Table.Header>
+          <Label htmlFor={id}>{tIfCurly(label)}</Label>
+        </Table.Header>
+        <Table.Cell>
           <Input ref={ref} id={id} {...props} />
-        </Td>
-      </Tr>
+        </Table.Cell>
+      </Table.Row>
     );
   }
 );

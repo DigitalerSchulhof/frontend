@@ -2,8 +2,8 @@ import * as chokidar from 'chokidar';
 import * as fs from 'fs';
 import * as globby from 'globby';
 import * as path from 'path';
-import { TranslationService } from '../utils/i18n/service';
-import { __app, __nextApp } from '../utils/paths';
+import { TranslationService } from '../../src/i18n/service';
+import { __app, __nextApp } from '../../src/utils/paths';
 
 export class AppDirTranslator {
   private watcher: AppDirTranslatorWatcher | null = null;

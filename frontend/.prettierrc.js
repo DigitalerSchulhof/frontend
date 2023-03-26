@@ -1,3 +1,4 @@
 module.exports = {
-  ...require("../.prettierrc"),
-}
+  ...require('../.prettierrc'),
+  jsxSingleQuote: true,
+};

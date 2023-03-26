@@ -21,6 +21,9 @@ const BodyWrapperOuter = styled.div(
 const BodyWrapperInner = styled.div`
   margin: 0 auto;
   max-width: 1000px;
-  padding: 30px 10px;
+  padding: 10px 0;
   width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
 `;

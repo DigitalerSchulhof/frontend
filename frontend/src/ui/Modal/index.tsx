@@ -1,9 +1,11 @@
+'use client';
+
+import { useTranslations } from '#/i18n';
+import { Heading } from '#/ui/Heading';
+import { Loading } from '#/ui/Loading';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
-import { useT } from '../../i18n';
-import { Heading } from '../Heading';
-import { Loading } from '../Loading';
 
 export interface ModalProps {
   onClose?: () => void;
@@ -36,11 +38,11 @@ export const LoadingModal: React.FC<LoadingModalProps> = ({
   title,
   description,
 }) => {
-  const t = useT();
+  const { t } = useTranslations();
 
   return (
     <Modal>
-      <Heading size="2">{title}</Heading>
+      <Heading size='1'>{title}</Heading>
       <p>{t('generic.wait')}</p>
       <Loading />
       <p>{description}</p>
