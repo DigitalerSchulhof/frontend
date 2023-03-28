@@ -4,15 +4,18 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"pnpm:dev:*\"",
+    "dev:translation-map": "nodemon -w tools -e ts --exec \"ts-node-transpile-only -r source-map-support/register tools/translation-map --watch\"",
     "dev:translate-app-dir": "nodemon -w tools -e ts --exec \"ts-node-transpile-only -r source-map-support/register tools/translate-app-dir --watch\"",
     "dev:next": "next dev",
     "build": "concurrently \"pnpm:build:*(!next|:watch)\" && pnpm run build:next",
     "build:next": "next build",
+    "build:translation-map": "ts-node-transpile-only -r source-map-support/register tools/translation-map",
     "build:translate-app-dir": "ts-node-transpile-only -r source-map-support/register tools/translate-app-dir",
     "start": "next start"
   },
   "dependencies": {
     "@formatjs/icu-messageformat-parser": "2.3.0",
+    "intl-messageformat": "10.3.3",
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",

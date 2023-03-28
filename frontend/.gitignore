@@ -2,3 +2,4 @@
 /.next
 /app
 /.env
+/src/i18n/translations.d.ts

@@ -1,4 +1,4 @@
-import { ClientTranslations } from '#/i18n/provider';
+import { ClientTranslations } from '#/i18n/context';
 import { TranslationService } from '#/i18n/service';
 import { DEFAULT_LOCALE } from '#/utils';
 import { Providers } from './providers';
@@ -10,10 +10,17 @@ export default function RootLayout({
 }) {
   const clientTranslations = makeClientTranslations(DEFAULT_LOCALE);
 
+  const appSettings = {
+    locale: DEFAULT_LOCALE,
+  };
+
   return (
-    <html lang="en">
+    <html>
       <body>
-        <Providers clientTranslations={clientTranslations}>
+        <Providers
+          clientTranslations={clientTranslations}
+          appSettings={appSettings}
+        >
           {children}
         </Providers>
       </body>
