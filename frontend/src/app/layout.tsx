@@ -1,5 +1,6 @@
 import { ClientTranslations } from '#/i18n/context';
 import { TranslationService } from '#/i18n/service';
+import { getSettings } from '#/settings';
 import { DEFAULT_LOCALE } from '#/utils';
 import { Providers } from './providers';
 
@@ -10,11 +11,10 @@ export default function RootLayout({
 }) {
   const clientTranslations = makeClientTranslations(DEFAULT_LOCALE);
 
-  const appSettings = {
-    locale: DEFAULT_LOCALE,
-  };
+  const appSettings = getSettings();
 
   return (
+    // eslint-disable-next-line jsx-a11y/html-has-lang -- TODO
     <html>
       <body>
         <Providers
