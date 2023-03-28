@@ -1,7 +1,5 @@
-import { DEFAULT_LOCALE } from '#/utils';
+import settings from '../../../settings.json';
 
 export function getSettings() {
-  return {
-    locale: DEFAULT_LOCALE,
-  };
+  return settings;
 }

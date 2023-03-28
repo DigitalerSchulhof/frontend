@@ -96,9 +96,11 @@ export class TranslationMapWriter {
           undefined,
           ts.factory.createIdentifier('variables'),
           undefined,
-          variablePropertySignatures.length
-            ? ts.factory.createTypeLiteralNode(variablePropertySignatures)
-            : ts.factory.createKeywordTypeNode(ts.SyntaxKind.NeverKeyword)
+          ts.factory.createTupleTypeNode(
+            variablePropertySignatures.length
+              ? [ts.factory.createTypeLiteralNode(variablePropertySignatures)]
+              : []
+          )
         ),
         ts.factory.createPropertySignature(
           undefined,

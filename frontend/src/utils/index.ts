@@ -1,6 +1,10 @@
 export const DEFAULT_LOCALE = 'de-DE';
 
-export function flattenObject(obj: object, joiner = '_'): object {
+export function flattenObject(obj: unknown, joiner = '_'): object {
+  if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+    return {};
+  }
+
   return Object.keys(obj).reduce<object>((acc, key) => {
     // @ts-expect-error -- Object access
     const val = obj[key];

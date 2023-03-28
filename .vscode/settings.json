@@ -11,10 +11,7 @@
   },
   "typescript.enablePromptUseWorkspaceTsdk": false,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": [
-    "Arango",
-    "schoolyear",
-    "schoolyears"
-  ],
-  "typescript.preferences.importModuleSpecifier": "non-relative"
+  "cSpell.words": ["Arango", "schoolyear", "schoolyears"],
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "colorize.languages": ["typescript"]
 }

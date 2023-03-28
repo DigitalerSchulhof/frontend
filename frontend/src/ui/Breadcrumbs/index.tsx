@@ -78,7 +78,8 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ path }) => {
     item: BreadcrumbItem
   ): Exclude<BreadcrumbItem, string> {
     if (typeof item === 'string') {
-      const translation = tIfCurly(item);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const translation = tIfCurly(item as any) as string;
 
       return {
         title: translation,
@@ -86,9 +87,12 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ path }) => {
       };
     } else {
       return {
-        title: tIfCurly(item.title),
-        segment: tIfCurly(item.segment),
-        hrefOverride: item.hrefOverride?.map(tIfCurly),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        title: tIfCurly(item.title as any) as string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        segment: tIfCurly(item.segment as any) as string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        hrefOverride: item.hrefOverride?.map(tIfCurly as any),
       };
     }
   }

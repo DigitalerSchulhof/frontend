@@ -8,10 +8,15 @@ import { ClientTranslations, translationsContext } from './context';
 import { Translations } from './translations';
 
 type T = {
-  t<K extends keyof Translations>(this: void, key: K): Translations[K]['type'];
+  t<K extends keyof Translations>(
+    this: void,
+    key: K,
+    ...[args]: Translations[K]['variables']
+  ): Translations[K]['type'];
   tIfCurly<K extends keyof Translations>(
     this: void,
-    key: K
+    key: K,
+    ...[args]: Translations[K]['variables']
   ): Translations[K]['type'];
 };
 
@@ -21,7 +26,8 @@ export const useTranslations = (): T => {
 
   function transformAst(
     ast: MessageFormatElement[],
-    key: string
+    key: string,
+    args: unknown
   ): string | React.ReactNode {
     let i = 0;
 
@@ -30,6 +36,7 @@ export const useTranslations = (): T => {
       res = new IntlMessageFormat(ast, settings.locale).format<ReactNode>({
         i: (c) => c.map((e) => <i key={i++}>{e}</i>),
         b: (c) => c.map((e) => <b key={i++}>{e}</b>),
+        ...(args as object | undefined),
       });
     } catch (e) {
       if (e instanceof Error) {
@@ -50,7 +57,7 @@ export const useTranslations = (): T => {
     return React.Children.toArray(res);
   }
 
-  function t(this: void, key: string) {
+  function t(this: void, key: string, args: unknown) {
     const translation = translations[key] as
       | ClientTranslations[keyof ClientTranslations]
       | undefined;
@@ -60,19 +67,17 @@ export const useTranslations = (): T => {
     }
 
     if (translation.type === 'string') {
-      return transformAst(translation.ast, key);
+      return transformAst(translation.ast, key, args);
     } else {
-      return React.Children.toArray(
-        translation.asts.map((ast) => transformAst(ast, key))
-      );
+      return translation.asts.map((ast) => transformAst(ast, key, args));
     }
   }
 
   return {
     t,
-    tIfCurly: (key: string) => {
+    tIfCurly: (key: string, args: unknown) => {
       if (key.startsWith('{') && key.endsWith('}')) {
-        return t(key.slice(1, -1));
+        return t(key.slice(1, -1), args);
       }
       return key;
     },
