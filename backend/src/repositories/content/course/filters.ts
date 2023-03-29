@@ -11,7 +11,7 @@ export abstract class CourseFilter extends Filter<'courses'> {}
 
 export abstract class ScalarCourseFilter<
   FilterOperatorType extends FilterOperator<
-    MaybeArray<string | number | boolean>
+    MaybeArray<string | number | boolean | null>
   >
 > extends ScalarFilter<'courses', FilterOperatorType> {}
 

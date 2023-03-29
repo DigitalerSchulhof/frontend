@@ -22,7 +22,7 @@ export type WithId<Base> = Base & { id: string; rev: string };
 
 export abstract class ArangoRepository<
   Name extends string,
-  Base extends Record<string, string | number | boolean>
+  Base extends Record<string, string | number | boolean | null>
 > {
   protected abstract readonly collectionName: Name;
 

@@ -11,7 +11,7 @@ export abstract class SchoolyearFilter extends Filter<'schoolyears'> {}
 
 export abstract class ScalarSchoolyearFilter<
   FilterOperatorType extends FilterOperator<
-    MaybeArray<string | number | boolean>
+    MaybeArray<string | number | boolean | null>
   >
 > extends ScalarFilter<'schoolyears', FilterOperatorType> {}
 

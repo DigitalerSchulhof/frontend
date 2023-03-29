@@ -1,11 +1,11 @@
-import { WithId } from '#/repositories/arango';
-import { LevelSchoolyearIdFilter } from '#/repositories/content/level/filters';
-import { SchoolyearBase } from '#/repositories/content/schoolyear';
-import { SchoolyearFilter } from '#/repositories/content/schoolyear/filters';
+import { WithId } from '#/backend/repositories/arango';
+import { LevelSchoolyearIdFilter } from '#/backend/repositories/content/level/filters';
+import { SchoolyearBase } from '#/backend/repositories/content/schoolyear';
+import { SchoolyearFilter } from '#/backend/repositories/content/schoolyear/filters';
 import {
   EqFilterOperator,
   InFilterOperator,
-} from '#/repositories/filters/operators';
+} from '#/backend/repositories/filters/operators';
 import { Service } from '../base';
 
 export class SchoolyearService extends Service<'schoolyears', SchoolyearBase> {

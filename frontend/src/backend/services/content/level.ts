@@ -1,12 +1,12 @@
-import { WithId } from '#/repositories/arango';
-import { ClassLevelIdFilter } from '#/repositories/content/class/filters';
-import { LevelBase } from '#/repositories/content/level';
-import { LevelFilter } from '#/repositories/content/level/filters';
+import { WithId } from '#/backend/repositories/arango';
+import { ClassLevelIdFilter } from '#/backend/repositories/content/class/filters';
+import { LevelBase } from '#/backend/repositories/content/level';
+import { LevelFilter } from '#/backend/repositories/content/level/filters';
 import {
   EqFilterOperator,
   InFilterOperator,
-} from '#/repositories/filters/operators';
-import { Service } from '#/services/base';
+} from '#/backend/repositories/filters/operators';
+import { Service } from '../base';
 
 export class LevelService extends Service<'levels', LevelBase> {
   override async delete(

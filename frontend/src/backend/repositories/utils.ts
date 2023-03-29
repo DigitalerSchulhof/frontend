@@ -1,3 +1,4 @@
+import * as aql from 'arangojs/aql';
 import { ArrayCursor } from 'arangojs/cursor';
 import { Paginated } from './search';
 
@@ -17,3 +18,5 @@ export async function paginateCursor<T>(
     total: cursor.extra.stats.fullCount,
   };
 }
+
+export type AqlExpression = aql.GeneratedAqlQuery;

@@ -7,7 +7,7 @@ import { Table } from '#/ui/Table';
 import { useRef } from 'react';
 import { PrivacyNote } from './privacy-note';
 
-export const Login = () => {
+export const LoginForm = () => {
   function doLogin() {
     console.log('YO');
     console.log(usernameRef.current?.value);

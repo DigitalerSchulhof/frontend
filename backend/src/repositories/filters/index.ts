@@ -20,7 +20,7 @@ export abstract class Filter<Collection> {
 export abstract class ScalarFilter<
   Collection,
   FilterOperatorType extends FilterOperator<
-    MaybeArray<string | number | boolean>
+    MaybeArray<string | number | boolean | null>
   >
 > extends Filter<Collection> {
   protected abstract readonly propertyName: string;

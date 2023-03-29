@@ -11,7 +11,7 @@ export abstract class LevelFilter extends Filter<'levels'> {}
 
 export abstract class ScalarLevelFilter<
   FilterOperatorType extends FilterOperator<
-    MaybeArray<string | number | boolean>
+    MaybeArray<string | number | boolean | null>
   >
 > extends ScalarFilter<'levels', FilterOperatorType> {}
 

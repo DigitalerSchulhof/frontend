@@ -1,11 +1,11 @@
-import { WithId } from '#/repositories/arango';
-import { ClassBase } from '#/repositories/content/class';
-import { ClassFilter } from '#/repositories/content/class/filters';
-import { CourseClassIdFilter } from '#/repositories/content/course/filters';
+import { WithId } from '#/backend/repositories/arango';
+import { ClassBase } from '#/backend/repositories/content/class';
+import { ClassFilter } from '#/backend/repositories/content/class/filters';
+import { CourseClassIdFilter } from '#/backend/repositories/content/course/filters';
 import {
   EqFilterOperator,
   InFilterOperator,
-} from '#/repositories/filters/operators';
+} from '#/backend/repositories/filters/operators';
 import { Service } from '../base';
 
 export class ClassService extends Service<'classes', ClassBase> {

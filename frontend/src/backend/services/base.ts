@@ -1,15 +1,18 @@
-import { ObjectCache } from '#/caches/object-cache';
-import { ArangoRepository, WithId } from '#/repositories/arango';
-import { Filter } from '#/repositories/filters';
-import { MakeSearchQuery, Paginated } from '#/repositories/search';
-import { MakePatch } from '#/repositories/utils';
-import { Services } from '#/server/context/services';
-import { getByIdCachedOrLoad, getByIdsCachedOrLoad } from '#/services/utils';
-import { Validator } from '#/validators/base';
+import { ObjectCache } from '#/backend/caches/object-cache';
+import { ArangoRepository, WithId } from '#/backend/repositories/arango';
+import { Filter } from '#/backend/repositories/filters';
+import { MakeSearchQuery, Paginated } from '#/backend/repositories/search';
+import { MakePatch } from '#/backend/repositories/utils';
+import { Services } from '#/backend/context/services';
+import {
+  getByIdCachedOrLoad,
+  getByIdsCachedOrLoad,
+} from '#/backend/services/utils';
+import { Validator } from '#/backend/validators/base';
 
 export abstract class Service<
   Name extends string,
-  Base extends Record<string, string | number | boolean>
+  Base extends Record<string, string | number | boolean | null>
 > {
   constructor(
     protected readonly repository: ArangoRepository<Name, Base>,

@@ -20,19 +20,28 @@ export abstract class Filter<Collection> {
 export abstract class ScalarFilter<
   Collection,
   FilterOperatorType extends FilterOperator<
-    MaybeArray<string | number | boolean>
+    MaybeArray<string | number | boolean | null>
   >
 > extends Filter<Collection> {
   protected abstract readonly propertyName: string;
 
-  constructor(private readonly filterOperator: FilterOperatorType) {
+  constructor(
+    private readonly filterOperator:
+      | FilterOperatorType
+      | ((variableName: aql.AqlLiteral) => FilterOperatorType)
+  ) {
     super();
   }
 
   apply(variableName: aql.AqlLiteral): aql.GeneratedAqlQuery {
+    const filterOperator =
+      typeof this.filterOperator === 'function'
+        ? this.filterOperator(variableName)
+        : this.filterOperator;
+
     return aql.aql`${variableName}.${aql.literal(
       this.propertyName
-    )} ${this.filterOperator.apply()}`;
+    )} ${filterOperator.apply()}`;
   }
 }
 

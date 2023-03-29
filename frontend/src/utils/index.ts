@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 export const DEFAULT_LOCALE = 'de-DE';
 
 export function flattenObject(obj: unknown, joiner = '_'): object {
@@ -22,4 +24,15 @@ export function flattenObject(obj: unknown, joiner = '_'): object {
 
     return acc;
   }, {});
+}
+
+export function createInternalErrorResponse(): Response {
+  return NextResponse.json(
+    {
+      error: 'Internal error',
+    },
+    {
+      status: 500,
+    }
+  );
 }

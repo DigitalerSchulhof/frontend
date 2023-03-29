@@ -1,4 +1,4 @@
-import * as authProviders from '#/auth/providers';
+import { authProviders } from '#/auth/providers';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -8,7 +8,9 @@ import { SchulhofLoginHeader } from './heading';
 export default function Page() {
   const provider = 'password';
 
-  const { Login } = authProviders[provider];
+  const {
+    login: { LoginForm },
+  } = authProviders[provider];
 
   return (
     <>
@@ -25,7 +27,7 @@ export default function Page() {
         <p>
           <T t='schulhof.login.login.description' />
         </p>
-        <Login />
+        <LoginForm />
       </Col>
     </>
   );
