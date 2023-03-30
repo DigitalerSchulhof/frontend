@@ -1,4 +1,4 @@
-import * as TTLCache from '@isaacs/ttlcache';
+import TTLCache from '@isaacs/ttlcache';
 import { CacheAdapter } from '.';
 
 export class MemoryCacheAdapter implements CacheAdapter {

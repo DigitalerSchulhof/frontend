@@ -9,9 +9,26 @@ import { PrivacyNote } from './privacy-note';
 
 export const LoginForm = () => {
   function doLogin() {
-    console.log('YO');
-    console.log(usernameRef.current?.value);
-    console.log(passwordRef.current?.value);
+    const username = usernameRef.current?.value;
+    const password = passwordRef.current?.value;
+
+    void fetch('/api/schulhof/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        provider: 'password',
+        username,
+        password,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        console.log('OK');
+      } else {
+        console.log('NOT OK');
+      }
+    });
   }
 
   const usernameRef = useRef<HTMLInputElement>(null);

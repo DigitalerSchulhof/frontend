@@ -1,15 +1,15 @@
 import { Sort } from '../../sort';
 
-export abstract class LevelSort extends Sort<'level'> {}
+export abstract class AccountSort extends Sort<'level'> {}
 
-export class LevelIdSort extends LevelSort {
+export class AccountIdSort extends AccountSort {
   protected readonly propertyName = '_key';
 }
 
-export class LevelNameSort extends LevelSort {
+export class AccountNameSort extends AccountSort {
   protected readonly propertyName = 'name';
 }
 
-export class LevelSchoolyearIdSort extends LevelSort {
-  protected readonly propertyName = 'schoolyearId';
+export class AccountPersonIdSort extends AccountSort {
+  protected readonly propertyName = 'personId';
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from '#/i18n/t';
-import { Translations } from '#/i18n/translations';
+import { Translations, TranslationsWithStringType } from '#/i18n/translations';
 
 export type TProps<K extends keyof Translations> = {
   t: K;
@@ -11,11 +11,7 @@ export type TProps<K extends keyof Translations> = {
     }
   : { args?: never });
 
-type TranslationsWithStringType = {
-  [K in keyof Translations]: Translations[K]['type'] extends string ? K : never;
-};
-
-export const T = <K extends keyof TranslationsWithStringType>({
+export const T = <K extends TranslationsWithStringType>({
   t,
   args,
 }: TProps<K>) => {

@@ -1,22 +1,23 @@
-import { LevelBase } from '#/repositories/content/level';
+import { LevelBase } from '#/backend/repositories/content/level';
 import {
   LevelIdFilter,
   LevelNameFilter,
   LevelSchoolyearIdFilter,
-} from '#/repositories/content/level/filters';
-import { IdNotFoundError } from '#/repositories/errors';
-import { AndFilter } from '#/repositories/filters';
+} from '#/backend/repositories/content/level/filters';
+import { IdNotFoundError } from '#/backend/repositories/errors';
+import { AndFilter } from '#/backend/repositories/filters';
 import {
   EqFilterOperator,
   NeqFilterOperator,
-} from '#/repositories/filters/operators';
-import { MakePatch } from '#/repositories/utils';
+} from '#/backend/repositories/filters/operators';
+import { MakePatch } from '#/backend/repositories/utils';
 import { Validator } from '../base';
-import { aggregateValidationErrors, InputValidationError } from '../utils';
+import { InputValidationError, aggregateValidationErrors } from '../utils';
 
 export const SCHOOLYEAR_DOES_NOT_EXIST = 'SCHOOLYEAR_DOES_NOT_EXIST';
 export const LEVEL_NAME_INVALID = 'LEVEL_NAME_INVALID';
 export const LEVEL_NAME_EXISTS = 'LEVEL_NAME_EXISTS';
+export const CANNOT_CHANGE_SCHOOLYEAR_ID = 'CANNOT_CHANGE_SCHOOLYEAR_ID';
 
 export class LevelValidator extends Validator<'levels', LevelBase> {
   override async assertCanCreate(post: LevelBase): Promise<void | never> {
@@ -43,6 +44,9 @@ export class LevelValidator extends Validator<'levels', LevelBase> {
       patch.name === undefined
         ? null
         : this.assertNameValid(base.schoolyearId, patch.name, id),
+      patch.schoolyearId === undefined
+        ? null
+        : this.throwValidationError(CANNOT_CHANGE_SCHOOLYEAR_ID),
     ]);
 
     if (error) throw error;

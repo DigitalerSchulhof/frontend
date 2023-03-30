@@ -1,9 +1,13 @@
+import { MaybePromise } from '#/utils';
 import * as password from './password';
 
 export interface AuthProvider {
   login: {
     LoginForm: () => JSX.Element;
-    doLogin: (req: Request) => Response;
+    doLogin: (
+      req: Request,
+      body: Record<string, unknown>
+    ) => MaybePromise<Response>;
   };
 }
 

@@ -1,7 +1,9 @@
 import { ArangoRepository } from '../../arango';
 
 export type AccountBase = {
-  email: string;
+  personId: string;
+  username: string;
+  password: string;
 };
 
 export class AccountRepository extends ArangoRepository<

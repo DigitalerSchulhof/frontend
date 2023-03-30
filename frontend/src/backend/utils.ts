@@ -97,3 +97,9 @@ export class MissingDependencyError extends Error {
     super(`Missing dependency: ${name}`);
   }
 }
+
+export class DataError extends Error {
+  constructor(message: string, readonly data?: Record<string, unknown>) {
+    super(message);
+  }
+}

@@ -1,7 +1,7 @@
-import { ClassRepository } from '#/repositories/content/class';
-import { CourseRepository } from '#/repositories/content/course';
-import { LevelRepository } from '#/repositories/content/level';
-import { SchoolyearRepository } from '#/repositories/content/schoolyear';
+import { ClassRepository } from '#/backend/repositories/content/class';
+import { CourseRepository } from '#/backend/repositories/content/course';
+import { LevelRepository } from '#/backend/repositories/content/level';
+import { SchoolyearRepository } from '#/backend/repositories/content/schoolyear';
 
 jest.mock('#/repositories/filters', () => ({
   ...jest.requireActual('#/repositories/filters'),

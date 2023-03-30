@@ -1,32 +1,34 @@
 import { BackendContext, getContext } from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
 import {
-  AccountEmailFilter,
   AccountPasswordFilter,
+  AccountUsernameFilter,
 } from '#/backend/repositories/content/account/filters';
 import { PersonBase } from '#/backend/repositories/content/person';
-import { PersonAccountFilter } from '#/backend/repositories/content/person/filters';
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
-import { createInternalErrorResponse } from '#/utils';
+import { DataError } from '#/backend/utils';
 import { aql } from 'arangojs';
 import { NextResponse } from 'next/server';
 
-export async function doLogin(req: Request): Promise<Response> {
-  const { email, password } = await req.json();
+export async function doLogin(
+  req: Request,
+  body: Record<string, unknown>
+): Promise<Response> {
+  const { username, password } = body;
 
   const context = getContext(req);
 
-  const persons = await getPersonsFromEmailAndPassword(
+  const person = await getPersonFromUsernameAndPassword(
     context,
-    email,
+    username,
     password
   );
 
-  if (!persons.length) {
+  if (!person) {
     return NextResponse.json(
       {
-        error: 'Invalid email or password',
+        error: 'Invalid username or password',
       },
       {
         status: 401,
@@ -34,51 +36,55 @@ export async function doLogin(req: Request): Promise<Response> {
     );
   }
 
-  if (persons.length > 1) {
-    context.logger.error('Multiple persons found for account with email', {
-      email,
-    });
-
-    return createInternalErrorResponse();
-  }
-
-  const [person] = persons;
-
-  const session = await context.services.session.createJwt({
-    personId: person.id,
-  });
+  const jwt = await context.services.session.createJwt(context, person.id);
 
   return NextResponse.json({
-    session,
+    jwt,
   });
 }
 
-async function getPersonsFromEmailAndPassword(
+async function getPersonFromUsernameAndPassword(
   context: BackendContext,
-  email: string,
-  password: string
-): Promise<WithId<PersonBase>[]> {
-  if (!email || !password) {
-    return [];
+  username: unknown,
+  password: unknown
+): Promise<WithId<PersonBase> | null> {
+  if (!username || !password) {
+    return null;
+  }
+
+  if (typeof username !== 'string' || typeof password !== 'string') {
+    return null;
   }
 
   const accountFilter = new AndFilter(
-    new AccountEmailFilter(new EqFilterOperator(email)),
+    new AccountUsernameFilter(new EqFilterOperator(username)),
     new AccountPasswordFilter(
       (variableName) =>
         new EqFilterOperator<string>(
           aql`
-            MD5(CONCAT(${password}, ${variableName}.salt))
+            SHA512(CONCAT(${password}, ${variableName}.salt))
           `
         )
     )
   );
 
-  const personFilter = new PersonAccountFilter(accountFilter);
-
-  const persons = await context.services.person.search({
-    filter: personFilter,
+  const accounts = await context.services.account.search({
+    filter: accountFilter,
   });
 
-  return persons.nodes;
+  if (!accounts.nodes.length) {
+    return null;
+  }
+
+  if (accounts.nodes.length > 1) {
+    throw new DataError('Multiple accounts found with username', {
+      username,
+    });
+  }
+
+  const person = await context.services.person.getById(
+    accounts.nodes[0].personId
+  );
+
+  return person;
 }

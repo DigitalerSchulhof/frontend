@@ -1,22 +1,23 @@
-import { ClassBase } from '#/repositories/content/class';
+import { ClassBase } from '#/backend/repositories/content/class';
 import {
   ClassIdFilter,
   ClassLevelIdFilter,
   ClassNameFilter,
-} from '#/repositories/content/class/filters';
-import { IdNotFoundError } from '#/repositories/errors';
-import { AndFilter } from '#/repositories/filters';
+} from '#/backend/repositories/content/class/filters';
+import { IdNotFoundError } from '#/backend/repositories/errors';
+import { AndFilter } from '#/backend/repositories/filters';
 import {
   EqFilterOperator,
   NeqFilterOperator,
-} from '#/repositories/filters/operators';
-import { MakePatch } from '#/repositories/utils';
+} from '#/backend/repositories/filters/operators';
+import { MakePatch } from '#/backend/repositories/utils';
 import { Validator } from '../base';
-import { aggregateValidationErrors, InputValidationError } from '../utils';
+import { InputValidationError, aggregateValidationErrors } from '../utils';
 
 export const LEVEL_DOES_NOT_EXIST = 'LEVEL_DOES_NOT_EXIST';
 export const CLASS_NAME_INVALID = 'CLASS_NAME_INVALID';
 export const CLASS_NAME_EXISTS = 'CLASS_NAME_EXISTS';
+export const CANNOT_CHANGE_LEVEL_ID = 'CANNOT_CHANGE_LEVEL_ID';
 
 export class ClassValidator extends Validator<'classes', ClassBase> {
   override async assertCanCreate(post: ClassBase): Promise<void | never> {
@@ -43,6 +44,9 @@ export class ClassValidator extends Validator<'classes', ClassBase> {
       patch.name === undefined
         ? null
         : this.assertNameValid(base.levelId, patch.name, id),
+      patch.levelId === undefined
+        ? null
+        : this.throwValidationError(CANNOT_CHANGE_LEVEL_ID),
     ]);
 
     if (error) throw error;

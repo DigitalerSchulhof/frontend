@@ -32,8 +32,8 @@ export class AccountPersonFilter extends RelationalAccountFilter<PersonFilter> {
   protected readonly relatedCollection = 'persons';
 }
 
-export class AccountEmailFilter extends ScalarAccountFilter<StringFilterOperator> {
-  protected readonly propertyName = 'name';
+export class AccountUsernameFilter extends ScalarAccountFilter<StringFilterOperator> {
+  protected readonly propertyName = 'username';
 }
 
 export class AccountPasswordFilter extends ScalarAccountFilter<StringFilterOperator> {

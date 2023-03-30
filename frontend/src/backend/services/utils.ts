@@ -1,4 +1,4 @@
-import { ObjectCache } from '#/caches/object-cache';
+import { ObjectCache } from '#/backend/caches/object-cache';
 
 interface RepositoryWithGetByIds<T> {
   getById(id: string): Promise<T | null>;

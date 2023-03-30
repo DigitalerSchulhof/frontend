@@ -11,7 +11,13 @@
   },
   "typescript.enablePromptUseWorkspaceTsdk": false,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["Arango", "schoolyear", "schoolyears"],
+  "cSpell.words": [
+    "Arango",
+    "firstname",
+    "Firstname",
+    "schoolyear",
+    "schoolyears"
+  ],
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "colorize.languages": [
     "typescript"

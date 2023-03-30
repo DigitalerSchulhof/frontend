@@ -27,6 +27,13 @@
     // There is no difference between interface/type in these cases, and the once I chose expresses what I want better
     "@typescript-eslint/no-empty-interface": "off",
 
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+
     // Want these
     "@typescript-eslint/explicit-module-boundary-types": "warn",
     "@typescript-eslint/naming-convention": "warn",

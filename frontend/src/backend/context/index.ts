@@ -8,9 +8,11 @@ import {
 } from './permission';
 import { BackendServicesContext, createServicesContext } from './services';
 import { createContextCreatorContext } from './setup';
+import { BackendMiscContext, createMiscContext } from '#/backend/context/misc';
 
 export interface BackendContext
-  extends BackendServicesContext,
+  extends BackendMiscContext,
+    BackendServicesContext,
     BackendPermissionsContext,
     BackendLoggerContext {}
 
@@ -28,9 +30,11 @@ export function createContextCreator(
   const contextCreatorContext = createContextCreatorContext(config);
 
   const servicesContext = createServicesContext(contextCreatorContext);
+  const miscContext = createMiscContext(contextCreatorContext);
 
   const persistentContext = {
     ...servicesContext,
+    ...miscContext,
   };
 
   return (): BackendContext => {

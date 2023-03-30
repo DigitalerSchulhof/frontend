@@ -4,12 +4,14 @@ import { CourseRepository } from '#/backend/repositories/content/course';
 import { LevelRepository } from '#/backend/repositories/content/level';
 import { PersonRepository } from '#/backend/repositories/content/person';
 import { SchoolyearRepository } from '#/backend/repositories/content/schoolyear';
+import { SessionRepository } from '#/backend/repositories/content/session';
 import { AccountService } from '#/backend/services/content/account';
 import { ClassService } from '#/backend/services/content/class';
 import { CourseService } from '#/backend/services/content/course';
 import { LevelService } from '#/backend/services/content/level';
 import { PersonService } from '#/backend/services/content/person';
 import { SchoolyearService } from '#/backend/services/content/schoolyear';
+import { SessionService } from '#/backend/services/content/session';
 import { ContextCreatorContext } from '..';
 import { createAccountService } from './content/account';
 import { createClassService } from './content/class';
@@ -17,6 +19,7 @@ import { createCourseService } from './content/course';
 import { createLevelService } from './content/level';
 import { createPersonService } from './content/person';
 import { createSchoolyearService } from './content/schoolyear';
+import { createSessionService } from './content/session';
 
 export interface Repositories {
   schoolyear: SchoolyearRepository;
@@ -25,6 +28,7 @@ export interface Repositories {
   course: CourseRepository;
   person: PersonRepository;
   account: AccountRepository;
+  session: SessionRepository;
 }
 
 export interface Services {
@@ -34,6 +38,7 @@ export interface Services {
   course: CourseService;
   person: PersonService;
   account: AccountService;
+  session: SessionService;
 }
 
 export interface BackendServicesContext {
@@ -83,6 +88,12 @@ export function createServicesContext(
       services,
       repositories
     ),
+    session: createSessionService(
+      context.db,
+      context.cacheAdapter,
+      services,
+      repositories
+    ),
   };
 
   Object.assign(repositories, {
@@ -92,6 +103,7 @@ export function createServicesContext(
     course: content.course[0],
     person: content.person[0],
     account: content.account[0],
+    session: content.session[0],
   } satisfies Repositories);
 
   Object.assign(services, {
@@ -101,6 +113,7 @@ export function createServicesContext(
     course: content.course[1],
     person: content.person[1],
     account: content.account[1],
+    session: content.session[1],
   } satisfies Services);
 
   return {

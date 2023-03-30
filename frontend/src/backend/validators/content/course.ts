@@ -1,22 +1,23 @@
-import { CourseBase } from '#/repositories/content/course';
+import { CourseBase } from '#/backend/repositories/content/course';
 import {
   CourseClassIdFilter,
   CourseIdFilter,
   CourseNameFilter,
-} from '#/repositories/content/course/filters';
-import { IdNotFoundError } from '#/repositories/errors';
-import { AndFilter } from '#/repositories/filters';
+} from '#/backend/repositories/content/course/filters';
+import { IdNotFoundError } from '#/backend/repositories/errors';
+import { AndFilter } from '#/backend/repositories/filters';
 import {
   EqFilterOperator,
   NeqFilterOperator,
-} from '#/repositories/filters/operators';
-import { MakePatch } from '#/repositories/utils';
+} from '#/backend/repositories/filters/operators';
+import { MakePatch } from '#/backend/repositories/utils';
 import { Validator } from '../base';
-import { aggregateValidationErrors, InputValidationError } from '../utils';
+import { InputValidationError, aggregateValidationErrors } from '../utils';
 
 export const CLASS_DOES_NOT_EXIST = 'CLASS_DOES_NOT_EXIST';
 export const COURSE_NAME_INVALID = 'COURSE_NAME_INVALID';
 export const COURSE_NAME_EXISTS = 'COURSE_NAME_EXISTS';
+export const CANNOT_CHANGE_CLASS_ID = 'CANNOT_CHANGE_CLASS_ID';
 
 export class CourseValidator extends Validator<'courses', CourseBase> {
   override async assertCanCreate(post: CourseBase): Promise<void | never> {
@@ -43,6 +44,9 @@ export class CourseValidator extends Validator<'courses', CourseBase> {
       patch.name === undefined
         ? null
         : this.assertNameValid(base.classId, patch.name, id),
+      patch.classId === undefined
+        ? null
+        : this.throwValidationError(CANNOT_CHANGE_CLASS_ID),
     ]);
 
     if (error) throw error;

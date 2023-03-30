@@ -1,17 +1,17 @@
-import { SchoolyearBase } from '#/repositories/content/schoolyear';
+import { SchoolyearBase } from '#/backend/repositories/content/schoolyear';
 import {
   SchoolyearIdFilter,
   SchoolyearNameFilter,
-} from '#/repositories/content/schoolyear/filters';
-import { IdNotFoundError } from '#/repositories/errors';
-import { AndFilter } from '#/repositories/filters';
+} from '#/backend/repositories/content/schoolyear/filters';
+import { IdNotFoundError } from '#/backend/repositories/errors';
+import { AndFilter } from '#/backend/repositories/filters';
 import {
   EqFilterOperator,
   NeqFilterOperator,
-} from '#/repositories/filters/operators';
-import { MakePatch } from '#/repositories/utils';
+} from '#/backend/repositories/filters/operators';
+import { MakePatch } from '#/backend/repositories/utils';
 import { Validator } from '../base';
-import { aggregateValidationErrors, InputValidationError } from '../utils';
+import { InputValidationError, aggregateValidationErrors } from '../utils';
 
 export const SCHOOLYEAR_START_NOT_BEFORE_END =
   'SCHOOLYEAR_START_NOT_BEFORE_END';

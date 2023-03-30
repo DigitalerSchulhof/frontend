@@ -15,6 +15,7 @@ const config = {
     host: v.string,
     name: v.string,
   },
+  jwtSecret: v.string,
 } as const;
 /* eslint-enable @typescript-eslint/naming-convention */
 

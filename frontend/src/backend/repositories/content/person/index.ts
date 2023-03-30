@@ -1,7 +1,6 @@
 import { ArangoRepository } from '../../arango';
 
 export type PersonBase = {
-  accountId: string | null;
   firstname: string;
 };
 

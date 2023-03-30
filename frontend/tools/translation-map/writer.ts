@@ -35,26 +35,13 @@ export class TranslationMapWriter {
     const interfaceDeclaration =
       this.getTranslationMapInterfaceDeclaration(translations);
 
+    const stringKeysTypeDeclaration =
+      this.getStringKeysTypeDeclaration(translations);
+
     return ts.factory.createSourceFile(
-      [...prelude, interfaceDeclaration],
+      [...prelude, interfaceDeclaration, stringKeysTypeDeclaration],
       ts.factory.createToken(ts.SyntaxKind.EndOfFileToken),
       ts.NodeFlags.None
-    );
-  }
-
-  private getTranslationMapInterfaceDeclaration(
-    translations: TranslationEntry[]
-  ): ts.InterfaceDeclaration {
-    const propertySignatures = translations.map((entry) =>
-      this.getTranslationEntryPropertySignature(entry)
-    );
-
-    return ts.factory.createInterfaceDeclaration(
-      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-      ts.factory.createIdentifier('Translations'),
-      undefined,
-      undefined,
-      propertySignatures
     );
   }
 
@@ -77,6 +64,49 @@ export class TranslationMapWriter {
         undefined
       ),
     ];
+  }
+
+  private getTranslationMapInterfaceDeclaration(
+    translations: TranslationEntry[]
+  ): ts.InterfaceDeclaration {
+    const propertySignatures = translations.map((entry) =>
+      this.getTranslationEntryPropertySignature(entry)
+    );
+
+    return ts.factory.createInterfaceDeclaration(
+      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+      ts.factory.createIdentifier('Translations'),
+      undefined,
+      undefined,
+      propertySignatures
+    );
+  }
+
+  private getStringKeysTypeDeclaration(
+    translations: TranslationEntry[]
+  ): ts.TypeAliasDeclaration {
+    const stringLiteralTypes = translations
+      .filter((entry) => {
+        const astElements = this.flattenAstElements(entry);
+
+        const hasTagElement = astElements.some(
+          (astElement) => astElement.type === mfp.TYPE.tag
+        );
+
+        return entry.type === 'string' && !hasTagElement;
+      })
+      .map((entry) =>
+        ts.factory.createLiteralTypeNode(
+          ts.factory.createStringLiteral(entry.key)
+        )
+      );
+
+    return ts.factory.createTypeAliasDeclaration(
+      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+      ts.factory.createIdentifier('TranslationsWithStringType'),
+      undefined,
+      ts.factory.createUnionTypeNode(stringLiteralTypes)
+    );
   }
 
   private getTranslationEntryPropertySignature(

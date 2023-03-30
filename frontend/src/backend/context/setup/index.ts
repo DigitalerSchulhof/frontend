@@ -1,5 +1,5 @@
+import { Config } from '#/backend/config';
 import { ContextCreatorContext } from '..';
-import { Config } from '../../../config';
 import { createCacheAdapter } from './cache';
 import { createContextDatabase } from './database';
 

@@ -95,6 +95,7 @@ importers:
     specifiers:
       '@formatjs/icu-messageformat-parser': 2.3.0
       '@isaacs/ttlcache': 1.2.1
+      '@types/jsonwebtoken': 9.0.1
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
       '@types/styled-components': 5.1.26
@@ -110,6 +111,7 @@ importers:
       eslint-plugin-prettier: 4.2.1
       intl-messageformat: 10.3.3
       ioredis: 5.3.1
+      jsonwebtoken: 9.0.0
       next: 13.2.4
       nodemon: 2.0.21
       prettier: 2.8.4
@@ -128,6 +130,7 @@ importers:
       arangojs: 8.1.0
       intl-messageformat: 10.3.3
       ioredis: 5.3.1
+      jsonwebtoken: 9.0.0
       next: 13.2.4_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -135,6 +138,7 @@ importers:
       vality: 6.3.2_typescript@5.0.2
       vality-env: 1.0.0_vality@6.3.2
     devDependencies:
+      '@types/jsonwebtoken': 9.0.1
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
       '@types/styled-components': 5.1.26

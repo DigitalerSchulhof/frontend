@@ -45,9 +45,9 @@ const ButtonStyles = ({
   }
 `;
 
-const StyledButton = styled.button<BaseButtonProps>(ButtonStyles);
+export const StyledButton = styled.button<BaseButtonProps>(ButtonStyles);
 
-const StyledLink = styled(Link)<BaseButtonProps>`
+export const StyledLink = styled(Link)<BaseButtonProps>`
   ${(props) => ButtonStyles(props)}
 
   display: inline-block;

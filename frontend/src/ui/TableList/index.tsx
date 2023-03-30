@@ -1,4 +1,4 @@
-import { Button } from '../Button';
+import { StyledButton, StyledLink } from '../Button';
 import { Icon } from '../Icon';
 import styled, { css } from 'styled-components';
 
@@ -15,7 +15,7 @@ const cellProps = css`
     margin: 2px;
   }
 
-  & > ${Button} {
+  & > ${StyledButton}, & > ${StyledLink} {
     margin-top: 0;
     margin-bottom: 0;
   }

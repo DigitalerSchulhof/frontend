@@ -13,11 +13,11 @@ type T = {
     key: K,
     ...[args]: Translations[K]['variables']
   ): Translations[K]['type'];
-  tIfCurly<K extends keyof Translations>(
+  tIfCurly<K extends string>(
     this: void,
     key: K,
-    ...[args]: Translations[K]['variables']
-  ): Translations[K]['type'];
+    args?: unknown
+  ): Translations[keyof Translations]['type'];
 };
 
 export const useTranslations = (): T => {
