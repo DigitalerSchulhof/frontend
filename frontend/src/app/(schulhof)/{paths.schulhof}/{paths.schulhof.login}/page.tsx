@@ -1,3 +1,4 @@
+import { requireLogin } from '#/auth';
 import { authProviders } from '#/auth/providers';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -5,7 +6,9 @@ import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 import { SchulhofLoginHeader } from './heading';
 
-export default function Page() {
+export default async function Page() {
+  await requireLogin();
+
   const provider = 'password';
 
   const {

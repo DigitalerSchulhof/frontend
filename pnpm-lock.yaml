@@ -96,6 +96,7 @@ importers:
       '@formatjs/icu-messageformat-parser': 2.3.0
       '@isaacs/ttlcache': 1.2.2
       '@types/jsonwebtoken': 9.0.1
+      '@types/node': 18.15.11
       '@types/react': 18.0.31
       '@types/react-dom': 18.0.11
       '@types/styled-components': 5.1.26
@@ -139,6 +140,7 @@ importers:
       vality-env: 1.0.0_vality@6.3.2
     devDependencies:
       '@types/jsonwebtoken': 9.0.1
+      '@types/node': 18.15.11
       '@types/react': 18.0.31
       '@types/react-dom': 18.0.11
       '@types/styled-components': 5.1.26
@@ -154,7 +156,7 @@ importers:
       nodemon: 2.0.22
       prettier: 2.8.7
       source-map-support: 0.5.21
-      ts-node: 10.9.1_typescript@5.0.3
+      ts-node: 10.9.1_pj3xut33gta66wns5w7rs6cilm
       typescript: 5.0.3
       yaml: 2.2.1
 
@@ -2985,7 +2987,7 @@ packages:
   /@types/jsonwebtoken/9.0.1:
     resolution: {integrity: sha512-c5ltxazpWabia/4UzhIoaDcIza4KViOQhdbjRlfcIGVnsE3c3brkz9Z+F/EeJIECOQP7W7US2hNE930cWWkPiw==}
     dependencies:
-      '@types/node': 18.15.3
+      '@types/node': 18.15.11
     dev: true
 
   /@types/keygrip/1.0.2:
@@ -3024,7 +3026,6 @@ packages:
 
   /@types/node/18.15.11:
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
-    dev: false
 
   /@types/node/18.15.3:
     resolution: {integrity: sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==}
@@ -8174,7 +8175,7 @@ packages:
       yn: 3.1.1
     dev: true
 
-  /ts-node/10.9.1_typescript@5.0.3:
+  /ts-node/10.9.1_pj3xut33gta66wns5w7rs6cilm:
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -8193,6 +8194,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
+      '@types/node': 18.15.11
       acorn: 8.8.2
       acorn-walk: 8.2.0
       arg: 4.1.3

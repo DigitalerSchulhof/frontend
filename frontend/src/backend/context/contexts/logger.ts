@@ -1,5 +1,5 @@
-import { UserContextCreatorContext } from '#/backend/context';
 import { Logger } from '#/backend/logger';
+import { UserContextCreatorContext } from '..';
 
 export interface BackendLoggerContext {
   logger: Logger;

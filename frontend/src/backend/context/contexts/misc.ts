@@ -1,5 +1,5 @@
 import { Config } from '#/backend/config';
-import { ContextCreatorContext } from '#/backend/context';
+import { ContextCreatorContext } from '..';
 
 export interface BackendMiscContext {
   config: Config;

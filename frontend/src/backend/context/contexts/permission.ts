@@ -1,4 +1,4 @@
-import { UserContextCreatorContext } from '.';
+import { UserContextCreatorContext } from '..';
 
 export interface BackendPermissionsContext {
   hasPermission: (permission: string) => Promise<boolean>;
