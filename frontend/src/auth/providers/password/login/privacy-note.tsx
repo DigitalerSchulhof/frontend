@@ -11,7 +11,7 @@ export const PrivacyNote = () => {
       {t('schulhof.login.login.privacy', {
         PrivacyLink: (c) =>
           // eslint-disable-next-line react/jsx-key
-          c.map((e) => <Link href={[t('paths.privacy')]}>{e}</Link>),
+          c.map((e) => <Link href={['paths.privacy']}>{e}</Link>),
       }).map((s, i) => (
         <Note key={i}>{s}</Note>
       ))}

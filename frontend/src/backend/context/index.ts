@@ -1,5 +1,5 @@
 import { CacheAdapter } from '#/backend/caches/adapters';
-import { Config, loadConfig } from '#/backend/config';
+import { Config, config } from '#/config';
 import { Database } from 'arangojs';
 import { BackendLoggerContext, createLoggerContext } from './contexts/logger';
 import { BackendMiscContext, createMiscContext } from './contexts/misc';
@@ -49,7 +49,5 @@ export function createContextCreator(
     };
   };
 }
-
-const config = loadConfig();
 
 export const getContext = createContextCreator(config);

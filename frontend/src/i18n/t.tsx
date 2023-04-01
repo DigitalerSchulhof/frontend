@@ -13,11 +13,6 @@ type T = {
     key: K,
     ...[args]: Translations[K]['variables']
   ): Translations[K]['type'];
-  tIfCurly<K extends string>(
-    this: void,
-    key: K,
-    args?: unknown
-  ): Translations[keyof Translations]['type'];
 };
 
 export const useTranslations = (): T => {
@@ -58,6 +53,8 @@ export const useTranslations = (): T => {
   }
 
   function t(this: void, key: string, args: unknown) {
+    if (key.startsWith('{') && key.endsWith('}')) return key.slice(1, -1);
+
     const translation = translations[key] as
       | ClientTranslations[keyof ClientTranslations]
       | undefined;
@@ -75,11 +72,5 @@ export const useTranslations = (): T => {
 
   return {
     t,
-    tIfCurly: (key: string, args: unknown) => {
-      if (key.startsWith('{') && key.endsWith('}')) {
-        return t(key.slice(1, -1), args);
-      }
-      return key;
-    },
   } as T;
 };

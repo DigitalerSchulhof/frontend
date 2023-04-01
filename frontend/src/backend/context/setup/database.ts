@@ -1,4 +1,4 @@
-import { Config } from '#/backend/config';
+import { Config } from '#/config';
 import { Database } from 'arangojs';
 
 export function createContextDatabase(config: Config): Database {

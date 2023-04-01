@@ -2,6 +2,7 @@ import { BackendContext } from '#/backend/context';
 import { SessionBase } from '#/backend/repositories/content/session';
 import * as jwt from 'jsonwebtoken';
 import { Service } from '../base';
+import { config } from '#/config';
 
 export class SessionService extends Service<'sessions', SessionBase> {
   async createJwt(context: BackendContext, personId: string): Promise<string> {
@@ -18,7 +19,7 @@ export class SessionService extends Service<'sessions', SessionBase> {
         id: session.id,
         personId: session.personId,
       },
-      context.config.jwtSecret,
+      config.jwtSecret,
       {
         expiresIn: '1d',
       }

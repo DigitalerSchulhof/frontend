@@ -2,7 +2,7 @@ import { CacheAdapter } from '#/backend/caches/adapters';
 import { MemoryCacheAdapter } from '#/backend/caches/adapters/memory';
 import { RedisCacheAdapter } from '#/backend/caches/adapters/redis';
 import { VoidCacheAdapter } from '#/backend/caches/adapters/void';
-import { Config } from '#/backend/config';
+import { Config } from '#/config';
 
 export function createCacheAdapter(config: Config): CacheAdapter {
   switch (config.cache.engine) {

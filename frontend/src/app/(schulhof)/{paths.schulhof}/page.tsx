@@ -7,7 +7,7 @@ export default function Page() {
   return (
     <>
       <Col w='12'>
-        <Breadcrumbs path={['{paths.schulhof}']} />
+        <Breadcrumbs path={['paths.schulhof']} />
       </Col>
       <Col w='12'>
         <Alert variant='success'>

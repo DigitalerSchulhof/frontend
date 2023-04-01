@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from '#/i18n';
+import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Link } from '#/ui/Link';
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
@@ -42,20 +43,20 @@ import styled from 'styled-components';
  * ```
  */
 export type BreadcrumbItem =
-  | string
+  | TranslationsWithStringTypeAndNoVariables
   | {
       /**
        * The title of the breadcrumb item
        */
-      title: string;
+      title: TranslationsWithStringTypeAndNoVariables;
       /**
        * The value to be used for the current item in constructing the href of the succeeding items
        */
-      segment: string;
+      segment: TranslationsWithStringTypeAndNoVariables;
       /**
        * Override the href of the breadcrumb item (direct click)
        */
-      hrefOverride?: string[];
+      hrefOverride?: TranslationsWithStringTypeAndNoVariables[];
     };
 
 export interface BreadcrumbsProps {
@@ -64,22 +65,25 @@ export interface BreadcrumbsProps {
 
 type TranslatedBreadcrumbItem = {
   title: string;
-  href: string;
+  segment: string;
   /**
    * Override the href of the breadcrumb item (direct click)
    */
+  hrefOverride?: string[];
+};
+
+type BreadcrumbItemWithFullPath = {
+  title: string;
+  href: string;
   hrefOverride?: string;
-}[];
+};
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ path }) => {
-  const { tIfCurly } = useTranslations();
+  const { t } = useTranslations();
 
-  function translateItem(
-    item: BreadcrumbItem
-  ): Exclude<BreadcrumbItem, string> {
+  function translateItem(item: BreadcrumbItem): TranslatedBreadcrumbItem {
     if (typeof item === 'string') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const translation = tIfCurly(item as any) as string;
+      const translation = t(item);
 
       return {
         title: translation,
@@ -87,20 +91,19 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ path }) => {
       };
     } else {
       return {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        title: tIfCurly(item.title as any) as string,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        segment: tIfCurly(item.segment as any) as string,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        hrefOverride: item.hrefOverride?.map(tIfCurly as any),
+        title: t(item.title),
+        segment: t(item.segment),
+        hrefOverride: item.hrefOverride?.map(t),
       };
     }
   }
 
-  const filledPath = path.reduce<TranslatedBreadcrumbItem>((acc, item) => {
+  const filledPath = path.reduce<BreadcrumbItemWithFullPath[]>((acc, item) => {
     const { title, segment, hrefOverride } = translateItem(item);
 
-    const lastItem = acc[acc.length - 1] as (typeof acc)[number] | undefined;
+    const lastItem = acc[acc.length - 1] as
+      | BreadcrumbItemWithFullPath
+      | undefined;
 
     if (lastItem) {
       acc.push({

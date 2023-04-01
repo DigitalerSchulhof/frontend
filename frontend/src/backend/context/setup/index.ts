@@ -1,4 +1,4 @@
-import { Config } from '#/backend/config';
+import { Config } from '#/config';
 import { ContextCreatorContext } from '..';
 import { createCacheAdapter } from './cache';
 import { createContextDatabase } from './database';

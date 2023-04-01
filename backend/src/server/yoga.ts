@@ -1,9 +1,9 @@
+import { config } from '#/config';
 import { loadFilesSync } from '@graphql-tools/load-files';
 import { mergeResolvers } from '@graphql-tools/merge';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { createYoga as realCreateYoga } from 'graphql-yoga';
 import * as path from 'path';
-import { loadConfig } from '../config';
 import { createContextCreator } from './context';
 import { useHandleArangoErrors } from './plugins/use-handle-arango-errors';
 import { useHandleValidationErrors } from './plugins/use-handle-validation-errors';
@@ -21,8 +21,6 @@ function createSchema() {
     resolvers,
   });
 }
-
-const config = loadConfig();
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function createYoga() {

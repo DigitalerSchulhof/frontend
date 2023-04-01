@@ -32,14 +32,26 @@ export class TranslationMapWriter {
   ): ts.SourceFile {
     const prelude = this.getPreludeStatements();
 
-    const interfaceDeclaration =
-      this.getTranslationMapInterfaceDeclaration(translations);
+    const typeDeclaration =
+      this.getTranslationMapTypeAliasDeclaration(translations);
 
     const stringKeysTypeDeclaration =
       this.getStringKeysTypeDeclaration(translations);
 
+    const noVarsKeysTypeDeclaration =
+      this.getNoVariablesKeysTypeDeclaration(translations);
+
+    const stringNoVarsKeysTypeDeclaration =
+      this.getStringNoVariablesKeysTypeDeclaration(translations);
+
     return ts.factory.createSourceFile(
-      [...prelude, interfaceDeclaration, stringKeysTypeDeclaration],
+      [
+        ...prelude,
+        typeDeclaration,
+        stringKeysTypeDeclaration,
+        noVarsKeysTypeDeclaration,
+        stringNoVarsKeysTypeDeclaration,
+      ],
       ts.factory.createToken(ts.SyntaxKind.EndOfFileToken),
       ts.NodeFlags.None
     );
@@ -66,22 +78,40 @@ export class TranslationMapWriter {
     ];
   }
 
-  private getTranslationMapInterfaceDeclaration(
+  /**
+   * ```ts
+   * type Translations = {
+   *   ...
+   * } & ...
+   * ```
+   */
+  private getTranslationMapTypeAliasDeclaration(
     translations: TranslationEntry[]
-  ): ts.InterfaceDeclaration {
-    const propertySignatures = translations.map((entry) =>
-      this.getTranslationEntryPropertySignature(entry)
+  ): ts.TypeAliasDeclaration {
+    const propertySignaturesTypeLiteral = ts.factory.createTypeLiteralNode(
+      translations.map((entry) =>
+        this.getTranslationEntryPropertySignature(entry)
+      )
     );
 
-    return ts.factory.createInterfaceDeclaration(
+    const curlyMappedTypeNode = this.getCurlyMappedTypeNode();
+
+    return ts.factory.createTypeAliasDeclaration(
       [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
       ts.factory.createIdentifier('Translations'),
       undefined,
-      undefined,
-      propertySignatures
+      ts.factory.createIntersectionTypeNode([
+        propertySignaturesTypeLiteral,
+        curlyMappedTypeNode,
+      ])
     );
   }
 
+  /**
+   * ```ts
+   * export type TranslationsWithStringType = 'key1' | 'key2' | ...
+   * ```
+   */
   private getStringKeysTypeDeclaration(
     translations: TranslationEntry[]
   ): ts.TypeAliasDeclaration {
@@ -109,6 +139,108 @@ export class TranslationMapWriter {
     );
   }
 
+  /**
+   * ```ts
+   * export type TranslationsWithNoVariables = `{${string}}` | 'key1' | 'key2' | ...
+   * ```
+   */
+  private getNoVariablesKeysTypeDeclaration(
+    translations: TranslationEntry[]
+  ): ts.TypeAliasDeclaration {
+    const noVarTypes = translations
+      .filter((entry) => {
+        const astElements = this.flattenAstElements(entry);
+
+        const hasVarElement = astElements.some(
+          (astElement) =>
+            astElement.type !== mfp.TYPE.pound &&
+            astElement.type !== mfp.TYPE.literal
+        );
+
+        return !hasVarElement;
+      })
+      .map((entry) =>
+        ts.factory.createLiteralTypeNode(
+          ts.factory.createStringLiteral(entry.key)
+        )
+      );
+
+    return ts.factory.createTypeAliasDeclaration(
+      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+      ts.factory.createIdentifier('TranslationsWithNoVariables'),
+      undefined,
+      ts.factory.createUnionTypeNode([
+        ts.factory.createTemplateLiteralType(
+          ts.factory.createTemplateHead('{', '{'),
+          [
+            ts.factory.createTemplateLiteralTypeSpan(
+              ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+              ts.factory.createTemplateTail('}', '}')
+            ),
+          ]
+        ),
+        ...noVarTypes,
+      ])
+    );
+  }
+
+  /**
+   * ```ts
+   * export type TranslationsWithStringTypeAndNoVariables = `{${string}}` | 'key1' | 'key2' | ...
+   * ```
+   */
+  private getStringNoVariablesKeysTypeDeclaration(
+    translations: TranslationEntry[]
+  ): ts.TypeAliasDeclaration {
+    const noVarTypes = translations
+      .filter((entry) => {
+        const astElements = this.flattenAstElements(entry);
+
+        const hasTagElement = astElements.some(
+          (astElement) => astElement.type === mfp.TYPE.tag
+        );
+
+        const hasVarElement = astElements.some(
+          (astElement) =>
+            astElement.type !== mfp.TYPE.pound &&
+            astElement.type !== mfp.TYPE.literal
+        );
+
+        return entry.type === 'string' && !hasTagElement && !hasVarElement;
+      })
+      .map((entry) =>
+        ts.factory.createLiteralTypeNode(
+          ts.factory.createStringLiteral(entry.key)
+        )
+      );
+
+    return ts.factory.createTypeAliasDeclaration(
+      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+      ts.factory.createIdentifier('TranslationsWithStringTypeAndNoVariables'),
+      undefined,
+      ts.factory.createUnionTypeNode([
+        ts.factory.createTemplateLiteralType(
+          ts.factory.createTemplateHead('{', '{'),
+          [
+            ts.factory.createTemplateLiteralTypeSpan(
+              ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+              ts.factory.createTemplateTail('}', '}')
+            ),
+          ]
+        ),
+        ...noVarTypes,
+      ])
+    );
+  }
+
+  /**
+   * ```ts
+   *   "schulhof.xy": {
+   *     variables: [ ... ],
+   *     type: ...
+   *   },
+   * ```
+   */
   private getTranslationEntryPropertySignature(
     entry: TranslationEntry
   ): ts.PropertySignature {
@@ -142,6 +274,61 @@ export class TranslationMapWriter {
     );
   }
 
+  /**
+   * ```ts
+   * {
+   *   [K in `{${string}}`]: {
+   *     variables: [];
+   *     type: string;
+   *   }
+   * }
+   * ```
+   */
+  private getCurlyMappedTypeNode(): ts.MappedTypeNode {
+    return ts.factory.createMappedTypeNode(
+      undefined,
+      ts.factory.createTypeParameterDeclaration(
+        undefined,
+        ts.factory.createIdentifier('K'),
+        ts.factory.createTemplateLiteralType(
+          ts.factory.createTemplateHead('{', '{'),
+          [
+            ts.factory.createTemplateLiteralTypeSpan(
+              ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+              ts.factory.createTemplateTail('}', '}')
+            ),
+          ]
+        ),
+        undefined
+      ),
+      undefined,
+      undefined,
+      ts.factory.createTypeLiteralNode([
+        ts.factory.createPropertySignature(
+          undefined,
+          ts.factory.createIdentifier('variables'),
+          undefined,
+          ts.factory.createTupleTypeNode([])
+        ),
+        ts.factory.createPropertySignature(
+          undefined,
+          ts.factory.createIdentifier('type'),
+          undefined,
+          ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
+        ),
+      ]),
+      ts.factory.createNodeArray([])
+    );
+  }
+
+  /**
+   * ```ts
+   *  "schulhof.xy": {
+   *     type: string | string[] | React.ReactNode | React.ReactNode[]
+   * //        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   *   },
+   * ```
+   */
   private getTranslationEntryTypeNode(entry: TranslationEntry): ts.TypeNode {
     const astElements = this.flattenAstElements(entry);
     const hasTagElement = astElements.some(
@@ -177,6 +364,16 @@ export class TranslationMapWriter {
     }
   }
 
+  /**
+   * ```ts
+   *  "schulhof.xy": {
+   *     variables: [{
+   *       x: string
+   * //    ^^^^^^^^^
+   *     }]
+   *   },
+   * ```
+   */
   private getTranslationEntryVariablesPropertySignatures(
     entry: TranslationEntry
   ): ts.PropertySignature[] {

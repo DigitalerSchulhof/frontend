@@ -7,7 +7,7 @@ import { Heading } from '#/ui/Heading';
 import { SchulhofLoginHeader } from './heading';
 
 export default async function Page() {
-  await requireLogin();
+  await requireLogin(false);
 
   const provider = 'password';
 
@@ -18,7 +18,7 @@ export default async function Page() {
   return (
     <>
       <Col w='12'>
-        <Breadcrumbs path={['{paths.schulhof}', '{paths.schulhof.login}']} />
+        <Breadcrumbs path={['paths.schulhof', 'paths.schulhof.login']} />
         <Heading size='1'>
           <SchulhofLoginHeader />
         </Heading>

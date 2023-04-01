@@ -2,7 +2,7 @@ import { Parse, v } from 'vality';
 import { loadEnv } from 'vality-env';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-const config = {
+const configSchema = {
   cache: {
     engine: ['void', 'memory', 'redis'],
     'redis?': {
@@ -19,10 +19,10 @@ const config = {
 } as const;
 /* eslint-enable @typescript-eslint/naming-convention */
 
-export type Config = Parse<typeof config>;
+export type Config = Parse<typeof configSchema>;
 
 export function loadConfig(): Config {
-  const validatedConfig = loadEnv(config);
+  const validatedConfig = loadEnv(configSchema);
 
   if (!validatedConfig.valid) {
     console.log(validatedConfig.errors);
@@ -31,3 +31,5 @@ export function loadConfig(): Config {
 
   return validatedConfig.data;
 }
+
+export const config = loadConfig();
