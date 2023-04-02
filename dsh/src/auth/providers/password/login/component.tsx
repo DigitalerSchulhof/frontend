@@ -2,37 +2,53 @@
 
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
+import { useLog } from '#/log/client';
+import { Alert } from '#/ui/Alert';
 import { Button } from '#/ui/Button';
 import { Form, FormRow } from '#/ui/Form';
+import { Heading } from '#/ui/Heading';
 import { Link } from '#/ui/Link';
+import { LoadingModal, Modal } from '#/ui/Modal';
 import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
+import { sleep } from '#/utils';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 export const LoginForm = () => {
   const { t } = useT();
   const router = useRouter();
+  const log = useLog();
+
+  const [isFetching, setFetching] = useState(false);
+  const [errorStatus, setErrorStatus] = useState<number | null>(null);
 
   async function doLogin() {
     const username = usernameRef.current?.value;
     const password = passwordRef.current?.value;
 
-    const res = await fetch('/api/schulhof/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        provider: 'password',
-        username,
-        password,
+    setFetching(true);
+
+    const [res] = await Promise.all([
+      fetch('/api/schulhof/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          provider: 'password',
+          username,
+          password,
+        }),
       }),
-    });
+      // Avoid flashing the loading dialogue
+      sleep(500),
+    ]);
 
     if (!res.ok) {
-      console.log('NOT OK');
+      setFetching(false);
+      setErrorStatus(res.status);
       return;
     }
 
@@ -45,9 +61,57 @@ export const LoginForm = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
+  const loadingComponent = useMemo(() => {
+    if (!isFetching) return null;
+
+    return (
+      <LoadingModal
+        title={'schulhof.login.modal.loading.title'}
+        description={'schulhof.login.modal.loading.description'}
+      />
+    );
+  }, [isFetching]);
+
+  const errorComponent = useMemo(() => {
+    if (errorStatus === null) return null;
+
+    let errorReasons: string[];
+    if (errorStatus === 401) {
+      errorReasons = t('schulhof.login.modal.error.codes.invalid-credentials');
+    } else {
+      log.error('Login error', {
+        username: usernameRef.current?.value,
+        errorStatus,
+      });
+
+      errorReasons = t('schulhof.login.modal.error.codes.internal');
+    }
+
+    return (
+      <Modal onClose={() => setErrorStatus(null)}>
+        <Alert variant='error'>
+          <Heading size='4'>
+            <T t='schulhof.login.modal.error.title' />
+          </Heading>
+          <p>
+            <T t='schulhof.login.modal.error.description' />
+          </p>
+          <ul>
+            {errorReasons.map((s, i) => (
+              <li key={i}>{s}</li>
+            ))}
+          </ul>
+        </Alert>
+        <Button onClick={() => setErrorStatus(null)}>
+          <T t='generic.back' />
+        </Button>
+      </Modal>
+    );
+  }, [errorStatus, log, t]);
+
   return (
     <Form onSubmit={() => void doLogin()}>
-      {/* {loadingComponent ?? errorComponent} */}
+      {loadingComponent ?? errorComponent}
       <Table>
         <Table.Body>
           <FormRow

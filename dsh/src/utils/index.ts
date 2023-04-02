@@ -25,3 +25,7 @@ export function flattenObject(obj: unknown, joiner = '_'): object {
     return acc;
   }, {});
 }
+
+export async function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

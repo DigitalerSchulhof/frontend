@@ -1,6 +1,7 @@
 'use client';
 
 import { useT } from '#/i18n/client';
+import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Heading } from '#/ui/Heading';
 import { Loading } from '#/ui/Loading';
 import { useEffect, useState } from 'react';
@@ -30,8 +31,8 @@ export const Modal = ({
 };
 
 export interface LoadingModalProps {
-  title: string;
-  description: string;
+  title: TranslationsWithStringTypeAndNoVariables;
+  description: TranslationsWithStringTypeAndNoVariables;
 }
 
 export const LoadingModal: React.FC<LoadingModalProps> = ({
@@ -42,10 +43,10 @@ export const LoadingModal: React.FC<LoadingModalProps> = ({
 
   return (
     <Modal>
-      <Heading size='1'>{title}</Heading>
+      <Heading size='1'>{t(title)}</Heading>
       <p>{t('generic.wait')}</p>
       <Loading />
-      <p>{description}</p>
+      <p>{t(description)}</p>
     </Modal>
   );
 };

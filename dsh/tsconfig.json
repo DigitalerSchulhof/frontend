@@ -4,10 +4,15 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
     ],
     "allowJs": true,
     "jsx": "preserve",
+    "baseUrl": ".",
+    "types": [
+      "node",
+      "jest"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -29,6 +34,5 @@
   ],
   "exclude": [
     "**/node_modules/*",
-    "**/__tests__/*"
   ]
 }

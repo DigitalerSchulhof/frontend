@@ -38,5 +38,13 @@
     "@typescript-eslint/explicit-module-boundary-types": "warn",
     "@typescript-eslint/naming-convention": "warn",
     "@typescript-eslint/switch-exhaustiveness-check": "warn"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/__tests__/**/*.ts", "__tests__/**/*.tsx"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ]
 }

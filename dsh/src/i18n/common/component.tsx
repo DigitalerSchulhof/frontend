@@ -14,13 +14,11 @@ export const T = <K extends TranslationsWithStringType>({
   args,
 }: TProps<K>): JSX.Element => {
   if (typeof window === 'undefined') {
-    return (
-      import('#/i18n/server')
-        .then((m) => m.getServerT().t)
-        // This assertion works because server components are able to render Promise<JSX.Element> as well
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((tFunc) => <>{tFunc(t, args as any)}</>) as unknown as JSX.Element
-    );
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { t: tFunc } = require('../server').getServerT();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return <>{tFunc(t, args as any)}</>;
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks -- This is for this component to work both on the server and the client

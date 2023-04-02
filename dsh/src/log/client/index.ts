@@ -1,0 +1,1 @@
+export { useLog } from './hook';
