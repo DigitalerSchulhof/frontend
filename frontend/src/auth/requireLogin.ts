@@ -1,39 +1,43 @@
-import * as jwt from 'jsonwebtoken';
-import { getJwtFromCookies } from '#/auth/jwt';
 import { config } from '#/config';
+import { getServerT } from '#/i18n/server';
+import * as jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-declare const t: any;
-
 export async function requireLogin(req = true): Promise<void> {
-  const token = getJwtFromCookies();
-  const isValid = await isValidJwt(token);
+  const { t } = getServerT();
+
+  const isValid = (await getCurrentUser()) !== null;
 
   if (isValid === req) return;
 
   if (req) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    redirect(`${t('paths.schulhof')}/${t('paths.schulhof.login')}`);
+    redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.login')}`);
   } else {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    redirect(`${t('paths.schulhof')}/${t('paths.schulhof.account')}`);
+    redirect(`/${t('paths.schulhof')}`);
   }
 }
 
-async function isValidJwt(token: string | undefined): Promise<boolean> {
-  if (!token) return false;
+export async function getCurrentUser(): Promise<{
+  id: string;
+} | null> {
+  const token = cookies().get('jwt')?.value;
+
+  if (!token) return null;
 
   try {
     const content = jwt.verify(token, config.jwtSecret);
 
-    if (typeof content === 'string') return false;
+    if (typeof content === 'string') return null;
 
-    if (!('id' in content)) return false;
+    if (!('id' in content)) return null;
 
-    return true;
+    return {
+      id: content.id,
+    };
   } catch (err) {
     if (err instanceof jwt.JsonWebTokenError) {
-      return false;
+      return null;
     }
 
     throw err;

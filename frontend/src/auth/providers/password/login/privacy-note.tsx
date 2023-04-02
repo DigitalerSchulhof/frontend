@@ -1,10 +1,10 @@
 'use client';
-import { useTranslations } from '#/i18n';
+import { useT } from '#/i18n';
 import { Link } from '#/ui/Link';
 import { Note } from '#/ui/Note';
 
 export const PrivacyNote = () => {
-  const { t } = useTranslations();
+  const { t } = useT();
 
   return (
     <>

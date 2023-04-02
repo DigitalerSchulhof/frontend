@@ -1,14 +1,27 @@
+import { getCurrentUser } from '#/auth/requireLogin';
 import { Alert } from '#/ui/Alert';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
+import { Link } from '#/ui/Link';
 
-export default function Page() {
+export default async function Page() {
+  const user = await getCurrentUser();
+
   return (
     <>
       <Col w='12'>
         <Breadcrumbs path={['paths.schulhof']} />
       </Col>
+      {user ? null : (
+        <Col w='12'>
+          Gehe zur{' '}
+          <Link href={['paths.schulhof', 'paths.schulhof.login']}>
+            Anmeldung
+          </Link>
+          .
+        </Col>
+      )}
       <Col w='12'>
         <Alert variant='success'>
           <Heading size='3'>12</Heading>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from '#/i18n';
+import { useT } from '#/i18n/t';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Link } from '#/ui/Link';
 import React, { Fragment } from 'react';
@@ -79,7 +79,7 @@ type BreadcrumbItemWithFullPath = {
 };
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ path }) => {
-  const { t } = useTranslations();
+  const { t } = useT();
 
   function translateItem(item: BreadcrumbItem): TranslatedBreadcrumbItem {
     if (typeof item === 'string') {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from '#/i18n';
+import { useT } from '#/i18n';
 import { Heading } from '#/ui/Heading';
 import { Loading } from '#/ui/Loading';
 import { useEffect, useState } from 'react';
@@ -38,7 +38,7 @@ export const LoadingModal: React.FC<LoadingModalProps> = ({
   title,
   description,
 }) => {
-  const { t } = useTranslations();
+  const { t } = useT();
 
   return (
     <Modal>

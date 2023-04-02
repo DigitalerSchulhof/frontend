@@ -2,7 +2,7 @@ import { Database } from 'arangojs';
 import * as aql from 'arangojs/aql';
 import { ArrayCursor } from 'arangojs/cursor';
 import { QueryOptions } from 'arangojs/database';
-import { ArangoError } from 'arangojs/error';
+import { ArangoError, isSystemError } from 'arangojs/error';
 import {
   ERROR_ARANGO_CONFLICT,
   ERROR_ARANGO_DOCUMENT_NOT_FOUND,
@@ -204,6 +204,13 @@ export abstract class ArangoRepository<
       if (error.errorNum === ERROR_ARANGO_DOCUMENT_NOT_FOUND) {
         throw new IdNotFoundError();
       }
+    }
+
+    if (isSystemError(error)) {
+      // Remove the `request` property from the error object to avoid a forever long ClientRequest object in the console
+      throw new Error(error.message, {
+        cause: error.cause,
+      });
     }
 
     throw error;

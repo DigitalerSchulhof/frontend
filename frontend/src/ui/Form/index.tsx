@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from '#/i18n';
+import { useT } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Input } from '#/ui/Input';
 import { Table } from '#/ui/Table';
@@ -35,7 +35,7 @@ export interface FormRowProps
 export const FormRow = forwardRef<HTMLInputElement, FormRowProps>(
   function FormRow({ label, ...props }, ref) {
     const id = useId();
-    const { t } = useTranslations();
+    const { t } = useT();
 
     return (
       <Table.Row>

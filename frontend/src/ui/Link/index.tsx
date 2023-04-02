@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from '#/i18n';
+import { useT } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import React from 'react';
@@ -12,7 +12,7 @@ export interface LinkProps extends Omit<NextLinkProps, 'href'> {
 }
 
 const UnstyledLink: React.FC<LinkProps> = ({ href, ...props }) => {
-  const { t } = useTranslations();
+  const { t } = useT();
 
   const hrefString = Array.isArray(href) ? `/${href.map(t).join('/')}` : href;
 

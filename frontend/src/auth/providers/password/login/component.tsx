@@ -1,14 +1,18 @@
 'use client';
 
 import Cookies from 'js-cookie';
-import { T } from '#/i18n';
+import { T, useT } from '#/i18n/t';
 import { Button } from '#/ui/Button';
 import { Form, FormRow } from '#/ui/Form';
 import { Table } from '#/ui/Table';
 import { useRef } from 'react';
 import { PrivacyNote } from './privacy-note';
+import { useRouter } from 'next/navigation';
 
 export const LoginForm = () => {
+  const { t } = useT();
+  const router = useRouter();
+
   async function doLogin() {
     const username = usernameRef.current?.value;
     const password = passwordRef.current?.value;
@@ -33,6 +37,7 @@ export const LoginForm = () => {
     const body = await res.json();
 
     Cookies.set('jwt', body.jwt);
+    router.refresh();
   }
 
   const usernameRef = useRef<HTMLInputElement>(null);

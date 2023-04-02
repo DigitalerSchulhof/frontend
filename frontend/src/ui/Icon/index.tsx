@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 'use client';
 
-import { useTranslations } from '#/i18n';
+import { useT } from '#/i18n';
 import { TranslationsWithStringType } from '#/i18n/translations';
 import Image, { StaticImageData } from 'next/image';
 import { memo } from 'react';
@@ -79,7 +79,7 @@ export const IconPersonDeletePersonWithAction = makeIcon(
 
 function makeIcon(src: StaticImageData, alt: TranslationsWithStringType) {
   return memo(function IconMaker() {
-    const { t } = useTranslations();
+    const { t } = useT();
     const altString = t(alt);
 
     return <Icon src={src} alt={altString} title={altString} />;
