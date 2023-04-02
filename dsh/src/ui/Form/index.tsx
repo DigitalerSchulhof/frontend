@@ -1,6 +1,6 @@
 'use client';
 
-import { useT } from '#/i18n';
+import { useT } from '#/i18n/client';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Input } from '#/ui/Input';
 import { Table } from '#/ui/Table';

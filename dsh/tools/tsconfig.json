@@ -2,7 +2,9 @@
   "extends": "../../tsconfig.json",
   "include": ["**/*.ts"],
   "compilerOptions": {
-    "target": "ESNext",
-    "outDir": "../.tools"
+    "outDir": "../.tools",
+    "paths": {
+      "#/*": ["../src/*"]
+    }
   }
 }

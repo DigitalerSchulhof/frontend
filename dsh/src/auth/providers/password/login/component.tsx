@@ -1,13 +1,15 @@
 'use client';
 
-import Cookies from 'js-cookie';
-import { T, useT } from '#/i18n/t';
+import { T } from '#/i18n';
+import { useT } from '#/i18n/client';
 import { Button } from '#/ui/Button';
 import { Form, FormRow } from '#/ui/Form';
+import { Link } from '#/ui/Link';
+import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
-import { useRef } from 'react';
-import { PrivacyNote } from './privacy-note';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
 
 export const LoginForm = () => {
   const { t } = useT();
@@ -61,7 +63,13 @@ export const LoginForm = () => {
           />
         </Table.Body>
       </Table>
-      <PrivacyNote />
+      {t('schulhof.login.login.privacy', {
+        PrivacyLink: (c) =>
+          // eslint-disable-next-line react/jsx-key
+          c.map((e) => <Link href={['paths.privacy']}>{e}</Link>),
+      }).map((s, i) => (
+        <Note key={i}>{s}</Note>
+      ))}
       <div>
         <Button type='submit' variant='success'>
           <T t='schulhof.login.login.buttons.login' />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useT } from '#/i18n/t';
+import { useT } from '#/i18n/client';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Link } from '#/ui/Link';
 import React, { Fragment } from 'react';

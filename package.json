@@ -2,10 +2,6 @@
   "name": "@dsh/digitaler-schulhof",
   "private": "true",
   "scripts": {
-    "dev": "concurrently --names f,b --handle-input --default-input-target 1 \"cd frontend && pnpm run dev\" \"cd backend && pnpm run dev\""
-  },
-  "devDependencies": {
-    "concurrently": "7.6.0",
-    "typescript": "5.0.2"
+    "dev": "cd dsh && pnpm run dev"
   }
 }

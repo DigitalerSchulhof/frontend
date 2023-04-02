@@ -1,13 +1,13 @@
 'use client';
 
-import { translationsContext } from '#/i18n/context';
-import { settingsContext } from '#/settings/context';
 import { useContext } from 'react';
-import { TFunction, makeTFunction } from './function';
+import { TFunction, makeTFunction } from '../common/function';
+import { translationsContext } from './context';
+import { useSettings } from '#/settings/client';
 
 export function useT(): { t: TFunction } {
   const translations = useContext(translationsContext);
-  const settings = useContext(settingsContext);
+  const settings = useSettings();
 
   return {
     t: makeTFunction(translations, settings.locale),

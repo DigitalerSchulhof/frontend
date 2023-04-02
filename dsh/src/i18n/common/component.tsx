@@ -1,5 +1,5 @@
-import { useT } from '#/i18n/t/hook';
-import { Translations, TranslationsWithStringType } from '#/i18n/translations';
+import { useT } from '../client';
+import { Translations, TranslationsWithStringType } from '../translations';
 
 export type TProps<K extends keyof Translations> = {
   t: K;

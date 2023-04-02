@@ -1,10 +1,10 @@
+import { TranslationEntry, TranslationService } from '#/i18n/server/service';
+import { DEFAULT_LOCALE } from '#/utils';
+import { __src } from '#/utils/paths';
 import * as mfp from '@formatjs/icu-messageformat-parser';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
-import { TranslationEntry, TranslationService } from '../../src/i18n/service';
-import { DEFAULT_LOCALE } from '../../src/utils';
-import { __src } from '../../src/utils/paths';
 
 export class TranslationMapWriter {
   private watcher: TranslationMapWriterWatcher | null = null;

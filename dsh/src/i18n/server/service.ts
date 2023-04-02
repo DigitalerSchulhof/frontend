@@ -1,3 +1,5 @@
+import { flattenObject } from '#/utils';
+import { __locales } from '#/utils/paths';
 import {
   MessageFormatElement,
   parse,
@@ -6,8 +8,6 @@ import * as fs from 'fs';
 import * as globby from 'globby';
 import * as path from 'path';
 import * as yaml from 'yaml';
-import { flattenObject } from '../utils';
-import { __locales } from '../utils/paths';
 
 export interface BaseTranslationEntry {
   file: string;

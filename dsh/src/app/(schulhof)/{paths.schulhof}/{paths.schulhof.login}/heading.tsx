@@ -1,7 +1,7 @@
 'use client';
 
 import { T } from '#/i18n';
-import { useSettings } from '#/settings/context';
+import { useSettings } from '#/settings/client';
 
 export const SchulhofLoginHeader = () => {
   const settings = useSettings();

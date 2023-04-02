@@ -1,4 +1,4 @@
-import { ClientTranslations } from '#/i18n/context';
+import { ClientTranslations } from '#/i18n/client';
 import { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 import IntlMessageFormat from 'intl-messageformat';
 import React from 'react';

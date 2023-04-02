@@ -1,1 +1,1 @@
-export * from './t';
+export { T } from './common/component';

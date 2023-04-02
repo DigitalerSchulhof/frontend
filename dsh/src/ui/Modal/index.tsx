@@ -1,6 +1,6 @@
 'use client';
 
-import { useT } from '#/i18n';
+import { useT } from '#/i18n/client';
 import { Heading } from '#/ui/Heading';
 import { Loading } from '#/ui/Loading';
 import { useEffect, useState } from 'react';

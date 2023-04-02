@@ -1,6 +1,6 @@
-import { Body } from '#/body';
-import { Footer } from '#/footer';
-import { Header } from '#/header';
+import { Body } from '#/shell/body';
+import { Footer } from '#/shell/footer';
+import { Header } from '#/shell/header';
 
 export default function SchulhofLayout({
   children,

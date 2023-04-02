@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 'use client';
 
-import { useT } from '#/i18n';
+import { useT } from '#/i18n/client';
 import { TranslationsWithStringType } from '#/i18n/translations';
 import Image, { StaticImageData } from 'next/image';
 import { memo } from 'react';

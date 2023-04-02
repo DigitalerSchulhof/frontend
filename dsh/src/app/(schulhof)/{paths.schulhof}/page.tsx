@@ -1,4 +1,4 @@
-import { getCurrentUser } from '#/auth/requireLogin';
+import { getCurrentUser } from '#/auth/server';
 import { Alert } from '#/ui/Alert';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';

@@ -1,5 +1,5 @@
-import { requireLogin } from '#/auth';
 import { authProviders } from '#/auth/providers';
+import { requireLogin } from '#/auth/server';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';

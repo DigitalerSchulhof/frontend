@@ -1,7 +1,5 @@
-export { getServerT } from './t/server';
-
 import { DEFAULT_LOCALE } from '#/utils';
-import { ClientTranslations } from './context';
+import { ClientTranslations } from '../client';
 import { TranslationService } from './service';
 
 const translationService = new TranslationService(DEFAULT_LOCALE);

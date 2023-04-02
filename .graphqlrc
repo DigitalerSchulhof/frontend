@@ -1,2 +1,0 @@
-schema: ./backend/src/resolvers/**/*.graphql
-documents: ./frontend/src/**/*.gql

@@ -1,5 +1,5 @@
-import { TranslationService } from '../../src/i18n/service';
-import { DEFAULT_LOCALE } from '../../src/utils';
+import { TranslationService } from '#/i18n/server/service';
+import { DEFAULT_LOCALE } from '#/utils';
 import { isWatchMode } from '../utils';
 import {
   AppDirTranslator,
