@@ -1,7 +1,0 @@
-extend type Course {
-  class: Class!
-}
-
-extend input CourseFilter {
-  class: ClassFilter
-}

@@ -1,5 +1,0 @@
-{
-  "watch": ["src", ".env"],
-  "ext": "ts,graphql",
-  "ignore": ["src/resolvers/types.d.ts"]
-}
