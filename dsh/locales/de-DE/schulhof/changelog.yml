@@ -1,0 +1,15 @@
+version:
+  0_11_4:
+    changeset:
+    - Problem mit der Tagebucheinsicht behoben.
+    - Bei Coronatests werden nur noch die Gruppen des aktuellen Schuljahres angezeigt.
+    - Stundenplanimportproblem mit Wochenrythmisierung behoben.
+    - Coronatest-Typo.
+    - Tests können entfernt werden.
+  0_11_3:
+    changeset:
+    - Richtig dämlicher Fehler behoben
+  0_11_2:
+    changeset:
+    - Bug in Coronatest-Statistik behoben
+    - Kleinere Bug-Fixes

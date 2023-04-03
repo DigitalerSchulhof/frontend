@@ -1,5 +1,6 @@
 import { authProviders } from '#/auth/providers';
 import { requireLogin } from '#/auth/server';
+import { Changelog } from '#/components/changelog';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -31,6 +32,7 @@ export default async function Page() {
           <T t='schulhof.login.login.description' />
         </p>
         <LoginForm />
+        <Changelog />
       </Col>
     </>
   );

@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-let __frontend;
+let __frontend: string;
 if (__dirname.includes('.next')) {
   [__frontend] = __dirname.split('.next');
 } else {

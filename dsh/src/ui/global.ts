@@ -33,17 +33,21 @@ export const GlobalStyles = createGlobalStyle`
     text-decoration: none;
   }
 
-  p, ul, li {
-    & {
-      margin-top:7px;
-      margin-bottom: 7px;
-    }
+  p, ul, li, section, hr {
+    margin-top:7px;
+    margin-bottom: 7px;
+
     &:first-child {
       margin-top: 0;
     }
     &:last-child {
       margin-bottom: 0;
     }
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid ${({ theme }) => theme.colors.text};
   }
 
   ul {
