@@ -27,10 +27,9 @@ changelog:
   all:
     show: Neuerungen älterer Versionen einblenden
     hide: Neuerungen älterer Versionen ausblenden
-system:
+system-requirements:
   version: Version {version}
   cookies: Cookies aktiv?
-  javascript: JavaScript aktiv?
   one-user: Nur ein Nutzer pro Browser zur selben Zeit.
   check:
     yes: Der Browser unterstützt alle Funktionen des Digitalen Schulhofs.

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const StyledTable = styled.table`
   background-color: #424242;
-  border-radius: 2px;
+  border-radius: ${({ theme }) => theme.borderRadius.medium};
   width: 100%;
 `;
 

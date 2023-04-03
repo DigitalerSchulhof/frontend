@@ -1,6 +1,7 @@
 import { authProviders } from '#/auth/providers';
 import { requireLogin } from '#/auth/server';
 import { Changelog } from '#/components/changelog';
+import { SystemRequirements } from '#/components/system-requirements';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -33,6 +34,9 @@ export default async function Page() {
         </p>
         <LoginForm />
         <Changelog />
+      </Col>
+      <Col w='4'>
+        <SystemRequirements />
       </Col>
     </>
   );

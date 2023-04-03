@@ -18,3 +18,8 @@ person:
     male: Männlich
     female: Weiblich
     other: Divers
+version: Version
+cookies-tech: Cookies
+group-error: Error
+tick: Haken
+warning: Warning

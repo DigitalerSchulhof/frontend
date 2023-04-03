@@ -14,7 +14,7 @@ export type ChangelogEntry = {
 class ChangelogService {
   private readonly changelogPath = path.join(__frontend, 'changelog.yml');
 
-  private changelogVersionsMap: Map<ChangelogId, ChangelogEntry> | null = null;
+  private changelogVersions: ChangelogEntry[] | null = null;
 
   loadChangelog(): void {
     const changelogFileContent = fs.readFileSync(this.changelogPath, 'utf-8');
@@ -22,33 +22,33 @@ class ChangelogService {
       version: Record<string, { version: string; date: string }>;
     };
 
-    this.changelogVersionsMap = new Map();
+    this.changelogVersions = Object.entries(loadedChangelog.version).map(
+      ([id, entry]) => {
+        const changelogId = id as ChangelogId;
 
-    for (const [id, entry] of Object.entries(loadedChangelog.version)) {
-      const changelogId = id as ChangelogId;
-
-      this.changelogVersionsMap.set(changelogId, {
-        id: changelogId,
-        version: entry.version,
-        date: new Date(entry.date),
-      });
-    }
-  }
-
-  getChangelogEntry(id: ChangelogId): ChangelogEntry {
-    if (!this.changelogVersionsMap) {
-      throw new Error('Changelog not loaded');
-    }
-
-    return this.changelogVersionsMap.get(id)!;
+        return {
+          id: changelogId,
+          version: entry.version,
+          date: new Date(entry.date),
+        };
+      }
+    );
   }
 
   getChangelogEntries(): ChangelogEntry[] {
-    if (!this.changelogVersionsMap) {
+    if (!this.changelogVersions) {
       throw new Error('Changelog not loaded');
     }
 
-    return [...this.changelogVersionsMap.values()];
+    return this.changelogVersions;
+  }
+
+  getVersion(): string {
+    if (!this.changelogVersions) {
+      throw new Error('Changelog not loaded');
+    }
+
+    return this.changelogVersions[0].version;
   }
 }
 

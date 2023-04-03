@@ -19,6 +19,12 @@ export interface Shared {
     regular: string;
     small: string;
   };
+  borderRadius: {
+    medium: string;
+  };
+  padding: {
+    medium: string;
+  };
 }
 
 export interface Theme extends Shared {
@@ -50,6 +56,12 @@ export const shared = {
   fontSizes: {
     regular: '13px',
     small: '80%',
+  },
+  borderRadius: {
+    medium: '3px',
+  },
+  padding: {
+    medium: '10px',
   },
 } satisfies Shared;
 

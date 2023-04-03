@@ -21,7 +21,7 @@ export interface ColProps {
 }
 
 export const Col = styled.div<ColProps>`
-  padding: 10px;
+  padding: ${({ theme }) => theme.padding.medium};
   grid-column: span ${(props) => props.w};
 `;
 

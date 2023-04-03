@@ -11,7 +11,7 @@ export const Alert = styled.div<AlertProps>(
   ({ theme, variant = 'default' }) => css`
     margin: 10px 0;
     text-align: left;
-    padding: 10px;
+    padding: ${theme.padding.medium};
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
     min-height: 42px;

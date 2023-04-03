@@ -19,7 +19,7 @@ const ButtonStyles = ({
   variant = 'default',
 }: BaseButtonProps & ExecutionContext) => css`
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: ${theme.borderRadius.medium};
   padding: 3px 7px;
   margin-bottom: 2px;
   line-height: 1.5em;
