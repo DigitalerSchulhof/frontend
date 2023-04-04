@@ -9,6 +9,7 @@ if (__dirname.includes('.next')) {
 }
 export { __frontend };
 export const __locales = path.resolve(__frontend, 'locales');
+export const __cache = path.resolve(__frontend, '.cache');
 export const __src = path.resolve(__frontend, 'src');
 export const __app = path.resolve(__src, 'app');
 export const __nextApp = path.resolve(__frontend, 'app');

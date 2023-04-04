@@ -1,11 +1,11 @@
 import { CacheAdapter } from '.';
 
 export class VoidCacheAdapter implements CacheAdapter {
-  async get<T>(): Promise<T | undefined> {
+  async get(): Promise<undefined> {
     return undefined;
   }
 
-  async getMany<T>(keys: readonly string[]): Promise<(T | undefined)[]> {
+  async getMany(keys: readonly string[]): Promise<undefined[]> {
     return keys.map(() => undefined);
   }
 

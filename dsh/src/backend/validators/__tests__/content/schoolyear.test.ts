@@ -1,4 +1,4 @@
-import { IdNotFoundError } from '#/repositories/errors';
+import { IdNotFoundError } from '#/backend/repositories/errors';
 import {
   SchoolyearValidator,
   SCHOOLYEAR_NAME_EXISTS,
@@ -11,7 +11,7 @@ import {
   setMockRepositoryDataset,
 } from './__utils__';
 
-jest.mock('#/repositories/content/schoolyear/filters', () => {
+jest.mock('#/backend/repositories/content/schoolyear/filters', () => {
   const { makeMockFilter } = jest.requireActual('./__utils__');
 
   return {
@@ -198,7 +198,7 @@ describe('SchoolyearValidator', () => {
       );
     });
 
-    it.only("doesn't throw if the schoolyear's name is valid", async () => {
+    it("doesn't throw if the schoolyear's name is valid", async () => {
       await expect(
         validator.assertCanUpdate('1', {
           name: 'test',

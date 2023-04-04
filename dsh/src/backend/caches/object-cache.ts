@@ -1,23 +1,43 @@
+import ms from 'ms';
 import { CacheAdapter } from './adapters';
+
+const FIVE_HOURS_MS = ms('5h');
 
 export class ObjectCache<T> {
   constructor(
     private readonly adapter: CacheAdapter,
     private readonly prefix: string,
     private readonly version: string = '1',
-    private readonly defaultTtlMs: number = 1000 * 60 * 5
+    private readonly defaultTtlMs: number = FIVE_HOURS_MS
   ) {}
 
-  private addPrefix(key: string): string {
+  private getCacheKey(key: string): string {
     return `${this.prefix}:${this.version}:${key}`;
   }
 
   async get(key: string): Promise<T | null | undefined> {
-    return this.adapter.get(this.addPrefix(key));
+    console.log('get', key);
+
+    const cacheKey = this.getCacheKey(key);
+
+    const res = await this.adapter.get(cacheKey);
+
+    return deserialize(res);
   }
 
-  async getMany(keys: readonly string[]): Promise<(T | null | undefined)[]> {
-    return this.adapter.getMany(keys.map((k) => this.addPrefix(k)));
+  async getMany<const K extends readonly string[]>(
+    keys: K
+  ): Promise<{
+    -readonly [P in keyof K]: T | null | undefined;
+  }> {
+    console.log('getMany', keys);
+
+    const cacheKeys = keys.map((key) => this.getCacheKey(key));
+
+    const res = await this.adapter.getMany(cacheKeys);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- I don't know how to type this better
+    return res.map(deserialize<T>) as any;
   }
 
   async set(
@@ -25,37 +45,62 @@ export class ObjectCache<T> {
     value: T | null,
     ttlMs: number = this.defaultTtlMs
   ): Promise<void> {
-    return this.adapter.set(this.addPrefix(key), value, ttlMs);
+    console.log('set', key, value);
+
+    const cacheKey = this.getCacheKey(key);
+
+    return this.adapter.set(cacheKey, serialize(value), ttlMs);
   }
 
-  async setMany(
-    keys: readonly string[],
-    values: readonly (T | null)[],
+  async setMany<const K extends readonly string[]>(
+    keys: K,
+    values: {
+      [P in keyof K]: T | null;
+    },
     ttlMs: number = this.defaultTtlMs
   ): Promise<void> {
-    if (keys.length !== values.length) {
-      throw new Error('Keys and values must be the same length');
-    }
+    console.log('setMany', keys, values);
+
+    const cacheKeys = keys.map((key) => this.getCacheKey(key));
 
     return this.adapter.setMany(
-      keys.map((key, i) => [this.addPrefix(key), values[i]]),
+      cacheKeys.map((key, i) => [key, serialize(values[i])]),
       ttlMs
     );
   }
 
   async has(key: string): Promise<boolean> {
-    return this.adapter.has(this.addPrefix(key));
+    return this.adapter.has(this.getCacheKey(key));
   }
 
-  async hasMany(keys: readonly string[]): Promise<boolean[]> {
-    return this.adapter.hasMany(keys.map((k) => this.addPrefix(k)));
+  async hasMany<const K extends readonly string[]>(
+    keys: K
+  ): Promise<{
+    -readonly [P in keyof K]: boolean;
+  }> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- I don't know how to type this better
+    return this.adapter.hasMany(keys.map((k) => this.getCacheKey(k))) as any;
   }
 
   async delete(key: string): Promise<boolean> {
-    return this.adapter.delete(this.addPrefix(key));
+    return this.adapter.delete(this.getCacheKey(key));
   }
 
-  async deleteMany(keys: readonly string[]): Promise<boolean[]> {
-    return this.adapter.deleteMany(keys.map((k) => this.addPrefix(k)));
+  async deleteMany<const K extends readonly string[]>(
+    keys: K
+  ): Promise<{
+    -readonly [P in keyof K]: boolean;
+  }> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- I don't know how to type this better
+    return this.adapter.deleteMany(keys.map((k) => this.getCacheKey(k))) as any;
   }
+}
+
+export function serialize(value: unknown): string {
+  return JSON.stringify(value);
+}
+
+function deserialize<T>(value: string | undefined): T | undefined {
+  if (value === undefined) return undefined;
+  return JSON.parse(value) as T;
 }

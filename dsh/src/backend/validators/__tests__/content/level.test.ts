@@ -1,18 +1,18 @@
-import { IdNotFoundError } from '#/repositories/errors';
+import { IdNotFoundError } from '#/backend/repositories/errors';
 import {
-  LevelValidator,
+  CANNOT_CHANGE_SCHOOLYEAR_ID,
   LEVEL_NAME_EXISTS,
   LEVEL_NAME_INVALID,
+  LevelValidator,
   SCHOOLYEAR_DOES_NOT_EXIST,
 } from '../../content/level';
 import {
   expectAggregatedInputValidationError,
-  expectInputValidationError,
   makeMockRepositories,
   setMockRepositoryDataset,
 } from './__utils__';
 
-jest.mock('#/repositories/content/level/filters', () => {
+jest.mock('#/backend/repositories/content/level/filters', () => {
   const { makeMockFilter } = jest.requireActual('./__utils__');
 
   return {
@@ -47,7 +47,9 @@ describe('LevelValidator', () => {
           schoolyearId: '2',
           name: 'test',
         })
-      ).rejects.toThrow(expectInputValidationError(SCHOOLYEAR_DOES_NOT_EXIST));
+      ).rejects.toThrow(
+        expectAggregatedInputValidationError(SCHOOLYEAR_DOES_NOT_EXIST)
+      );
     });
 
     it("doesn't throw if the schoolyear exists", async () => {
@@ -233,6 +235,24 @@ describe('LevelValidator', () => {
       await expect(
         validator.assertCanUpdate('1', {
           name: 'test',
+        })
+      ).resolves.toBeUndefined();
+    });
+
+    it("throws if the level's schoolyear is changed", async () => {
+      await expect(
+        validator.assertCanUpdate('1', {
+          schoolyearId: '2',
+        })
+      ).rejects.toThrow(
+        expectAggregatedInputValidationError(CANNOT_CHANGE_SCHOOLYEAR_ID)
+      );
+    });
+
+    it("doesn't throw if the level's schoolyear is not changed", async () => {
+      await expect(
+        validator.assertCanUpdate('1', {
+          schoolyearId: '1',
         })
       ).resolves.toBeUndefined();
     });

@@ -44,7 +44,7 @@ export class CourseValidator extends Validator<'courses', CourseBase> {
       patch.name === undefined
         ? null
         : this.assertNameValid(base.classId, patch.name, id),
-      patch.classId === undefined
+      patch.classId === undefined || patch.classId === base.classId
         ? null
         : this.throwValidationError(CANNOT_CHANGE_CLASS_ID),
     ]);

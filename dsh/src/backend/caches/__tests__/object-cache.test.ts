@@ -1,5 +1,5 @@
 import { CacheAdapter } from '../adapters';
-import { ObjectCache } from '../object-cache';
+import { ObjectCache, serialize } from '../object-cache';
 
 const mockCacheAdapter = {
   get: jest.fn(),
@@ -31,7 +31,9 @@ describe('Cache', () => {
     });
 
     it('should return cached value', async () => {
-      mockCacheAdapter.get.mockImplementationOnce(() => Promise.resolve('bar'));
+      mockCacheAdapter.get.mockImplementationOnce(() =>
+        Promise.resolve(serialize('bar'))
+      );
 
       const value = await cache.get('foo');
 
@@ -83,7 +85,7 @@ describe('Cache', () => {
 
     it('should return cached value', async () => {
       mockCacheAdapter.getMany.mockImplementationOnce(() =>
-        Promise.resolve(['bar', 'baz'])
+        Promise.resolve([serialize('bar'), serialize('baz')])
       );
 
       const value = await cache.getMany(['foo', 'bar']);
@@ -97,7 +99,7 @@ describe('Cache', () => {
 
     it('mixes undefined and cached values', async () => {
       mockCacheAdapter.getMany.mockImplementationOnce(() =>
-        Promise.resolve([undefined, 'baz'])
+        Promise.resolve([undefined, serialize('baz')])
       );
 
       const value = await cache.getMany(['foo', 'bar']);
@@ -106,6 +108,8 @@ describe('Cache', () => {
     });
 
     it('uses prefix', async () => {
+      mockCacheAdapter.getMany.mockImplementation(() => Promise.resolve([]));
+
       const cacheA = new ObjectCache(mockCacheAdapter, 'cache-a', '69');
       const cacheB = new ObjectCache(mockCacheAdapter, 'cache-b', '69');
 
@@ -123,6 +127,8 @@ describe('Cache', () => {
     });
 
     it('uses version', async () => {
+      mockCacheAdapter.getMany.mockImplementation(() => Promise.resolve([]));
+
       const cacheA = new ObjectCache(mockCacheAdapter, 'mock-cache', '1');
       const cacheB = new ObjectCache(mockCacheAdapter, 'mock-cache', '2');
 
@@ -140,6 +146,10 @@ describe('Cache', () => {
     });
 
     it("uses default version if it's not provided", async () => {
+      mockCacheAdapter.getMany.mockImplementationOnce(() =>
+        Promise.resolve([])
+      );
+
       const cache = new ObjectCache(mockCacheAdapter, 'mock-cache');
 
       await cache.getMany(['foo', 'bar']);
@@ -157,7 +167,7 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.set).toHaveBeenCalledWith(
         'mock-cache:69:foo',
-        'bar',
+        serialize('bar'),
         420
       );
     });
@@ -167,7 +177,7 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.set).toHaveBeenCalledWith(
         'mock-cache:69:foo',
-        'bar',
+        serialize('bar'),
         1000
       );
     });
@@ -177,7 +187,7 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.set).toHaveBeenCalledWith(
         'mock-cache:69:foo',
-        'bar',
+        serialize('bar'),
         420
       );
     });
@@ -191,12 +201,12 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.set).toHaveBeenCalledWith(
         'cache-a:69:foo',
-        'bar',
+        serialize('bar'),
         420
       );
       expect(mockCacheAdapter.set).toHaveBeenCalledWith(
         'cache-b:69:foo',
-        'baz',
+        serialize('baz'),
         420
       );
     });
@@ -210,12 +220,12 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.set).toHaveBeenCalledWith(
         'mock-cache:1:foo',
-        'bar',
+        serialize('bar'),
         420
       );
       expect(mockCacheAdapter.set).toHaveBeenCalledWith(
         'mock-cache:2:foo',
-        'baz',
+        serialize('baz'),
         420
       );
     });
@@ -232,7 +242,7 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.set).toHaveBeenCalledWith(
         'mock-cache:1:foo',
-        'bar',
+        serialize('bar'),
         420
       );
     });
@@ -244,8 +254,8 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.setMany).toHaveBeenCalledWith(
         [
-          ['mock-cache:69:foo', 'baz'],
-          ['mock-cache:69:bar', 'qux'],
+          ['mock-cache:69:foo', serialize('baz')],
+          ['mock-cache:69:bar', serialize('qux')],
         ],
         420
       );
@@ -256,8 +266,8 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.setMany).toHaveBeenCalledWith(
         [
-          ['mock-cache:69:foo', 'baz'],
-          ['mock-cache:69:bar', 'qux'],
+          ['mock-cache:69:foo', serialize('baz')],
+          ['mock-cache:69:bar', serialize('qux')],
         ],
         1000
       );
@@ -268,8 +278,8 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.setMany).toHaveBeenCalledWith(
         [
-          ['mock-cache:69:foo', 'baz'],
-          ['mock-cache:69:bar', 'qux'],
+          ['mock-cache:69:foo', serialize('baz')],
+          ['mock-cache:69:bar', serialize('qux')],
         ],
         420
       );
@@ -284,15 +294,15 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.setMany).toHaveBeenCalledWith(
         [
-          ['cache-a:69:foo', 'baz'],
-          ['cache-a:69:bar', 'qux'],
+          ['cache-a:69:foo', serialize('baz')],
+          ['cache-a:69:bar', serialize('qux')],
         ],
         420
       );
       expect(mockCacheAdapter.setMany).toHaveBeenCalledWith(
         [
-          ['cache-b:69:foo', 'baz'],
-          ['cache-b:69:bar', 'qux'],
+          ['cache-b:69:foo', serialize('baz')],
+          ['cache-b:69:bar', serialize('qux')],
         ],
         420
       );
@@ -307,23 +317,17 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.setMany).toHaveBeenCalledWith(
         [
-          ['mock-cache:1:foo', 'baz'],
-          ['mock-cache:1:bar', 'qux'],
+          ['mock-cache:1:foo', serialize('baz')],
+          ['mock-cache:1:bar', serialize('qux')],
         ],
         420
       );
       expect(mockCacheAdapter.setMany).toHaveBeenCalledWith(
         [
-          ['mock-cache:2:foo', 'baz'],
-          ['mock-cache:2:bar', 'qux'],
+          ['mock-cache:2:foo', serialize('baz')],
+          ['mock-cache:2:bar', serialize('qux')],
         ],
         420
-      );
-    });
-
-    it('should throw if keys and values are not the same length', async () => {
-      await expect(cache.setMany(['foo', 'bar'], ['baz'])).rejects.toThrowError(
-        'Keys and values must be the same length'
       );
     });
 
@@ -339,8 +343,8 @@ describe('Cache', () => {
 
       expect(mockCacheAdapter.setMany).toHaveBeenCalledWith(
         [
-          ['mock-cache:1:foo', 'baz'],
-          ['mock-cache:1:bar', 'qux'],
+          ['mock-cache:1:foo', serialize('baz')],
+          ['mock-cache:1:bar', serialize('qux')],
         ],
         420
       );

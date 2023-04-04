@@ -5,6 +5,7 @@ import { loadEnv } from 'vality-env';
 const configSchema = {
   cache: {
     engine: ['void', 'memory', 'redis'],
+    shouldSaveMemoryToDisk: v.env('SAVE_MEMORY_CACHE_TO_DISK', v.boolean),
     'redis?': {
       host: v.string,
       port: v.number,

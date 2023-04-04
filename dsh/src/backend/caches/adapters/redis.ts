@@ -16,32 +16,25 @@ export class RedisCacheAdapter implements CacheAdapter {
     });
   }
 
-  async get<T>(key: string): Promise<T | undefined> {
-    const res = await this.client.get(key);
-
-    return deserialize(res);
+  async get(key: string): Promise<string | undefined> {
+    return (await this.client.get(key)) ?? undefined;
   }
 
-  async getMany<T>(keys: readonly string[]): Promise<(T | undefined)[]> {
+  async getMany(keys: readonly string[]): Promise<(string | undefined)[]> {
     const res = await this.client.mget(...keys);
 
-    return res.map(deserialize<T>);
+    return res.map((r) => r ?? undefined);
   }
 
-  async set<T>(key: string, value: T, ttlMs: number): Promise<void> {
-    await this.client.set(key, serialize(value), 'PX', ttlMs);
+  async set(key: string, value: string, ttlMs: number): Promise<void> {
+    await this.client.set(key, value, 'PX', ttlMs);
   }
 
-  async setMany<T>(
-    entries: readonly [string, T][],
+  async setMany(
+    entries: readonly [string, string][],
     ttlMs: number
   ): Promise<void> {
-    const args = entries.flatMap(([key, value]) => [
-      key,
-      serialize(value),
-      'PX',
-      ttlMs,
-    ]);
+    const args = entries.flatMap(([key, value]) => [key, value, 'PX', ttlMs]);
 
     await this.client.mset(...args);
   }
@@ -54,7 +47,7 @@ export class RedisCacheAdapter implements CacheAdapter {
     // TODO: Verify this assertion
     const res = (await this.client.exists(...keys)) as unknown as number[];
 
-    return res.map((r) => r === 1);
+    return res.map((exists) => exists === 1);
   }
 
   async delete(key: string): Promise<boolean> {
@@ -65,15 +58,6 @@ export class RedisCacheAdapter implements CacheAdapter {
     // TODO: Verify this assertion
     const res = (await this.client.del(...keys)) as unknown as number[];
 
-    return res.map((r) => r === 1);
+    return res.map((deleted) => deleted === 1);
   }
-}
-
-function serialize<T>(value: T): string {
-  return JSON.stringify(value);
-}
-
-function deserialize<T>(value: string | null): T | undefined {
-  if (value === null) return undefined;
-  return JSON.parse(value) as T;
 }

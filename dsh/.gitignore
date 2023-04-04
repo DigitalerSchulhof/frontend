@@ -2,4 +2,6 @@
 /.next
 /app
 /.env
+/.cache
+/coverage
 /src/i18n/translations.d.ts

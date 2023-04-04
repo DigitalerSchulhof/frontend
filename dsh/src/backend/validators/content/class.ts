@@ -44,7 +44,7 @@ export class ClassValidator extends Validator<'classes', ClassBase> {
       patch.name === undefined
         ? null
         : this.assertNameValid(base.levelId, patch.name, id),
-      patch.levelId === undefined
+      patch.levelId === undefined || patch.levelId === base.levelId
         ? null
         : this.throwValidationError(CANNOT_CHANGE_LEVEL_ID),
     ]);

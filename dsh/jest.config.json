@@ -1,0 +1,16 @@
+{
+  "coverageReporters": ["lcov", "text"],
+  "verbose": true,
+  "transform": {
+    "^.+\\.tsx?$": "@swc/jest"
+  },
+  "moduleNameMapper": {
+    "^#/(.*)": "<rootDir>/src/$1"
+  },
+  "collectCoverageFrom": ["src/**/*.{ts,tsx}", "!**/__utils__/**/*"],
+  "testMatch": [
+    "**/__tests__/**/*.[jt]s?(x)",
+    "**/?(*.)+(spec|test).[jt]s?(x)",
+    "!**/__utils__/**/*"
+  ]
+}

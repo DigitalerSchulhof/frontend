@@ -27,7 +27,7 @@ export class SessionValidator extends Validator<'sessions', SessionBase> {
     }
 
     const error = await aggregateValidationErrors([
-      patch.personId === undefined
+      patch.personId === undefined || patch.personId === base.personId
         ? null
         : this.throwValidationError(CANNOT_CHANGE_PERSON_ID),
     ]);

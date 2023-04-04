@@ -1,10 +1,13 @@
+import { AccountRepository } from '#/backend/repositories/content/account';
 import { ClassRepository } from '#/backend/repositories/content/class';
 import { CourseRepository } from '#/backend/repositories/content/course';
 import { LevelRepository } from '#/backend/repositories/content/level';
+import { PersonRepository } from '#/backend/repositories/content/person';
 import { SchoolyearRepository } from '#/backend/repositories/content/schoolyear';
+import { SessionRepository } from '#/backend/repositories/content/session';
 
-jest.mock('#/repositories/filters', () => ({
-  ...jest.requireActual('#/repositories/filters'),
+jest.mock('#/backend/repositories/filters', () => ({
+  ...jest.requireActual('#/backend/repositories/filters'),
   AndFilter: class {
     private readonly filters: any[];
 
@@ -30,7 +33,7 @@ jest.mock('#/repositories/filters', () => ({
   __esModule: true,
 }));
 
-jest.mock('#/repositories/filters/operators', () => ({
+jest.mock('#/backend/repositories/filters/operators', () => ({
   EqFilterOperator: class {
     constructor(private readonly value: any) {}
 
@@ -75,6 +78,12 @@ export function makeMockRepositories() {
     class: makeSimpleMockRepository() as SimpleMockRepository & ClassRepository,
     course: makeSimpleMockRepository() as SimpleMockRepository &
       CourseRepository,
+    person: makeSimpleMockRepository() as SimpleMockRepository &
+      PersonRepository,
+    account: makeSimpleMockRepository() as SimpleMockRepository &
+      AccountRepository,
+    session: makeSimpleMockRepository() as SimpleMockRepository &
+      SessionRepository,
   };
 }
 
@@ -117,7 +126,7 @@ export function expectAggregatedInputValidationError(code: string) {
 /**
  * Returns a matcher that matches an InputValidationError with the given error code.
  */
-export function expectInputValidationError(code: string) {
+function expectInputValidationError(code: string) {
   return expect.objectContaining({
     code,
   });

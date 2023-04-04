@@ -1,9 +1,9 @@
 export interface CacheAdapter {
-  get<T>(key: string): Promise<T | undefined>;
-  getMany<T>(keys: readonly string[]): Promise<(T | undefined)[]>;
+  get(key: string): Promise<string | undefined>;
+  getMany(keys: readonly string[]): Promise<(string | undefined)[]>;
 
-  set<T>(key: string, value: T, ttlMs?: number): Promise<void>;
-  setMany<T>(entries: readonly [string, T][], ttlMs?: number): Promise<void>;
+  set(key: string, value: string, ttlMs?: number): Promise<void>;
+  setMany(entries: readonly [string, string][], ttlMs?: number): Promise<void>;
 
   has(key: string): Promise<boolean>;
   hasMany(keys: readonly string[]): Promise<boolean[]>;

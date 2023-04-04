@@ -12,7 +12,11 @@ import {
 } from '#/backend/repositories/filters/operators';
 import { MakePatch } from '#/backend/repositories/utils';
 import { Validator } from '../base';
-import { InputValidationError, aggregateValidationErrors } from '../utils';
+import {
+  AggregatedInputValidationError,
+  InputValidationError,
+  aggregateValidationErrors,
+} from '../utils';
 
 export const SCHOOLYEAR_DOES_NOT_EXIST = 'SCHOOLYEAR_DOES_NOT_EXIST';
 export const LEVEL_NAME_INVALID = 'LEVEL_NAME_INVALID';
@@ -44,7 +48,8 @@ export class LevelValidator extends Validator<'levels', LevelBase> {
       patch.name === undefined
         ? null
         : this.assertNameValid(base.schoolyearId, patch.name, id),
-      patch.schoolyearId === undefined
+      patch.schoolyearId === undefined ||
+      patch.schoolyearId === base.schoolyearId
         ? null
         : this.throwValidationError(CANNOT_CHANGE_SCHOOLYEAR_ID),
     ]);
@@ -60,7 +65,9 @@ export class LevelValidator extends Validator<'levels', LevelBase> {
     ]);
 
     if (!schoolyear) {
-      throw new InputValidationError(SCHOOLYEAR_DOES_NOT_EXIST);
+      throw new AggregatedInputValidationError([
+        new InputValidationError(SCHOOLYEAR_DOES_NOT_EXIST),
+      ]);
     }
   }
 
