@@ -27,10 +27,10 @@ export default async function Page() {
       </Col>
       <Col w='4'>
         <Heading size='2'>
-          <T t='schulhof.login.login.title' />
+          <T t='schulhof.login.form.title' />
         </Heading>
         <p>
-          <T t='schulhof.login.login.description' />
+          <T t='schulhof.login.form.description' />
         </p>
         <LoginForm />
         <Changelog />

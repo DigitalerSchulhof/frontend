@@ -17,7 +17,17 @@ export const Changelog = () => {
         <T t='schulhof.login.changelog.title' />
       </Heading>
       <div>
-        <ChangelogEntry entry={mostRecentEntry} />
+        <VisibilityToggle
+          show={t('schulhof.login.changelog.specific.show', {
+            version: mostRecentEntry.version,
+          })}
+          hide={t('schulhof.login.changelog.specific.hide', {
+            version: mostRecentEntry.version,
+          })}
+          content={<ChangelogEntry entry={mostRecentEntry} />}
+          defaultVisible
+        />
+
         <VisibilityToggle
           show={t('schulhof.login.changelog.all.show')}
           hide={t('schulhof.login.changelog.all.hide')}

@@ -115,19 +115,19 @@ export const LoginForm = () => {
       <Table>
         <Table.Body>
           <FormRow
-            label='schulhof.login.login.providers.password.username'
+            label='schulhof.login.form.providers.password.username'
             autoComplete='username'
             ref={usernameRef}
           />
           <FormRow
-            label='schulhof.login.login.providers.password.password'
+            label='schulhof.login.form.providers.password.password'
             autoComplete='current-password'
             type='password'
             ref={passwordRef}
           />
         </Table.Body>
       </Table>
-      {t('schulhof.login.login.privacy', {
+      {t('schulhof.login.form.privacy', {
         PrivacyLink: (c) =>
           // eslint-disable-next-line react/jsx-key
           c.map((e) => <Link href={['paths.privacy']}>{e}</Link>),
@@ -136,13 +136,13 @@ export const LoginForm = () => {
       ))}
       <div>
         <Button type='submit' variant='success'>
-          <T t='schulhof.login.login.buttons.login' />
+          <T t='schulhof.login.form.buttons.login' />
         </Button>
         <Button href={['paths.schulhof', 'paths.schulhof.forgot-password']}>
-          <T t='schulhof.login.login.buttons.forgot-password' />
+          <T t='schulhof.login.form.buttons.forgot-password' />
         </Button>
         <Button href={['paths.schulhof', 'paths.schulhof.register']}>
-          <T t='schulhof.login.login.buttons.register' />
+          <T t='schulhof.login.form.buttons.register' />
         </Button>
       </div>
     </Form>

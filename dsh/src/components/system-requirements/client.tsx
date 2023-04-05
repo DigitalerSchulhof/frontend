@@ -8,12 +8,14 @@ import {
   LargeIconVersion,
   LargeIconWarning,
 } from '#/ui/Icon';
+import { useState } from 'react';
 import { css, styled } from 'styled-components';
 
 export const SystemRequirementsClient = ({ version }: { version: string }) => {
   const { t } = useT();
 
-  const hasFullSupport = useHasFullSupport();
+  // const hasFullSupport = useHasFullSupport();
+  const [hasFullSupport, setHasFullSupport] = useState(true);
 
   return (
     <SystemRequirementsWrapper>
@@ -34,7 +36,7 @@ export const SystemRequirementsClient = ({ version }: { version: string }) => {
         <br />
         {t('schulhof.login.system-requirements.one-user')}
       </SystemRequirementsItem>
-      <SystemRequirementsItem>
+      <SystemRequirementsItem onClick={() => setHasFullSupport((f) => !f)}>
         {hasFullSupport ? (
           <>
             <LargeIconTick />
