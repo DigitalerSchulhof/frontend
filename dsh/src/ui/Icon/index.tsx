@@ -130,13 +130,17 @@ function makeIcon(
     const { t } = useT();
     const altString = t(alt);
 
-    return <Icon src={src} alt={altString} title={altString} $size={size} />;
+    return <Icon src={src} alt={altString} title={altString} size={size} />;
   });
 }
 
-export const Icon = styled(Image)<{ $size?: number }>`
-  width: ${({ $size }) => $size}px;
-  height: ${({ $size }) => $size}px;
+const noForwardProps = new Set(['size']);
+
+export const Icon = styled(Image).withConfig({
+  shouldForwardProp: (prop) => !noForwardProps.has(prop),
+})<{ size?: number }>`
+  width: ${({ size: $size }) => $size}px;
+  height: ${({ size: $size }) => $size}px;
   image-rendering: pixelated;
   margin: 2px;
   display: block;

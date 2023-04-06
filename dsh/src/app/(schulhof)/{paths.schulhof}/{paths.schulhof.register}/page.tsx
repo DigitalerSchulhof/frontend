@@ -1,19 +1,27 @@
 import { T } from '#/i18n';
+import { getSettings } from '#/settings/server';
 import { Alert } from '#/ui/Alert';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Button } from '#/ui/Button';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 import { Variant } from '#/ui/variants';
-import { SchulhofRegisterHeading } from './heading';
 
 export default async function Page() {
+  const settings = await getSettings();
+
   return (
     <>
       <Col w='12'>
         <Breadcrumbs path={['paths.schulhof', 'paths.schulhof.register']} />
         <Heading size='1'>
-          <SchulhofRegisterHeading />
+          <T
+            t='schulhof.register.heading'
+            args={{
+              school_name_genus: settings.school.name.genus,
+              school_name_genitive: settings.school.name.genitive,
+            }}
+          />
         </Heading>
       </Col>
       <Col w='12'>

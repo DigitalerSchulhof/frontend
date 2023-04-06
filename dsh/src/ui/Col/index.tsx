@@ -20,7 +20,11 @@ export interface ColProps {
   w: ColNr;
 }
 
-export const Col = styled.div<ColProps>`
+const noForwardProps = new Set(['w']);
+
+export const Col = styled.div.withConfig({
+  shouldForwardProp: (prop) => !noForwardProps.has(prop),
+})<ColProps>`
   padding: ${({ theme }) => theme.padding.medium};
   grid-column: span ${(props) => props.w};
 `;

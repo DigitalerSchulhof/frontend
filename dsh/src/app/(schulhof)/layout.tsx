@@ -1,3 +1,4 @@
+import { NoScript } from '#/app/noscript';
 import { Body } from '#/shell/body';
 import { Footer } from '#/shell/footer';
 import { Header } from '#/shell/header';
@@ -10,7 +11,10 @@ export default function SchulhofLayout({
   return (
     <>
       <Header />
-      <Body>{children}</Body>
+      <Body>
+        <NoScript />
+        {children}
+      </Body>
       <Footer />
     </>
   );

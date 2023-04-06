@@ -45,9 +45,15 @@ const ButtonStyles = ({
   }
 `;
 
-export const StyledButton = styled.button<BaseButtonProps>(ButtonStyles);
+const noForwardProps = new Set(['variant']);
 
-export const StyledLink = styled(Link)<BaseButtonProps>`
+export const StyledButton = styled.button.withConfig({
+  shouldForwardProp: (prop) => !noForwardProps.has(prop),
+})<BaseButtonProps>(ButtonStyles);
+
+export const StyledLink = styled(Link).withConfig({
+  shouldForwardProp: (prop) => !noForwardProps.has(prop),
+})<BaseButtonProps>`
   ${(props) => ButtonStyles(props)}
 
   display: inline-block;

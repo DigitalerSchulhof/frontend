@@ -7,7 +7,11 @@ export interface NoteProps {
   variant?: Variant;
 }
 
-export const Note = styled.div<NoteProps>(
+const noForwardProps = new Set(['variant']);
+
+export const Note = styled.div.withConfig({
+  shouldForwardProp: (prop) => !noForwardProps.has(prop),
+})<NoteProps>(
   ({ theme, variant = Variant.Default }) => css`
     color: ${{
       success: theme.accents.success.regular.background,

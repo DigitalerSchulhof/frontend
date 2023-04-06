@@ -7,3 +7,6 @@ table:
   search: Suche
   actions:
     title: Aktionen
+noscript:
+  title: JavaScript ist deaktiviert
+  message: Diese Seite benötigt JavaScript. Bitte aktivieren Sie JavaScript in Ihrem Browser und laden Sie die Seite erneut.

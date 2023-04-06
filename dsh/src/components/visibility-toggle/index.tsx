@@ -1,7 +1,7 @@
 'use client';
 
+import { BreathingSpace } from '#/ui/BreathingSpace';
 import { StyledButton } from '#/ui/Button';
-import { WithBreathingSpace } from '#/ui/WithBreathingSpace';
 import { useState } from 'react';
 import { css, styled } from 'styled-components';
 
@@ -21,28 +21,20 @@ export const VisibilityToggle = ({
   return (
     <>
       {visible ? content : null}
-      <WithBreathingSpace>
-        {visible ? (
-          // Force a key change to force a re-render of the button
-          // Else the button will only sort of change its colors when the cursor is moved and stuff is.. updated.. due to the transition?
-          // The re-render will force the new color to be applied instantly
-          <ToggleButton
-            key='hide'
-            onClick={() => setVisible(false)}
-            $mode='hide'
-          >
-            {hide}
-          </ToggleButton>
-        ) : (
-          <ToggleButton
-            key='show'
-            onClick={() => setVisible(true)}
-            $mode='show'
-          >
-            {show}
-          </ToggleButton>
-        )}
-      </WithBreathingSpace>
+      <BreathingSpace />
+      {visible ? (
+        // Force a key change to force a re-render of the button
+        // Else the button will only sort of change its colors when the cursor is moved and stuff is.. updated.. due to the transition?
+        // The re-render will force the new color to be applied instantly
+        <ToggleButton key='hide' onClick={() => setVisible(false)} $mode='hide'>
+          {hide}
+        </ToggleButton>
+      ) : (
+        <ToggleButton key='show' onClick={() => setVisible(true)} $mode='show'>
+          {show}
+        </ToggleButton>
+      )}
+      <BreathingSpace />
     </>
   );
 };

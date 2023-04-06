@@ -39,7 +39,11 @@ export const TableListHeader = styled.th`
   ${cellProps}
 `;
 
-export const TableListIconHeader = styled(TableListHeader)<{
+const noForwardProps = new Set(['nr']);
+
+export const TableListIconHeader = styled(TableListHeader).withConfig({
+  shouldForwardProp: (prop) => !noForwardProps.has(prop),
+})<{
   /**
    * Maximum number of icons to display
    *

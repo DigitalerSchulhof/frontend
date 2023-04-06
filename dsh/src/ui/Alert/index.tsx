@@ -7,7 +7,11 @@ export interface AlertProps {
   variant: Variant;
 }
 
-export const Alert = styled.div<AlertProps>(
+const noForwardProps = new Set(['variant']);
+
+export const Alert = styled.div.withConfig({
+  shouldForwardProp: (prop) => !noForwardProps.has(prop),
+})<AlertProps>(
   ({ theme, variant = Variant.Default }) => css`
     margin: 10px 0;
     text-align: left;

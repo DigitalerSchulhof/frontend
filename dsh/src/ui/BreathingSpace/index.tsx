@@ -2,7 +2,7 @@
 
 import { styled } from 'styled-components';
 
-export const WithBreathingSpace = styled.div`
+export const BreathingSpace = styled.div`
   margin-top: 7px;
   margin-bottom: 7px;
 
