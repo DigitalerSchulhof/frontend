@@ -1,5 +1,6 @@
 wait: Bitte warten...
 back: Zurück
+error: Fehler
 internal-error: Es ist ein interner Fehler aufgetreten.
 table:
   filters: Filter

@@ -1,14 +1,14 @@
 'use client';
 
 import styled, { css } from 'styled-components';
-import { Variant } from '../themes';
+import { Variant } from '../variants';
 
 export interface NoteProps {
   variant?: Variant;
 }
 
 export const Note = styled.div<NoteProps>(
-  ({ theme, variant = 'default' }) => css`
+  ({ theme, variant = Variant.Default }) => css`
     color: ${{
       success: theme.accents.success.regular.background,
       warning: theme.accents.warning.regular.background,

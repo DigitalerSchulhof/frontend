@@ -4,6 +4,7 @@ import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 import { Link } from '#/ui/Link';
+import { Variant } from '#/ui/variants';
 
 export default async function Page() {
   const user = await getCurrentUser();
@@ -23,169 +24,169 @@ export default async function Page() {
         </Col>
       )}
       <Col w='12'>
-        <Alert variant='success'>
+        <Alert variant={Variant.Success}>
           <Heading size='3'>12</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='6'>
-        <Alert variant='warning'>
+        <Alert variant={Variant.Warning}>
           <Heading size='3'>6</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='6'>
-        <Alert variant='warning'>
+        <Alert variant={Variant.Warning}>
           <Heading size='3'>6</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='4'>
-        <Alert variant='error'>
+        <Alert variant={Variant.Error}>
           <Heading size='3'>4</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='4'>
-        <Alert variant='error'>
+        <Alert variant={Variant.Error}>
           <Heading size='3'>4</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='4'>
-        <Alert variant='error'>
+        <Alert variant={Variant.Error}>
           <Heading size='3'>4</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='3'>
-        <Alert variant='information'>
+        <Alert variant={Variant.Information}>
           <Heading size='3'>3</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='3'>
-        <Alert variant='information'>
+        <Alert variant={Variant.Information}>
           <Heading size='3'>3</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='3'>
-        <Alert variant='information'>
+        <Alert variant={Variant.Information}>
           <Heading size='3'>3</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='3'>
-        <Alert variant='information'>
+        <Alert variant={Variant.Information}>
           <Heading size='3'>3</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='2'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>2</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='2'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>2</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='2'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>2</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='2'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>2</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='2'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>2</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='2'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>2</Heading>
           <p>Ich bin eine Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>
       </Col>
       <Col w='1'>
-        <Alert variant='default'>
+        <Alert variant={Variant.Default}>
           <Heading size='3'>1</Heading>
           <p>Ja Box</p>
         </Alert>

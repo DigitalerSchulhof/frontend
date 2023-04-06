@@ -3,7 +3,7 @@
 import { useT } from '#/i18n/client';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Link } from '#/ui/Link';
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 import styled from 'styled-components';
 
 /**
@@ -78,7 +78,8 @@ type BreadcrumbItemWithFullPath = {
   hrefOverride?: string;
 };
 
-export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ path }) => {
+// eslint-disable-next-line react/display-name
+export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
   const { t } = useT();
 
   function translateItem(item: BreadcrumbItem): TranslatedBreadcrumbItem {
@@ -135,7 +136,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ path }) => {
       })}
     </StyledBreadcrumbs>
   );
-};
+});
 
 export const StyledBreadcrumbs = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.small};

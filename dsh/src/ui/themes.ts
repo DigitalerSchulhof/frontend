@@ -1,17 +1,11 @@
 'use client';
 
 import 'styled-components';
+import { Variant } from './variants';
 
 declare module 'styled-components' {
   export interface DefaultTheme extends Theme {}
 }
-
-export type Variant =
-  | 'success'
-  | 'warning'
-  | 'error'
-  | 'information'
-  | 'default';
 
 export interface Shared {
   pageWidth: string;

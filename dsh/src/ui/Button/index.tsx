@@ -1,14 +1,14 @@
 'use client';
 
-// import { Icon } from '../Icon';
-// import React, { HTMLAttributes } from 'react';
+import { Icon } from '../Icon';
+import React, { HTMLAttributes } from 'react';
 import { Link } from '#/ui/Link';
 import styled, {
   ExecutionContext,
   IStyledComponent,
   css,
 } from 'styled-components';
-import { Variant } from '../themes';
+import { Variant } from '../variants';
 
 export type BaseButtonProps = {
   variant?: Variant;
@@ -16,7 +16,7 @@ export type BaseButtonProps = {
 
 const ButtonStyles = ({
   theme,
-  variant = 'default',
+  variant = Variant.Default,
 }: BaseButtonProps & ExecutionContext) => css`
   border: 1px solid transparent;
   border-radius: ${theme.borderRadius.medium};
@@ -66,21 +66,21 @@ export const Button = (
   );
 };
 
-// export interface IconButtonProps
-//   extends ButtonProps,
-//     HTMLAttributes<HTMLButtonElement> {
-//   icon: React.ReactNode;
-// }
+export interface IconButtonProps
+  extends BaseButtonProps,
+    HTMLAttributes<HTMLButtonElement> {
+  icon: React.ReactNode;
+}
 
-// const UnstyledIconButton: React.FC<IconButtonProps> = ({ icon, ...props }) => {
-//   return <Button {...props}>{icon}</Button>;
-// };
+const UnstyledIconButton: React.FC<IconButtonProps> = ({ icon, ...props }) => {
+  return <Button {...props}>{icon}</Button>;
+};
 
-// export const IconButton = styled(UnstyledIconButton)`
-//   padding: 0;
-//   margin: 2px;
+export const IconButton = styled(UnstyledIconButton)`
+  padding: 0;
+  margin: 2px;
 
-//   & > ${Icon} {
-//     margin: 1px;
-//   }
-// `;
+  & > ${Icon} {
+    margin: 1px;
+  }
+`;

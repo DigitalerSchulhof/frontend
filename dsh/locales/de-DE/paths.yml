@@ -2,7 +2,9 @@ privacy: Datenschutz
 schulhof:
   index: Schulhof
   login: Anmeldung
-  forgot-password: Passwort_vergessen
+  forgot-password:
+    index: Passwort_vergessen
+    title: Passwort vergessen
   register: Registrierung
   account:
     index: Nutzerkonto

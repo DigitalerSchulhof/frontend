@@ -14,7 +14,18 @@
         "plugin:jsx-a11y/recommended",
         "next",
         "plugin:prettier/recommended"
-      ]
+      ],
+      "rules": {
+        // This doesn't work with memoized callbacks
+        "@typescript-eslint/no-misused-promises": [
+          "error",
+          {
+            "checksVoidReturn": {
+              "attributes": false
+            }
+          }
+        ]
+      }
     }
   ]
 }

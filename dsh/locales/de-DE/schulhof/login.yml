@@ -1,18 +1,60 @@
-welcome: Willkommen auf dem Schulhof {school_name_genus, select, m {des} w {der} n {des} other {~}} {school_name_genitive}!
-form:
-  title: Anmeldung
-  description: Um den Schulhof zu betreten, ist eine Anmeldung nötig.
-  buttons:
-    login: Anmelden
-    forgot-password: Passwort vergessen?
-    register: Registrieren
-  privacy:
-    - "<b>Datenschutzhinweis</b>: Im Schulhof werden Daten anders verarbeitet als auf der normalen Website. Was gespeichert und wie die Daten verarbeitet werden, ist der <PrivacyLink>Datenschutzseite</PrivacyLink> zu entnehmen."
-    - "Mit der Anmeldung wird automatisch »Einwilligung A« erteilt."
-  providers:
-    password:
+heading: Willkommen auf dem Schulhof {school_name_genus, select, m {des} w {der} n {des} other {~}} {school_name_genitive}!
+action:
+  login:
+    title: Anmeldung
+    description: Um den Schulhof zu betreten, ist eine Anmeldung nötig.
+    form:
       username: "Benutzername: "
       password: "Passwort: "
+    buttons:
+      login: Anmelden
+      forgot-password: Passwort vergessen?
+      register: Registrieren
+    privacy:
+      - "<b>Datenschutzhinweis</b>: Im Schulhof werden Daten anders verarbeitet als auf der normalen Website. Was gespeichert und wie die Daten verarbeitet werden, ist der <PrivacyLink>Datenschutzseite</PrivacyLink> zu entnehmen."
+      - "Mit der Anmeldung wird automatisch »Einwilligung A« erteilt."
+    modal:
+      loading:
+        title: Anmelden
+        description: Die eingegebenen Daten werden überprüft, die Anmeldung kann einige Sekunden dauern.
+      error:
+        title: Anmeldung fehlgeschlagen
+        description: Die Anmeldung ist fehlgeschlagen, denn ...
+        reasons:
+          internal-error:
+            - es ist ein interner Fehler aufgetreten.
+          invalid-credentials:
+            - der Benutzername wurde nicht gefunden oder
+            - das Passwort passt nicht zum Benutzernamen oder
+            - das Passwort ist nicht mehr gültig.
+  forgot-password:
+    title: Passwort vergessen
+    description: Um ein neues Passwort zu erhalten, müssen der Benutzername und die E-Mail-Adresse angegeben werden.
+    form:
+      username: "Benutzername: "
+      email: "E-Mail-Adresse: "
+    buttons:
+      send: Neues Password zuschicken
+      login: Zur Anmeldung
+    info:
+      title: "Bitte beachten:"
+      content: Das versendete Kennwort ist nur eine Stunde lang gültig und sollte daher sofort nach der Verwendung geändert werden.
+    modal:
+      loading:
+        title: Neues Passwort zuschicken
+        description: Die eingegebenen Daten werden überprüft und das neue Password wird verschickt.
+      error:
+        title: Neues Passwort Zuschicken fehlgeschlagen
+        description: Es wurde kein neues Passwort verschickt, denn ...
+        reasons:
+          internal-error:
+            - es ist ein interner Fehler aufgetreten.
+          invalid-credentials:
+            - der Benutzername wurde nicht gefunden oder
+            - die E-Mail-Adresse passt nicht zum Benutzernamen.
+      success:
+        title: Neues Passwort zugeschickt
+        description: Das neue Passwort wurde erfolgreich an <b>{email}</b> verschickt. {form_of_address, select, informal {Vergiss nicht} formal {Beachten Sie} other {~}}, dass {form_of_address, select, informal {es} formal {dieses} other {~}} nur eine Stunde lang gültig ist.
 apps:
   title: Jetzt auch als App
   ios: iPhone/iPad
@@ -34,17 +76,3 @@ system-requirements:
   check:
     yes: Der Browser unterstützt alle Funktionen des Digitalen Schulhofs.
     no: Der Browser unterstützt womöglich nicht alle Funktionen des Digitalen Schulhofs.
-modal:
-  loading:
-    title: Anmelden
-    description: Die eingegebenen Daten werden überprüft, die Anmeldung kann einige Sekunden dauern.
-  error:
-    title: Anmeldung fehlgeschlagen
-    description: Die Anmeldung ist fehlgeschlagen, denn ...
-    codes:
-      internal:
-        - es ist ein interner Fehler aufgetreten.
-      invalid-credentials:
-        - der Benutzername wurde nicht gefunden oder
-        - das Passwort passt nicht zum Benutzernamen oder
-        - das Passwort ist nicht mehr gültig.

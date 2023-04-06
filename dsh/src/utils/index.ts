@@ -29,3 +29,9 @@ export function flattenObject(obj: unknown, joiner = '_'): object {
 export async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export class ErrorWithPayload extends Error {
+  constructor(message: string, readonly data?: Record<string, unknown>) {
+    super(message);
+  }
+}

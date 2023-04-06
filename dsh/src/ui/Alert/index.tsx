@@ -1,14 +1,14 @@
 'use client';
 
 import styled, { css } from 'styled-components';
-import { Variant } from '../themes';
+import { Variant } from '../variants';
 
 export interface AlertProps {
   variant: Variant;
 }
 
 export const Alert = styled.div<AlertProps>(
-  ({ theme, variant = 'default' }) => css`
+  ({ theme, variant = Variant.Default }) => css`
     margin: 10px 0;
     text-align: left;
     padding: ${theme.padding.medium};

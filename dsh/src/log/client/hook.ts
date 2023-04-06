@@ -1,7 +1,14 @@
+'use client';
+
+import { useMemo } from 'react';
+
 export function useLog() {
-  return {
-    error: (...args: any[]) => {
-      console.error(...args);
-    },
-  };
+  return useMemo(
+    () => ({
+      error: (...args: any[]) => {
+        console.error(...args);
+      },
+    }),
+    []
+  );
 }

@@ -1,5 +1,6 @@
+import { useMemo } from 'react';
 import { useT } from '../client';
-import { Translations, TranslationsWithStringType } from '../translations';
+import { Translations } from '../translations';
 
 export type TProps<K extends keyof Translations> = {
   t: K;
@@ -9,7 +10,7 @@ export type TProps<K extends keyof Translations> = {
     }
   : { args?: never });
 
-export const T = <K extends TranslationsWithStringType>({
+export const T = <K extends keyof Translations>({
   t,
   args,
 }: TProps<K>): JSX.Element => {
@@ -24,6 +25,9 @@ export const T = <K extends TranslationsWithStringType>({
   // eslint-disable-next-line react-hooks/rules-of-hooks -- This is for this component to work both on the server and the client
   const { t: tFunc } = useT();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return <>{tFunc(t, args as any)}</>;
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- This is for this component to work both on the server and the client
+  return useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return <>{tFunc(t, args as any)}</>;
+  }, [t, args, tFunc]);
 };

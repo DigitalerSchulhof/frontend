@@ -1,33 +1,32 @@
 import { BackendContext, getContext } from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
+import { AccountBase } from '#/backend/repositories/content/account';
 import {
-  AccountPasswordFilter,
+  AccountEmailFilter,
   AccountUsernameFilter,
 } from '#/backend/repositories/content/account/filters';
-import { PersonBase } from '#/backend/repositories/content/person';
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { ErrorWithPayload } from '#/utils';
-import { aql } from 'arangojs';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const body = await req.json();
 
-  const { username, password } = body;
+  const { username, email } = body;
 
   const context = getContext(req);
 
-  const person = await getPersonFromUsernameAndPassword(
+  const account = await getAccountFromUsernameAndEmail(
     context,
     username,
-    password
+    email
   );
 
-  if (!person) {
+  if (!account) {
     return NextResponse.json(
       {
-        error: 'Invalid username or password',
+        error: 'Username and email do not match',
       },
       {
         status: 401,
@@ -35,36 +34,29 @@ export async function POST(req: Request) {
     );
   }
 
-  const jwt = await context.services.session.createJwt(context, person.id);
+  await sendPasswordResetEmail(context, account);
 
   return NextResponse.json({
-    jwt,
+    formOfAddress: account.formOfAddress,
   });
 }
 
-async function getPersonFromUsernameAndPassword(
+async function getAccountFromUsernameAndEmail(
   context: BackendContext,
   username: unknown,
-  password: unknown
-): Promise<WithId<PersonBase> | null> {
-  if (!username || !password) {
+  email: unknown
+): Promise<WithId<AccountBase> | null> {
+  if (!username || !email) {
     return null;
   }
 
-  if (typeof username !== 'string' || typeof password !== 'string') {
+  if (typeof username !== 'string' || typeof email !== 'string') {
     return null;
   }
 
   const accountFilter = new AndFilter(
     new AccountUsernameFilter(new EqFilterOperator(username)),
-    new AccountPasswordFilter(
-      (variableName) =>
-        new EqFilterOperator<string>(
-          aql`
-            SHA512(CONCAT(${password}, ${variableName}.salt))
-          `
-        )
-    )
+    new AccountEmailFilter(new EqFilterOperator(email))
   );
 
   const accounts = await context.services.account.search({
@@ -81,9 +73,12 @@ async function getPersonFromUsernameAndPassword(
     });
   }
 
-  const person = await context.services.person.getById(
-    accounts.nodes[0].personId
-  );
+  return accounts.nodes[0];
+}
 
-  return person;
+async function sendPasswordResetEmail(
+  _context: BackendContext,
+  account: WithId<AccountBase>
+): Promise<void> {
+  console.log(`Sent email to ${account.email}`);
 }

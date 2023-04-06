@@ -3,12 +3,12 @@
 import { T } from '#/i18n';
 import { useSettings } from '#/settings/client';
 
-export const SchulhofLoginHeader = () => {
+export const SchulhofLoginHeading = () => {
   const settings = useSettings();
 
   return (
     <T
-      t='schulhof.login.welcome'
+      t='schulhof.login.heading'
       args={{
         school_name_genus: settings.school.name.genus,
         school_name_genitive: settings.school.name.genitive,
