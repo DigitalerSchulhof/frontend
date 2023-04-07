@@ -5,6 +5,17 @@ import * as fs from 'fs';
 import * as globby from 'globby';
 import * as path from 'path';
 
+const SPECIAL_FILE_NAMES = [
+  /page.tsx?/,
+  /route.tsx?/,
+  /layout.tsx?/,
+  /template.tsx?/,
+  /loading.tsx?/,
+  /error.tsx?/,
+  /global-error.tsx?/,
+  /not-found.tsx?/,
+];
+
 export class AppDirTranslator {
   private watcher: AppDirTranslatorWatcher | null = null;
 
@@ -23,6 +34,8 @@ export class AppDirTranslator {
   }
 
   addAppDirFile(appDirFile: string): void {
+    if (!this.shouldAddAppDirFile(appDirFile)) return;
+
     const nextAppDirFile =
       this.translationService.getNextAppDirFile(appDirFile);
     const nextAppDirFilePath = path.join(__nextApp, nextAppDirFile);
@@ -38,6 +51,12 @@ export class AppDirTranslator {
       nextAppDirFilePath,
       this.makeNextAppDirFileContent(appDirFile)
     );
+  }
+
+  private shouldAddAppDirFile(appDirFile: string): boolean {
+    const appDirFileName = appDirFile.split('/').at(-1)!;
+
+    return SPECIAL_FILE_NAMES.some((f) => f.test(appDirFileName));
   }
 
   removeAppDirFile(appDirFile: string): void {
