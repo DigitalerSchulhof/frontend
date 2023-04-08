@@ -8,15 +8,26 @@ import styled from 'styled-components';
 
 export interface LinkProps extends Omit<NextLinkProps, 'href'> {
   children?: React.ReactNode;
+  /**
+   * @default false
+   */
+  external?: boolean;
   href: NextLinkProps['href'] | TranslationsWithStringTypeAndNoVariables[];
 }
 
-const UnstyledLink: React.FC<LinkProps> = ({ href, ...props }) => {
+const UnstyledLink: React.FC<LinkProps> = ({ href, external, ...props }) => {
   const { t } = useT();
 
   const hrefString = Array.isArray(href) ? `/${href.map(t).join('/')}` : href;
 
-  return <NextLink href={hrefString} {...props} />;
+  const externalProps = external
+    ? {
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      }
+    : {};
+
+  return <NextLink href={hrefString} {...externalProps} {...props} />;
 };
 
 export const Link = styled(UnstyledLink)`
