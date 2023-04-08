@@ -14,7 +14,7 @@ export async function requireLogin(req = true): Promise<void> {
   if (req) {
     redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.login')}`);
   } else {
-    redirect(`/${t('paths.schulhof')}`);
+    redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}}`);
   }
 }
 
@@ -31,6 +31,8 @@ export async function getCurrentUser(): Promise<{
     if (typeof content === 'string') return null;
 
     if (!('id' in content)) return null;
+
+    // TODO: Verify id is valid
 
     return {
       id: content.id,

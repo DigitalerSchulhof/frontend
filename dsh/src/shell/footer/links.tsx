@@ -1,10 +1,9 @@
 import { T } from '#/i18n';
 import { FooterButton } from '#/shell/footer/button';
-import { Col } from '#/ui/Col';
 
 export const Links = () => {
   return (
-    <Col w='12'>
+    <>
       <FooterButton href={['paths.contact']}>
         <T t='footer.links.contact' />
       </FooterButton>
@@ -14,6 +13,6 @@ export const Links = () => {
       <FooterButton href={['paths.privacy']}>
         <T t='footer.links.privacy' />
       </FooterButton>
-    </Col>
+    </>
   );
 };

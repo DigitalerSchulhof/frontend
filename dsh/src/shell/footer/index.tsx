@@ -1,5 +1,6 @@
 'use client';
 
+import { Col } from '#/ui/Col';
 import { styled } from 'styled-components';
 import { Credits } from './credits';
 import { Links } from './links';
@@ -7,8 +8,12 @@ import { Links } from './links';
 export const Footer = () => {
   return (
     <FooterWrapper>
-      <Links />
-      <Credits />
+      <Col w='12'>
+        <Links />
+      </Col>
+      <Col w='12'>
+        <Credits />
+      </Col>
     </FooterWrapper>
   );
 };
