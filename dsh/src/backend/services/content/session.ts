@@ -1,9 +1,7 @@
-import { BackendContext } from '#/backend/context';
-import { WithId } from '#/backend/repositories/arango';
-import { SessionBase } from '#/backend/repositories/content/session';
-import { Filter } from '#/backend/repositories/filters';
-import { MakeSearchQuery, Paginated } from '#/backend/repositories/search';
-import { MakePatch } from '#/backend/repositories/utils';
+import {
+  SessionBase,
+  SessionRepository,
+} from '#/backend/repositories/content/session';
 import { config } from '#/config';
 import * as jwt from 'jsonwebtoken';
 import { Service } from '../base';
@@ -15,9 +13,14 @@ export type JwtPayload = {
   hasSeenLastLogin: boolean;
 };
 
-export class SessionService extends Service<'sessions', SessionBase> {
+export class SessionService extends Service<
+  'sessions',
+  SessionBase,
+  SessionRepository
+> {
   async createJwt(accountId: string): Promise<string> {
-    const iat = Math.floor(Date.now() / 1000);
+    const now = new Date();
+    const iat = Math.floor(now.getTime() / 1000);
 
     const session = await this.repository.create({
       accountId,

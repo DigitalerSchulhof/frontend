@@ -1,4 +1,4 @@
-import { Logger } from '#/backend/logger';
+import { Logger } from '#/log/server';
 import { UserContextCreatorContext } from '..';
 
 export interface BackendLoggerContext {

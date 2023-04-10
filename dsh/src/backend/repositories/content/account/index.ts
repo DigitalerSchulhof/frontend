@@ -1,5 +1,5 @@
 import { aql } from 'arangojs';
-import { ArangoRepository } from '../../arango';
+import { ArangoRepository, WithId } from '../../arango';
 
 export type FormOfAddress = 'formal' | 'informal';
 
@@ -19,15 +19,27 @@ export class AccountRepository extends ArangoRepository<
 > {
   protected readonly collectionName = 'accounts';
 
-  // TODO: Should Date be stored as number?
-  async updateLastLogin(id: string, lastLogin: Date): Promise<void> {
-    await this.query(aql`
+  async updateLastLogin(
+    id: string,
+    lastLogin: number
+  ): Promise<WithId<AccountBase>> {
+    const res = await this.query<WithId<AccountBase>>(aql`
       LET doc = DOCUMENT(${this.collectionNameLiteral}, ${id})
 
       UPDATE doc WITH {
-        lastLogin: ${lastLogin},
-        secondLastLogin: doc.lastLogin
+        secondLastLogin: doc.lastLogin,
+        lastLogin: ${lastLogin}
       } IN ${this.collectionNameLiteral}
+
+      RETURN MERGE(
+        UNSET(NEW, "_key", "_id", "_rev"),
+        {
+          id: NEW._key,
+          rev: NEW._rev
+        }
+      )
     `);
+
+    return (await res.next())!;
   }
 }

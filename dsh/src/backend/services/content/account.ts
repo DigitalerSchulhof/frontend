@@ -47,6 +47,11 @@ export class AccountService extends Service<
     accountId: string,
     lastLogin = new Date()
   ): Promise<void> {
-    this.repository.updateLastLogin(accountId, lastLogin);
+    const res = await this.repository.updateLastLogin(
+      accountId,
+      Math.floor(lastLogin.getTime() / 1000)
+    );
+
+    await this.cache.set(res.id, res);
   }
 }

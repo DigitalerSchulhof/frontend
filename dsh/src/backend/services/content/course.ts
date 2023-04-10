@@ -1,4 +1,11 @@
-import { CourseBase } from '#/backend/repositories/content/course';
+import {
+  CourseBase,
+  CourseRepository,
+} from '#/backend/repositories/content/course';
 import { Service } from '../base';
 
-export class CourseService extends Service<'courses', CourseBase> {}
+export class CourseService extends Service<
+  'courses',
+  CourseBase,
+  CourseRepository
+> {}

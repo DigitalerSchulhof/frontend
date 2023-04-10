@@ -1,5 +1,8 @@
 import { WithId } from '#/backend/repositories/arango';
-import { ClassBase } from '#/backend/repositories/content/class';
+import {
+  ClassBase,
+  ClassRepository,
+} from '#/backend/repositories/content/class';
 import { ClassFilter } from '#/backend/repositories/content/class/filters';
 import { CourseClassIdFilter } from '#/backend/repositories/content/course/filters';
 import {
@@ -8,7 +11,11 @@ import {
 } from '#/backend/repositories/filters/operators';
 import { Service } from '../base';
 
-export class ClassService extends Service<'classes', ClassBase> {
+export class ClassService extends Service<
+  'classes',
+  ClassBase,
+  ClassRepository
+> {
   override async delete(
     id: string,
     ifRev?: string | undefined

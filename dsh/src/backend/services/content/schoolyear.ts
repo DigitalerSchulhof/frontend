@@ -1,6 +1,9 @@
 import { WithId } from '#/backend/repositories/arango';
 import { LevelSchoolyearIdFilter } from '#/backend/repositories/content/level/filters';
-import { SchoolyearBase } from '#/backend/repositories/content/schoolyear';
+import {
+  SchoolyearBase,
+  SchoolyearRepository,
+} from '#/backend/repositories/content/schoolyear';
 import { SchoolyearFilter } from '#/backend/repositories/content/schoolyear/filters';
 import {
   EqFilterOperator,
@@ -8,7 +11,11 @@ import {
 } from '#/backend/repositories/filters/operators';
 import { Service } from '../base';
 
-export class SchoolyearService extends Service<'schoolyears', SchoolyearBase> {
+export class SchoolyearService extends Service<
+  'schoolyears',
+  SchoolyearBase,
+  SchoolyearRepository
+> {
   override async delete(
     id: string,
     ifRev?: string | undefined

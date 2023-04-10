@@ -13,7 +13,7 @@ import { Validator } from '#/backend/validators/base';
 export abstract class Service<
   Name extends string,
   Base extends Record<string, string | number | boolean | null>,
-  Repository extends ArangoRepository<Name, Base> = ArangoRepository<Name, Base>
+  Repository extends ArangoRepository<Name, Base>
 > {
   constructor(
     protected readonly repository: Repository,

@@ -1,6 +1,9 @@
 import { WithId } from '#/backend/repositories/arango';
 import { AccountPersonIdFilter } from '#/backend/repositories/content/account/filters';
-import { PersonBase } from '#/backend/repositories/content/person';
+import {
+  PersonBase,
+  PersonRepository,
+} from '#/backend/repositories/content/person';
 import { PersonFilter } from '#/backend/repositories/content/person/filters';
 import {
   EqFilterOperator,
@@ -8,7 +11,11 @@ import {
 } from '#/backend/repositories/filters/operators';
 import { Service } from '../base';
 
-export class PersonService extends Service<'persons', PersonBase> {
+export class PersonService extends Service<
+  'persons',
+  PersonBase,
+  PersonRepository
+> {
   override async delete(
     id: string,
     ifRev?: string | undefined

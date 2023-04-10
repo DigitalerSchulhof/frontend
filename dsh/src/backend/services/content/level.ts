@@ -1,6 +1,9 @@
 import { WithId } from '#/backend/repositories/arango';
 import { ClassLevelIdFilter } from '#/backend/repositories/content/class/filters';
-import { LevelBase } from '#/backend/repositories/content/level';
+import {
+  LevelBase,
+  LevelRepository,
+} from '#/backend/repositories/content/level';
 import { LevelFilter } from '#/backend/repositories/content/level/filters';
 import {
   EqFilterOperator,
@@ -8,7 +11,11 @@ import {
 } from '#/backend/repositories/filters/operators';
 import { Service } from '../base';
 
-export class LevelService extends Service<'levels', LevelBase> {
+export class LevelService extends Service<
+  'levels',
+  LevelBase,
+  LevelRepository
+> {
   override async delete(
     id: string,
     ifRev?: string | undefined

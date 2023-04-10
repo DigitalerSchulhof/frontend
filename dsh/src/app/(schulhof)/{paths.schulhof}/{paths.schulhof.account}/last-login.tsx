@@ -10,7 +10,7 @@ export async function getLastLoginAndUpdateDidShow(
   account: WithId<AccountBase>,
   session: WithId<SessionBase>
 ): Promise<React.ReactNode> {
-  if (session.didShowLastLogin) return null;
+  // if (session.didShowLastLogin) return null;
   if (!account.secondLastLogin) return null;
 
   await context.services.session.update(session.id, {
@@ -21,7 +21,7 @@ export async function getLastLoginAndUpdateDidShow(
     <T
       t='schulhof.account.last-login'
       args={{
-        last_login: account.secondLastLogin,
+        last_login: new Date(account.secondLastLogin * 1000),
         TheftLink: makeLink([
           'paths.schulhof',
           'paths.schulhof.account',

@@ -34,7 +34,7 @@ export async function requireNoLogin(): Promise<void> {
   const session = (await getCurrentSession(context)) !== null;
 
   if (session) {
-    redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}}`);
+    redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}`);
   }
 }
 
