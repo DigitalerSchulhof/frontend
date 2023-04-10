@@ -1,15 +1,21 @@
+import { BackendContext } from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
 import { AccountBase } from '#/backend/repositories/content/account';
 import { SessionBase } from '#/backend/repositories/content/session';
 import { T, makeLink } from '#/i18n';
 import React from 'react';
 
-export function getLastLoginAndSetCookie(
+export async function getLastLoginAndUpdateDidShow(
+  context: BackendContext,
   account: WithId<AccountBase>,
   session: WithId<SessionBase>
-): React.ReactNode {
+): Promise<React.ReactNode> {
   if (session.didShowLastLogin) return null;
   if (!account.secondLastLogin) return null;
+
+  await context.services.session.update(session.id, {
+    didShowLastLogin: true,
+  });
 
   return (
     <T

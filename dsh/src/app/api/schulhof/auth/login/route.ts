@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const jwt = await context.services.session.createJwt(context, account.id);
+  const jwt = await context.services.session.createJwt(account.id);
 
   await context.services.account.updateLastLogin(account.id);
 

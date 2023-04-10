@@ -9,6 +9,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export async function requireLogin(): Promise<{
+  context: BackendContext;
   jwtPayload: JwtPayload;
   session: WithId<SessionBase>;
   person: WithId<PersonBase>;
@@ -23,7 +24,7 @@ export async function requireLogin(): Promise<{
     redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.login')}`);
   }
 
-  return personEtc;
+  return { ...personEtc, context };
 }
 
 export async function requireNoLogin(): Promise<void> {

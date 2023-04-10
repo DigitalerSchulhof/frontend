@@ -15,55 +15,8 @@ export type JwtPayload = {
   hasSeenLastLogin: boolean;
 };
 
-/**
- * None of the calls to the repository are cached.
- */
 export class SessionService extends Service<'sessions', SessionBase> {
-  override async getById(id: string): Promise<WithId<SessionBase> | null> {
-    return this.repository.getById(id);
-  }
-
-  override async getByIds(
-    ids: readonly string[]
-  ): Promise<(WithId<SessionBase> | null)[]> {
-    return this.repository.getByIds(ids);
-  }
-  override async create(post: SessionBase): Promise<WithId<SessionBase>> {
-    await this.validator.assertCanCreate(post);
-
-    return this.repository.create(post);
-  }
-
-  override async update(
-    id: string,
-    patch: MakePatch<SessionBase>,
-    ifRev?: string
-  ): Promise<WithId<SessionBase>> {
-    await this.validator.assertCanUpdate(id, patch);
-
-    return this.repository.update(id, patch, ifRev);
-  }
-
-  override async delete(
-    id: string,
-    ifRev?: string
-  ): Promise<WithId<SessionBase>> {
-    return this.repository.delete(id, ifRev);
-  }
-
-  override async filterDelete(
-    filter: Filter<'sessions'>
-  ): Promise<WithId<SessionBase>[]> {
-    return this.repository.filterDelete(filter);
-  }
-
-  override async search(
-    query: MakeSearchQuery<'sessions'>
-  ): Promise<Paginated<WithId<SessionBase>>> {
-    return this.repository.search(query);
-  }
-
-  async createJwt(context: BackendContext, accountId: string): Promise<string> {
+  async createJwt(accountId: string): Promise<string> {
     const iat = Math.floor(Date.now() / 1000);
 
     const session = await this.repository.create({

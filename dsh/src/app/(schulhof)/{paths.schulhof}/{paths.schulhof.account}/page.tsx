@@ -3,12 +3,16 @@ import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
-import { getLastLoginAndSetCookie } from './last-login';
+import { getLastLoginAndUpdateDidShow } from './last-login';
 
 export default async function Page() {
-  const { person, account, session } = await requireLogin();
+  const { context, person, account, session } = await requireLogin();
 
-  const lastLogin = getLastLoginAndSetCookie(account, session);
+  const lastLogin = await getLastLoginAndUpdateDidShow(
+    context,
+    account,
+    session
+  );
 
   return (
     <>
@@ -23,6 +27,7 @@ export default async function Page() {
             }}
           />
         </Heading>
+        {/* @ts-expect-error -- Server Component */}
         <p>{lastLogin}</p>
       </Col>
     </>
