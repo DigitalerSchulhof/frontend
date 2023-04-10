@@ -4,12 +4,12 @@ import { MakePatch } from '#/backend/repositories/utils';
 import { Validator } from '../base';
 import { InputValidationError, aggregateValidationErrors } from '../utils';
 
-export const PERSON_DOES_NOT_EXIST = 'PERSON_DOES_NOT_EXIST';
-export const CANNOT_CHANGE_PERSON_ID = 'CANNOT_CHANGE_PERSON_ID';
+export const ACCOUNT_DOES_NOT_EXIST = 'ACCOUNT_DOES_NOT_EXIST';
+export const CANNOT_CHANGE_ACCOUNT_ID = 'CANNOT_CHANGE_ACCOUNT_ID';
 
 export class SessionValidator extends Validator<'sessions', SessionBase> {
   override async assertCanCreate(post: SessionBase): Promise<void | never> {
-    await this.assertPersonExists(post.personId);
+    await this.assertAccountExists(post.accountId);
 
     const error = await aggregateValidationErrors([]);
 
@@ -27,19 +27,19 @@ export class SessionValidator extends Validator<'sessions', SessionBase> {
     }
 
     const error = await aggregateValidationErrors([
-      patch.personId === undefined || patch.personId === base.personId
+      patch.accountId === undefined || patch.accountId === base.accountId
         ? null
-        : this.throwValidationError(CANNOT_CHANGE_PERSON_ID),
+        : this.throwValidationError(CANNOT_CHANGE_ACCOUNT_ID),
     ]);
 
     if (error) throw error;
   }
 
-  private async assertPersonExists(personId: string): Promise<void | never> {
-    const [schoolyear] = await this.repositories.person.getByIds([personId]);
+  private async assertAccountExists(accountId: string): Promise<void | never> {
+    const [schoolyear] = await this.repositories.account.getByIds([accountId]);
 
     if (!schoolyear) {
-      throw new InputValidationError(PERSON_DOES_NOT_EXIST);
+      throw new InputValidationError(ACCOUNT_DOES_NOT_EXIST);
     }
   }
 }

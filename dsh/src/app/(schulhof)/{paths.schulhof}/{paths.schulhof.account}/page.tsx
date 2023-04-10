@@ -1,13 +1,14 @@
-import { getCurrentUser, requireLogin } from '#/auth/server';
+import { requireLogin } from '#/auth/server';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
+import { getLastLoginAndSetCookie } from './last-login';
 
 export default async function Page() {
-  await requireLogin(true);
+  const { person, account, session } = await requireLogin();
 
-  const user = await getCurrentUser();
+  const lastLogin = getLastLoginAndSetCookie(account, session);
 
   return (
     <>
@@ -17,11 +18,12 @@ export default async function Page() {
           <T
             t='schulhof.account.title'
             args={{
-              user_firstname: 'yo',
-              user_lastname: 'yo',
+              person_firstname: person.firstname,
+              person_lastname: person.lastname,
             }}
           />
         </Heading>
+        <p>{lastLogin}</p>
       </Col>
     </>
   );

@@ -25,3 +25,7 @@ export class PersonIdFilter extends ScalarPersonFilter<IDFilterOperator> {
 export class PersonFirstnameFilter extends ScalarPersonFilter<StringFilterOperator> {
   protected readonly propertyName = 'firstname';
 }
+
+export class PersonLastnameFilter extends ScalarPersonFilter<StringFilterOperator> {
+  protected readonly propertyName = 'lastname';
+}

@@ -1,10 +1,10 @@
 import { BackendContext, getContext } from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
+import { AccountBase } from '#/backend/repositories/content/account';
 import {
   AccountPasswordFilter,
   AccountUsernameFilter,
 } from '#/backend/repositories/content/account/filters';
-import { PersonBase } from '#/backend/repositories/content/person';
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { ErrorWithPayload } from '#/utils';
@@ -18,13 +18,13 @@ export async function POST(req: Request) {
 
   const context = getContext(req);
 
-  const person = await getPersonFromUsernameAndPassword(
+  const account = await getAccountFromUsernameAndPassword(
     context,
     username,
     password
   );
 
-  if (!person) {
+  if (!account) {
     return NextResponse.json(
       {
         error: 'Invalid username or password',
@@ -35,18 +35,20 @@ export async function POST(req: Request) {
     );
   }
 
-  const jwt = await context.services.session.createJwt(context, person.id);
+  const jwt = await context.services.session.createJwt(context, account.id);
+
+  await context.services.account.updateLastLogin(account.id);
 
   return NextResponse.json({
     jwt,
   });
 }
 
-async function getPersonFromUsernameAndPassword(
+async function getAccountFromUsernameAndPassword(
   context: BackendContext,
   username: unknown,
   password: unknown
-): Promise<WithId<PersonBase> | null> {
+): Promise<WithId<AccountBase> | null> {
   if (!username || !password) {
     return null;
   }
@@ -81,9 +83,5 @@ async function getPersonFromUsernameAndPassword(
     });
   }
 
-  const person = await context.services.person.getById(
-    accounts.nodes[0].personId
-  );
-
-  return person;
+  return accounts.nodes[0];
 }

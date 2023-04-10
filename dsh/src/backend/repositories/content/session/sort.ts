@@ -6,10 +6,14 @@ export class SessionIdSort extends SessionSort {
   protected readonly propertyName = '_key';
 }
 
-export class SessionPersonIdSort extends SessionSort {
-  protected readonly propertyName = 'personId';
+export class SessionAccountIdSort extends SessionSort {
+  protected readonly propertyName = 'accountId';
 }
 
 export class SessionIatSort extends SessionSort {
   protected readonly propertyName = 'iat';
+}
+
+export class SessionDidShowLastLoginSort extends SessionSort {
+  protected readonly propertyName = 'didShowLastLogin';
 }

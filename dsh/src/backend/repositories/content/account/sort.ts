@@ -21,3 +21,11 @@ export class AccountPersonIdSort extends AccountSort {
 export class AccountFormOfAddressSort extends AccountSort {
   protected readonly propertyName = 'formOfAddress';
 }
+
+export class AccountLastLoginSort extends AccountSort {
+  protected readonly propertyName = 'lastLogin';
+}
+
+export class AccountSecondLastLoginSort extends AccountSort {
+  protected readonly propertyName = 'secondLastLogin';
+}

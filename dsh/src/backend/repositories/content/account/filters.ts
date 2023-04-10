@@ -8,6 +8,7 @@ import {
   InFilterOperator,
   NeqFilterOperator,
   NinFilterOperator,
+  NullableNumberFilterOperator,
   StringFilterOperator,
 } from '../../filters/operators';
 import { PersonFilter, ScalarPersonFilter } from '../person/filters';
@@ -57,4 +58,12 @@ export class AccountPasswordFilter extends ScalarAccountFilter<StringFilterOpera
 
 export class AccountFormOfAddressFilter extends ScalarPersonFilter<FormOfAddressFilterOperator> {
   protected readonly propertyName = 'formOfAddress';
+}
+
+export class AccountLastLoginFilter extends ScalarPersonFilter<NullableNumberFilterOperator> {
+  protected readonly propertyName = 'lastLogin';
+}
+
+export class AccountSecondLastLoginFilter extends ScalarPersonFilter<NullableNumberFilterOperator> {
+  protected readonly propertyName = 'secondLastLogin';
 }

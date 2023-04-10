@@ -1,13 +1,12 @@
 'use client';
 
-import { T } from '#/i18n';
+import { T, makeLink } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button } from '#/ui/Button';
 import { Form, FormRow } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
-import { Link } from '#/ui/Link';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
@@ -67,9 +66,7 @@ export const LoginForm = () => {
         </Table.Body>
       </Table>
       {t('schulhof.login.action.login.privacy', {
-        PrivacyLink: (c) =>
-          // eslint-disable-next-line react/jsx-key
-          c.map((e) => <Link href={['paths.privacy']}>{e}</Link>),
+        PrivacyLink: makeLink(['paths.privacy']),
       }).map((s, i) => (
         <Note key={i}>{s}</Note>
       ))}

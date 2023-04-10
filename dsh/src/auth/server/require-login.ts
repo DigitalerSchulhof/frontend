@@ -1,47 +1,85 @@
-import { config } from '#/config';
+import { BackendContext, getContext } from '#/backend/context';
+import { WithId } from '#/backend/repositories/arango';
+import { AccountBase } from '#/backend/repositories/content/account';
+import { PersonBase } from '#/backend/repositories/content/person';
+import { SessionBase } from '#/backend/repositories/content/session';
+import { JwtPayload } from '#/backend/services/content/session';
 import { getServerT } from '#/i18n/server';
-import * as jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-export async function requireLogin(req = true): Promise<void> {
+export async function requireLogin(): Promise<{
+  jwtPayload: JwtPayload;
+  session: WithId<SessionBase>;
+  person: WithId<PersonBase>;
+  account: WithId<AccountBase>;
+}> {
   const { t } = getServerT();
+  const context = getContext();
 
-  const isValid = (await getCurrentUser()) !== null;
+  const personEtc = await getCurrentPerson(context);
 
-  if (isValid === req) return;
-
-  if (req) {
+  if (!personEtc) {
     redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.login')}`);
-  } else {
+  }
+
+  return personEtc;
+}
+
+export async function requireNoLogin(): Promise<void> {
+  const { t } = getServerT();
+  const context = getContext();
+
+  const session = (await getCurrentSession(context)) !== null;
+
+  if (session) {
     redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}}`);
   }
 }
 
-export async function getCurrentUser(): Promise<{
-  id: string;
-} | null> {
+export async function getCurrentSession(
+  context: BackendContext
+): Promise<{ jwtPayload: JwtPayload; session: WithId<SessionBase> } | null> {
   const token = cookies().get('jwt')?.value;
 
   if (!token) return null;
 
-  try {
-    const content = jwt.verify(token, config.jwtSecret);
+  const content = context.services.session.verifyJwt(token);
 
-    if (typeof content === 'string') return null;
+  if (!content) return null;
 
-    if (!('id' in content)) return null;
-
-    // TODO: Verify id is valid
-
-    return {
-      id: content.id,
-    };
-  } catch (err) {
-    if (err instanceof jwt.JsonWebTokenError) {
-      return null;
-    }
-
-    throw err;
+  // Session expired
+  if (content.exp < Date.now() / 1000) {
+    return null;
   }
+
+  const session = await context.services.session.getById(content.sessionId);
+
+  // Session revoked
+  if (!session) return null;
+
+  return { jwtPayload: content, session };
+}
+
+export async function getCurrentPerson(context: BackendContext): Promise<{
+  jwtPayload: JwtPayload;
+  session: WithId<SessionBase>;
+  person: WithId<PersonBase>;
+  account: WithId<AccountBase>;
+} | null> {
+  const sessionAndPayload = await getCurrentSession(context);
+
+  if (!sessionAndPayload) return null;
+
+  const { jwtPayload, session } = sessionAndPayload;
+
+  const account = (await context.services.account.getById(session.accountId))!;
+  const person = (await context.services.person.getById(account.personId))!;
+
+  return {
+    jwtPayload,
+    session,
+    person,
+    account,
+  };
 }

@@ -9,3 +9,7 @@ export class PersonIdSort extends PersonSort {
 export class PersonFirstnameSort extends PersonSort {
   protected readonly propertyName = 'firstname';
 }
+
+export class PersonLastnameSort extends PersonSort {
+  protected readonly propertyName = 'lastname';
+}

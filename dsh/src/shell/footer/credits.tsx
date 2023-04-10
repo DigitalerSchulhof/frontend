@@ -1,5 +1,4 @@
-import { T } from '#/i18n';
-import { Link } from '#/ui/Link';
+import { T, makeLink } from '#/i18n';
 import { Note } from '#/ui/Note';
 
 export const Credits = () => {
@@ -8,40 +7,20 @@ export const Credits = () => {
       <T
         t='footer.credits'
         args={{
-          FatcowLink: (c) =>
-            c.map((e) => (
-              // eslint-disable-next-line react/jsx-key
-              <Link external href='http://www.fatcow.com/free-icons'>
-                {e}
-              </Link>
-            )),
-          FatcowLicenseLink: (c) =>
-            c.map((e) => (
-              // eslint-disable-next-line react/jsx-key
-              <Link
-                external
-                href='http://creativecommons.org/licenses/by/3.0/us/'
-              >
-                {e}
-              </Link>
-            )),
-          RobotoLink: (c) =>
-            c.map((e) => (
-              // eslint-disable-next-line react/jsx-key
-              <Link external href='https://github.com/google/roboto'>
-                {e}
-              </Link>
-            )),
-          RobotoLicenseLink: (c) =>
-            c.map((e) => (
-              // eslint-disable-next-line react/jsx-key
-              <Link
-                external
-                href='https://github.com/google/roboto/blob/main/LICENSE'
-              >
-                {e}
-              </Link>
-            )),
+          FatcowLink: makeLink('http://www.fatcow.com/free-icons', {
+            external: true,
+          }),
+          FatcowLicenseLink: makeLink(
+            'http://creativecommons.org/licenses/by/3.0/us/',
+            { external: true }
+          ),
+          RobotoLink: makeLink('https://github.com/google/roboto', {
+            external: true,
+          }),
+          RobotoLicenseLink: makeLink(
+            'https://github.com/google/roboto/blob/main/LICENSE',
+            { external: true }
+          ),
         }}
       />
     </Note>

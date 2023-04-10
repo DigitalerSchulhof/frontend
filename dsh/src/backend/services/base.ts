@@ -12,10 +12,11 @@ import { Validator } from '#/backend/validators/base';
 
 export abstract class Service<
   Name extends string,
-  Base extends Record<string, string | number | boolean | null>
+  Base extends Record<string, string | number | boolean | null>,
+  Repository extends ArangoRepository<Name, Base> = ArangoRepository<Name, Base>
 > {
   constructor(
-    protected readonly repository: ArangoRepository<Name, Base>,
+    protected readonly repository: Repository,
     protected readonly cache: ObjectCache<WithId<Base>>,
     protected readonly validator: Validator<Name, Base>,
     protected readonly services: Services

@@ -1,8 +1,9 @@
 import { ArangoRepository } from '../../arango';
 
 export type SessionBase = {
-  personId: string;
+  accountId: string;
   iat: number;
+  didShowLastLogin: boolean;
 };
 
 export class SessionRepository extends ArangoRepository<
