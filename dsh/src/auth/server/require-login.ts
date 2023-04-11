@@ -8,7 +8,7 @@ import { useT } from '#/i18n';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-export async function requireLogin(): Promise<{
+export async function useRequireLogin(): Promise<{
   context: BackendContext;
   jwtPayload: JwtPayload;
   session: WithId<SessionBase>;
@@ -27,7 +27,7 @@ export async function requireLogin(): Promise<{
   return { ...personEtc, context };
 }
 
-export async function requireNoLogin(): Promise<void> {
+export async function useRequireNoLogin(): Promise<void> {
   const { t } = useT();
   const context = getContext();
 

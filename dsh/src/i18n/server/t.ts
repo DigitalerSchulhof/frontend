@@ -1,6 +1,6 @@
 import { DEFAULT_LOCALE } from '#/utils';
 import { getOrMakeClientTranslations } from '.';
-import { makeIsTranslationKey, makeTFunction } from '../common/function';
+import { makeTFunction } from '../common/function';
 import { TContext } from '../common/utils';
 
 export function getServerT(): TContext {
@@ -12,6 +12,5 @@ export function getServerT(): TContext {
   return {
     t: makeTFunction(translations, locale),
     translations,
-    isTranslationKey: makeIsTranslationKey(translations),
   };
 }

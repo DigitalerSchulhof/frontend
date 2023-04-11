@@ -7,7 +7,6 @@ import { FormatXMLElementFn } from 'intl-messageformat';
 export type TContext = {
   t: TFunction;
   translations: ClientTranslations;
-  isTranslationKey: (key: string) => key is keyof Translations;
 };
 
 export function makeLink(

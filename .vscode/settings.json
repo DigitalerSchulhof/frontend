@@ -10,7 +10,7 @@
     "tsconfig.json": "tsconfig.*.json, tsconfig.tsbuildinfo"
   },
   "typescript.enablePromptUseWorkspaceTsdk": false,
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.tsdk": "dsh/node_modules/typescript/lib",
   "cSpell.words": [
     "Arango",
     "firstname",
