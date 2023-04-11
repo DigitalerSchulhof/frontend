@@ -18,7 +18,7 @@ const BodyWrapperOuter = styled.div(
   `
 );
 
-const BodyWrapperInner = styled.div`
+const BodyWrapperInner = styled.main`
   margin: 0 auto;
   max-width: 1000px;
   padding: ${({ theme }) => theme.padding.medium} 0;

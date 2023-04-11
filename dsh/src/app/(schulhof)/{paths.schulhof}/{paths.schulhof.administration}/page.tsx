@@ -1,11 +1,14 @@
 import { AdministrationOverviewSection } from '#/administration/overview/section';
 import { administrationSections } from '#/administration/sections';
+import { useRequireLogin } from '#/auth/server/require-login';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 
-export default function Page() {
+export default async function Page() {
+  await useRequireLogin();
+
   return (
     <>
       <Col w='12'>
