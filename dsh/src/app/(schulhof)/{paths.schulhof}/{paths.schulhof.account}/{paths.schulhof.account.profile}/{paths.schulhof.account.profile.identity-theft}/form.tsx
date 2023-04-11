@@ -10,7 +10,6 @@ import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
 import { sleep } from '#/utils';
-import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
 enum IdentityTheftState {
@@ -23,8 +22,6 @@ enum IdentityTheftState {
 }
 
 export const IdentityTheftForm = () => {
-  const router = useRouter();
-
   const [identityTheftState, setIdentityTheftState] =
     useState<IdentityTheftState>(IdentityTheftState.Idle);
 
@@ -43,10 +40,6 @@ export const IdentityTheftForm = () => {
     identityTheftState,
     setIdentityTheftState
   );
-
-  const goBack = useCallback(() => {
-    router.back();
-  }, [router]);
 
   return (
     <Form onSubmit={sendIdentityTheft}>
