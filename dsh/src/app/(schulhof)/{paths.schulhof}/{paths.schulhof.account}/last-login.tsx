@@ -10,7 +10,7 @@ export async function getLastLoginAndUpdateDidShow(
   account: WithId<AccountBase>,
   session: WithId<SessionBase>
 ): Promise<React.ReactNode> {
-  // if (session.didShowLastLogin) return null;
+  if (session.didShowLastLogin) return null;
   if (!account.secondLastLogin) return null;
 
   await context.services.session.update(session.id, {
@@ -26,7 +26,7 @@ export async function getLastLoginAndUpdateDidShow(
           'paths.schulhof',
           'paths.schulhof.account',
           'paths.schulhof.account.profile',
-          'paths.schulhof.account.profile.theft',
+          'paths.schulhof.account.profile.identity-theft',
         ]),
       }}
     />

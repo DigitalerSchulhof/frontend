@@ -25,10 +25,10 @@ export default async function Page() {
         </Heading>
       </Col>
       <Col w='12'>
-        <Alert variant={Variant.Warning}>
-          <Heading size='4'>
-            <T t='schulhof.register.description.title' />
-          </Heading>
+        <Alert
+          variant={Variant.Warning}
+          title='schulhof.register.description.title'
+        >
           <p>
             <T t='schulhof.register.description.text' />
           </p>

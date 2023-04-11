@@ -382,7 +382,7 @@ export class TranslationMapWriter {
     const propertySignatures: ts.PropertySignature[] = [];
 
     // <i> and <b> are in-built
-    const seenVariables = new Set(['i', 'b']);
+    const seenVariables = new Set(['i', 'b', 'u']);
 
     for (const astElement of astElements) {
       const typeNode = this.convertAstTypeToTsTypeNode(astElement);

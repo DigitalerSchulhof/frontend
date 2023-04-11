@@ -7,7 +7,6 @@ import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button } from '#/ui/Button';
 import { Form, FormRow } from '#/ui/Form';
-import { Heading } from '#/ui/Heading';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
@@ -64,10 +63,10 @@ export const ForgotPasswordForm = () => {
           />
         </Table.Body>
       </Table>
-      <Alert variant={Variant.Information}>
-        <Heading size='4'>
-          <T t='schulhof.login.action.forgot-password.info.title' />
-        </Heading>
+      <Alert
+        variant={Variant.Information}
+        title='schulhof.login.action.forgot-password.info.title'
+      >
         <p>
           <T t='schulhof.login.action.forgot-password.info.content' />
         </p>
@@ -110,7 +109,7 @@ function useSendForgotPassword(
             email,
           }),
         }),
-        // Avoid flashing the forgot password dialogue
+        // Avoid flashing the loading dialogue
         sleep(500),
       ]);
 
@@ -121,7 +120,7 @@ function useSendForgotPassword(
         }
 
         log.error('Error while sending forgot password link', {
-          username: usernameRef.current?.value,
+          username,
           status: res.status,
           body: await res.text(),
         });
@@ -171,10 +170,10 @@ function useForgotPasswordStateModal(
 
         return (
           <Modal onClose={setIdle}>
-            <Alert variant={Variant.Error}>
-              <Heading size='4'>
-                <T t='schulhof.login.action.forgot-password.modal.error.title' />
-              </Heading>
+            <Alert
+              variant={Variant.Error}
+              title='schulhof.login.action.forgot-password.modal.error.title'
+            >
               <p>
                 <T t='schulhof.login.action.forgot-password.modal.error.description' />
               </p>
@@ -203,10 +202,10 @@ function useForgotPasswordStateModal(
 
         return (
           <Modal onClose={setIdle}>
-            <Alert variant={Variant.Success}>
-              <Heading size='4'>
-                <T t='schulhof.login.action.forgot-password.modal.success.title' />
-              </Heading>
+            <Alert
+              variant={Variant.Success}
+              title='schulhof.login.action.forgot-password.modal.success.title'
+            >
               <p>
                 <T
                   t='schulhof.login.action.forgot-password.modal.success.description'

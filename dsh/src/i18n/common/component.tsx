@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useT } from '../client';
+import { useT } from './hook';
 import { Translations } from '../translations';
 
 export type TProps<K extends keyof Translations> = {
@@ -15,8 +15,8 @@ export const T = <K extends keyof Translations>({
   args,
 }: TProps<K>): JSX.Element => {
   if (typeof window === 'undefined') {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { t: tFunc } = require('../server').getServerT();
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- This is for this component to work both on the server and the client
+    const { t: tFunc } = useT();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return <>{tFunc(t, args as any)}</>;

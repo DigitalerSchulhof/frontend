@@ -22,13 +22,7 @@ function useBreadcrumbPath(): BreadcrumbItem[] {
         [t('paths.schulhof.login'), ['paths.schulhof', 'paths.schulhof.login']],
         [
           t('paths.schulhof.forgot-password'),
-          [
-            'paths.schulhof',
-            {
-              segment: 'paths.schulhof.forgot-password',
-              title: 'paths.schulhof.forgot-password.title',
-            },
-          ],
+          ['paths.schulhof', 'paths.schulhof.forgot-password'],
         ],
       ]),
     [t]

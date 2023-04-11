@@ -4,7 +4,7 @@ import { AccountBase } from '#/backend/repositories/content/account';
 import { PersonBase } from '#/backend/repositories/content/person';
 import { SessionBase } from '#/backend/repositories/content/session';
 import { JwtPayload } from '#/backend/services/content/session';
-import { getServerT } from '#/i18n/server';
+import { useT } from '#/i18n';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -15,7 +15,7 @@ export async function requireLogin(): Promise<{
   person: WithId<PersonBase>;
   account: WithId<AccountBase>;
 }> {
-  const { t } = getServerT();
+  const { t } = useT();
   const context = getContext();
 
   const personEtc = await getCurrentPerson(context);
@@ -28,7 +28,7 @@ export async function requireLogin(): Promise<{
 }
 
 export async function requireNoLogin(): Promise<void> {
-  const { t } = getServerT();
+  const { t } = useT();
   const context = getContext();
 
   const session = (await getCurrentSession(context)) !== null;

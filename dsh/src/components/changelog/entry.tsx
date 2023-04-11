@@ -1,10 +1,10 @@
 import { T } from '#/i18n';
-import { getServerT } from '#/i18n/server';
+import { useT } from '#/i18n';
 import { Heading } from '#/ui/Heading';
 import { ChangelogEntry as ChangelogEntryType } from './service';
 
 export const ChangelogEntry = ({ entry }: { entry: ChangelogEntryType }) => {
-  const { t } = getServerT();
+  const { t } = useT();
 
   const changeset = t(`schulhof.changelog.version.${entry.id}.changeset`);
 

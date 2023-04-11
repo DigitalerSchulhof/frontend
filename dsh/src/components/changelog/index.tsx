@@ -1,12 +1,11 @@
 import { VisibilityToggle } from '#/components/visibility-toggle';
-import { T } from '#/i18n';
-import { getServerT } from '#/i18n/server';
+import { T, useT } from '#/i18n';
 import { Heading } from '#/ui/Heading';
 import { ChangelogEntry } from './entry';
 import { changelogService } from './service';
 
 export const Changelog = () => {
-  const { t } = getServerT();
+  const { t } = useT();
 
   const [mostRecentEntry, ...oldEntries] =
     changelogService.getChangelogEntries();

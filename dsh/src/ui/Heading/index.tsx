@@ -1,6 +1,6 @@
 'use client';
 
-import { StyledBreadcrumbs } from '#/ui/Breadcrumbs';
+import { StyledBreadcrumbs } from '#/ui/Breadcrumbs/client';
 import styled, { css } from 'styled-components';
 
 export type HeadingSize = '1' | '2' | '3' | '4';

@@ -12,7 +12,13 @@ schulhof:
     index: Nutzerkonto
     profile:
       index: Profil
-      theft: Identitätsdiebstahl
+      title: Mein Profil
+      identity-theft:
+        index: Identitaetsdiebstahl
+        title: Identitätsdiebstahl
+      change-password:
+        index: Passwort_aendern
+        title: Passwort ändern
   administration:
     index: Verwaltung
     persons:

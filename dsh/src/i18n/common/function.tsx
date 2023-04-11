@@ -46,6 +46,8 @@ function transformTranslationAst(
       i: (c) => c.map((e) => <i>{e}</i>),
       // eslint-disable-next-line react/jsx-key
       b: (c) => c.map((e) => <b>{e}</b>),
+      // eslint-disable-next-line react/jsx-key
+      u: (c) => c.map((e) => <u>{e}</u>),
       ...args,
     });
   } catch (e) {

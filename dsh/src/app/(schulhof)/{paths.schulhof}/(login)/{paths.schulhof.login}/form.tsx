@@ -6,7 +6,6 @@ import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button } from '#/ui/Button';
 import { Form, FormRow } from '#/ui/Form';
-import { Heading } from '#/ui/Heading';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
@@ -122,7 +121,7 @@ function useSendLogin(
         }
 
         log.error('Error while logging in', {
-          username: usernameRef.current?.value,
+          username,
           status: res.status,
           body: await res.text(),
         });
@@ -169,10 +168,10 @@ function useLoginStateModal(
 
         return (
           <Modal onClose={setIdle}>
-            <Alert variant={Variant.Error}>
-              <Heading size='4'>
-                <T t='schulhof.login.action.forgot-password.modal.error.title' />
-              </Heading>
+            <Alert
+              variant={Variant.Error}
+              title='schulhof.login.action.forgot-password.modal.error.title'
+            >
               <p>
                 <T t='schulhof.login.action.forgot-password.modal.error.description' />
               </p>

@@ -1,12 +1,15 @@
-'use client';
-
-import { useT } from '#/i18n/client';
+import { useT } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
-import { Link } from '#/ui/Link';
+import {
+  StyledBreadcrumbItem,
+  StyledBreadcrumbs,
+} from '#/ui/Breadcrumbs/client';
+import { LinkProps } from 'next/link';
 import React, { Fragment, memo } from 'react';
-import styled from 'styled-components';
 
 /**
+ * For a segment `S`, the title of the breadcrumb is, if available, the translation `S.title`, otherwise the translation `S`.
+ *
  * @example
  * ```ts
  * const breadcrumbs = [
@@ -25,7 +28,6 @@ import styled from 'styled-components';
  *   'paths.schulhof',
  *   'paths.schulhof.administration',
  *   {
- *     title: 'paths.schulhof.administration.persons.title',
  *     segment: 'paths.schulhof.administration.persons',
  *     href: [
  *       'paths.schulhof',
@@ -43,7 +45,7 @@ import styled from 'styled-components';
  * ```
  */
 export type BreadcrumbItem =
-  | TranslationsWithStringTypeAndNoVariables
+  | Exclude<TranslationsWithStringTypeAndNoVariables, `{${string}}`>
   | {
       /**
        * The title of the breadcrumb item
@@ -56,7 +58,7 @@ export type BreadcrumbItem =
       /**
        * Override the href of the breadcrumb item (direct click)
        */
-      hrefOverride?: TranslationsWithStringTypeAndNoVariables[];
+      hrefOverride?: LinkProps['href'];
     };
 
 export interface BreadcrumbsProps {
@@ -69,34 +71,36 @@ type TranslatedBreadcrumbItem = {
   /**
    * Override the href of the breadcrumb item (direct click)
    */
-  hrefOverride?: string[];
+  hrefOverride?: LinkProps['href'];
 };
 
 type BreadcrumbItemWithFullPath = {
   title: string;
   href: string;
-  hrefOverride?: string;
+  hrefOverride?: LinkProps['href'];
 };
 
 // eslint-disable-next-line react/display-name
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
-  const { t } = useT();
+  const { t, translations } = useT();
 
   function translateItem(item: BreadcrumbItem): TranslatedBreadcrumbItem {
     if (typeof item === 'string') {
-      const translation = t(item);
-
-      return {
-        title: translation,
-        segment: translation,
-      };
-    } else {
-      return {
-        title: t(item.title),
-        segment: t(item.segment),
-        hrefOverride: item.hrefOverride?.map(t),
+      item = {
+        title: item,
+        segment: item,
       };
     }
+
+    return {
+      title:
+        `${item.title}.title` in translations
+          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            t(`${item.title}.title` as any)
+          : t(item.title),
+      segment: t(item.segment),
+      hrefOverride: item.hrefOverride,
+    };
   }
 
   const filledPath = path.reduce<BreadcrumbItemWithFullPath[]>((acc, item) => {
@@ -110,13 +114,13 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
       acc.push({
         title,
         href: `${lastItem.href}/${segment}`,
-        hrefOverride: hrefOverride?.join('/'),
+        hrefOverride: hrefOverride,
       });
     } else {
       acc.push({
         title,
         href: `/${segment}`,
-        hrefOverride: hrefOverride?.join('/'),
+        hrefOverride: hrefOverride,
       });
     }
     return acc;
@@ -126,7 +130,9 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
     <StyledBreadcrumbs>
       {filledPath.map((item, i) => {
         return (
-          <Fragment key={`${item.title}-${item.hrefOverride ?? item.href}`}>
+          <Fragment
+            key={`${item.title}-${item.hrefOverride?.toString() ?? item.href}`}
+          >
             <StyledBreadcrumbItem href={item.hrefOverride ?? item.href}>
               {item.title}
             </StyledBreadcrumbItem>
@@ -137,10 +143,3 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
     </StyledBreadcrumbs>
   );
 });
-
-export const StyledBreadcrumbs = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.small};
-  color: ${({ theme }) => theme.colors.textMuted};
-`;
-
-export const StyledBreadcrumbItem = Link;

@@ -6,6 +6,7 @@ const StyledTable = styled.table`
   background-color: #424242;
   border-radius: ${({ theme }) => theme.borderRadius.medium};
   width: 100%;
+  margin: 10px 0;
 `;
 
 export const Table = ({ children }: { children: React.ReactNode }) => {
