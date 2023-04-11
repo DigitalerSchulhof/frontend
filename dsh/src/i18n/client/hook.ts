@@ -2,10 +2,10 @@
 
 import { useContext, useMemo } from 'react';
 import { TFunction, makeTFunction } from '../common/function';
-import { translationsContext } from './context';
+import { ClientTranslations, translationsContext } from './context';
 import { useSettings } from '#/settings/client';
 
-export function useT(): { t: TFunction } {
+export function useT(): { t: TFunction; translations: ClientTranslations } {
   const translations = useContext(translationsContext);
   const settings = useSettings();
 
@@ -17,7 +17,8 @@ export function useT(): { t: TFunction } {
   return useMemo(
     () => ({
       t: tFunc,
+      translations,
     }),
-    [tFunc]
+    [tFunc, translations]
   );
 }

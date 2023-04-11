@@ -27,7 +27,6 @@ export default async function Page() {
             }}
           />
         </Heading>
-        {/* @ts-expect-error -- Server Component */}
         <p>{lastLogin}</p>
       </Col>
     </>

@@ -1,7 +1,7 @@
-import { useT as clientUseT } from '../client';
+import { ClientTranslations, useT as clientUseT } from '../client';
 import { TFunction } from './function';
 
-export function useT(): { t: TFunction } {
+export function useT(): { t: TFunction; translations: ClientTranslations } {
   if (typeof window === 'undefined') {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     return require('../server/t').getServerT();
