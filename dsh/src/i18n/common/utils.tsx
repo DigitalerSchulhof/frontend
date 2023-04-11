@@ -1,5 +1,14 @@
+import { ClientTranslations } from '#/i18n/client';
+import { TFunction } from '#/i18n/common/function';
+import { Translations } from '#/i18n/translations';
 import { Link, LinkProps } from '#/ui/Link';
 import { FormatXMLElementFn } from 'intl-messageformat';
+
+export type TContext = {
+  t: TFunction;
+  translations: ClientTranslations;
+  isTranslationKey: (key: string) => key is keyof Translations;
+};
 
 export function makeLink(
   href: LinkProps['href'],

@@ -33,6 +33,14 @@ export function makeTFunction(
   };
 }
 
+export function makeIsTranslationKey(
+  translations: ClientTranslations
+): (key: string) => key is keyof Translations {
+  return function isTranslationKey(key) {
+    return !!translations[key];
+  };
+}
+
 function transformTranslationAst(
   ast: MessageFormatElement[],
   key: string,

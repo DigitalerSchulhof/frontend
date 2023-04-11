@@ -1,24 +1,21 @@
 'use client';
 
-import { useContext, useMemo } from 'react';
-import { TFunction, makeTFunction } from '../common/function';
-import { ClientTranslations, translationsContext } from './context';
 import { useSettings } from '#/settings/client';
+import { useContext, useMemo } from 'react';
+import { makeIsTranslationKey, makeTFunction } from '../common/function';
+import { TContext } from '../common/utils';
+import { translationsContext } from './context';
 
-export function useT(): { t: TFunction; translations: ClientTranslations } {
+export function useT(): TContext {
   const translations = useContext(translationsContext);
   const settings = useSettings();
 
-  const tFunc = useMemo(
-    () => makeTFunction(translations, settings.locale),
-    [translations, settings.locale]
-  );
-
   return useMemo(
     () => ({
-      t: tFunc,
+      t: makeTFunction(translations, settings.locale),
       translations,
+      hasTranslationKey: makeIsTranslationKey(translations),
     }),
-    [tFunc, translations]
+    [translations, settings.locale]
   );
 }

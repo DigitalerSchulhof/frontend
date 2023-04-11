@@ -3,6 +3,7 @@ import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
+import { Link } from '#/ui/Link';
 import { getLastLoginAndUpdateDidShow } from './last-login';
 
 export default async function Page() {
@@ -27,7 +28,12 @@ export default async function Page() {
             }}
           />
         </Heading>
-        <p>{lastLogin}</p>
+        {lastLogin ? <p>{lastLogin}</p> : null}
+      </Col>
+      <Col w='6'>
+        <Link href={['paths.schulhof', 'paths.schulhof.administration']}>
+          Zum Verwaltungsbereich
+        </Link>
       </Col>
     </>
   );

@@ -28,13 +28,13 @@ import React, { Fragment, memo } from 'react';
  *   'paths.schulhof',
  *   'paths.schulhof.administration',
  *   {
- *     segment: 'paths.schulhof.administration.persons',
+ *     segment: 'paths.schulhof.administration.sections.persons',
  *     href: [
  *       'paths.schulhof',
  *       'paths.schulhof.administration',
  *     ],
  *   },
- *   'paths.schulhof.administration.persons.persons',
+ *   'paths.schulhof.administration.sections.persons.slices.persons',
  * ];
  *
  * // Yields the following breadcrumbs:

@@ -21,7 +21,10 @@ schulhof:
         title: Passwort ändern
   administration:
     index: Verwaltung
-    persons:
-      index: Personen_und_Gruppen
-      title: Personen und Gruppen
-      persons: Personen
+    sections:
+      persons:
+        index: Personen_und_Gruppen
+        title: Personen und Gruppen
+        slices:
+          persons: Personen
+          roles: Rollen
