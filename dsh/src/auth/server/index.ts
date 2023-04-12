@@ -1,6 +1,6 @@
 export {
   getCurrentSession,
   getCurrentPerson,
-  useRequireLogin as requireLogin,
-  useRequireNoLogin as requireNoLogin,
+  useRequireLogin,
+  useRequireNoLogin,
 } from './require-login';

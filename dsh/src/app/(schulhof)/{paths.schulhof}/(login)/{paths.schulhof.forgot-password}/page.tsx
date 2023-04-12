@@ -1,8 +1,8 @@
-import { requireNoLogin } from '#/auth/server';
+import { useRequireNoLogin } from '#/auth/server';
 import { ForgotPasswordForm } from './form';
 
 export default async function Page() {
-  await requireNoLogin();
+  await useRequireNoLogin();
 
   return <ForgotPasswordForm />;
 }

@@ -1,5 +1,5 @@
 import { PersonDetails } from '#/administration/sections/persons/slices/persons/details';
-import { requireLogin } from '#/auth/server';
+import { useRequireLogin } from '#/auth/server';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -14,7 +14,7 @@ export default async function Page({
     id: string;
   };
 }) {
-  const { context } = await requireLogin();
+  const { context } = await useRequireLogin();
 
   const person = await context.services.person.getById(params.id);
 

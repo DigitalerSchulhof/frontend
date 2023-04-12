@@ -1,4 +1,4 @@
-import { requireLogin } from '#/auth/server';
+import { useRequireLogin } from '#/auth/server';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -7,7 +7,7 @@ import { Link } from '#/ui/Link';
 import { getLastLoginAndUpdateDidShow } from './last-login';
 
 export default async function Page() {
-  const { context } = await requireLogin();
+  const { context } = await useRequireLogin();
 
   const lastLogin = await getLastLoginAndUpdateDidShow(context);
 
