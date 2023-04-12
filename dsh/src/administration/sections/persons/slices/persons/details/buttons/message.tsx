@@ -10,7 +10,9 @@ export const MessagePersonButton = ({ personId }: { personId: string }) => {
         'paths.schulhof.account.mailbox.compose',
         `{${personId}}}`,
       ]}
-      t={'schulhof.account.profile.actions.write-message.button'}
+      t={
+        'schulhof.administration.sections.persons.slices.persons.details.actions.write-message.button'
+      }
     />
   );
 };

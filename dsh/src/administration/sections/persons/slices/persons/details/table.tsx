@@ -30,7 +30,7 @@ export const PersonDetailsTable = ({
       <Table>
         <Table.Row>
           <Table.Header>
-            <T t='schulhof.account.profile.data.table.type' />
+            <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.type' />
           </Table.Header>
           <Table.Cell>
             <T t={`generic.person-type.${person.type}`} />
@@ -39,26 +39,26 @@ export const PersonDetailsTable = ({
         {account ? (
           <Table.Row>
             <Table.Header>
-              <T t='schulhof.account.profile.data.table.username' />
+              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.username' />
             </Table.Header>
             <Table.Cell>{account.username}</Table.Cell>
           </Table.Row>
         ) : null}
         <Table.Row>
           <Table.Header>
-            <T t='schulhof.account.profile.data.table.firstname' />
+            <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.firstname' />
           </Table.Header>
           <Table.Cell>${person.firstname}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Header>
-            <T t='schulhof.account.profile.data.table.lastname' />
+            <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.lastname' />
           </Table.Header>
           <Table.Cell>${person.lastname}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Header>
-            <T t='schulhof.account.profile.data.table.gender' />
+            <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.gender' />
           </Table.Header>
           <Table.Cell>
             <T t={`generic.gender.${person.gender}`} />
@@ -67,7 +67,7 @@ export const PersonDetailsTable = ({
         {account ? (
           <Table.Row>
             <Table.Header>
-              <T t='schulhof.account.profile.data.table.email' />
+              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.email' />
             </Table.Header>
             <Table.Cell>{account.email}</Table.Cell>
           </Table.Row>
@@ -78,7 +78,7 @@ export const PersonDetailsTable = ({
               <>
                 <Table.Row>
                   <Table.Header>
-                    <T t='schulhof.account.profile.data.table.last-login' />
+                    <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.last-login' />
                   </Table.Header>
                   <Table.Cell>
                     {account.lastLogin ? (
@@ -87,13 +87,13 @@ export const PersonDetailsTable = ({
                         args={{ date: new Date(account.lastLogin) }}
                       />
                     ) : (
-                      <T t='schulhof.account.profile.data.table.no-login' />
+                      <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.no-login' />
                     )}
                   </Table.Cell>
                 </Table.Row>
                 <Table.Row>
                   <Table.Header>
-                    <T t='schulhof.account.profile.data.table.second-last-login' />
+                    <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.second-last-login' />
                   </Table.Header>
                   <Table.Cell>
                     {account.secondLastLogin ? (
@@ -102,7 +102,7 @@ export const PersonDetailsTable = ({
                         args={{ date: new Date(account.secondLastLogin) }}
                       />
                     ) : (
-                      <T t='schulhof.account.profile.data.table.no-login' />
+                      <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.no-login' />
                     )}
                   </Table.Cell>
                 </Table.Row>
@@ -111,7 +111,9 @@ export const PersonDetailsTable = ({
           </>
         ) : null}
       </Table>
-      {!account ? <Note t='schulhof.account.profile.data.no-account' /> : null}
+      {!account ? (
+        <Note t='schulhof.administration.sections.persons.slices.persons.details.personal-data.no-account' />
+      ) : null}
       <p>
         <Button
           onClick={toggleShowMore}

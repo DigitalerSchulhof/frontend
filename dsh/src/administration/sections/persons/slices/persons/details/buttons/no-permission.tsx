@@ -23,14 +23,14 @@ export const MayNotMessagePersonButton = ({
       <Button
         onClick={setIsOpenTrue}
         disabled
-        t='schulhof.account.profile.actions.write-message.button'
+        t='schulhof.administration.sections.persons.slices.persons.details.actions.write-message.button'
       />
       {isOpen && (
         <Modal onClose={setIsOpenFalse}>
           <Alert variant={Variant.Error}>
             <Heading size='4'>
               <T
-                t='schulhof.account.profile.actions.write-message.title'
+                t='schulhof.administration.sections.persons.slices.persons.details.actions.write-message.title'
                 args={{
                   name: personName,
                 }}
@@ -38,7 +38,7 @@ export const MayNotMessagePersonButton = ({
             </Heading>
             <p>
               <T
-                t='schulhof.account.profile.actions.write-message.errors.no-permission'
+                t='schulhof.administration.sections.persons.slices.persons.details.actions.write-message.errors.no-permission'
                 args={{
                   form_of_address: formOfAddress,
                   name: personName,

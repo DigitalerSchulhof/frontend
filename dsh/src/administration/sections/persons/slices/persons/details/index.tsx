@@ -37,14 +37,23 @@ export const PersonDetails = async ({
   const writeMessageButton = getWriteMessageButton(context, person, !!account);
 
   return (
-    <Col w='6'>
-      <Heading size='2' t='schulhof.account.profile.data.title' />
-      <PersonDetailsTable
-        person={person}
-        account={account}
-        buttons={<>{writeMessageButton}</>}
-      />
-    </Col>
+    <>
+      <Col w='6'>
+        <Heading
+          size='2'
+          t='schulhof.administration.sections.persons.slices.persons.details.personal-data.title'
+        />
+        <PersonDetailsTable
+          person={person}
+          account={account}
+          buttons={writeMessageButton}
+        />
+        <Heading
+          size='3'
+          t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.title'
+        />
+      </Col>
+    </>
   );
 };
 

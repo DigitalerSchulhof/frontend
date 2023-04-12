@@ -16,14 +16,14 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
       <Button
         onClick={setIsOpenTrue}
         disabled
-        t='schulhof.account.profile.actions.write-message.button'
+        t='schulhof.administration.sections.persons.slices.persons.details.actions.write-message.button'
       />
       {isOpen && (
         <Modal onClose={setIsOpenFalse}>
           <Alert variant={Variant.Error}>
             <Heading size='4'>
               <T
-                t='schulhof.account.profile.actions.write-message.title'
+                t='schulhof.administration.sections.persons.slices.persons.details.actions.write-message.title'
                 args={{
                   name: personName,
                 }}
@@ -31,7 +31,7 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
             </Heading>
             <p>
               <T
-                t='schulhof.account.profile.actions.write-message.errors.no-account'
+                t='schulhof.administration.sections.persons.slices.persons.details.actions.write-message.errors.no-account'
                 args={{
                   name: personName,
                 }}
