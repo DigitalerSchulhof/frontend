@@ -6,9 +6,8 @@ export const MessagePersonButton = ({ personId }: { personId: string }) => {
       href={[
         'paths.schulhof',
         'paths.schulhof.account',
-        'paths.schulhof.account.profile',
-        'paths.schulhof.account.profile.mailbox',
-        'paths.schulhof.account.profile.mailbox.compose',
+        'paths.schulhof.account.mailbox',
+        'paths.schulhof.account.mailbox.compose',
         `{${personId}}}`,
       ]}
       t={'schulhof.account.profile.actions.write-message.button'}
