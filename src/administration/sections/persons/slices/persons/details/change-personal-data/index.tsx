@@ -1,5 +1,8 @@
 import { LoggedInBackendContext } from '#/backend/context';
-import { FormOfAddress } from '#/backend/repositories/content/person';
+import {
+  FormOfAddress,
+  PersonType,
+} from '#/backend/repositories/content/person';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Note } from '#/ui/Note';
@@ -159,63 +162,80 @@ const PersonButtons = ({
 }: PersonButtonsProps) => {
   return (
     <>
-      <Button
-        t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.settings'
-        href={
-          isOwnProfile
-            ? [
-                'paths.schulhof',
-                'paths.schulhof.account',
-                'paths.schulhof.account.profile',
-                'paths.schulhof.account.profile.settings',
-              ]
-            : [
-                'paths.schulhof',
-                'paths.schulhof.administration',
-                'paths.schulhof.administration.persons',
-                'paths.schulhof.administration.persons.persons',
-                `{${person.id}}`,
-                'paths.schulhof.administration.persons.persons.settings',
-              ]
-        }
-      />
-      <Button
-        t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.permissions-and-roles'
-        href={[
-          'paths.schulhof',
-          'paths.schulhof.administration',
-          'paths.schulhof.administration.persons',
-          'paths.schulhof.administration.persons.persons',
-          `{${person.id}}`,
-          'paths.schulhof.administration.persons.persons.permissions-and-roles',
-        ]}
-      />
-      <Button
-        t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.edit-person'
-        href={
-          isOwnProfile
-            ? [
-                'paths.schulhof',
-                'paths.schulhof.account',
-                'paths.schulhof.account.profile',
-                'paths.schulhof.account.profile.edit',
-              ]
-            : [
+      {React.Children.toArray(
+        [
+          <Button
+            t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.settings'
+            href={
+              isOwnProfile
+                ? [
+                    'paths.schulhof',
+                    'paths.schulhof.account',
+                    'paths.schulhof.account.profile',
+                    'paths.schulhof.account.profile.settings',
+                  ]
+                : [
+                    'paths.schulhof',
+                    'paths.schulhof.administration',
+                    'paths.schulhof.administration.persons',
+                    'paths.schulhof.administration.persons.persons',
+                    `{${person.id}}`,
+                    'paths.schulhof.administration.persons.persons.settings',
+                  ]
+            }
+          />,
+          person.type === PersonType.Teacher && (
+            <Button
+              t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.change-teacher-code'
+              href={[
                 'paths.schulhof',
                 'paths.schulhof.administration',
                 'paths.schulhof.administration.persons',
                 'paths.schulhof.administration.persons.persons',
                 `{${person.id}}`,
-                'paths.schulhof.administration.persons.persons.edit',
-              ]
-        }
-      />
-      <DeletePersonButton
-        formOfAddress={formOfAddress}
-        personId={person.id}
-        personName={formatName(person)}
-        hasAccount={!!account}
-      />
+                'paths.schulhof.administration.persons.persons.change-teacher-code',
+              ]}
+            />
+          ),
+          <Button
+            t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.permissions-and-roles'
+            href={[
+              'paths.schulhof',
+              'paths.schulhof.administration',
+              'paths.schulhof.administration.persons',
+              'paths.schulhof.administration.persons.persons',
+              `{${person.id}}`,
+              'paths.schulhof.administration.persons.persons.permissions-and-roles',
+            ]}
+          />,
+          <Button
+            t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.edit-person'
+            href={
+              isOwnProfile
+                ? [
+                    'paths.schulhof',
+                    'paths.schulhof.account',
+                    'paths.schulhof.account.profile',
+                    'paths.schulhof.account.profile.edit',
+                  ]
+                : [
+                    'paths.schulhof',
+                    'paths.schulhof.administration',
+                    'paths.schulhof.administration.persons',
+                    'paths.schulhof.administration.persons.persons',
+                    `{${person.id}}`,
+                    'paths.schulhof.administration.persons.persons.edit',
+                  ]
+            }
+          />,
+          <DeletePersonButton
+            formOfAddress={formOfAddress}
+            personId={person.id}
+            personName={formatName(person)}
+            hasAccount={!!account}
+          />,
+        ].filter(Boolean)
+      )}
     </>
   );
 };

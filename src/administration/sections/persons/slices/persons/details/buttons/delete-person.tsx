@@ -24,7 +24,7 @@ export const DeletePersonButton = ({
   const [isOpen, setIsOpenTrue, setIsOpenFalse] = useToggle();
   const { t } = useT();
 
-  const only = hasAccount ? 'only' : 'with';
+  const only = hasAccount ? 'with' : 'only';
   const sendDelete = useSendDelete(personId);
 
   return (

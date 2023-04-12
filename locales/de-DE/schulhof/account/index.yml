@@ -1,2 +1,5 @@
 title: Willkommen {person_firstname} {person_lastname}!
 last-login: Die letzte Anmeldung erfolgte am <b>{last_login, date, long}</b> um <b>{last_login, time, short}</b>. Falsch? <TheftLink><b>Identitätsdiebstahl melden</b> und Passwort ändern!</TheftLink>
+my-account:
+  title: Mein Konto
+  details: Profildaten

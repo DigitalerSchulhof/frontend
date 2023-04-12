@@ -7,7 +7,7 @@ person:
     other: Extern
   action:
     mail: Nachricht schreiben
-    permissions: Rechte und Rollen vergeben
+    permissions: Rollen und Rechte vergeben
     changeTeacherId: Lehrerkürzel ändern
     delete:
       account: Nutzerkonto löschen
