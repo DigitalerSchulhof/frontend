@@ -18,9 +18,7 @@ export default async function Page({
 
   const person = await context.services.person.getById(params.id);
 
-  if (!person) {
-    notFound();
-  }
+  if (!person) notFound();
 
   const account =
     person.accountId === null
@@ -36,6 +34,10 @@ export default async function Page({
             'paths.schulhof.administration',
             'paths.schulhof.administration.persons',
             'paths.schulhof.administration.persons.persons',
+            {
+              title: `{${formatName(person)}}`,
+              segment: `{${person.id}}`,
+            },
             'paths.schulhof.administration.persons.persons.details',
           ]}
         />

@@ -18,8 +18,6 @@ export class ObjectCache<T> {
   async get(key: string): Promise<T | null | undefined> {
     const cacheKey = this.getCacheKey(key);
 
-    console.log('get', cacheKey);
-
     const res = await this.adapter.get(cacheKey);
 
     return deserialize(res);
@@ -31,8 +29,6 @@ export class ObjectCache<T> {
     -readonly [P in keyof K]: T | null | undefined;
   }> {
     const cacheKeys = keys.map((key) => this.getCacheKey(key));
-
-    console.log('getMany', cacheKeys);
 
     const res = await this.adapter.getMany(cacheKeys);
 
@@ -47,8 +43,6 @@ export class ObjectCache<T> {
   ): Promise<void> {
     const cacheKey = this.getCacheKey(key);
 
-    console.log('set', cacheKey, value);
-
     return this.adapter.set(cacheKey, serialize(value), ttlMs);
   }
 
@@ -60,8 +54,6 @@ export class ObjectCache<T> {
     ttlMs: number = this.defaultTtlMs
   ): Promise<void> {
     const cacheKeys = keys.map((key) => this.getCacheKey(key));
-
-    console.log('setMany', cacheKeys, values);
 
     return this.adapter.setMany(
       cacheKeys.map((key, i) => [key, serialize(values[i])]),

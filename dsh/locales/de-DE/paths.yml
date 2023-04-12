@@ -19,11 +19,20 @@ schulhof:
       change-password:
         index: Passwort_aendern
         title: Passwort ändern
+      edit-account:
+        index: Nutzerkonto_bearbeiten
+        title: Nutzerkonto bearbeiten
+      edit:
+        index: Profil_bearbeiten
+        title: Profil bearbeiten
+      settings: Einstellungen
     mailbox:
       index: Postfach
       compose:
         index: Neue_Nachricht
         title: Neue Nachricht
+        query:
+          to: empfaenger
   administration:
     index: Verwaltung
     persons:

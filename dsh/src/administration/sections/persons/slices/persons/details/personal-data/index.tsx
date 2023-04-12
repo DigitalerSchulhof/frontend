@@ -1,4 +1,5 @@
 import { LoggedInBackendContext } from '#/backend/context';
+import { useT } from '#/i18n';
 import { Button } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { formatName } from '#/utils';
@@ -9,15 +10,21 @@ import { PersonDetailsPersonalDataSectionTable } from './table';
 
 export type PersonDetailsPersonalDataSectionProps = Pick<
   PersonDetailsProps,
-  'context' | 'person' | 'account'
->;
+  'person' | 'account'
+> & {
+  context: LoggedInBackendContext;
+};
 
 export const PersonDetailsPersonalDataSection = ({
   context,
   person,
   account,
 }: PersonDetailsPersonalDataSectionProps) => {
-  const writeMessageButton = getWriteMessageButton(context, person, !!account);
+  const writeMessageButton = useGetWriteMessageButton(
+    context,
+    person,
+    !!account
+  );
 
   return (
     <>
@@ -34,11 +41,13 @@ export const PersonDetailsPersonalDataSection = ({
   );
 };
 
-function getWriteMessageButton(
+function useGetWriteMessageButton(
   context: LoggedInBackendContext,
   person: { id: string; firstname: string; lastname: string },
   hasAccount: boolean
 ): React.ReactNode {
+  const { t } = useT();
+
   if (person.id === context.person.id) return null;
 
   if (!mayMessagePerson(context, person)) {
@@ -56,13 +65,14 @@ function getWriteMessageButton(
 
   return (
     <Button
-      href={[
-        'paths.schulhof',
-        'paths.schulhof.account',
-        'paths.schulhof.account.mailbox',
-        'paths.schulhof.account.mailbox.compose',
-        `{${person.id}}}`,
-      ]}
+      href={`/${[
+        t('paths.schulhof'),
+        t('paths.schulhof.account'),
+        t('paths.schulhof.account.mailbox'),
+        t('paths.schulhof.account.mailbox.compose'),
+      ].join('/')}?${t('paths.schulhof.account.mailbox.compose.query.to')}=${
+        person.id
+      }`}
       t={
         'schulhof.administration.sections.persons.slices.persons.details.personal-data.actions.write-message.button'
       }

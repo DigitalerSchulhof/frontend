@@ -22,6 +22,7 @@ export default async function Page() {
       {/* @ts-expect-error -- Server Component */}
       <PersonDetails
         context={context}
+        isOwnProfile
         person={context.person}
         account={context.account}
       />

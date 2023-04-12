@@ -12,19 +12,19 @@ import { useCallback } from 'react';
 
 export const DeleteAccountButton = ({
   formOfAddress,
+  isOwnProfile,
   personId,
   personName,
-  isOwnAccount,
 }: {
   formOfAddress: FormOfAddress;
+  isOwnProfile: boolean;
   personId: string;
   personName: string;
-  isOwnAccount: boolean;
 }) => {
   const [isOpen, setIsOpenTrue, setIsOpenFalse] = useToggle();
   const { t } = useT();
 
-  const own = isOwnAccount ? 'own' : 'other';
+  const own = isOwnProfile ? 'own' : 'other';
   const sendDelete = useSendDelete(personId);
 
   return (

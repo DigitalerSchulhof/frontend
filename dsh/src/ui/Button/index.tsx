@@ -107,5 +107,5 @@ export const ButtonGroup = styled.div`
   align-content: center;
   gap: 5px;
 
-  margin: 7px 0;
+  margin: 10px 0;
 `;

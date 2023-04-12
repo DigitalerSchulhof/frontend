@@ -2,6 +2,8 @@
 
 import { useT } from '#/i18n/client';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import { StyledAlert } from '#/ui/Alert/client';
+import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Loading } from '#/ui/Loading';
 import { useEffect } from 'react';
@@ -87,4 +89,12 @@ const ModalContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   text-align: center;
+
+  & > ${StyledAlert}:first-child, & > ${ButtonGroup}:first-child {
+    margin-top: 0;
+  }
+
+  & > ${StyledAlert}:last-child, & > ${ButtonGroup}:last-child {
+    margin-bottom: 0;
+  }
 `;

@@ -55,6 +55,7 @@ export const DeletePersonButton = ({
             <Button onClick={setIsOpenFalse} t='generic.back' />
             <Button
               onClick={sendDelete}
+              variant={Variant.Error}
               t={`schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.person.${only}.action`}
             />
           </ButtonGroup>

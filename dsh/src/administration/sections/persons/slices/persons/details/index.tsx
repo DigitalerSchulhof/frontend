@@ -9,6 +9,7 @@ import { PersonDetailsPersonalDataSection } from './personal-data';
 
 export type PersonDetailsProps = {
   context: LoggedInBackendContext;
+  isOwnProfile?: boolean;
   person: {
     id: string;
     type: PersonType;
@@ -27,6 +28,7 @@ export type PersonDetailsProps = {
 
 export const PersonDetails = async ({
   context,
+  isOwnProfile = false,
   person,
   account,
 }: PersonDetailsProps) => {
@@ -40,6 +42,7 @@ export const PersonDetails = async ({
         />
         <PersonDetailsChangePersonalDataSection
           context={context}
+          isOwnProfile={isOwnProfile}
           person={person}
           account={account}
         />

@@ -68,6 +68,7 @@ details:
   change-personal-data:
     title: Daten ändern
     actions:
+      identity-theft: Identitätsdiebstahl melden
       create-account: Benutzerkonto anlegen
       edit-account: Benutzerkonto bearbeiten
       delete-account:
@@ -77,4 +78,6 @@ details:
       permissions-and-roles: Rollen und Rechte vergeben
       edit-person: Persönliche Daten bearbeiten
       delete-person: Person löschen
-      change-password: Das Passwort kann nur von der jeweiligen Person selbst geändert werden.
+      change-password:
+        button: Passwort ändern
+        note: Das Passwort kann nur von der jeweiligen Person selbst geändert werden.

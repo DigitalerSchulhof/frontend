@@ -10,10 +10,14 @@ export default async function Page() {
 
   try {
     await getCurrentSession(context);
-    redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}`);
+    redirect(
+      `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
+    );
   } catch (err) {
     if (err instanceof NotLoggedInError) {
-      redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.login')}`);
+      redirect(
+        `/${[t('paths.schulhof'), t('paths.schulhof.login')].join('/')}`
+      );
     }
 
     throw err;
