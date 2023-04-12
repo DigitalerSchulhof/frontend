@@ -72,12 +72,15 @@ export const ForgotPasswordForm = () => {
         </p>
       </Alert>
       <div>
-        <Button type='submit' variant={Variant.Success}>
-          <T t='schulhof.login.action.forgot-password.buttons.send' />
-        </Button>
-        <Button href={['paths.schulhof', 'paths.schulhof.login']}>
-          <T t='schulhof.login.action.forgot-password.buttons.login' />
-        </Button>
+        <Button
+          type='submit'
+          variant={Variant.Success}
+          t='schulhof.login.action.forgot-password.buttons.send'
+        />
+        <Button
+          href={['paths.schulhof', 'paths.schulhof.login']}
+          t='schulhof.login.action.forgot-password.buttons.login'
+        />
       </div>
     </Form>
   );
@@ -183,9 +186,7 @@ function useForgotPasswordStateModal(
                 ))}
               </ul>
             </Alert>
-            <Button onClick={setIdle}>
-              <T t='generic.back' />
-            </Button>
+            <Button onClick={setIdle} t='generic.back' />
           </Modal>
         );
       }
@@ -216,9 +217,10 @@ function useForgotPasswordStateModal(
                 />
               </p>
             </Alert>
-            <Button href={['paths.schulhof', 'paths.schulhof.login']}>
-              <T t='schulhof.login.action.forgot-password.buttons.login' />
-            </Button>
+            <Button
+              href={['paths.schulhof', 'paths.schulhof.login']}
+              t='schulhof.login.action.forgot-password.buttons.login'
+            />
           </Modal>
         );
     }

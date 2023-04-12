@@ -1,19 +1,14 @@
-import { BackendContext } from '#/backend/context';
-import { WithId } from '#/backend/repositories/arango';
-import { AccountBase } from '#/backend/repositories/content/account';
-import { SessionBase } from '#/backend/repositories/content/session';
+import { LoggedInBackendContext } from '#/backend/context';
 import { T, makeLink } from '#/i18n';
 import React from 'react';
 
 export async function getLastLoginAndUpdateDidShow(
-  context: BackendContext,
-  account: WithId<AccountBase>,
-  session: WithId<SessionBase>
+  context: LoggedInBackendContext
 ): Promise<React.ReactNode> {
-  if (session.didShowLastLogin) return null;
-  if (!account.secondLastLogin) return null;
+  if (context.session.didShowLastLogin) return null;
+  if (!context.account.secondLastLogin) return null;
 
-  await context.services.session.update(session.id, {
+  await context.services.session.update(context.session.id, {
     didShowLastLogin: true,
   });
 
@@ -21,7 +16,7 @@ export async function getLastLoginAndUpdateDidShow(
     <T
       t='schulhof.account.last-login'
       args={{
-        last_login: new Date(account.secondLastLogin * 1000),
+        last_login: new Date(context.account.secondLastLogin * 1000),
         TheftLink: makeLink([
           'paths.schulhof',
           'paths.schulhof.account',

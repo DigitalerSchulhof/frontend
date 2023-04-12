@@ -1,5 +1,5 @@
 import { VisibilityToggle } from '#/components/visibility-toggle';
-import { T, useT } from '#/i18n';
+import { useT } from '#/i18n';
 import { Heading } from '#/ui/Heading';
 import { ChangelogEntry } from './entry';
 import { changelogService } from './service';
@@ -12,9 +12,7 @@ export const Changelog = () => {
 
   return (
     <>
-      <Heading size='2'>
-        <T t='schulhof.login.changelog.title' />
-      </Heading>
+      <Heading size='2' t='schulhof.login.changelog.title' />
       <div>
         <VisibilityToggle
           show={t('schulhof.login.changelog.specific.show', {

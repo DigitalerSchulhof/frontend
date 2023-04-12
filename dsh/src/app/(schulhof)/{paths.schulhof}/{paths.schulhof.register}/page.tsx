@@ -33,12 +33,14 @@ export default async function Page() {
             <T t='schulhof.register.description.text' />
           </p>
         </Alert>
-        <Button href={['paths.schulhof', 'paths.schulhof.login']}>
-          <T t='schulhof.register.buttons.login' />
-        </Button>
-        <Button href={['paths.schulhof', 'paths.schulhof.forgot-password']}>
-          <T t='schulhof.register.buttons.forgot-password' />
-        </Button>
+        <Button
+          href={['paths.schulhof', 'paths.schulhof.login']}
+          t='schulhof.register.buttons.login'
+        />
+        <Button
+          href={['paths.schulhof', 'paths.schulhof.forgot-password']}
+          t='schulhof.register.buttons.forgot-password'
+        />
       </Col>
     </>
   );

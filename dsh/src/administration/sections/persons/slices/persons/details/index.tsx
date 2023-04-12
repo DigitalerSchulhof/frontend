@@ -3,7 +3,6 @@ import {
   PersonGender,
   PersonType,
 } from '#/backend/repositories/content/person';
-import { T } from '#/i18n';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 import { formatName } from '#/utils';
@@ -39,9 +38,7 @@ export const PersonDetails = async ({
 
   return (
     <Col w='6'>
-      <Heading size='2'>
-        <T t='schulhof.account.profile.data.title' />
-      </Heading>
+      <Heading size='2' t='schulhof.account.profile.data.title' />
       <PersonDetailsTable
         person={person}
         account={account}

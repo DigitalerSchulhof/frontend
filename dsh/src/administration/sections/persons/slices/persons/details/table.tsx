@@ -111,15 +111,12 @@ export const PersonDetailsTable = ({
           </>
         ) : null}
       </Table>
-      {!account ? (
-        <Note>
-          <T t='schulhof.account.profile.data.no-account' />
-        </Note>
-      ) : null}
+      {!account ? <Note t='schulhof.account.profile.data.no-account' /> : null}
       <p>
-        <Button onClick={toggleShowMore}>
-          <T t={showMore ? 'generic.less' : 'generic.more'} />
-        </Button>
+        <Button
+          onClick={toggleShowMore}
+          t={showMore ? 'generic.less' : 'generic.more'}
+        />
         {buttons}
       </p>
     </>

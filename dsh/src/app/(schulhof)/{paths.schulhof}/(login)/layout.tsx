@@ -28,9 +28,7 @@ export default async function LoginLayout({
         </Heading>
       </Col>
       <Col w='4'>
-        <Heading size='2'>
-          <T t='schulhof.login.action.login.title' />
-        </Heading>
+        <Heading size='2' t='schulhof.login.action.login.title' />
         <p>
           <T t='schulhof.login.action.login.description' />
         </p>

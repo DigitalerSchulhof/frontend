@@ -70,15 +70,19 @@ export const LoginForm = () => {
         <Note key={i}>{s}</Note>
       ))}
       <div>
-        <Button type='submit' variant={Variant.Success}>
-          <T t='schulhof.login.action.login.buttons.login' />
-        </Button>
-        <Button href={['paths.schulhof', 'paths.schulhof.forgot-password']}>
-          <T t='schulhof.login.action.login.buttons.forgot-password' />
-        </Button>
-        <Button href={['paths.schulhof', 'paths.schulhof.register']}>
-          <T t='schulhof.login.action.login.buttons.register' />
-        </Button>
+        <Button
+          type='submit'
+          variant={Variant.Success}
+          t='schulhof.login.action.login.buttons.login'
+        />
+        <Button
+          href={['paths.schulhof', 'paths.schulhof.forgot-password']}
+          t='schulhof.login.action.login.buttons.forgot-password'
+        />
+        <Button
+          href={['paths.schulhof', 'paths.schulhof.register']}
+          t='schulhof.login.action.login.buttons.register'
+        />
       </div>
     </Form>
   );
@@ -181,9 +185,7 @@ function useLoginStateModal(
                 ))}
               </ul>
             </Alert>
-            <Button onClick={setIdle}>
-              <T t='generic.back' />
-            </Button>
+            <Button onClick={setIdle} t='generic.back' />
           </Modal>
         );
       }

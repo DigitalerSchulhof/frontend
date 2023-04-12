@@ -4,7 +4,7 @@ import { useT } from '#/i18n/client';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Heading } from '#/ui/Heading';
 import { Loading } from '#/ui/Loading';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 

@@ -1,5 +1,4 @@
-import { T } from '#/i18n';
-import { Translations } from '#/i18n/translations';
+import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Heading } from '#/ui/Heading';
 import { AdministrationSection } from '../../sections/types';
 import {
@@ -22,13 +21,12 @@ export const AdministrationOverviewSection = ({
 
   return (
     <>
-      <Heading size='2'>
-        <T
-          t={
-            `schulhof.administration.sections.${section.id}.title` as keyof Translations
-          }
-        />
-      </Heading>
+      <Heading
+        size='2'
+        t={
+          `schulhof.administration.sections.${section.id}.title` as TranslationsWithStringTypeAndNoVariables
+        }
+      />
       <AdministrationOverviewSectionCards>
         {cards}
       </AdministrationOverviewSectionCards>

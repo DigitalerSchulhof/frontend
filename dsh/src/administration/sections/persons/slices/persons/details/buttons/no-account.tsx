@@ -1,22 +1,23 @@
 'use client';
 
-import { FormOfAddress } from '#/backend/repositories/content/account';
 import { T } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
 import { Variant } from '#/ui/variants';
-import { useToggle } from '#/utils';
+import { useToggle } from '#/utils/client';
 
 export const NoAccountButton = ({ personName }: { personName: string }) => {
   const [isOpen, setIsOpenTrue, setIsOpenFalse] = useToggle();
 
   return (
     <>
-      <Button onClick={setIsOpenTrue} disabled>
-        <T t='schulhof.account.profile.actions.write-message.button' />
-      </Button>
+      <Button
+        onClick={setIsOpenTrue}
+        disabled
+        t='schulhof.account.profile.actions.write-message.button'
+      />
       {isOpen && (
         <Modal onClose={setIsOpenFalse}>
           <Alert variant={Variant.Error}>
@@ -28,16 +29,16 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
                 }}
               />
             </Heading>
-            <T
-              t='schulhof.account.profile.actions.write-message.errors.no-account'
-              args={{
-                name: personName,
-              }}
-            />
+            <p>
+              <T
+                t='schulhof.account.profile.actions.write-message.errors.no-account'
+                args={{
+                  name: personName,
+                }}
+              />
+            </p>
           </Alert>
-          <Button onClick={setIsOpenFalse}>
-            <T t='generic.back' />
-          </Button>
+          <Button onClick={setIsOpenFalse} t='generic.back' />
         </Modal>
       )}
     </>

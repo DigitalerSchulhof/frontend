@@ -7,13 +7,9 @@ import { Link } from '#/ui/Link';
 import { getLastLoginAndUpdateDidShow } from './last-login';
 
 export default async function Page() {
-  const { context, person, account, session } = await requireLogin();
+  const { context } = await requireLogin();
 
-  const lastLogin = await getLastLoginAndUpdateDidShow(
-    context,
-    account,
-    session
-  );
+  const lastLogin = await getLastLoginAndUpdateDidShow(context);
 
   return (
     <>
@@ -23,8 +19,8 @@ export default async function Page() {
           <T
             t='schulhof.account.title'
             args={{
-              person_firstname: person.firstname,
-              person_lastname: person.lastname,
+              person_firstname: context.person.firstname,
+              person_lastname: context.person.lastname,
             }}
           />
         </Heading>

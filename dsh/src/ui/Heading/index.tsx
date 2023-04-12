@@ -1,5 +1,7 @@
 'use client';
 
+import { T } from '#/i18n';
+import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledBreadcrumbs } from '#/ui/Breadcrumbs/client';
 import styled, { css } from 'styled-components';
 
@@ -7,20 +9,28 @@ export type HeadingSize = '1' | '2' | '3' | '4';
 
 export interface HeadingProps {
   size: HeadingSize;
+  t?: TranslationsWithStringTypeAndNoVariables;
+  children?: React.ReactNode;
 }
 
-const noForwardProps = new Set(['size']);
+export const Heading = ({ size, t, ...props }: HeadingProps) => {
+  if (t) {
+    props.children = <T t={t} />;
+  }
 
-export const Heading = styled.h1
-  .withConfig({
-    shouldForwardProp: (prop) => !noForwardProps.has(prop),
-  })
+  return <StyledHeading $size={size} {...props} />;
+};
+
+export const StyledHeading = styled.h1.attrs<{
+  $size: HeadingSize;
   // @ts-expect-error -- Bug?
-  .attrs<HeadingProps>(({ size }) => ({
-    as: `h${size}`,
-  }))<HeadingProps>`
-  ${({ size }) => {
-    const h = `h${size}` as const;
+}>(({ $size }) => ({
+  as: `h${$size}`,
+}))<{
+  $size: HeadingSize;
+}>`
+  ${({ $size }) => {
+    const h = `h${$size}` as const;
 
     return css`
       font-size: ${{ h1: '170%', h2: '140%', h3: '120%', h4: '100%' }[h]};

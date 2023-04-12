@@ -64,13 +64,14 @@ export const StyledLink = styled(Link).withConfig({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PropsFrom<T> = T extends IStyledComponent<any, any, infer P> ? P : never;
 
-export const Button = (
-  props: (PropsFrom<typeof StyledButton> | PropsFrom<typeof StyledLink>) & {
-    t?: TranslationsWithStringTypeAndNoVariables;
-  }
-) => {
-  if (props.t) {
-    props.children = <T t={props.t} />;
+export const Button = ({
+  t,
+  ...props
+}: (PropsFrom<typeof StyledButton> | PropsFrom<typeof StyledLink>) & {
+  t?: TranslationsWithStringTypeAndNoVariables;
+}) => {
+  if (t) {
+    props.children = <T t={t} />;
   }
 
   return 'href' in props ? (

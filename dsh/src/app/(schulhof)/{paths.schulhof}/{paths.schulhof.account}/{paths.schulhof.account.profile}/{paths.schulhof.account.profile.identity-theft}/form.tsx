@@ -67,9 +67,11 @@ export const IdentityTheftForm = () => {
         </Table.Body>
       </Table>
       <div>
-        <Button type='submit' variant={Variant.Warning}>
-          <T t='schulhof.account.profile.identity-theft.buttons.submit' />
-        </Button>
+        <Button
+          type='submit'
+          variant={Variant.Warning}
+          t='schulhof.account.profile.identity-theft.buttons.submit'
+        />
         <Button
           href={[
             'paths.schulhof',
@@ -77,12 +79,12 @@ export const IdentityTheftForm = () => {
             'paths.schulhof.account.profile',
             'paths.schulhof.account.profile.change-password',
           ]}
-        >
-          <T t='schulhof.account.profile.identity-theft.buttons.change-password' />
-        </Button>
-        <Button href={['paths.schulhof', 'paths.schulhof.account']}>
-          <T t='schulhof.account.profile.identity-theft.buttons.back' />
-        </Button>
+          t='schulhof.account.profile.identity-theft.buttons.change-password'
+        />
+        <Button
+          href={['paths.schulhof', 'paths.schulhof.account']}
+          t='schulhof.account.profile.identity-theft.buttons.back'
+        />
       </div>
     </Form>
   );
@@ -198,9 +200,7 @@ function useIdentityTheftStateModal(
                 ))}
               </ul>
             </Alert>
-            <Button onClick={setIdle}>
-              <T t='generic.back' />
-            </Button>
+            <Button onClick={setIdle} t='generic.back' />
           </Modal>
         );
       }
@@ -215,9 +215,10 @@ function useIdentityTheftStateModal(
                 <T t='schulhof.account.profile.identity-theft.modal.success.description' />
               </p>
             </Alert>
-            <Button href={['paths.schulhof', 'paths.schulhof.account']}>
-              <T t='schulhof.account.profile.identity-theft.modal.success.button' />
-            </Button>
+            <Button
+              href={['paths.schulhof', 'paths.schulhof.account']}
+              t='schulhof.account.profile.identity-theft.modal.success.button'
+            />
           </Modal>
         );
     }

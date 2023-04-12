@@ -37,7 +37,7 @@ const HeaderWrapper = styled.header(
   ({ theme }) => css`
     margin: 0 auto;
     max-width: 1000px;
-    padding: ${({ theme }) => theme.padding.medium} 0;
+    padding: ${theme.padding.medium} 0;
     width: 100%;
 
     display: grid;
