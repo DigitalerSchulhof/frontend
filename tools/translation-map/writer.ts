@@ -11,7 +11,7 @@ export class TranslationMapWriter {
 
   constructor(private translateService: TranslationService) {}
 
-  writeTranslationMap() {
+  writeTranslationMap(): void {
     const translations =
       this.translateService.getOrLoadTranslations(DEFAULT_LOCALE);
 
@@ -23,7 +23,7 @@ export class TranslationMapWriter {
 
     fs.writeFileSync(
       path.join(__src, 'i18n', 'translations.d.ts'),
-      '/* eslint-disable */\n' + printer.printFile(translationMapSourceFile)
+      `/* eslint-disable */\n${printer.printFile(translationMapSourceFile)}`
     );
   }
 

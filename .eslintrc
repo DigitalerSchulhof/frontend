@@ -40,7 +40,8 @@
     // Want these
     "@typescript-eslint/explicit-module-boundary-types": "warn",
     "@typescript-eslint/naming-convention": "warn",
-    "@typescript-eslint/switch-exhaustiveness-check": "warn"
+    "@typescript-eslint/switch-exhaustiveness-check": "warn",
+    "prefer-template": "error"
   },
   "overrides": [
     {
