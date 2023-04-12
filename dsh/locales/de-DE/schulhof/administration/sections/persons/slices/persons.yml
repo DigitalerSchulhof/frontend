@@ -37,13 +37,6 @@ page:
             action: Person und Nutzerkonto löschen
 details:
   title: Detailansicht von {name}
-  actions:
-    write-message:
-      button: Nachricht schreiben
-      title: Nachricht an {name} schreiben
-      errors:
-        no-permission: "{form_of_address, select, informal {Du hast} formal {Sie haben} other {~}} keine Berechtigung, eine Nachricht an {name} zu schreiben."
-        no-account: Für {name} existiert kein Benutzerkonto.
   personal-data:
     title: Persönliche Daten
     table:
@@ -58,5 +51,29 @@ details:
       second-last-login: "Vorletzte Anmeldung: "
       no-login: Noch keine Anmeldung
     no-account: Diese Person verfügt über kein Benutzerkonto.
+    actions:
+      write-message:
+        button: Nachricht schreiben
+        title: Nachricht an {name} schreiben
+        errors:
+          no-permission: "{form_of_address, select, informal {Du hast} formal {Sie haben} other {~}} keine Berechtigung, eine Nachricht an {name} zu schreiben."
+          no-account: Für {name} existiert kein Benutzerkonto.
   change-personal-data:
-   title: Daten ändern
+    title: Daten ändern
+    actions:
+      create-account:
+        button: Benutzerkonto anlegen
+      edit-account:
+        button: Benutzerkonto bearbeiten
+      delete-account:
+        button: Benutzerkonto löschen
+      change-person:
+        button: Persönliche Daten bearbeiten
+      delete-person:
+        button: Person löschen
+      settings:
+        button: Einstellungen
+      permissions-and-roles:
+        button: Rollen und Rechte vergeben
+      change-password:
+        note: Das Passwort kann nur von der jeweiligen Person selbst geändert werden.

@@ -11,7 +11,7 @@ export const MessagePersonButton = ({ personId }: { personId: string }) => {
         `{${personId}}}`,
       ]}
       t={
-        'schulhof.administration.sections.persons.slices.persons.details.actions.write-message.button'
+        'schulhof.administration.sections.persons.slices.persons.details.personal-data.actions.write-message.button'
       }
     />
   );
