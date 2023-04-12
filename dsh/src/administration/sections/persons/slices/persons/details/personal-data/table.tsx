@@ -1,24 +1,24 @@
 'use client';
 
 import { T } from '#/i18n';
-import { Table } from '#/ui/Table';
-import { useCallback, useState } from 'react';
-import { PersonDetailsProps } from '.';
 import { Button } from '#/ui/Button';
 import { Note } from '#/ui/Note';
+import { Table } from '#/ui/Table';
+import { useCallback, useState } from 'react';
+import { PersonDetailsProps } from '..';
 
-export type PersonDetailsTableProps = Pick<
+export type PersonDetailsPersonalDataSectionTableProps = Pick<
   PersonDetailsProps,
   'person' | 'account'
 > & {
   buttons?: React.ReactNode;
 };
 
-export const PersonDetailsTable = ({
+export const PersonDetailsPersonalDataSectionTable = ({
   person,
   account,
   buttons,
-}: PersonDetailsTableProps) => {
+}: PersonDetailsPersonalDataSectionTableProps) => {
   const [showMore, setShowMore] = useState(false);
 
   const toggleShowMore = useCallback(() => {

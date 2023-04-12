@@ -16,8 +16,10 @@
     "Arango",
     "firstname",
     "Firstname",
+    "lastname",
     "schoolyear",
-    "schoolyears"
+    "schoolyears",
+    "schulhof"
   ],
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "colorize.languages": [
