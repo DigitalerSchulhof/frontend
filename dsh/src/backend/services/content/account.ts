@@ -49,7 +49,7 @@ export class AccountService extends Service<
   ): Promise<void> {
     const res = await this.repository.updateLastLogin(
       accountId,
-      Math.floor(lastLogin.getTime() / 1000)
+      lastLogin.getTime()
     );
 
     await this.cache.set(res.id, res);

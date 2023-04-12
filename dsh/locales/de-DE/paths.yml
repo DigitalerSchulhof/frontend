@@ -19,6 +19,11 @@ schulhof:
       change-password:
         index: Passwort_aendern
         title: Passwort ändern
+    mailbox:
+      index: Postfach
+      compose:
+        index: Neue_Nachricht
+        title: Neue Nachricht
   administration:
     index: Verwaltung
     sections:

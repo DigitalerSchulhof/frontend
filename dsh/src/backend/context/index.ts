@@ -9,12 +9,22 @@ import {
 } from './contexts/permission';
 import { BackendServicesContext, createServicesContext } from './services';
 import { createContextCreatorContext } from './setup';
+import { WithId } from '#/backend/repositories/arango';
+import { AccountBase } from '#/backend/repositories/content/account';
+import { PersonBase } from '#/backend/repositories/content/person';
+import { SessionBase } from '#/backend/repositories/content/session';
 
 export interface BackendContext
   extends BackendMiscContext,
     BackendServicesContext,
     BackendPermissionsContext,
     BackendLoggerContext {}
+
+export interface LoggedInBackendContext extends BackendContext {
+  session: WithId<SessionBase>;
+  person: WithId<PersonBase>;
+  account: WithId<AccountBase>;
+}
 
 export interface ContextCreatorContext {
   config: Config;

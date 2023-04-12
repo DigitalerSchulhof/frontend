@@ -9,6 +9,8 @@ import styled, {
   css,
 } from 'styled-components';
 import { Variant } from '../variants';
+import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import { T } from '#/i18n';
 
 export type BaseButtonProps = {
   variant?: Variant;
@@ -63,8 +65,14 @@ export const StyledLink = styled(Link).withConfig({
 type PropsFrom<T> = T extends IStyledComponent<any, any, infer P> ? P : never;
 
 export const Button = (
-  props: PropsFrom<typeof StyledButton> | PropsFrom<typeof StyledLink>
+  props: (PropsFrom<typeof StyledButton> | PropsFrom<typeof StyledLink>) & {
+    t?: TranslationsWithStringTypeAndNoVariables;
+  }
 ) => {
+  if (props.t) {
+    props.children = <T t={props.t} />;
+  }
+
   return 'href' in props ? (
     <StyledLink {...props} />
   ) : (

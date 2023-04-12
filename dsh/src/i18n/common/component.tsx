@@ -10,7 +10,7 @@ export type TProps<K extends keyof Translations> = {
     }
   : { args?: never });
 
-export const T = <K extends keyof Translations>({
+export const T = <const K extends keyof Translations>({
   t,
   args,
 }: TProps<K>): JSX.Element => {

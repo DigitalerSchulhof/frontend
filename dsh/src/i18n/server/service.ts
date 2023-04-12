@@ -114,9 +114,13 @@ export class TranslationsLoader {
     const translations = flattenObject(translationsObject, '.');
 
     for (const key in translations) {
-      const translationKey = `${translationKeyPrefix}.${key}`
-        .replace(/(^\.|\.$)/g, '')
-        .replace(/\.index|index\./g, '');
+      const translationKey = [
+        ...translationKeyPrefix.split('.'),
+        ...key.split('.'),
+      ]
+        .filter((s) => s !== '' && s !== 'index')
+        .join('.');
+
       // @ts-expect-error -- Object access
       const translationValue = translations[key];
 

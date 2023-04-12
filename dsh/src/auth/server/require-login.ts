@@ -1,4 +1,8 @@
-import { BackendContext, getContext } from '#/backend/context';
+import {
+  BackendContext,
+  LoggedInBackendContext,
+  getContext,
+} from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
 import { AccountBase } from '#/backend/repositories/content/account';
 import { PersonBase } from '#/backend/repositories/content/person';
@@ -9,55 +13,65 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export async function useRequireLogin(): Promise<{
-  context: BackendContext;
+  context: LoggedInBackendContext;
   jwtPayload: JwtPayload;
-  session: WithId<SessionBase>;
-  person: WithId<PersonBase>;
-  account: WithId<AccountBase>;
 }> {
   const { t } = useT();
   const context = getContext();
 
-  const personEtc = await getCurrentPerson(context);
+  const { jwtPayload, ...personEtc } = await getCurrentPerson(context);
+  try {
+    return {
+      context: {
+        ...context,
+        ...personEtc,
+      },
+      jwtPayload,
+    };
+  } catch (err) {
+    if (err instanceof NotLoggedInError) {
+      redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.login')}`);
+    }
 
-  if (!personEtc) {
-    redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.login')}`);
+    throw err;
   }
-
-  return { ...personEtc, context };
 }
 
 export async function useRequireNoLogin(): Promise<void> {
   const { t } = useT();
   const context = getContext();
 
-  const session = (await getCurrentSession(context)) !== null;
+  try {
+    await getCurrentSession(context);
+  } catch (err) {
+    if (err instanceof NotLoggedInError) {
+      redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}`);
+    }
 
-  if (session) {
-    redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}`);
+    throw err;
   }
 }
 
 export async function getCurrentSession(
   context: BackendContext
-): Promise<{ jwtPayload: JwtPayload; session: WithId<SessionBase> } | null> {
+): Promise<{ jwtPayload: JwtPayload; session: WithId<SessionBase> }> {
   const token = cookies().get('jwt')?.value;
 
-  if (!token) return null;
+  if (!token) throw new NotLoggedInError();
 
   const content = context.services.session.verifyJwt(token);
 
-  if (!content) return null;
+  if (!content) throw new NotLoggedInError();
 
   // Session expired
   if (content.exp < Date.now() / 1000) {
-    return null;
+    throw new NotLoggedInError();
   }
 
   const session = await context.services.session.getById(content.sessionId);
 
   // Session revoked
-  if (!session) return null;
+  if (!session) throw new NotLoggedInError();
 
   return { jwtPayload: content, session };
 }
@@ -67,12 +81,8 @@ export async function getCurrentPerson(context: BackendContext): Promise<{
   session: WithId<SessionBase>;
   person: WithId<PersonBase>;
   account: WithId<AccountBase>;
-} | null> {
-  const sessionAndPayload = await getCurrentSession(context);
-
-  if (!sessionAndPayload) return null;
-
-  const { jwtPayload, session } = sessionAndPayload;
+}> {
+  const { jwtPayload, session } = await getCurrentSession(context);
 
   const account = (await context.services.account.getById(session.accountId))!;
   const person = (await context.services.person.getById(account.personId))!;
@@ -83,4 +93,10 @@ export async function getCurrentPerson(context: BackendContext): Promise<{
     person,
     account,
   };
+}
+
+export class NotLoggedInError extends Error {
+  constructor() {
+    super('Not logged in');
+  }
 }

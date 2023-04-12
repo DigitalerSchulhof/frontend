@@ -13,3 +13,15 @@ export class PersonFirstnameSort extends PersonSort {
 export class PersonLastnameSort extends PersonSort {
   protected readonly propertyName = 'lastname';
 }
+
+export class PersonTypeSort extends PersonSort {
+  protected readonly propertyName = 'type';
+}
+
+export class PersonGenderSort extends PersonSort {
+  protected readonly propertyName = 'gender';
+}
+
+export class PersonTeacherCodeSort extends PersonSort {
+  protected readonly propertyName = 'teacherCode';
+}

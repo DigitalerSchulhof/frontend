@@ -12,22 +12,30 @@ export interface ModalProps {
   onClose?: () => void;
 }
 
+let isModalOpen = false;
+
 export const Modal = ({
   onClose,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & ModalProps) => {
-  const [isMounted, setIsMounted] = useState(false);
+  if (isModalOpen) {
+    throw new Error('Only one modal can be open at a time');
+  }
+
+  isModalOpen = true;
 
   useEffect(() => {
-    setIsMounted(true);
+    return () => {
+      isModalOpen = false;
+    };
   }, []);
 
-  return isMounted ? (
+  return (
     <>
       {createPortal(<ModalOverlay onClick={onClose} />, document.body)}
       {createPortal(<ModalContainer {...props} />, document.body)}
     </>
-  ) : null;
+  );
 };
 
 export interface LoadingModalProps {
