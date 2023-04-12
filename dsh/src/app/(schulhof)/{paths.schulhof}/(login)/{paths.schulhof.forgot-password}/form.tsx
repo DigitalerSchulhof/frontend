@@ -1,6 +1,6 @@
 'use client';
 
-import { FormOfAddress } from '#/backend/repositories/content/account';
+import { FormOfAddress } from '#/backend/repositories/content/person';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';

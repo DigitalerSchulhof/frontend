@@ -1,5 +1,5 @@
 import { AccountFilter } from '#/backend/repositories/content/account/filters';
-import { PersonGender, PersonType } from '.';
+import { FormOfAddress, PersonGender, PersonType } from '.';
 import { MaybeArray } from '../../../utils';
 import { Filter, RelationalFilter, ScalarFilter } from '../../filters';
 import {
@@ -12,6 +12,12 @@ import {
   NullableStringFilterOperator,
   StringFilterOperator,
 } from '../../filters/operators';
+
+export type FormOfAddressFilterOperator =
+  | EqFilterOperator<FormOfAddress | null>
+  | NeqFilterOperator<FormOfAddress | null>
+  | InFilterOperator<FormOfAddress | null>
+  | NinFilterOperator<FormOfAddress | null>;
 
 export type PersonTypeFilterOperator =
   | EqFilterOperator<PersonType>
@@ -59,6 +65,10 @@ export class PersonGenderFilter extends ScalarPersonFilter<PersonGenderFilterOpe
 
 export class PersonTeacherCodeFilter extends ScalarPersonFilter<NullableStringFilterOperator> {
   protected readonly propertyName = 'teacherCode';
+}
+
+export class PersonFormOfAddressFilter extends ScalarPersonFilter<FormOfAddressFilterOperator> {
+  protected readonly propertyName = 'formOfAddress';
 }
 
 export class PersonAccountIdFilter extends ScalarPersonFilter<NullableStringFilterOperator> {

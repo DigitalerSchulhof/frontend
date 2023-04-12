@@ -19,20 +19,20 @@ page:
         account:
           title: Nutzerkonto löschen
           description:
-            - "<b>Achtung!</b>{form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, das Nutzerkonto von <b>{person_firstname} {person_lastname}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
+            - "<b>Achtung!</b>{form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, das Nutzerkonto von <b>{person_name}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
             - "Alle Daten, die mit diesem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht! Die Person wird über die Löschung benachrichtigt."
           action: Nutzerkonto löschen
         person:
           only:
             title: Person löschen
             description:
-              - "<b>Achtung!</b>{form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, die Person <b>{person_firstname} {person_lastname}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
+              - "<b>Achtung!</b>{form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, die Person <b>{person_name}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
               - "Alle Daten, die mit dieser Person in Verbindung stehen, werden unwiderruflich gelöscht! Da kein Nutzerkonto hinterlegt ist, wird die Person nicht über die Löschung benachrichtigt."
             action: Person löschen
           with:
             title: Person und Nutzerkonto löschen
             description:
-              - "<b>Achtung!</b>{form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, die Person und das Nutzerkonto von <b>{person_firstname} {person_lastname}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
+              - "<b>Achtung!</b>{form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, die Person und das Nutzerkonto von <b>{person_name}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
               - "Alle Daten, die mit dieser Person und dem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht! Die Person wird über die Löschung benachrichtigt."
             action: Person und Nutzerkonto löschen
 details:
@@ -61,19 +61,11 @@ details:
   change-personal-data:
     title: Daten ändern
     actions:
-      create-account:
-        button: Benutzerkonto anlegen
-      edit-account:
-        button: Benutzerkonto bearbeiten
-      delete-account:
-        button: Benutzerkonto löschen
-      change-person:
-        button: Persönliche Daten bearbeiten
-      delete-person:
-        button: Person löschen
-      settings:
-        button: Einstellungen
-      permissions-and-roles:
-        button: Rollen und Rechte vergeben
-      change-password:
-        note: Das Passwort kann nur von der jeweiligen Person selbst geändert werden.
+      create-account: Benutzerkonto anlegen
+      edit-account: Benutzerkonto bearbeiten
+      delete-account: Benutzerkonto löschen
+      settings: Einstellungen
+      permissions-and-roles: Rollen und Rechte vergeben
+      edit-person: Persönliche Daten bearbeiten
+      delete-person: Person löschen
+      change-password: Das Passwort kann nur von der jeweiligen Person selbst geändert werden.

@@ -1,8 +1,8 @@
 import { LoggedInBackendContext } from '#/backend/context';
+import { Button } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { formatName } from '#/utils';
 import { PersonDetailsProps } from '..';
-import { MessagePersonButton } from '../buttons/message';
 import { NoAccountButton } from '../buttons/no-account';
 import { MayNotMessagePersonButton } from '../buttons/no-permission';
 import { PersonDetailsPersonalDataSectionTable } from './table';
@@ -44,7 +44,7 @@ function getWriteMessageButton(
   if (!mayMessagePerson(context, person)) {
     return (
       <MayNotMessagePersonButton
-        formOfAddress={context.account.formOfAddress}
+        formOfAddress={context.person.formOfAddress}
         personName={formatName(person)}
       />
     );
@@ -54,7 +54,20 @@ function getWriteMessageButton(
     <NoAccountButton personName={formatName(person)} />;
   }
 
-  return <MessagePersonButton personId={person.id} />;
+  return (
+    <Button
+      href={[
+        'paths.schulhof',
+        'paths.schulhof.account',
+        'paths.schulhof.account.mailbox',
+        'paths.schulhof.account.mailbox.compose',
+        `{${person.id}}}`,
+      ]}
+      t={
+        'schulhof.administration.sections.persons.slices.persons.details.personal-data.actions.write-message.button'
+      }
+    />
+  );
 }
 
 export function mayMessagePerson(

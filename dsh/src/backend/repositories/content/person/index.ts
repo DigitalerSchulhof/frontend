@@ -1,5 +1,10 @@
 import { ArangoRepository } from '../../arango';
 
+export enum FormOfAddress {
+  Formal = 'formal',
+  Informal = 'informal',
+}
+
 export enum PersonType {
   Student = 'student',
   Teacher = 'teacher',
@@ -20,6 +25,7 @@ export type PersonBase = {
   type: PersonType;
   gender: PersonGender;
   teacherCode: string | null;
+  formOfAddress: FormOfAddress;
   accountId: string | null;
 };
 

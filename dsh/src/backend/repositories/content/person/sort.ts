@@ -26,6 +26,10 @@ export class PersonTeacherCodeSort extends PersonSort {
   protected readonly propertyName = 'teacherCode';
 }
 
+export class PersonFormOfAddressSort extends PersonSort {
+  protected readonly propertyName = 'formOfAddress';
+}
+
 export class PersonAccountIdSort extends PersonSort {
   protected readonly propertyName = 'accountId';
 }

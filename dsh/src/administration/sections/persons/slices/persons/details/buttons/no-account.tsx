@@ -18,7 +18,7 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
         disabled
         t='schulhof.administration.sections.persons.slices.persons.details.personal-data.actions.write-message.button'
       />
-      {isOpen && (
+      {isOpen ? (
         <Modal onClose={setIsOpenFalse}>
           <Alert variant={Variant.Error}>
             <Heading size='4'>
@@ -40,7 +40,7 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
           </Alert>
           <Button onClick={setIsOpenFalse} t='generic.back' />
         </Modal>
-      )}
+      ) : null}
     </>
   );
 };

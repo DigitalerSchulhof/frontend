@@ -1,6 +1,6 @@
 'use client';
 
-import { FormOfAddress } from '#/backend/repositories/content/account';
+import { FormOfAddress } from '#/backend/repositories/content/person';
 import { T } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button } from '#/ui/Button';
@@ -25,7 +25,7 @@ export const MayNotMessagePersonButton = ({
         disabled
         t='schulhof.administration.sections.persons.slices.persons.details.personal-data.actions.write-message.button'
       />
-      {isOpen && (
+      {isOpen ? (
         <Modal onClose={setIsOpenFalse}>
           <Alert variant={Variant.Error}>
             <Heading size='4'>
@@ -48,7 +48,7 @@ export const MayNotMessagePersonButton = ({
           </Alert>
           <Button onClick={setIsOpenFalse} t='generic.back' />
         </Modal>
-      )}
+      ) : null}
     </>
   );
 };

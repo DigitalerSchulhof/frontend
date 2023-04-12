@@ -32,4 +32,20 @@ schulhof:
       persons:
         index: Personen
         details: Details
+        create-account:
+          index: Neues_Nutzerkonto
+          title: Neues Nutzerkonto
+        edit-account:
+          index: Nutzerkonto_bearbeiten
+          title: Nutzerkonto bearbeiten
+        create:
+          index: Neue_Person
+          title: Neue Person
+        edit:
+          index: Person_bearbeiten
+          title: Person bearbeiten
+        settings: Einstellungen
+        permissions-and-roles:
+          index: Rechte_und_Rollen
+          title: Rechte und Rollen vergeben
       roles: Rollen

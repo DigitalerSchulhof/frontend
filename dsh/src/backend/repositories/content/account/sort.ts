@@ -18,10 +18,6 @@ export class AccountPersonIdSort extends AccountSort {
   protected readonly propertyName = 'personId';
 }
 
-export class AccountFormOfAddressSort extends AccountSort {
-  protected readonly propertyName = 'formOfAddress';
-}
-
 export class AccountLastLoginSort extends AccountSort {
   protected readonly propertyName = 'lastLogin';
 }

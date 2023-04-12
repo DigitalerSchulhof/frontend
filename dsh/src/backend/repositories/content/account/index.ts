@@ -1,14 +1,11 @@
 import { aql } from 'arangojs';
 import { ArangoRepository, WithId } from '../../arango';
 
-export type FormOfAddress = 'formal' | 'informal';
-
 export type AccountBase = {
   personId: string;
   username: string;
   email: string;
   password: string;
-  formOfAddress: FormOfAddress;
   lastLogin: number | null;
   secondLastLogin: number | null;
 };

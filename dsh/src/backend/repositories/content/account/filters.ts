@@ -1,23 +1,12 @@
-import { FormOfAddress } from '.';
 import { MaybeArray } from '../../../utils';
 import { Filter, RelationalFilter, ScalarFilter } from '../../filters';
 import {
-  EqFilterOperator,
   FilterOperator,
   IDFilterOperator,
-  InFilterOperator,
-  NeqFilterOperator,
-  NinFilterOperator,
   NullableNumberFilterOperator,
   StringFilterOperator,
 } from '../../filters/operators';
 import { PersonFilter, ScalarPersonFilter } from '../person/filters';
-
-export type FormOfAddressFilterOperator =
-  | EqFilterOperator<FormOfAddress | null>
-  | NeqFilterOperator<FormOfAddress | null>
-  | InFilterOperator<FormOfAddress | null>
-  | NinFilterOperator<FormOfAddress | null>;
 
 export abstract class AccountFilter extends Filter<'accounts'> {}
 
@@ -54,10 +43,6 @@ export class AccountEmailFilter extends ScalarAccountFilter<StringFilterOperator
 
 export class AccountPasswordFilter extends ScalarAccountFilter<StringFilterOperator> {
   protected readonly propertyName = 'password';
-}
-
-export class AccountFormOfAddressFilter extends ScalarPersonFilter<FormOfAddressFilterOperator> {
-  protected readonly propertyName = 'formOfAddress';
 }
 
 export class AccountLastLoginFilter extends ScalarPersonFilter<NullableNumberFilterOperator> {

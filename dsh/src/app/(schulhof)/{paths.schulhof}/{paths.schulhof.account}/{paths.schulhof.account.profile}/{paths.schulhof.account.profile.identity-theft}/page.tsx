@@ -30,7 +30,7 @@ export default async function Page() {
           title='schulhof.account.profile.identity-theft.disclaimer.title'
         >
           {t('schulhof.account.profile.identity-theft.disclaimer.content', {
-            form_of_address: context.account.formOfAddress,
+            form_of_address: context.person.formOfAddress,
           }).map((e, i) => (
             <p key={i}>{e}</p>
           ))}

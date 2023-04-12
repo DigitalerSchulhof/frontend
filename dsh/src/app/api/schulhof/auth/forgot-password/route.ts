@@ -5,6 +5,7 @@ import {
   AccountEmailFilter,
   AccountUsernameFilter,
 } from '#/backend/repositories/content/account/filters';
+import { PersonBase } from '#/backend/repositories/content/person';
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { ErrorWithPayload } from '#/utils';
@@ -17,13 +18,13 @@ export async function POST(req: Request) {
 
   const context = getContext(req);
 
-  const account = await getAccountFromUsernameAndEmail(
+  const personAndAccount = await getPersonAndAccountFromUsernameAndEmail(
     context,
     username,
     email
   );
 
-  if (!account) {
+  if (!personAndAccount) {
     return NextResponse.json(
       {
         error: 'Username and email do not match',
@@ -34,18 +35,23 @@ export async function POST(req: Request) {
     );
   }
 
+  const { person, account } = personAndAccount;
+
   await sendPasswordResetEmail(context, account);
 
   return NextResponse.json({
-    formOfAddress: account.formOfAddress,
+    formOfAddress: person.formOfAddress,
   });
 }
 
-async function getAccountFromUsernameAndEmail(
+async function getPersonAndAccountFromUsernameAndEmail(
   context: BackendContext,
   username: unknown,
   email: unknown
-): Promise<WithId<AccountBase> | null> {
+): Promise<{
+  person: WithId<PersonBase>;
+  account: WithId<AccountBase>;
+} | null> {
   if (!username || !email) {
     return null;
   }
@@ -73,7 +79,11 @@ async function getAccountFromUsernameAndEmail(
     });
   }
 
-  return accounts.nodes[0];
+  const person = (await context.services.person.getById(
+    accounts.nodes[0].personId
+  ))!;
+
+  return { person, account: accounts.nodes[0] };
 }
 
 async function sendPasswordResetEmail(
