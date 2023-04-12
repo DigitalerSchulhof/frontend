@@ -16,7 +16,7 @@ export async function getLastLoginAndUpdateDidShow(
     <T
       t='schulhof.account.last-login'
       args={{
-        last_login: new Date(context.account.secondLastLogin * 1000),
+        last_login: new Date(context.account.secondLastLogin),
         TheftLink: makeLink([
           'paths.schulhof',
           'paths.schulhof.account',

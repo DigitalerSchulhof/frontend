@@ -5,7 +5,7 @@ import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
-import { Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, FormRow } from '#/ui/Form';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
@@ -71,7 +71,7 @@ export const ForgotPasswordForm = () => {
           <T t='schulhof.login.action.forgot-password.info.content' />
         </p>
       </Alert>
-      <div>
+      <ButtonGroup>
         <Button
           type='submit'
           variant={Variant.Success}
@@ -81,7 +81,7 @@ export const ForgotPasswordForm = () => {
           href={['paths.schulhof', 'paths.schulhof.login']}
           t='schulhof.login.action.forgot-password.buttons.login'
         />
-      </div>
+      </ButtonGroup>
     </Form>
   );
 };
@@ -186,7 +186,9 @@ function useForgotPasswordStateModal(
                 ))}
               </ul>
             </Alert>
-            <Button onClick={setIdle} t='generic.back' />
+            <div>
+              <Button onClick={setIdle} t='generic.back' />
+            </div>
           </Modal>
         );
       }
@@ -217,10 +219,12 @@ function useForgotPasswordStateModal(
                 />
               </p>
             </Alert>
-            <Button
-              href={['paths.schulhof', 'paths.schulhof.login']}
-              t='schulhof.login.action.forgot-password.buttons.login'
-            />
+            <div>
+              <Button
+                href={['paths.schulhof', 'paths.schulhof.login']}
+                t='schulhof.login.action.forgot-password.buttons.login'
+              />
+            </div>
           </Modal>
         );
     }

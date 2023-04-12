@@ -4,7 +4,7 @@ import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
-import { Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, FormRow } from '#/ui/Form';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
@@ -66,7 +66,7 @@ export const IdentityTheftForm = () => {
           />
         </Table.Body>
       </Table>
-      <div>
+      <ButtonGroup>
         <Button
           type='submit'
           variant={Variant.Warning}
@@ -85,7 +85,7 @@ export const IdentityTheftForm = () => {
           href={['paths.schulhof', 'paths.schulhof.account']}
           t='schulhof.account.profile.identity-theft.buttons.back'
         />
-      </div>
+      </ButtonGroup>
     </Form>
   );
 };
@@ -200,7 +200,9 @@ function useIdentityTheftStateModal(
                 ))}
               </ul>
             </Alert>
-            <Button onClick={setIdle} t='generic.back' />
+            <div>
+              <Button onClick={setIdle} t='generic.back' />
+            </div>
           </Modal>
         );
       }
@@ -215,10 +217,12 @@ function useIdentityTheftStateModal(
                 <T t='schulhof.account.profile.identity-theft.modal.success.description' />
               </p>
             </Alert>
-            <Button
-              href={['paths.schulhof', 'paths.schulhof.account']}
-              t='schulhof.account.profile.identity-theft.modal.success.button'
-            />
+            <div>
+              <Button
+                href={['paths.schulhof', 'paths.schulhof.account']}
+                t='schulhof.account.profile.identity-theft.modal.success.button'
+              />
+            </div>
           </Modal>
         );
     }

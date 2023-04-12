@@ -3,7 +3,7 @@
 import { FormOfAddress } from '#/backend/repositories/content/person';
 import { useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
-import { Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
 import { Variant } from '#/ui/variants';
@@ -51,11 +51,13 @@ export const DeletePersonButton = ({
               <p key={i}>{s}</p>
             ))}
           </Alert>
-          <Button onClick={setIsOpenFalse} t='generic.back' />
-          <Button
-            onClick={sendDelete}
-            t={`schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.person.${only}.action`}
-          />
+          <ButtonGroup>
+            <Button onClick={setIsOpenFalse} t='generic.back' />
+            <Button
+              onClick={sendDelete}
+              t={`schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.person.${only}.action`}
+            />
+          </ButtonGroup>
         </Modal>
       ) : null}
     </>

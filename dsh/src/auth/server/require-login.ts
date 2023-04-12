@@ -19,8 +19,9 @@ export async function useRequireLogin(): Promise<{
   const { t } = useT();
   const context = getContext();
 
-  const { jwtPayload, ...personEtc } = await getCurrentPerson(context);
   try {
+    const { jwtPayload, ...personEtc } = await getCurrentPerson(context);
+
     return {
       context: {
         ...context,
@@ -43,9 +44,11 @@ export async function useRequireNoLogin(): Promise<void> {
 
   try {
     await getCurrentSession(context);
+
+    redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}`);
   } catch (err) {
     if (err instanceof NotLoggedInError) {
-      redirect(`/${t('paths.schulhof')}/${t('paths.schulhof.account')}`);
+      return;
     }
 
     throw err;

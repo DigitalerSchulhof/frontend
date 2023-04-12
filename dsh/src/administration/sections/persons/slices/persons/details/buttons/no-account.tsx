@@ -2,7 +2,7 @@
 
 import { T } from '#/i18n';
 import { Alert } from '#/ui/Alert';
-import { Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
 import { Variant } from '#/ui/variants';
@@ -38,7 +38,9 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
               />
             </p>
           </Alert>
-          <Button onClick={setIsOpenFalse} t='generic.back' />
+          <ButtonGroup>
+            <Button onClick={setIsOpenFalse} t='generic.back' />
+          </ButtonGroup>
         </Modal>
       ) : null}
     </>

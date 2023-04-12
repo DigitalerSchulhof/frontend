@@ -1,7 +1,7 @@
 'use client';
 
 import { T } from '#/i18n';
-import { Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
 import { useCallback, useState } from 'react';
@@ -48,13 +48,13 @@ export const PersonDetailsPersonalDataSectionTable = ({
           <Table.Header>
             <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.firstname' />
           </Table.Header>
-          <Table.Cell>${person.firstname}</Table.Cell>
+          <Table.Cell>{person.firstname}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Header>
             <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.lastname' />
           </Table.Header>
-          <Table.Cell>${person.lastname}</Table.Cell>
+          <Table.Cell>{person.lastname}</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Header>
@@ -114,13 +114,13 @@ export const PersonDetailsPersonalDataSectionTable = ({
       {!account ? (
         <Note t='schulhof.administration.sections.persons.slices.persons.details.personal-data.no-account' />
       ) : null}
-      <p>
+      <ButtonGroup>
         <Button
           onClick={toggleShowMore}
           t={showMore ? 'generic.less' : 'generic.more'}
         />
         {buttons}
-      </p>
+      </ButtonGroup>
     </>
   );
 };

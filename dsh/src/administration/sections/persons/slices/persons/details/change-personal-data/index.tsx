@@ -1,5 +1,5 @@
 import { FormOfAddress } from '#/backend/repositories/content/person';
-import { Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Variant } from '#/ui/variants';
 import { formatName } from '#/utils';
@@ -23,34 +23,37 @@ export const PersonDetailsChangePersonalDataSection = ({
         size='2'
         t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.title'
       />
-      <p>
+      <ButtonGroup>
         <AccountButtons
           formOfAddress={context.person.formOfAddress}
           person={person}
           account={account}
+          isOwnAccount={context.person.id === person.id}
         />
-      </p>
-      <p>
+      </ButtonGroup>
+      <ButtonGroup>
         <PersonButtons
           formOfAddress={context.person.formOfAddress}
           person={person}
           account={account}
         />
-      </p>
+      </ButtonGroup>
     </>
   );
 };
 
 type AccountButtonsProps = Pick<PersonDetailsProps, 'person' | 'account'> & {
   formOfAddress: FormOfAddress;
+  isOwnAccount: boolean;
 };
 
 const AccountButtons = ({
   formOfAddress,
   person,
   account,
+  isOwnAccount,
 }: AccountButtonsProps) => {
-  return account ? (
+  return !account ? (
     <Button
       variant={Variant.Success}
       t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.create-account'
@@ -80,6 +83,7 @@ const AccountButtons = ({
         formOfAddress={formOfAddress}
         personId={person.id}
         personName={formatName(person)}
+        isOwnAccount={isOwnAccount}
       />
     </>
   );

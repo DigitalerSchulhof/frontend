@@ -2,7 +2,7 @@ import { T } from '#/i18n';
 import { getSettings } from '#/settings/server';
 import { Alert } from '#/ui/Alert';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
-import { Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 import { Variant } from '#/ui/variants';
@@ -33,14 +33,16 @@ export default async function Page() {
             <T t='schulhof.register.description.text' />
           </p>
         </Alert>
-        <Button
-          href={['paths.schulhof', 'paths.schulhof.login']}
-          t='schulhof.register.buttons.login'
-        />
-        <Button
-          href={['paths.schulhof', 'paths.schulhof.forgot-password']}
-          t='schulhof.register.buttons.forgot-password'
-        />
+        <ButtonGroup>
+          <Button
+            href={['paths.schulhof', 'paths.schulhof.login']}
+            t='schulhof.register.buttons.login'
+          />
+          <Button
+            href={['paths.schulhof', 'paths.schulhof.forgot-password']}
+            t='schulhof.register.buttons.forgot-password'
+          />
+        </ButtonGroup>
       </Col>
     </>
   );

@@ -3,7 +3,7 @@
 import { FormOfAddress } from '#/backend/repositories/content/person';
 import { T } from '#/i18n';
 import { Alert } from '#/ui/Alert';
-import { Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
 import { Variant } from '#/ui/variants';
@@ -46,7 +46,9 @@ export const MayNotMessagePersonButton = ({
               />
             </p>
           </Alert>
-          <Button onClick={setIsOpenFalse} t='generic.back' />
+          <ButtonGroup>
+            <Button onClick={setIsOpenFalse} t='generic.back' />
+          </ButtonGroup>
         </Modal>
       ) : null}
     </>

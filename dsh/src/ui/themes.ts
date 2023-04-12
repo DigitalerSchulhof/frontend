@@ -176,11 +176,11 @@ export const themes = {
       },
       default: {
         regular: {
-          background: 'rgb(85, 85, 85)',
+          background: 'rgb(66, 66, 66)',
           text: 'rgb(252, 248, 227)',
         },
         hover: {
-          background: 'rgb(66, 66, 66)',
+          background: 'rgb(85, 85, 85)',
           text: 'rgb(252, 248, 227)',
         },
       },

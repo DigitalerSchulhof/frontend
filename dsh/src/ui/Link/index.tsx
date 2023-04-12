@@ -32,4 +32,5 @@ const UnstyledLink: React.FC<LinkProps> = ({ href, external, ...props }) => {
 
 export const Link = styled(UnstyledLink)`
   color: ${({ theme }) => theme.colors.textLink};
+  transition: 500ms ease-in-out;
 `;

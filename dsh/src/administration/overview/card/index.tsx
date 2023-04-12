@@ -26,8 +26,8 @@ export const AdministrationOverviewSectionCard = ({
         href={[
           'paths.schulhof',
           'paths.schulhof.administration',
-          `paths.schulhof.administration.sections.${sectionId}` as TranslationsWithStringTypeAndNoVariables,
-          `paths.schulhof.administration.sections.${sectionId}.slices.${slice.id}` as TranslationsWithStringTypeAndNoVariables,
+          `paths.schulhof.administration.${sectionId}` as TranslationsWithStringTypeAndNoVariables,
+          `paths.schulhof.administration.${sectionId}.${slice.id}` as TranslationsWithStringTypeAndNoVariables,
         ]}
         $backgroundImage={slice.card.icon}
       >
@@ -75,6 +75,7 @@ const StyledAdministrationOverviewSectionCardLink = styled(Link)<{
   padding-left: 47px;
 
   &:hover {
+    background-color: #424242;
     color: inherit;
   }
 `;

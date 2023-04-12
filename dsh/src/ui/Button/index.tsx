@@ -23,11 +23,9 @@ const ButtonStyles = ({
   border: 1px solid transparent;
   border-radius: ${theme.borderRadius.medium};
   padding: 3px 7px;
-  margin-bottom: 2px;
   line-height: 1.5em;
   text-align: center;
   cursor: pointer;
-  margin: 0 2px;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
   background-color: ${theme.accents[variant].regular.background};
@@ -98,4 +96,16 @@ export const IconButton = styled(UnstyledIconButton)`
   & > ${Icon} {
     margin: 1px;
   }
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  gap: 5px;
+
+  margin: 7px 0;
 `;

@@ -3,7 +3,7 @@
 import { FormOfAddress } from '#/backend/repositories/content/person';
 import { useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
-import { Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
 import { Variant } from '#/ui/variants';
@@ -14,21 +14,24 @@ export const DeleteAccountButton = ({
   formOfAddress,
   personId,
   personName,
+  isOwnAccount,
 }: {
   formOfAddress: FormOfAddress;
   personId: string;
   personName: string;
+  isOwnAccount: boolean;
 }) => {
   const [isOpen, setIsOpenTrue, setIsOpenFalse] = useToggle();
   const { t } = useT();
 
+  const own = isOwnAccount ? 'own' : 'other';
   const sendDelete = useSendDelete(personId);
 
   return (
     <>
       <Button
         variant={Variant.Error}
-        t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.delete-account'
+        t={`schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.delete-account.${own}`}
         onClick={setIsOpenTrue}
       />
       {isOpen ? (
@@ -36,10 +39,10 @@ export const DeleteAccountButton = ({
           <Alert variant={Variant.Warning}>
             <Heading
               size='4'
-              t='schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.account.title'
+              t={`schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.account.${own}.title`}
             />
             {t(
-              'schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.account.description',
+              `schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.account.${own}.description`,
               {
                 form_of_address: formOfAddress,
                 person_name: personName,
@@ -48,11 +51,14 @@ export const DeleteAccountButton = ({
               <p key={i}>{s}</p>
             ))}
           </Alert>
-          <Button onClick={setIsOpenFalse} t='generic.back' />
-          <Button
-            onClick={sendDelete}
-            t='schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.account.action'
-          />
+          <ButtonGroup>
+            <Button onClick={setIsOpenFalse} t='generic.back' />
+            <Button
+              onClick={sendDelete}
+              variant={Variant.Error}
+              t={`schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.account.${own}.action`}
+            />
+          </ButtonGroup>
         </Modal>
       ) : null}
     </>
