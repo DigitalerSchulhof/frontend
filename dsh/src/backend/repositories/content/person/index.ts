@@ -20,6 +20,7 @@ export type PersonBase = {
   type: PersonType;
   gender: PersonGender;
   teacherCode: string | null;
+  accountId: string | null;
 };
 
 export class PersonRepository extends ArangoRepository<'persons', PersonBase> {

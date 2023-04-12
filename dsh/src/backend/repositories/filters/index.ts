@@ -51,6 +51,7 @@ export abstract class RelationalFilter<
 > extends Filter<Collection> {
   protected abstract readonly propertyName: string;
   protected abstract readonly relatedCollection: string;
+  protected readonly nullable: boolean = false;
 
   constructor(private readonly relatedFilter: RelatedFilter) {
     super();
@@ -62,8 +63,15 @@ export abstract class RelationalFilter<
   ): aql.GeneratedAqlQuery {
     const nextVariableName = this.getFreeVariableName(freeVariableNameCounter);
 
+    const propertyNameLiteral = aql.literal(this.propertyName);
+
     return aql.aql`
-      ${variableName}.${aql.literal(this.propertyName)} IN (
+      ${
+        this.nullable
+          ? aql.aql`(${variableName}.${propertyNameLiteral} != null && `
+          : undefined
+      }
+      ${variableName}.${propertyNameLiteral} IN (
         FOR ${nextVariableName} IN ${aql.literal(this.relatedCollection)}
           FILTER ${this.relatedFilter.apply(
             nextVariableName,
@@ -71,6 +79,7 @@ export abstract class RelationalFilter<
           )}
           RETURN ${nextVariableName}._key
       )
+      ${this.nullable ? aql.aql`)` : undefined}
     `;
   }
 }

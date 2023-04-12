@@ -1,9 +1,5 @@
 import { PersonDetails } from '#/administration/sections/persons/slices/persons/details';
 import { requireLogin } from '#/auth/server';
-import { WithId } from '#/backend/repositories/arango';
-import { AccountBase } from '#/backend/repositories/content/account';
-import { AccountPersonIdFilter } from '#/backend/repositories/content/account/filters';
-import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -20,19 +16,16 @@ export default async function Page({
 }) {
   const { context } = await requireLogin();
 
-  const [person, accountSearch] = await Promise.all([
-    context.services.person.getById(params.id),
-    context.services.account.search({
-      filter: new AccountPersonIdFilter(new EqFilterOperator(params.id)),
-    }),
-  ]);
+  const person = await context.services.person.getById(params.id);
 
   if (!person) {
     notFound();
   }
 
-  const account = (accountSearch.nodes[0] ??
-    null) as WithId<AccountBase> | null;
+  const account =
+    person.accountId === null
+      ? null
+      : await context.services.account.getById(person.accountId);
 
   return (
     <>

@@ -25,3 +25,7 @@ export class PersonGenderSort extends PersonSort {
 export class PersonTeacherCodeSort extends PersonSort {
   protected readonly propertyName = 'teacherCode';
 }
+
+export class PersonAccountIdSort extends PersonSort {
+  protected readonly propertyName = 'accountId';
+}

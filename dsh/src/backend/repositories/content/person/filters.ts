@@ -1,3 +1,4 @@
+import { AccountFilter } from '#/backend/repositories/content/account/filters';
 import { PersonGender, PersonType } from '.';
 import { MaybeArray } from '../../../utils';
 import { Filter, RelationalFilter, ScalarFilter } from '../../filters';
@@ -58,4 +59,14 @@ export class PersonGenderFilter extends ScalarPersonFilter<PersonGenderFilterOpe
 
 export class PersonTeacherCodeFilter extends ScalarPersonFilter<NullableStringFilterOperator> {
   protected readonly propertyName = 'teacherCode';
+}
+
+export class PersonAccountIdFilter extends ScalarPersonFilter<NullableStringFilterOperator> {
+  protected readonly propertyName = 'accountId';
+}
+
+export class PersonAccountFilter extends RelationalPersonFilter<AccountFilter> {
+  protected readonly propertyName = 'accountId';
+  protected readonly relatedCollection = 'accounts';
+  protected override readonly nullable = true;
 }
