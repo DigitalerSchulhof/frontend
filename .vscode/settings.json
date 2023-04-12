@@ -12,6 +12,7 @@
   "typescript.enablePromptUseWorkspaceTsdk": false,
   "typescript.tsdk": "dsh/node_modules/typescript/lib",
   "cSpell.words": [
+    "arango",
     "Arango",
     "firstname",
     "Firstname",

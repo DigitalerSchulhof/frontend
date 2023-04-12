@@ -35,3 +35,5 @@ page:
               - "<b>Achtung!</b>{form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, die Person und das Nutzerkonto von <b>{person_firstname} {person_lastname}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
               - "Alle Daten, die mit dieser Person und dem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht! Die Person wird über die Löschung benachrichtigt."
             action: Person und Nutzerkonto löschen
+details:
+  title: Detailansicht von {name}

@@ -26,10 +26,10 @@ schulhof:
         title: Neue Nachricht
   administration:
     index: Verwaltung
-    sections:
+    persons:
+      index: Personen_und_Gruppen
+      title: Personen und Gruppen
       persons:
-        index: Personen_und_Gruppen
-        title: Personen und Gruppen
-        slices:
-          persons: Personen
-          roles: Rollen
+        index: Personen
+        details: Details
+      roles: Rollen
