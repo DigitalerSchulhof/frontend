@@ -1,4 +1,11 @@
 node_modules/
 dist/
-
 *.tsbuildinfo
+
+/.vscode
+/.next
+/app
+/.env
+/.cache
+/coverage
+/src/i18n/translations.d.ts

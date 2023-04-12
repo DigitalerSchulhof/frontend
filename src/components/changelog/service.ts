@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as yaml from 'yaml';
 import * as fs from 'fs';
-import { __frontend } from '#/utils/paths';
+import { __dsh } from '#/utils/paths';
 
 export type ChangelogId = '0_11_4';
 
@@ -12,7 +12,7 @@ export type ChangelogEntry = {
 };
 
 class ChangelogService {
-  private readonly changelogPath = path.join(__frontend, 'changelog.yml');
+  private readonly changelogPath = path.join(__dsh, 'changelog.yml');
 
   private changelogVersions: ChangelogEntry[] | null = null;
 

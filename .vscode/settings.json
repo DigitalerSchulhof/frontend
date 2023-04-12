@@ -9,8 +9,8 @@
     "*.ts": "${capture}.js, ${capture}.map, ${capture}.d.ts, ${capture}.d.ts.map",
     "tsconfig.json": "tsconfig.*.json, tsconfig.tsbuildinfo"
   },
-  "typescript.enablePromptUseWorkspaceTsdk": false,
-  "typescript.tsdk": "dsh/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsdk": "node_modules/.pnpm/typescript@5.0.4/node_modules/typescript/lib",
   "cSpell.words": [
     "arango",
     "Arango",

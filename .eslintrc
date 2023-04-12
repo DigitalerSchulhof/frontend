@@ -6,6 +6,9 @@
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:@typescript-eslint/strict"
   ],
+  "parserOptions": {
+    "project": true
+  },
   "parser": "@typescript-eslint/parser",
   "rules": {
     "prettier/prettier": "error",
@@ -44,6 +47,30 @@
       "files": ["**/__tests__/**/*.ts", "__tests__/**/*.tsx"],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off"
+      }
+    },
+    {
+      "files": ["./src/**/*.ts?(x)"],
+      "extends": [
+        "plugin:jsx-a11y/recommended",
+        "next",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        // This doesn't work with memoized callbacks
+        "@typescript-eslint/no-misused-promises": [
+          "error",
+          {
+            "checksVoidReturn": {
+              "attributes": false
+            }
+          }
+        ],
+        "react/self-closing-comp": "error",
+
+        // Make no sense with React components
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/naming-convention": "off"
       }
     }
   ]
