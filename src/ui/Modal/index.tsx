@@ -6,7 +6,6 @@ import { StyledAlert } from '#/ui/Alert/client';
 import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Loading } from '#/ui/Loading';
-import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 
@@ -14,24 +13,10 @@ export interface ModalProps {
   onClose?: () => void;
 }
 
-let isModalOpen = false;
-
 export const Modal = ({
   onClose,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & ModalProps) => {
-  if (isModalOpen) {
-    throw new Error('Only one modal can be open at a time');
-  }
-
-  isModalOpen = true;
-
-  useEffect(() => {
-    return () => {
-      isModalOpen = false;
-    };
-  }, []);
-
   return (
     <>
       {createPortal(<ModalOverlay onClick={onClose} />, document.body)}
