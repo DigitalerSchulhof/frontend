@@ -98,7 +98,7 @@ export const IconButton = styled(UnstyledIconButton)`
   }
 `;
 
-export const ButtonGroup = styled.div`
+export const ButtonGroup = styled.section`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

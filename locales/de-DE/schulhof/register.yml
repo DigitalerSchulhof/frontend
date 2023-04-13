@@ -1,7 +1,7 @@
 heading: Registrieren auf dem Schulhof {school_name_genus, select, m {des} w {der} n {des} other {~}} {school_name_genitive}
 description:
   title: Nicht verfügbar
-  text: Eine Registrierung ist zur Zeit nicht möglich.
+  text: Eine Registrierung ist zurzeit nicht möglich.
 buttons:
   login: Zur Anmeldung
   forgot-password: Passwort vergessen?

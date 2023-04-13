@@ -10,8 +10,6 @@ export const Footer = () => {
     <FooterWrapper>
       <Col w='12'>
         <Links />
-      </Col>
-      <Col w='12'>
         <Credits />
       </Col>
     </FooterWrapper>

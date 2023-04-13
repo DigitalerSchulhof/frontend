@@ -11,7 +11,8 @@ table:
     title: Aktionen
 noscript:
   title: JavaScript ist deaktiviert
-  message: Diese Seite benötigt JavaScript. Bitte aktivieren Sie JavaScript in Ihrem Browser und laden Sie die Seite erneut.
+  message: Der Digitale Schulhof benötigt JavaScript. Bitte aktivieren Sie JavaScript in Ihrem Browser und laden Sie die Seite erneut. Wie Sie das machen, erfahren Sie <EnableLink>hier</EnableLink>.
+  link: https://www.enable-javascript.com/de/
 person-type:
   student: Schüler
   teacher: Lehrer

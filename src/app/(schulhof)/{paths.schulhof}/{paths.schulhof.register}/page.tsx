@@ -23,8 +23,6 @@ export default async function Page() {
             }}
           />
         </Heading>
-      </Col>
-      <Col w='12'>
         <Alert
           variant={Variant.Warning}
           title='schulhof.register.description.title'

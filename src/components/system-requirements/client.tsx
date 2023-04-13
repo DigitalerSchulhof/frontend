@@ -1,72 +1,84 @@
 'use client';
 
 import { useT } from '#/i18n/client';
-import {
-  LargeIconCookies,
-  LargeIconGroupError,
-  LargeIconTick,
-  LargeIconVersion,
-  LargeIconWarning,
-} from '#/ui/Icon';
-import { useState } from 'react';
+import { LargeIconError, LargeIconTick, LargeIconWarning } from '#/ui/Icon';
+import { useEffect, useState } from 'react';
 import { css, styled } from 'styled-components';
 
-export const SystemRequirementsClient = ({ version }: { version: string }) => {
-  const { t } = useT();
+enum HasFullSupport {
+  Yes,
+  No,
+  Maybe,
+}
 
-  // const hasFullSupport = useHasFullSupport();
-  const [hasFullSupport, setHasFullSupport] = useState(true);
+export const SystemRequirementsFullSupport = () => {
+  const hasFullSupport = useHasFullSupport();
 
   return (
-    <SystemRequirementsWrapper>
-      <SystemRequirementsItem>
-        <LargeIconVersion />
-        <br />
-        {t('schulhof.login.system-requirements.version', {
-          version,
-        })}
-      </SystemRequirementsItem>
-      <SystemRequirementsItem>
-        <LargeIconCookies />
-        <br />
-        {t('schulhof.login.system-requirements.cookies')}
-      </SystemRequirementsItem>
-      <SystemRequirementsItem>
-        <LargeIconGroupError />
-        <br />
-        {t('schulhof.login.system-requirements.one-user')}
-      </SystemRequirementsItem>
-      <SystemRequirementsItem onClick={() => setHasFullSupport((f) => !f)}>
-        {hasFullSupport ? (
-          <>
-            <LargeIconTick />
-            <br />
-            {t('schulhof.login.system-requirements.check.yes')}
-          </>
-        ) : (
-          <>
-            <LargeIconWarning />
-            <br />
-            <b>{t('schulhof.login.system-requirements.check.no')}</b>
-          </>
-        )}
-      </SystemRequirementsItem>
-    </SystemRequirementsWrapper>
+    <SystemRequirementsItem>
+      <FullSupportIcon hasFullSupport={hasFullSupport} />
+    </SystemRequirementsItem>
   );
 };
 
+const FullSupportIcon = ({
+  hasFullSupport,
+}: {
+  hasFullSupport: HasFullSupport;
+}) => {
+  const { t } = useT();
+
+  switch (hasFullSupport) {
+    case HasFullSupport.Yes:
+      return (
+        <>
+          <LargeIconTick />
+          <br />
+          {t('schulhof.login.system-requirements.check.yes')}
+        </>
+      );
+    case HasFullSupport.Maybe:
+      return (
+        <>
+          <LargeIconWarning />
+          <br />
+          <b>{t('schulhof.login.system-requirements.check.maybe')}</b>
+        </>
+      );
+    case HasFullSupport.No:
+      return (
+        <>
+          <LargeIconError />
+          <br />
+          <b>{t('schulhof.login.system-requirements.check.no')}</b>
+        </>
+      );
+  }
+};
+
 export function useHasFullSupport() {
-  return true;
+  const [hasFullSupport, setHasFullSupport] = useState(HasFullSupport.Maybe);
+
+  useEffect(() => {
+    // TODO: Check if the user has full support
+    if (Math.random() > 0.5) {
+      setHasFullSupport(HasFullSupport.Yes);
+    } else {
+      setHasFullSupport(HasFullSupport.No);
+    }
+  }, [setHasFullSupport]);
+
+  return hasFullSupport;
 }
 
-const SystemRequirementsWrapper = styled.div(
+export const SystemRequirementsWrapper = styled.div(
   ({ theme }) => css`
     background-color: #424242;
     border-radius: ${theme.borderRadius.medium};
   `
 );
 
-const SystemRequirementsItem = styled.div(
+export const SystemRequirementsItem = styled.div(
   ({ theme }) => css`
     padding: ${theme.padding.medium};
     text-align: center;

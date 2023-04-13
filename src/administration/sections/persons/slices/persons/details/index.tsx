@@ -34,19 +34,17 @@ export const PersonDetails = async ({
 }: PersonDetailsProps) => {
   return (
     <>
-      <Col w='6'>
-        <PersonDetailsPersonalDataSection
-          context={context}
-          person={person}
-          account={account}
-        />
-        <PersonDetailsChangePersonalDataSection
-          context={context}
-          isOwnProfile={isOwnProfile}
-          person={person}
-          account={account}
-        />
-      </Col>
+      <PersonDetailsPersonalDataSection
+        context={context}
+        person={person}
+        account={account}
+      />
+      <PersonDetailsChangePersonalDataSection
+        context={context}
+        isOwnProfile={isOwnProfile}
+        person={person}
+        account={account}
+      />
     </>
   );
 };

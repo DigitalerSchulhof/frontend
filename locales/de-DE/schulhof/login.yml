@@ -72,7 +72,9 @@ changelog:
 system-requirements:
   version: Version {version}
   cookies: Cookies aktiv?
+  javascript: JavaScript aktiv?
   one-user: Nur ein Nutzer pro Browser zur selben Zeit.
   check:
     yes: Der Browser unterstützt alle Funktionen des Digitalen Schulhofs.
-    no: Der Browser unterstützt womöglich nicht alle Funktionen des Digitalen Schulhofs.
+    maybe: Der Browser unterstützt womöglich nicht alle Funktionen des Digitalen Schulhofs.
+    no: Der Browser unterstützt nicht alle Funktionen des Digitalen Schulhofs.

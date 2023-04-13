@@ -22,7 +22,7 @@ export interface ColProps {
 
 const noForwardProps = new Set(['w']);
 
-export const Col = styled.div.withConfig({
+export const Col = styled.section.withConfig({
   shouldForwardProp: (prop) => !noForwardProps.has(prop),
 })<ColProps>`
   padding: ${({ theme }) => theme.padding.medium};

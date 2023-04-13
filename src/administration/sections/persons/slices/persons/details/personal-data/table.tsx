@@ -3,9 +3,10 @@
 import { T } from '#/i18n';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Note } from '#/ui/Note';
-import { Table } from '#/ui/Table';
+import { List } from '#/ui/List';
 import { useCallback, useState } from 'react';
 import { PersonDetailsProps } from '..';
+import { PersonType } from '#/backend/repositories/content/person';
 
 export type PersonDetailsPersonalDataSectionTableProps = Pick<
   PersonDetailsProps,
@@ -27,90 +28,100 @@ export const PersonDetailsPersonalDataSectionTable = ({
 
   return (
     <>
-      <Table>
-        <Table.Row>
-          <Table.Header>
-            <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.type' />
-          </Table.Header>
-          <Table.Cell>
-            <T t={`generic.person-type.${person.type}`} />
-          </Table.Cell>
-        </Table.Row>
-        {account ? (
-          <Table.Row>
-            <Table.Header>
-              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.username' />
-            </Table.Header>
-            <Table.Cell>{account.username}</Table.Cell>
-          </Table.Row>
-        ) : null}
-        <Table.Row>
-          <Table.Header>
-            <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.firstname' />
-          </Table.Header>
-          <Table.Cell>{person.firstname}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Header>
-            <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.lastname' />
-          </Table.Header>
-          <Table.Cell>{person.lastname}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Header>
-            <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.gender' />
-          </Table.Header>
-          <Table.Cell>
-            <T t={`generic.gender.${person.gender}`} />
-          </Table.Cell>
-        </Table.Row>
-        {account ? (
-          <Table.Row>
-            <Table.Header>
-              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.email' />
-            </Table.Header>
-            <Table.Cell>{account.email}</Table.Cell>
-          </Table.Row>
-        ) : null}
-        {showMore ? (
-          <>
-            {account ? (
-              <>
-                <Table.Row>
-                  <Table.Header>
-                    <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.last-login' />
-                  </Table.Header>
-                  <Table.Cell>
-                    {account.lastLogin ? (
-                      <T
-                        t='generic.date.full'
-                        args={{ date: new Date(account.lastLogin) }}
-                      />
-                    ) : (
-                      <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.no-login' />
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Header>
-                    <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.second-last-login' />
-                  </Table.Header>
-                  <Table.Cell>
-                    {account.secondLastLogin ? (
-                      <T
-                        t='generic.date.full'
-                        args={{ date: new Date(account.secondLastLogin) }}
-                      />
-                    ) : (
-                      <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.no-login' />
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-              </>
-            ) : null}
-          </>
-        ) : null}
-      </Table>
+      <List>
+        <List.Body>
+          <List.Row>
+            <List.Header>
+              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.type' />
+            </List.Header>
+            <List.Cell>
+              <T t={`generic.person-type.${person.type}`} />
+            </List.Cell>
+          </List.Row>
+          {account ? (
+            <List.Row>
+              <List.Header>
+                <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.username' />
+              </List.Header>
+              <List.Cell>{account.username}</List.Cell>
+            </List.Row>
+          ) : null}
+          <List.Row>
+            <List.Header>
+              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.firstname' />
+            </List.Header>
+            <List.Cell>{person.firstname}</List.Cell>
+          </List.Row>
+          <List.Row>
+            <List.Header>
+              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.lastname' />
+            </List.Header>
+            <List.Cell>{person.lastname}</List.Cell>
+          </List.Row>
+          <List.Row>
+            <List.Header>
+              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.gender' />
+            </List.Header>
+            <List.Cell>
+              <T t={`generic.gender.${person.gender}`} />
+            </List.Cell>
+          </List.Row>
+          {account ? (
+            <List.Row>
+              <List.Header>
+                <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.email' />
+              </List.Header>
+              <List.Cell>{account.email}</List.Cell>
+            </List.Row>
+          ) : null}
+          {person.type === PersonType.Teacher ? (
+            <List.Row>
+              <List.Header>
+                <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.teacher-code' />
+              </List.Header>
+              <List.Cell>{person.teacherCode}</List.Cell>
+            </List.Row>
+          ) : null}
+          {showMore ? (
+            <>
+              {account ? (
+                <>
+                  <List.Row>
+                    <List.Header>
+                      <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.last-login' />
+                    </List.Header>
+                    <List.Cell>
+                      {account.lastLogin ? (
+                        <T
+                          t='generic.date.full'
+                          args={{ date: new Date(account.lastLogin) }}
+                        />
+                      ) : (
+                        <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.no-login' />
+                      )}
+                    </List.Cell>
+                  </List.Row>
+                  <List.Row>
+                    <List.Header>
+                      <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.second-last-login' />
+                    </List.Header>
+                    <List.Cell>
+                      {account.secondLastLogin ? (
+                        <T
+                          t='generic.date.full'
+                          args={{ date: new Date(account.secondLastLogin) }}
+                        />
+                      ) : (
+                        <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.no-login' />
+                      )}
+                    </List.Cell>
+                  </List.Row>
+                </>
+              ) : null}
+            </>
+          ) : null}
+        </List.Body>
+      </List>
       {!account ? (
         <Note t='schulhof.administration.sections.persons.slices.persons.details.personal-data.no-account' />
       ) : null}

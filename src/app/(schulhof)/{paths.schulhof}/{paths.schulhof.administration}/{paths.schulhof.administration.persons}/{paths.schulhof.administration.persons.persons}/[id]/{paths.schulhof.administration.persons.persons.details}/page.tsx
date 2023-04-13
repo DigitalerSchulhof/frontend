@@ -50,8 +50,10 @@ export default async function Page({
           />
         </Heading>
       </Col>
-      {/* @ts-expect-error -- Server Component */}
-      <PersonDetails context={context} person={person} account={account} />
+      <Col w='6'>
+        {/* @ts-expect-error -- Server Component */}
+        <PersonDetails context={context} person={person} account={account} />
+      </Col>
     </>
   );
 }

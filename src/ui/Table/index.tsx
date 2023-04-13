@@ -7,6 +7,14 @@ const StyledTable = styled.table`
   border-radius: ${({ theme }) => theme.borderRadius.medium};
   width: 100%;
   margin: 10px 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 export const Table = ({ children }: { children: React.ReactNode }) => {

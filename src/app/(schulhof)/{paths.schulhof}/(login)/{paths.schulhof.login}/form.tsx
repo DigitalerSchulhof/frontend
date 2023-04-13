@@ -76,8 +76,8 @@ export const LoginForm = () => {
           t='schulhof.login.action.login.buttons.login'
         />
         <Button
-          href={['paths.schulhof', 'paths.schulhof.login']}
-          t='schulhof.login.action.login.buttons.login'
+          href={['paths.schulhof', 'paths.schulhof.forgot-password']}
+          t='schulhof.login.action.login.buttons.forgot-password'
         />
         <Button
           href={['paths.schulhof', 'paths.schulhof.register']}
