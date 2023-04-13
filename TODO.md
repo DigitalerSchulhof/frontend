@@ -1,2 +1,2 @@
 - Identity theft endpoint
-- My Profile > Reset password
+- Change password endpoint
