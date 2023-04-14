@@ -125,13 +125,15 @@ export const PersonDetailsPersonalDataSectionTable = ({
       {!account ? (
         <Note t='schulhof.administration.sections.persons.slices.persons.details.personal-data.no-account' />
       ) : null}
-      <ButtonGroup>
-        <Button
-          onClick={toggleShowMore}
-          t={showMore ? 'generic.less' : 'generic.more'}
-        />
-        {buttons}
-      </ButtonGroup>
+      {account && (
+        <ButtonGroup>
+          <Button
+            onClick={toggleShowMore}
+            t={showMore ? 'generic.less' : 'generic.more'}
+          />
+          {buttons}
+        </ButtonGroup>
+      )}
     </>
   );
 };

@@ -58,7 +58,7 @@ details:
       last-login: "Letzte Anmeldung: "
       second-last-login: "Vorletzte Anmeldung: "
       no-login: Noch keine Anmeldung
-    no-account: Diese Person verfügt über kein Benutzerkonto.
+    no-account: Einige Felder sind nicht verfügbar, da für diese Person kein Benutzerkonto existiert.
     actions:
       write-message:
         button: Nachricht schreiben
