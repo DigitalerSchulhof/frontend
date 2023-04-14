@@ -120,8 +120,20 @@ function useSendLogin(
 
       if (!res.ok) {
         if (res.status === 401) {
-          setLoginState(LoginState.InvalidCredentials);
-          return;
+          const body = await res.json();
+
+          switch (body) {
+            case 'invalid-credentials':
+              setLoginState(LoginState.InvalidCredentials);
+              return;
+            default:
+              log.error('Unknown error while logging in', {
+                username,
+                status: res.status,
+                body,
+              });
+              return;
+          }
         }
 
         log.error('Error while logging in', {

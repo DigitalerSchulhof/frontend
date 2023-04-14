@@ -118,12 +118,26 @@ function useSendForgotPassword(
 
       if (!res.ok) {
         if (res.status === 401) {
-          setForgotPasswordState(ForgotPasswordState.InvalidCredentials);
-          return;
+          const body = await res.json();
+
+          switch (body) {
+            case 'invalid-credentials':
+              setForgotPasswordState(ForgotPasswordState.InvalidCredentials);
+              return;
+            default:
+              log.error('Unknown error while sending forgot password link', {
+                username,
+                email,
+                status: res.status,
+                body,
+              });
+              return;
+          }
         }
 
         log.error('Error while sending forgot password link', {
           username,
+          email,
           status: res.status,
           body: await res.text(),
         });

@@ -132,6 +132,13 @@ function useSendIdentityTheft(
               return;
             case 'password-mismatch':
               setIdentityTheftState(IdentityTheftState.PasswordMismatch);
+              return;
+            default:
+              log.error('Unknown error while reporting identity theft', {
+                status: res.status,
+                body,
+              });
+              return;
           }
         }
 

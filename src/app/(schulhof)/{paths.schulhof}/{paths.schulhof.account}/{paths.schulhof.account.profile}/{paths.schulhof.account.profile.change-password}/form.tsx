@@ -126,6 +126,13 @@ function useSendChangePassword(
               return;
             case 'password-mismatch':
               setChangePasswordState(ChangePasswordState.PasswordMismatch);
+              return;
+            default:
+              log.error('Unknown error while changing password', {
+                status: res.status,
+                body,
+              });
+              return;
           }
         }
 
