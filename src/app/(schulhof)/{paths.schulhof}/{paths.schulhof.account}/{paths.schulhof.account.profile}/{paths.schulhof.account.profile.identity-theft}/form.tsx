@@ -100,9 +100,9 @@ function useSendIdentityTheft(
 
   return useCallback(
     async function sendIdentityTheft() {
-      const oldPassword = oldPasswordRef.current?.value;
-      const newPassword = newPasswordRef.current?.value;
-      const newPasswordAgain = newPasswordAgainRef.current?.value;
+      const oldPassword = oldPasswordRef.current!.value;
+      const newPassword = newPasswordRef.current!.value;
+      const newPasswordAgain = newPasswordAgainRef.current!.value;
 
       setIdentityTheftState(IdentityTheftState.Loading);
 
@@ -123,32 +123,38 @@ function useSendIdentityTheft(
       ]);
 
       if (!res.ok) {
-        if (res.status === 401) {
-          const body = await res.json();
-
-          switch (body) {
-            case 'invalid-credentials':
-              setIdentityTheftState(IdentityTheftState.InvalidCredentials);
-              return;
-            case 'password-mismatch':
-              setIdentityTheftState(IdentityTheftState.PasswordMismatch);
-              return;
-            default:
-              log.error('Unknown error while reporting identity theft', {
-                status: res.status,
-                body,
-              });
-              return;
+        const bodyString = await res.text();
+        let body;
+        try {
+          body = JSON.parse(bodyString);
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            setIdentityTheftState(IdentityTheftState.InternalError);
+            log.error('Unknown error while reporting identity theft', {
+              status: res.status,
+              body: bodyString,
+            });
+            return;
           }
+
+          throw e;
         }
 
-        log.error('Error while reporting identity theft', {
-          status: res.status,
-          body: await res.text(),
-        });
-
-        setIdentityTheftState(IdentityTheftState.InternalError);
-        return;
+        switch (body.code) {
+          case 'invalid-credentials':
+            setIdentityTheftState(IdentityTheftState.InvalidCredentials);
+            return;
+          case 'password-mismatch':
+            setIdentityTheftState(IdentityTheftState.PasswordMismatch);
+            return;
+          default:
+            setIdentityTheftState(IdentityTheftState.InternalError);
+            log.error('Unknown error while reporting identity theft', {
+              status: res.status,
+              body,
+            });
+            return;
+        }
       }
 
       setIdentityTheftState(IdentityTheftState.Success);
@@ -207,9 +213,9 @@ function useIdentityTheftStateModal(
                 ))}
               </ul>
             </Alert>
-            <div>
+            <ButtonGroup>
               <Button onClick={setIdle} t='generic.back' />
-            </div>
+            </ButtonGroup>
           </Modal>
         );
       }
@@ -224,12 +230,12 @@ function useIdentityTheftStateModal(
                 <T t='schulhof.account.profile.identity-theft.modal.success.description' />
               </p>
             </Alert>
-            <div>
+            <ButtonGroup>
               <Button
                 href={['paths.schulhof', 'paths.schulhof.account']}
                 t='schulhof.account.profile.identity-theft.modal.success.button'
               />
-            </div>
+            </ButtonGroup>
           </Modal>
         );
     }

@@ -42,7 +42,7 @@ export const ForgotPasswordForm = () => {
   const modal = useForgotPasswordStateModal(
     forgotPasswordState,
     setForgotPasswordState,
-    emailRef.current?.value,
+    emailRef,
     formOfAddress
   );
 
@@ -96,8 +96,8 @@ function useSendForgotPassword(
 
   return useCallback(
     async function sendForgotPassword() {
-      const username = usernameRef.current?.value;
-      const email = emailRef.current?.value;
+      const username = usernameRef.current!.value;
+      const email = emailRef.current!.value;
 
       setForgotPasswordState(ForgotPasswordState.Loading);
 
@@ -117,38 +117,44 @@ function useSendForgotPassword(
       ]);
 
       if (!res.ok) {
-        if (res.status === 401) {
-          const body = await res.json();
-
-          switch (body) {
-            case 'invalid-credentials':
-              setForgotPasswordState(ForgotPasswordState.InvalidCredentials);
-              return;
-            default:
-              log.error('Unknown error while sending forgot password link', {
-                username,
-                email,
-                status: res.status,
-                body,
-              });
-              return;
+        const bodyString = await res.text();
+        let body;
+        try {
+          body = JSON.parse(bodyString);
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            setForgotPasswordState(ForgotPasswordState.InternalError);
+            log.error('Unknown error while sending forgot password link', {
+              username,
+              email,
+              status: res.status,
+              body: bodyString,
+            });
+            return;
           }
+
+          throw e;
         }
 
-        log.error('Error while sending forgot password link', {
-          username,
-          email,
-          status: res.status,
-          body: await res.text(),
-        });
-
-        setForgotPasswordState(ForgotPasswordState.InternalError);
-        return;
+        switch (body.code) {
+          case 'invalid-credentials':
+            setForgotPasswordState(ForgotPasswordState.InvalidCredentials);
+            return;
+          default:
+            setForgotPasswordState(ForgotPasswordState.InternalError);
+            log.error('Unknown error while sending forgot password link', {
+              username,
+              email,
+              status: res.status,
+              body,
+            });
+            return;
+        }
       }
 
-      const { formOfAddress } = await res.json();
+      const body = await res.json();
 
-      setFormOfAddress(formOfAddress);
+      setFormOfAddress(body.formOfAddress);
       setForgotPasswordState(ForgotPasswordState.Success);
     },
     [usernameRef, emailRef, setFormOfAddress, setForgotPasswordState, log]
@@ -158,7 +164,7 @@ function useSendForgotPassword(
 function useForgotPasswordStateModal(
   state: ForgotPasswordState,
   setForgotPasswordState: (s: ForgotPasswordState) => void,
-  email: string | undefined,
+  emailRef: React.RefObject<HTMLInputElement>,
   formOfAddress: FormOfAddress | undefined
 ) {
   const { t } = useT();
@@ -200,18 +206,17 @@ function useForgotPasswordStateModal(
                 ))}
               </ul>
             </Alert>
-            <div>
+            <ButtonGroup>
               <Button onClick={setIdle} t='generic.back' />
-            </div>
+            </ButtonGroup>
           </Modal>
         );
       }
       case ForgotPasswordState.Success:
-        if (!email || !formOfAddress) {
+        if (!formOfAddress) {
           throw new ErrorWithPayload(
-            'ForgotPasswordState.Success but email or formOfAddress is undefined',
+            'ForgotPasswordState.Success but formOfAddress is undefined',
             {
-              email,
               formOfAddress,
             }
           );
@@ -227,20 +232,20 @@ function useForgotPasswordStateModal(
                 <T
                   t='schulhof.login.action.forgot-password.modal.success.description'
                   args={{
-                    email,
+                    email: emailRef.current!.value,
                     form_of_address: formOfAddress,
                   }}
                 />
               </p>
             </Alert>
-            <div>
+            <ButtonGroup>
               <Button
                 href={['paths.schulhof', 'paths.schulhof.login']}
                 t='schulhof.login.action.forgot-password.buttons.login'
               />
-            </div>
+            </ButtonGroup>
           </Modal>
         );
     }
-  }, [state, setIdle, email, formOfAddress, t]);
+  }, [state, setIdle, emailRef, formOfAddress, t]);
 }

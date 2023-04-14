@@ -25,14 +25,7 @@ export async function POST(req: Request) {
   );
 
   if (!account) {
-    return NextResponse.json(
-      {
-        error: 'Invalid username or password',
-      },
-      {
-        status: 401,
-      }
-    );
+    return NextResponse.json({ code: 'invalid-credentials' }, { status: 401 });
   }
 
   const jwt = await context.services.session.createJwt(account.id);

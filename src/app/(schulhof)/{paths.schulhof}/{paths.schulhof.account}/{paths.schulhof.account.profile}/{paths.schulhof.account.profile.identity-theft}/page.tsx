@@ -23,6 +23,8 @@ export default async function Page() {
           ]}
         />
         <Heading size='1' t='schulhof.account.profile.identity-theft.title' />
+      </Col>
+      <Col w='12'>
         <Alert
           variant={Variant.Warning}
           title='schulhof.account.profile.identity-theft.disclaimer.title'

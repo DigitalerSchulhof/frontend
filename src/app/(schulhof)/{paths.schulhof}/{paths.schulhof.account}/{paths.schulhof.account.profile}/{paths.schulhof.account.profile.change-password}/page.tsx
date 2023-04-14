@@ -19,6 +19,8 @@ export default async function Page() {
           ]}
         />
         <Heading size='1' t='schulhof.account.profile.change-password.title' />
+      </Col>
+      <Col w='12'>
         <ChangePasswordForm />
       </Col>
     </>

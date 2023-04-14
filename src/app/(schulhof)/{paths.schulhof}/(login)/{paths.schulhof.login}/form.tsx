@@ -98,8 +98,8 @@ function useSendLogin(
 
   return useCallback(
     async function sendLogin() {
-      const username = usernameRef.current?.value;
-      const password = passwordRef.current?.value;
+      const username = usernameRef.current!.value;
+      const password = passwordRef.current!.value;
 
       setLoginState(LoginState.Loading);
 
@@ -119,31 +119,37 @@ function useSendLogin(
       ]);
 
       if (!res.ok) {
-        if (res.status === 401) {
-          const body = await res.json();
-
-          switch (body) {
-            case 'invalid-credentials':
-              setLoginState(LoginState.InvalidCredentials);
-              return;
-            default:
-              log.error('Unknown error while logging in', {
-                username,
-                status: res.status,
-                body,
-              });
-              return;
+        const bodyString = await res.text();
+        let body;
+        try {
+          body = JSON.parse(bodyString);
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            setLoginState(LoginState.InternalError);
+            log.error('Unknown error while logging in', {
+              username,
+              status: res.status,
+              body: bodyString,
+            });
+            return;
           }
+
+          throw e;
         }
 
-        log.error('Error while logging in', {
-          username,
-          status: res.status,
-          body: await res.text(),
-        });
-
-        setLoginState(LoginState.InternalError);
-        return;
+        switch (body.code) {
+          case 'invalid-credentials':
+            setLoginState(LoginState.InvalidCredentials);
+            return;
+          default:
+            setLoginState(LoginState.InternalError);
+            log.error('Unknown error while logging in', {
+              username,
+              status: res.status,
+              body,
+            });
+            return;
+        }
       }
 
       const body = await res.json();
@@ -197,9 +203,9 @@ function useLoginStateModal(
                 ))}
               </ul>
             </Alert>
-            <div>
+            <ButtonGroup>
               <Button onClick={setIdle} t='generic.back' />
-            </div>
+            </ButtonGroup>
           </Modal>
         );
       }

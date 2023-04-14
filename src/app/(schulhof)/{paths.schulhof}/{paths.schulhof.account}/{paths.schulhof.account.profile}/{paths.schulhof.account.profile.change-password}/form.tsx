@@ -69,7 +69,7 @@ export const ChangePasswordForm = () => {
       <ButtonGroup>
         <Button
           type='submit'
-          t='schulhof.account.profile.change-password.buttons.submit'
+          t='schulhof.account.profile.change-password.form.buttons.submit'
         />
         <Button
           href={[
@@ -77,7 +77,7 @@ export const ChangePasswordForm = () => {
             'paths.schulhof.account',
             'paths.schulhof.account.profile',
           ]}
-          t='schulhof.account.profile.change-password.buttons.back'
+          t='schulhof.account.profile.change-password.form.buttons.back'
         />
       </ButtonGroup>
     </Form>
@@ -94,9 +94,9 @@ function useSendChangePassword(
 
   return useCallback(
     async function sendChangePassword() {
-      const oldPassword = oldPasswordRef.current?.value;
-      const newPassword = newPasswordRef.current?.value;
-      const newPasswordAgain = newPasswordAgainRef.current?.value;
+      const oldPassword = oldPasswordRef.current!.value;
+      const newPassword = newPasswordRef.current!.value;
+      const newPasswordAgain = newPasswordAgainRef.current!.value;
 
       setChangePasswordState(ChangePasswordState.Loading);
 
@@ -117,32 +117,38 @@ function useSendChangePassword(
       ]);
 
       if (!res.ok) {
-        if (res.status === 401) {
-          const body = await res.json();
-
-          switch (body) {
-            case 'invalid-credentials':
-              setChangePasswordState(ChangePasswordState.InvalidCredentials);
-              return;
-            case 'password-mismatch':
-              setChangePasswordState(ChangePasswordState.PasswordMismatch);
-              return;
-            default:
-              log.error('Unknown error while changing password', {
-                status: res.status,
-                body,
-              });
-              return;
+        const bodyString = await res.text();
+        let body;
+        try {
+          body = JSON.parse(bodyString);
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            setChangePasswordState(ChangePasswordState.InternalError);
+            log.error('Unknown error while changing password', {
+              status: res.status,
+              body: bodyString,
+            });
+            return;
           }
+
+          throw e;
         }
 
-        log.error('Error while changing password', {
-          status: res.status,
-          body: await res.text(),
-        });
-
-        setChangePasswordState(ChangePasswordState.InternalError);
-        return;
+        switch (body.code) {
+          case 'invalid-credentials':
+            setChangePasswordState(ChangePasswordState.InvalidCredentials);
+            return;
+          case 'password-mismatch':
+            setChangePasswordState(ChangePasswordState.PasswordMismatch);
+            return;
+          default:
+            setChangePasswordState(ChangePasswordState.InternalError);
+            log.error('Unknown error while changing password', {
+              status: res.status,
+              body,
+            });
+            return;
+        }
       }
 
       setChangePasswordState(ChangePasswordState.Success);
@@ -201,9 +207,9 @@ function useChangePasswordStateModal(
                 ))}
               </ul>
             </Alert>
-            <div>
+            <ButtonGroup>
               <Button onClick={setIdle} t='generic.back' />
-            </div>
+            </ButtonGroup>
           </Modal>
         );
       }
@@ -218,7 +224,7 @@ function useChangePasswordStateModal(
                 <T t='schulhof.account.profile.change-password.modal.success.description' />
               </p>
             </Alert>
-            <div>
+            <ButtonGroup>
               <Button
                 href={[
                   'paths.schulhof',
@@ -227,7 +233,7 @@ function useChangePasswordStateModal(
                 ]}
                 t='schulhof.account.profile.change-password.modal.success.button'
               />
-            </div>
+            </ButtonGroup>
           </Modal>
         );
     }

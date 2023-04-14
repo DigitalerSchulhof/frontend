@@ -3,7 +3,6 @@ import {
   PersonGender,
   PersonType,
 } from '#/backend/repositories/content/person';
-import { Col } from '#/ui/Col';
 import { PersonDetailsChangePersonalDataSection } from './change-personal-data';
 import { PersonDetailsPersonalDataSection } from './personal-data';
 

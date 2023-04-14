@@ -25,14 +25,7 @@ export async function POST(req: Request) {
   );
 
   if (!personAndAccount) {
-    return NextResponse.json(
-      {
-        error: 'Username and email do not match',
-      },
-      {
-        status: 401,
-      }
-    );
+    return NextResponse.json({ code: 'invalid-credentials' }, { status: 401 });
   }
 
   const { person, account } = personAndAccount;
@@ -91,4 +84,5 @@ async function sendPasswordResetEmail(
   account: WithId<AccountBase>
 ): Promise<void> {
   console.log(`Sent email to ${account.email}`);
+  // TODO: Send email
 }
