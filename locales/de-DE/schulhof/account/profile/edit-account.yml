@@ -5,7 +5,7 @@ form:
   buttons:
     save: Änderungen speichern
     back: Zurück zur Profilansicht
-modal:
+modals:
   loading:
     title: Benutzerkonto bearbeiten
     description: Die eingegebenen Daten werden überprüft und das Benutzerkonto wird aktualisiert.

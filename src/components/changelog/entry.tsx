@@ -6,13 +6,13 @@ import { ChangelogEntry as ChangelogEntryType } from './service';
 export const ChangelogEntry = ({ entry }: { entry: ChangelogEntryType }) => {
   const { t } = useT();
 
-  const changeset = t(`schulhof.changelog.version.${entry.id}.changeset`);
+  const changeset = t(`schulhof.changelog.versions.${entry.id}.changeset`);
 
   return (
     <section>
       <Heading size='4'>
         <T
-          t='schulhof.login.changelog.heading'
+          t='schulhof.login.changelog.section-title'
           args={{
             version: entry.version,
             date: entry.date,

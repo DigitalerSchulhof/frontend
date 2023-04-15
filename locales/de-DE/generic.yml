@@ -13,15 +13,15 @@ noscript:
   title: JavaScript ist deaktiviert
   message: Der Digitale Schulhof benötigt JavaScript. Bitte aktivieren Sie JavaScript in Ihrem Browser und laden Sie die Seite erneut. Wie Sie das machen, erfahren Sie <EnableLink>hier</EnableLink>.
   link: https://www.enable-javascript.com/de/
-person-type:
+person-types:
   student: Schüler
   teacher: Lehrer
   parent: Elternteil
   admin: Verwaltungsangestellter
   other: Andere
-gender:
+genders:
   male: Männlich
   female: Weiblich
   other: Divers
-date:
+dates:
   full: "{date, date, medium} um {date, time, medium}"

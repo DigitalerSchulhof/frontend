@@ -181,25 +181,25 @@ function useChangePasswordStateModal(
       case ChangePasswordState.Loading:
         return (
           <LoadingModal
-            title='schulhof.account.profile.change-password.modal.loading.title'
-            description='schulhof.account.profile.change-password.modal.loading.description'
+            title='schulhof.account.profile.change-password.modals.loading.title'
+            description='schulhof.account.profile.change-password.modals.loading.description'
           />
         );
       case ChangePasswordState.InternalError:
       case ChangePasswordState.InvalidCredentials:
       case ChangePasswordState.PasswordMismatch: {
         const errorReasons = t(
-          `schulhof.account.profile.change-password.modal.error.reasons.${state}`
+          `schulhof.account.profile.change-password.modals.error.reasons.${state}`
         );
 
         return (
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Error}
-              title='schulhof.account.profile.change-password.modal.error.title'
+              title='schulhof.account.profile.change-password.modals.error.title'
             >
               <p>
-                <T t='schulhof.account.profile.change-password.modal.error.description' />
+                <T t='schulhof.account.profile.change-password.modals.error.description' />
               </p>
               <ul>
                 {errorReasons.map((s, i) => (
@@ -218,10 +218,10 @@ function useChangePasswordStateModal(
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Success}
-              title='schulhof.account.profile.change-password.modal.success.title'
+              title='schulhof.account.profile.change-password.modals.success.title'
             >
               <p>
-                <T t='schulhof.account.profile.change-password.modal.success.description' />
+                <T t='schulhof.account.profile.change-password.modals.success.description' />
               </p>
             </Alert>
             <ButtonGroup>
@@ -231,7 +231,7 @@ function useChangePasswordStateModal(
                   'paths.schulhof.account',
                   'paths.schulhof.account.profile',
                 ]}
-                t='schulhof.account.profile.change-password.modal.success.button'
+                t='schulhof.account.profile.change-password.modals.success.button'
               />
             </ButtonGroup>
           </Modal>

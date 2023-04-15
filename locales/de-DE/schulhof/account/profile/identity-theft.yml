@@ -1,7 +1,7 @@
 title: Identitätsdiebstahl melden
 disclaimer:
   title: Identitätsdiebstahl
-  content:
+  description:
     - Hiermit {form_of_address, select, informal {meldest du} formal {melden Sie} other {~}}, dass unerlaubt auf {form_of_address, select, informal {dein} formal {Ihr} other {~}} Konto zugegriffen worden ist. Eine leichtfertige Meldung sollte vermeiden werden, da hierdurch eine Sicherheitslücke gemeldet wird und ist vergleichbar mit dem Ziehen der Notbremse ohne triftigen Grund.
     - <b>Ein Identitätsdiebstahl muss gemeldet werden, wenn einer vorliegt, aber nicht leichtfertig.</b>
 form:
@@ -11,11 +11,11 @@ form:
   declaration:
     title: Erklärung
     text: Mir ist bewusst, dass ich gerade einen Identitätsdiebstahl melde.
-buttons:
-  submit: Identitätsdiebstahl melden
-  change-password: Password ohne Identitätsdiebstahl ändern
-  back: Zurück zum Schulhof
-modal:
+  buttons:
+    submit: Identitätsdiebstahl melden
+    change-password: Password ohne Identitätsdiebstahl ändern
+    back: Zurück zum Schulhof
+modals:
   loading:
     title: Identitätsdiebstahl melden
     description: Die eingegebenen Daten werden überprüft und die Meldung wird durchgeführt.

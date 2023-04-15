@@ -1,4 +1,4 @@
-version:
+versions:
   0_11_4:
     changeset:
     - Problem mit der Tagebucheinsicht behoben.

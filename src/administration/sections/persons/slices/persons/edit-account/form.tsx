@@ -170,23 +170,23 @@ function useEditAccountStateModal(
       case EditAccountState.Loading:
         return (
           <LoadingModal
-            title='schulhof.account.profile.edit-account.modal.loading.title'
-            description='schulhof.account.profile.edit-account.modal.loading.description'
+            title='schulhof.account.profile.edit-account.modals.loading.title'
+            description='schulhof.account.profile.edit-account.modals.loading.description'
           />
         );
       case EditAccountState.InternalError: {
         const errorReasons = t(
-          `schulhof.account.profile.edit-account.modal.error.reasons.${state}`
+          `schulhof.account.profile.edit-account.modals.error.reasons.${state}`
         );
 
         return (
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Error}
-              title='schulhof.account.profile.edit-account.modal.error.title'
+              title='schulhof.account.profile.edit-account.modals.error.title'
             >
               <p>
-                <T t='schulhof.account.profile.edit-account.modal.error.description' />
+                <T t='schulhof.account.profile.edit-account.modals.error.description' />
               </p>
               <ul>
                 {errorReasons.map((s, i) => (
@@ -205,10 +205,10 @@ function useEditAccountStateModal(
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Success}
-              title='schulhof.account.profile.edit-account.modal.success.title'
+              title='schulhof.account.profile.edit-account.modals.success.title'
             >
               <p>
-                <T t='schulhof.account.profile.edit-account.modal.success.description' />
+                <T t='schulhof.account.profile.edit-account.modals.success.description' />
               </p>
             </Alert>
             <ButtonGroup>
@@ -218,7 +218,7 @@ function useEditAccountStateModal(
                   'paths.schulhof.account',
                   'paths.schulhof.account.profile',
                 ]}
-                t='schulhof.account.profile.edit-account.modal.success.button'
+                t='schulhof.account.profile.edit-account.modals.success.button'
               />
             </ButtonGroup>
           </Modal>

@@ -16,7 +16,7 @@ export default async function Page() {
         <Breadcrumbs path={['paths.schulhof', 'paths.schulhof.register']} />
         <Heading size='1'>
           <T
-            t='schulhof.register.heading'
+            t='schulhof.register.title'
             args={{
               school_name_genus: settings.school.name.genus,
               school_name_genitive: settings.school.name.genitive,
@@ -25,12 +25,9 @@ export default async function Page() {
         </Heading>
       </Col>
       <Col w='12'>
-        <Alert
-          variant={Variant.Warning}
-          title='schulhof.register.description.title'
-        >
+        <Alert variant={Variant.Warning} title='schulhof.register.note.title'>
           <p>
-            <T t='schulhof.register.description.text' />
+            <T t='schulhof.register.note.description' />
           </p>
         </Alert>
         <ButtonGroup>

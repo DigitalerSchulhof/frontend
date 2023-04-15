@@ -29,7 +29,7 @@ export default async function Page() {
           variant={Variant.Warning}
           title='schulhof.account.profile.identity-theft.disclaimer.title'
         >
-          {t('schulhof.account.profile.identity-theft.disclaimer.content', {
+          {t('schulhof.account.profile.identity-theft.disclaimer.description', {
             form_of_address: context.person.formOfAddress,
           }).map((e, i) => (
             <p key={i}>{e}</p>

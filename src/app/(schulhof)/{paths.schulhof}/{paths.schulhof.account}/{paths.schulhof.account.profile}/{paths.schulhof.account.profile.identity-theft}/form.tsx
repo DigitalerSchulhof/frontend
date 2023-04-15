@@ -70,7 +70,7 @@ export const IdentityTheftForm = () => {
         <Button
           type='submit'
           variant={Variant.Warning}
-          t='schulhof.account.profile.identity-theft.buttons.submit'
+          t='schulhof.account.profile.identity-theft.form.buttons.submit'
         />
         <Button
           href={[
@@ -79,11 +79,11 @@ export const IdentityTheftForm = () => {
             'paths.schulhof.account.profile',
             'paths.schulhof.account.profile.change-password',
           ]}
-          t='schulhof.account.profile.identity-theft.buttons.change-password'
+          t='schulhof.account.profile.identity-theft.form.buttons.change-password'
         />
         <Button
           href={['paths.schulhof', 'paths.schulhof.account']}
-          t='schulhof.account.profile.identity-theft.buttons.back'
+          t='schulhof.account.profile.identity-theft.form.buttons.back'
         />
       </ButtonGroup>
     </Form>
@@ -187,25 +187,25 @@ function useIdentityTheftStateModal(
       case IdentityTheftState.Loading:
         return (
           <LoadingModal
-            title='schulhof.account.profile.identity-theft.modal.loading.title'
-            description='schulhof.account.profile.identity-theft.modal.loading.description'
+            title='schulhof.account.profile.identity-theft.modals.loading.title'
+            description='schulhof.account.profile.identity-theft.modals.loading.description'
           />
         );
       case IdentityTheftState.InternalError:
       case IdentityTheftState.InvalidCredentials:
       case IdentityTheftState.PasswordMismatch: {
         const errorReasons = t(
-          `schulhof.account.profile.identity-theft.modal.error.reasons.${state}`
+          `schulhof.account.profile.identity-theft.modals.error.reasons.${state}`
         );
 
         return (
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Error}
-              title='schulhof.account.profile.identity-theft.modal.error.title'
+              title='schulhof.account.profile.identity-theft.modals.error.title'
             >
               <p>
-                <T t='schulhof.account.profile.identity-theft.modal.error.description' />
+                <T t='schulhof.account.profile.identity-theft.modals.error.description' />
               </p>
               <ul>
                 {errorReasons.map((s, i) => (
@@ -224,16 +224,16 @@ function useIdentityTheftStateModal(
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Success}
-              title='schulhof.account.profile.identity-theft.modal.success.title'
+              title='schulhof.account.profile.identity-theft.modals.success.title'
             >
               <p>
-                <T t='schulhof.account.profile.identity-theft.modal.success.description' />
+                <T t='schulhof.account.profile.identity-theft.modals.success.description' />
               </p>
             </Alert>
             <ButtonGroup>
               <Button
                 href={['paths.schulhof', 'paths.schulhof.account']}
-                t='schulhof.account.profile.identity-theft.modal.success.button'
+                t='schulhof.account.profile.identity-theft.modals.success.button'
               />
             </ButtonGroup>
           </Modal>

@@ -35,7 +35,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
               <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.type' />
             </List.Header>
             <List.Cell>
-              <T t={`generic.person-type.${person.type}`} />
+              <T t={`generic.person-types.${person.type}`} />
             </List.Cell>
           </List.Row>
           {account ? (
@@ -63,7 +63,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
               <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.gender' />
             </List.Header>
             <List.Cell>
-              <T t={`generic.gender.${person.gender}`} />
+              <T t={`generic.genders.${person.gender}`} />
             </List.Cell>
           </List.Row>
           {account ? (
@@ -93,7 +93,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
                     <List.Cell>
                       {account.lastLogin ? (
                         <T
-                          t='generic.date.full'
+                          t='generic.dates.full'
                           args={{ date: new Date(account.lastLogin) }}
                         />
                       ) : (
@@ -108,7 +108,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
                     <List.Cell>
                       {account.secondLastLogin ? (
                         <T
-                          t='generic.date.full'
+                          t='generic.dates.full'
                           args={{ date: new Date(account.secondLastLogin) }}
                         />
                       ) : (

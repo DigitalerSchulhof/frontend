@@ -52,19 +52,19 @@ export const LoginForm = () => {
       <Table>
         <Table.Body>
           <FormRow
-            label='schulhof.login.action.login.form.username'
+            label='schulhof.login.actions.login.form.username'
             autoComplete='username'
             ref={usernameRef}
           />
           <FormRow
-            label='schulhof.login.action.login.form.password'
+            label='schulhof.login.actions.login.form.password'
             autoComplete='current-password'
             type='password'
             ref={passwordRef}
           />
         </Table.Body>
       </Table>
-      {t('schulhof.login.action.login.privacy', {
+      {t('schulhof.login.actions.login.privacy', {
         PrivacyLink: makeLink(['paths.privacy']),
       }).map((s, i) => (
         <Note key={i}>{s}</Note>
@@ -73,15 +73,15 @@ export const LoginForm = () => {
         <Button
           type='submit'
           variant={Variant.Success}
-          t='schulhof.login.action.login.buttons.login'
+          t='schulhof.login.actions.login.form.buttons.login'
         />
         <Button
           href={['paths.schulhof', 'paths.schulhof.forgot-password']}
-          t='schulhof.login.action.login.buttons.forgot-password'
+          t='schulhof.login.actions.login.form.buttons.forgot-password'
         />
         <Button
           href={['paths.schulhof', 'paths.schulhof.register']}
-          t='schulhof.login.action.login.buttons.register'
+          t='schulhof.login.actions.login.form.buttons.register'
         />
       </ButtonGroup>
     </Form>
@@ -178,24 +178,24 @@ function useLoginStateModal(
       case LoginState.Loading:
         return (
           <LoadingModal
-            title='schulhof.login.action.login.modal.loading.title'
-            description='schulhof.login.action.login.modal.loading.description'
+            title='schulhof.login.actions.login.modals.loading.title'
+            description='schulhof.login.actions.login.modals.loading.description'
           />
         );
       case LoginState.InternalError:
       case LoginState.InvalidCredentials: {
         const errorReasons = t(
-          `schulhof.login.action.login.modal.error.reasons.${state}`
+          `schulhof.login.actions.login.modals.error.reasons.${state}`
         );
 
         return (
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Error}
-              title='schulhof.login.action.login.modal.error.title'
+              title='schulhof.login.actions.login.modals.error.title'
             >
               <p>
-                <T t='schulhof.login.action.login.modal.error.description' />
+                <T t='schulhof.login.actions.login.modals.error.description' />
               </p>
               <ul>
                 {errorReasons.map((s, i) => (

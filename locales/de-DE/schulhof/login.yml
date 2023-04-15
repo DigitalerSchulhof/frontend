@@ -1,19 +1,19 @@
 heading: Willkommen auf dem Schulhof {school_name_genus, select, m {des} w {der} n {des} other {~}} {school_name_genitive}!
-action:
+actions:
   login:
     title: Anmeldung
-    description: Um den Schulhof zu betreten, ist eine Anmeldung nötig.
+    subtitle: Um den Schulhof zu betreten, ist eine Anmeldung nötig.
     form:
       username: "Benutzername: "
       password: "Passwort: "
-    buttons:
-      login: Anmelden
-      forgot-password: Passwort vergessen?
-      register: Registrieren
+      buttons:
+        login: Anmelden
+        forgot-password: Passwort vergessen?
+        register: Registrieren
     privacy:
       - "<b>Datenschutzhinweis</b>: Im Schulhof werden Daten anders verarbeitet als auf der normalen Website. Was gespeichert und wie die Daten verarbeitet werden, ist der <PrivacyLink>Datenschutzseite</PrivacyLink> zu entnehmen."
       - "Mit der Anmeldung wird automatisch »Einwilligung A« erteilt."
-    modal:
+    modals:
       loading:
         title: Anmelden
         description: Die eingegebenen Daten werden überprüft, die Anmeldung kann einige Sekunden dauern.
@@ -29,17 +29,17 @@ action:
             - das Passwort ist nicht mehr gültig.
   forgot-password:
     title: Passwort vergessen
-    description: Um ein neues Passwort zu erhalten, müssen der Benutzername und die E-Mail-Adresse angegeben werden.
+    subtitle: Um ein neues Passwort zu erhalten, müssen der Benutzername und die E-Mail-Adresse angegeben werden.
     form:
       username: "Benutzername: "
       email: "E-Mail-Adresse: "
-    buttons:
-      send: Neues Password zuschicken
-      login: Zur Anmeldung
+      buttons:
+        send: Neues Password zuschicken
+        login: Zur Anmeldung
     info:
       title: "Bitte beachten:"
       content: Das versendete Kennwort ist nur eine Stunde lang gültig und sollte daher sofort nach der Verwendung geändert werden.
-    modal:
+    modals:
       loading:
         title: Neues Passwort zuschicken
         description: Die eingegebenen Daten werden überprüft und das neue Password wird verschickt.
@@ -55,6 +55,7 @@ action:
       success:
         title: Neues Passwort zugeschickt
         description: Das neue Passwort wurde erfolgreich an <b>{email}</b> verschickt. {form_of_address, select, informal {Vergiss nicht} formal {Beachten Sie} other {~}}, dass {form_of_address, select, informal {es} formal {dieses} other {~}} nur eine Stunde lang gültig ist.
+        button: Zur Anmeldung
 apps:
   title: Jetzt auch als App
   ios: iPhone/iPad
@@ -62,7 +63,7 @@ apps:
   pwa: Direkt installieren
 changelog:
   title: Neuerungen
-  heading: "{version} - {date, date, long}"
+  section-title: "{version} - {date, date, long}"
   specific:
     show: Neuerungen in Version <b>{version}</b> einblenden
     hide: Neuerungen in Version <b>{version}</b> ausblenden

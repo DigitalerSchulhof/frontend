@@ -52,12 +52,12 @@ export const ForgotPasswordForm = () => {
       <Table>
         <Table.Body>
           <FormRow
-            label='schulhof.login.action.forgot-password.form.username'
+            label='schulhof.login.actions.forgot-password.form.username'
             autoComplete='username'
             ref={usernameRef}
           />
           <FormRow
-            label='schulhof.login.action.forgot-password.form.email'
+            label='schulhof.login.actions.forgot-password.form.email'
             autoComplete='email'
             ref={emailRef}
           />
@@ -65,21 +65,21 @@ export const ForgotPasswordForm = () => {
       </Table>
       <Alert
         variant={Variant.Information}
-        title='schulhof.login.action.forgot-password.info.title'
+        title='schulhof.login.actions.forgot-password.info.title'
       >
         <p>
-          <T t='schulhof.login.action.forgot-password.info.content' />
+          <T t='schulhof.login.actions.forgot-password.info.content' />
         </p>
       </Alert>
       <ButtonGroup>
         <Button
           type='submit'
           variant={Variant.Success}
-          t='schulhof.login.action.forgot-password.buttons.send'
+          t='schulhof.login.actions.forgot-password.form.buttons.send'
         />
         <Button
           href={['paths.schulhof', 'paths.schulhof.login']}
-          t='schulhof.login.action.forgot-password.buttons.login'
+          t='schulhof.login.actions.forgot-password.form.buttons.login'
         />
       </ButtonGroup>
     </Form>
@@ -181,24 +181,24 @@ function useForgotPasswordStateModal(
       case ForgotPasswordState.Loading:
         return (
           <LoadingModal
-            title='schulhof.login.action.forgot-password.modal.loading.title'
-            description='schulhof.login.action.forgot-password.modal.loading.description'
+            title='schulhof.login.actions.forgot-password.modals.loading.title'
+            description='schulhof.login.actions.forgot-password.modals.loading.description'
           />
         );
       case ForgotPasswordState.InternalError:
       case ForgotPasswordState.InvalidCredentials: {
         const errorReasons = t(
-          `schulhof.login.action.forgot-password.modal.error.reasons.${state}`
+          `schulhof.login.actions.forgot-password.modals.error.reasons.${state}`
         );
 
         return (
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Error}
-              title='schulhof.login.action.forgot-password.modal.error.title'
+              title='schulhof.login.actions.forgot-password.modals.error.title'
             >
               <p>
-                <T t='schulhof.login.action.forgot-password.modal.error.description' />
+                <T t='schulhof.login.actions.forgot-password.modals.error.description' />
               </p>
               <ul>
                 {errorReasons.map((s, i) => (
@@ -226,11 +226,11 @@ function useForgotPasswordStateModal(
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Success}
-              title='schulhof.login.action.forgot-password.modal.success.title'
+              title='schulhof.login.actions.forgot-password.modals.success.title'
             >
               <p>
                 <T
-                  t='schulhof.login.action.forgot-password.modal.success.description'
+                  t='schulhof.login.actions.forgot-password.modals.success.description'
                   args={{
                     email: emailRef.current!.value,
                     form_of_address: formOfAddress,
@@ -241,7 +241,7 @@ function useForgotPasswordStateModal(
             <ButtonGroup>
               <Button
                 href={['paths.schulhof', 'paths.schulhof.login']}
-                t='schulhof.login.action.forgot-password.buttons.login'
+                t='schulhof.login.actions.forgot-password.modals.success.button'
               />
             </ButtonGroup>
           </Modal>
