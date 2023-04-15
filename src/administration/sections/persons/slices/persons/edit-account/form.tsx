@@ -50,13 +50,13 @@ export const EditAccountForm = ({
       <Table>
         <Table.Body>
           <FormRow
-            label='schulhof.account.profile.edit-account.form.username'
+            label='schulhof.administration.sections.persons.slices.persons.edit-account.form.username'
             autoComplete='username'
             defaultValue={username}
             ref={usernameRef}
           />
           <FormRow
-            label='schulhof.account.profile.edit-account.form.email'
+            label='schulhof.administration.sections.persons.slices.persons.edit-account.form.email'
             autoComplete='email'
             defaultValue={email}
             ref={emailRef}
@@ -67,7 +67,7 @@ export const EditAccountForm = ({
         <Button
           type='submit'
           variant={Variant.Success}
-          t='schulhof.account.profile.edit-account.form.buttons.save'
+          t='schulhof.administration.sections.persons.slices.persons.edit-account.form.buttons.save'
         />
         <Button
           href={[
@@ -75,7 +75,7 @@ export const EditAccountForm = ({
             'paths.schulhof.account',
             'paths.schulhof.account.profile',
           ]}
-          t='schulhof.account.profile.edit-account.form.buttons.back'
+          t='schulhof.administration.sections.persons.slices.persons.edit-account.form.buttons.back'
         />
       </ButtonGroup>
     </Form>
@@ -170,23 +170,23 @@ function useEditAccountStateModal(
       case EditAccountState.Loading:
         return (
           <LoadingModal
-            title='schulhof.account.profile.edit-account.modals.loading.title'
-            description='schulhof.account.profile.edit-account.modals.loading.description'
+            title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.title'
+            description='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.description'
           />
         );
       case EditAccountState.InternalError: {
         const errorReasons = t(
-          `schulhof.account.profile.edit-account.modals.error.reasons.${state}`
+          `schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.reasons.${state}`
         );
 
         return (
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Error}
-              title='schulhof.account.profile.edit-account.modals.error.title'
+              title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.title'
             >
               <p>
-                <T t='schulhof.account.profile.edit-account.modals.error.description' />
+                <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.description' />
               </p>
               <ul>
                 {errorReasons.map((s, i) => (
@@ -205,10 +205,10 @@ function useEditAccountStateModal(
           <Modal onClose={setIdle}>
             <Alert
               variant={Variant.Success}
-              title='schulhof.account.profile.edit-account.modals.success.title'
+              title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.title'
             >
               <p>
-                <T t='schulhof.account.profile.edit-account.modals.success.description' />
+                <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.description' />
               </p>
             </Alert>
             <ButtonGroup>
@@ -218,7 +218,7 @@ function useEditAccountStateModal(
                   'paths.schulhof.account',
                   'paths.schulhof.account.profile',
                 ]}
-                t='schulhof.account.profile.edit-account.modals.success.button'
+                t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.button'
               />
             </ButtonGroup>
           </Modal>

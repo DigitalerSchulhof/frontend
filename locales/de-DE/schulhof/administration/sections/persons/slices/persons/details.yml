@@ -1,0 +1,39 @@
+title: Detailansicht von {name}
+personal-data:
+  title: Persönliche Daten
+  table:
+    type: "Art: "
+    username: "Benutzername: "
+    firstname: "Vorname: "
+    lastname: "Nachname: "
+    gender: "Geschlecht: "
+    email: "E-Mail-Adresse: "
+    teacher-code: "Lehrerkürzel: "
+    last-login: "Letzte Anmeldung: "
+    second-last-login: "Vorletzte Anmeldung: "
+    no-login: Noch keine Anmeldung
+  no-account: Einige Felder sind nicht verfügbar, da für diese Person kein Benutzerkonto existiert.
+  actions:
+    write-message:
+      button: Nachricht schreiben
+      title: Nachricht an {name} schreiben
+      errors:
+        no-permission: "{form_of_address, select, informal {Du hast} formal {Sie haben} other {~}} keine Berechtigung, eine Nachricht an {name} zu schreiben."
+        no-account: Für {name} existiert kein Benutzerkonto.
+change-personal-data:
+  title: Daten ändern
+  actions:
+    change-teacher-code: Lehrerkürzel ändern
+    identity-theft: Identitätsdiebstahl melden
+    create-account: Benutzerkonto anlegen
+    edit-account: Benutzerkonto bearbeiten
+    delete-account:
+      own: Mein Benutzerkonto löschen
+      other: Benutzerkonto löschen
+    settings: Einstellungen
+    permissions-and-roles: Rollen und Rechte vergeben
+    edit-person: Persönliche Daten bearbeiten
+    delete-person: Person löschen
+    change-password:
+      button: Passwort ändern
+      note: Das Passwort kann nur von der jeweiligen Person selbst geändert werden.

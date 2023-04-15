@@ -1,0 +1,21 @@
+title: Benutzerkonto bearbeiten
+form:
+  username: "Benutzername: "
+  email: "E-Mail-Adresse: "
+  buttons:
+    save: Änderungen speichern
+    back: Zurück zur Profilansicht
+modals:
+  loading:
+    title: Benutzerkonto bearbeiten
+    description: Die eingegebenen Daten werden überprüft und das Benutzerkonto wird aktualisiert.
+  error:
+    title: Benutzerkonto Bearbeiten fehlgeschlagen
+    description: Das Benutzerkonto wurde nicht geändert, denn ...
+    reasons:
+      internal-error:
+        - es ist ein interner Fehler aufgetreten.
+  success:
+    title: Benutzerkonto bearbeiten
+    description: Das Benutzerkonto wurde erfolgreich geändert.
+    button: Zurück zur Profilansicht
