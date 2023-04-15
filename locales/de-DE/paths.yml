@@ -22,9 +22,6 @@ schulhof:
       edit-account:
         index: Nutzerkonto_bearbeiten
         title: Nutzerkonto bearbeiten
-      edit:
-        index: Profil_bearbeiten
-        title: Profil bearbeiten
       settings: Einstellungen
     mailbox:
       index: Postfach
@@ -40,7 +37,6 @@ schulhof:
       title: Personen und Gruppen
       persons:
         index: Personen
-        details: Details
         create-account:
           index: Neues_Nutzerkonto
           title: Neues Nutzerkonto

@@ -1,10 +1,12 @@
-title: Benutzerkonto bearbeiten
+title: Benutzerkonto von {name} bearbeiten
 form:
   username: "Benutzername: "
   email: "E-Mail-Adresse: "
   buttons:
     save: Änderungen speichern
-    back: Zurück zur Profilansicht
+    back:
+      own: Zurück zur Profilansicht
+      other: Zurück zur Benutzeransicht
 modals:
   loading:
     title: Benutzerkonto bearbeiten

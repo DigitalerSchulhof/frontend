@@ -20,10 +20,14 @@ enum EditAccountState {
 }
 
 export const EditAccountForm = ({
+  isOwnProfile,
+  personId,
   accountId,
   username,
   email,
 }: {
+  isOwnProfile: boolean;
+  personId: string;
   accountId: string;
   username: string;
   email: string;
@@ -31,6 +35,8 @@ export const EditAccountForm = ({
   const [editAccountState, setEditAccountState] = useState<EditAccountState>(
     EditAccountState.Idle
   );
+
+  const own = isOwnProfile ? 'own' : 'other';
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -70,12 +76,22 @@ export const EditAccountForm = ({
           t='schulhof.administration.sections.persons.slices.persons.edit-account.form.buttons.save'
         />
         <Button
-          href={[
-            'paths.schulhof',
-            'paths.schulhof.account',
-            'paths.schulhof.account.profile',
-          ]}
-          t='schulhof.administration.sections.persons.slices.persons.edit-account.form.buttons.back'
+          href={
+            isOwnProfile
+              ? [
+                  'paths.schulhof',
+                  'paths.schulhof.account',
+                  'paths.schulhof.account.profile',
+                ]
+              : [
+                  'paths.schulhof',
+                  'paths.schulhof.administration',
+                  'paths.schulhof.administration.persons',
+                  'paths.schulhof.administration.persons.persons',
+                  `{${personId}}`,
+                ]
+          }
+          t={`schulhof.administration.sections.persons.slices.persons.edit-account.form.buttons.back.${own}`}
         />
       </ButtonGroup>
     </Form>

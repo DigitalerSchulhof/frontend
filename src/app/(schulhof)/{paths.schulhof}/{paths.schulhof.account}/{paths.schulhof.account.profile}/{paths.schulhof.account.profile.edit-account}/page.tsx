@@ -22,7 +22,11 @@ export default async function Page() {
       </Col>
       <Col w='12'>
         {/* @ts-expect-error -- Server Component */}
-        <EditAccount account={context.account} />
+        <EditAccount
+          isOwnProfile
+          person={context.person}
+          account={context.account}
+        />
       </Col>
     </>
   );

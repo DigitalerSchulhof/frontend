@@ -1,6 +1,11 @@
+import { PersonDetails } from '#/administration/sections/persons/slices/persons/details';
 import { useRequireLogin } from '#/auth/server';
-import { useT } from '#/i18n';
-import { notFound, redirect } from 'next/navigation';
+import { T } from '#/i18n';
+import { Breadcrumbs } from '#/ui/Breadcrumbs';
+import { Col } from '#/ui/Col';
+import { Heading } from '#/ui/Heading';
+import { formatName } from '#/utils';
+import { notFound } from 'next/navigation';
 
 export default async function Page({
   params,
@@ -15,16 +20,39 @@ export default async function Page({
 
   if (!person) notFound();
 
-  const { t } = useT();
+  const account =
+    person.accountId === null
+      ? null
+      : await context.services.account.getById(person.accountId);
 
-  redirect(
-    `/${[
-      t('paths.schulhof'),
-      t('paths.schulhof.administration'),
-      t('paths.schulhof.administration.persons'),
-      t('paths.schulhof.administration.persons.persons'),
-      params.id,
-      t('paths.schulhof.administration.persons.persons.details'),
-    ].join('/')}`
+  return (
+    <>
+      <Col w='12'>
+        <Breadcrumbs
+          path={[
+            'paths.schulhof',
+            'paths.schulhof.administration',
+            'paths.schulhof.administration.persons',
+            'paths.schulhof.administration.persons.persons',
+            {
+              title: `{${formatName(person)}}`,
+              segment: `{${person.id}}`,
+            },
+          ]}
+        />
+        <Heading size='1'>
+          <T
+            t='schulhof.administration.sections.persons.slices.persons.details.title'
+            args={{
+              name: formatName(person),
+            }}
+          />
+        </Heading>
+      </Col>
+      <Col w='6'>
+        {/* @ts-expect-error -- Server Component */}
+        <PersonDetails context={context} person={person} account={account} />
+      </Col>
+    </>
   );
 }

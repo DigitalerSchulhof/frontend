@@ -36,4 +36,4 @@ change-personal-data:
     delete-person: Person löschen
     change-password:
       button: Passwort ändern
-      note: Das Passwort kann nur von der jeweiligen Person selbst geändert werden.
+      note: Das Passwort kann nur auf der eigenen Profilseite geändert werden.

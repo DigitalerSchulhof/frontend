@@ -1,6 +1,10 @@
 import { EditAccountForm } from './form';
 
 export type EditAccountProps = {
+  isOwnProfile?: boolean;
+  person: {
+    id: string;
+  };
   account: {
     id: string;
     username: string;
@@ -8,9 +12,15 @@ export type EditAccountProps = {
   };
 };
 
-export const EditAccount = async ({ account }: EditAccountProps) => {
+export const EditAccount = async ({
+  isOwnProfile = false,
+  person,
+  account,
+}: EditAccountProps) => {
   return (
     <EditAccountForm
+      isOwnProfile={isOwnProfile}
+      personId={person.id}
       accountId={account.id}
       username={account.username}
       email={account.email}

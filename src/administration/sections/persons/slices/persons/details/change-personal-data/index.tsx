@@ -27,8 +27,6 @@ export const PersonDetailsChangePersonalDataSection = ({
   person,
   account,
 }: PersonDetailsChangePersonalDataSectionProps) => {
-  const isSelf = context.person.id === person.id;
-
   return (
     <>
       <Heading
@@ -39,7 +37,6 @@ export const PersonDetailsChangePersonalDataSection = ({
         <UserButtons
           formOfAddress={context.person.formOfAddress}
           isOwnProfile={isOwnProfile}
-          isSelf={isSelf}
           person={person}
           account={account}
         />
@@ -47,12 +44,11 @@ export const PersonDetailsChangePersonalDataSection = ({
       <ButtonGroup>
         <AdminButtons
           formOfAddress={context.person.formOfAddress}
-          isOwnProfile={isOwnProfile}
           person={person}
           account={account}
         />
       </ButtonGroup>
-      {!isSelf ? (
+      {!isOwnProfile ? (
         <Note t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.change-password.note' />
       ) : null}
     </>
@@ -61,14 +57,12 @@ export const PersonDetailsChangePersonalDataSection = ({
 
 type AccountButtonsProps = Pick<PersonDetailsProps, 'person' | 'account'> & {
   formOfAddress: FormOfAddress;
-  isSelf: boolean;
   isOwnProfile: boolean;
 };
 
 const UserButtons = ({
   formOfAddress,
   isOwnProfile,
-  isSelf,
   person,
   account,
 }: AccountButtonsProps) => {
@@ -98,7 +92,7 @@ const UserButtons = ({
             }
           />
         ),
-        isSelf && (
+        isOwnProfile && (
           <Button
             key='change-password'
             t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.change-password.button'
@@ -160,12 +154,10 @@ const UserButtons = ({
 
 type PersonButtonsProps = Pick<PersonDetailsProps, 'person' | 'account'> & {
   formOfAddress: FormOfAddress;
-  isOwnProfile: boolean;
 };
 
 const AdminButtons = ({
   formOfAddress,
-  isOwnProfile,
   person,
   account,
 }: PersonButtonsProps) => {
@@ -176,23 +168,14 @@ const AdminButtons = ({
           <Button
             key='edit-person'
             t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.edit-person'
-            href={
-              isOwnProfile
-                ? [
-                    'paths.schulhof',
-                    'paths.schulhof.account',
-                    'paths.schulhof.account.profile',
-                    'paths.schulhof.account.profile.edit',
-                  ]
-                : [
-                    'paths.schulhof',
-                    'paths.schulhof.administration',
-                    'paths.schulhof.administration.persons',
-                    'paths.schulhof.administration.persons.persons',
-                    `{${person.id}}`,
-                    'paths.schulhof.administration.persons.persons.edit',
-                  ]
-            }
+            href={[
+              'paths.schulhof',
+              'paths.schulhof.administration',
+              'paths.schulhof.administration.persons',
+              'paths.schulhof.administration.persons.persons',
+              `{${person.id}}`,
+              'paths.schulhof.administration.persons.persons.edit',
+            ]}
           />,
           person.type === PersonType.Teacher && (
             <Button
