@@ -131,9 +131,8 @@ function useSendLogin(
       ]);
 
       if (!res.ok) {
-        setFormState(FormState.Error);
-
         const bodyString = await res.text();
+        setFormState(FormState.Error);
         let body: LoginOutputNotOk;
         try {
           body = JSON.parse(bodyString);

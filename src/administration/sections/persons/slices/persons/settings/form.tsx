@@ -365,9 +365,8 @@ function useSendSettings(
       ]);
 
       if (!res.ok) {
-        setFormState(FormState.Error);
-
         const bodyString = await res.text();
+        setFormState(FormState.Error);
         let body: SettingsOutputNotOk;
         try {
           body = JSON.parse(bodyString);

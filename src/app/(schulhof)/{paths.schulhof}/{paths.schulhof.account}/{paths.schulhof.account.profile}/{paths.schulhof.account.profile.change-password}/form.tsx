@@ -3,7 +3,7 @@
 import {
   ChangePasswordInput,
   ChangePasswordOutputNotOk,
-} from '#/app/api/schulhof/auth/change-password/route';
+} from '#/app/api/schulhof/account/profile/change-password/route';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
@@ -128,9 +128,8 @@ function useSendChangePassword(
       ]);
 
       if (!res.ok) {
-        setFormState(FormState.Error);
-
         const bodyString = await res.text();
+        setFormState(FormState.Error);
         let body: ChangePasswordOutputNotOk;
         try {
           body = JSON.parse(bodyString);

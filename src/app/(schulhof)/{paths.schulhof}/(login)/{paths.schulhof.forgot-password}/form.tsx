@@ -134,9 +134,8 @@ function useSendForgotPassword(
       ]);
 
       if (!res.ok) {
-        setFormState(FormState.Error);
-
         const bodyString = await res.text();
+        setFormState(FormState.Error);
         let body: ForgotPasswordOutputNotOk;
         try {
           body = JSON.parse(bodyString);
@@ -180,8 +179,10 @@ function useSendForgotPassword(
         return;
       }
 
+      const body: ForgotPasswordOutputOk = await res.json();
+
       setFormState(FormState.Success);
-      onSuccess(await res.json());
+      onSuccess(body);
     },
     [usernameRef, emailRef, setFormState, setFormErrors, onSuccess, log]
   );

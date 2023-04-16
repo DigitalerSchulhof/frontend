@@ -143,9 +143,8 @@ function useSendEditAccount(
       ]);
 
       if (!res.ok) {
-        setFormState(FormState.Error);
-
         const bodyString = await res.text();
+        setFormState(FormState.Error);
         let body: EditAccountOutputNotOk;
         try {
           body = JSON.parse(bodyString);

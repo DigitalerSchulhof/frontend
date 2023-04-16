@@ -42,7 +42,13 @@ export async function POST(req: Request) {
   );
 
   if (!account) {
-    return NextResponse.json({ code: 'invalid-credentials' }, { status: 401 });
+    return NextResponse.json(
+      {
+        code: 'NOT_OK',
+        errors: [{ code: 'INVALID_CREDENTIALS' }],
+      },
+      { status: 401 }
+    );
   }
 
   const jwt = await context.services.session.createJwt(account.id);
@@ -50,6 +56,7 @@ export async function POST(req: Request) {
   await context.services.account.updateLastLogin(account.id);
 
   return NextResponse.json({
+    code: 'OK',
     jwt,
   });
 }

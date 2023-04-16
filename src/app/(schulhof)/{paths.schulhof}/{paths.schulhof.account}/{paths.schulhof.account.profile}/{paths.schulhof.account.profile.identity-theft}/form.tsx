@@ -3,7 +3,7 @@
 import {
   IdentityTheftInput,
   IdentityTheftOutputNotOk,
-} from '#/app/api/schulhof/auth/identity-theft/route';
+} from '#/app/api/schulhof/account/profile/identity-theft/route';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
@@ -130,9 +130,8 @@ function useSendIdentityTheft(
       ]);
 
       if (!res.ok) {
-        setFormState(FormState.Error);
-
         const bodyString = await res.text();
+        setFormState(FormState.Error);
         let body: IdentityTheftOutputNotOk;
         try {
           body = JSON.parse(bodyString);
