@@ -66,14 +66,18 @@ export class PersonValidator extends Validator<'persons', PersonBase> {
     settings: PersonSettings
   ): Promise<void | never> {
     await aggregateValidationErrors([
-      settings.mailbox.deleteAfter !== null && settings.mailbox.deleteAfter < 0
+      settings.mailbox.deleteAfter !== null &&
+      (!Number.isInteger(settings.mailbox.deleteAfter) ||
+        settings.mailbox.deleteAfter <= 0)
         ? this.throwValidationError(PERSON_MAILBOX_DELETE_AFTER_INVALID)
         : null,
       settings.mailbox.deleteAfterInBin !== null &&
-      settings.mailbox.deleteAfterInBin < 0
+      (!Number.isInteger(settings.mailbox.deleteAfterInBin) ||
+        settings.mailbox.deleteAfterInBin <= 0)
         ? this.throwValidationError(PERSON_MAILBOX_DELETE_AFTER_IN_BIN_INVALID)
         : null,
-      settings.profile.sessionTimeout < 0 ||
+      !Number.isInteger(settings.profile.sessionTimeout) ||
+      settings.profile.sessionTimeout <= 0 ||
       settings.profile.sessionTimeout > MAX_SESSION_TIMEOUT
         ? this.throwValidationError(PERSON_PROFILE_SESSION_TIMEOUT_INVALID)
         : null,

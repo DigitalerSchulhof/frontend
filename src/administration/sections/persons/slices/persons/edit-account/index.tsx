@@ -1,3 +1,4 @@
+import { Col } from '#/ui/Col';
 import { EditAccountForm } from './form';
 
 export type EditAccountProps = {
@@ -6,7 +7,6 @@ export type EditAccountProps = {
     id: string;
   };
   account: {
-    id: string;
     username: string;
     email: string;
   };
@@ -18,12 +18,13 @@ export const EditAccount = async ({
   account,
 }: EditAccountProps) => {
   return (
-    <EditAccountForm
-      isOwnProfile={isOwnProfile}
-      personId={person.id}
-      accountId={account.id}
-      username={account.username}
-      email={account.email}
-    />
+    <Col w='12'>
+      <EditAccountForm
+        isOwnProfile={isOwnProfile}
+        personId={person.id}
+        username={account.username}
+        email={account.email}
+      />
+    </Col>
   );
 };

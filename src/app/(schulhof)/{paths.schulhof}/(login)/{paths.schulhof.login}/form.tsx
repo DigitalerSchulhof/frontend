@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  LoginInput,
+  LoginOutputNotOk,
+  LoginOutputOk,
+} from '#/app/api/schulhof/auth/login/route';
 import { T, makeLink } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
@@ -15,9 +20,13 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-enum LoginState {
-  Idle = 'idle',
-  Loading = 'loading',
+enum FormState {
+  Idle,
+  Loading,
+  Error,
+}
+
+export enum FormError {
   InternalError = 'internal-error',
   InvalidCredentials = 'invalid-credentials',
 }
@@ -26,7 +35,8 @@ export const LoginForm = () => {
   const { t } = useT();
   const router = useRouter();
 
-  const [loginState, setLoginState] = useState<LoginState>(LoginState.Idle);
+  const [formState, setFormState] = useState<FormState>(FormState.Idle);
+  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -34,17 +44,18 @@ export const LoginForm = () => {
   const sendLogin = useSendLogin(
     usernameRef,
     passwordRef,
-    setLoginState,
+    setFormState,
+    setFormErrors,
     useCallback(
-      (jwt: string) => {
-        Cookies.set('jwt', jwt);
+      (res: LoginOutputOk) => {
+        Cookies.set('jwt', res.jwt);
         router.refresh();
       },
       [router]
     )
   );
 
-  const modal = useLoginStateModal(loginState, setLoginState);
+  const modal = useLoginStateModal(formState, formErrors, setFormState);
 
   return (
     <Form onSubmit={sendLogin}>
@@ -91,8 +102,9 @@ export const LoginForm = () => {
 function useSendLogin(
   usernameRef: React.RefObject<HTMLInputElement>,
   passwordRef: React.RefObject<HTMLInputElement>,
-  setLoginState: (s: LoginState) => void,
-  onLoginSuccess: (jwt: string) => void
+  setFormState: (s: FormState) => void,
+  setFormErrors: (e: readonly FormError[]) => void,
+  onSuccess: (jwt: LoginOutputOk) => void
 ) {
   const log = useLog();
 
@@ -101,7 +113,7 @@ function useSendLogin(
       const username = usernameRef.current!.value;
       const password = passwordRef.current!.value;
 
-      setLoginState(LoginState.Loading);
+      setFormState(FormState.Loading);
 
       const [res] = await Promise.all([
         fetch('/api/schulhof/auth/login', {
@@ -112,20 +124,22 @@ function useSendLogin(
           body: JSON.stringify({
             username,
             password,
-          }),
+          } satisfies LoginInput),
         }),
         // Avoid flashing the loading dialogue
         sleep(500),
       ]);
 
       if (!res.ok) {
+        setFormState(FormState.Error);
+
         const bodyString = await res.text();
-        let body;
+        let body: LoginOutputNotOk;
         try {
           body = JSON.parse(bodyString);
         } catch (e) {
+          setFormErrors([FormError.InternalError]);
           if (e instanceof SyntaxError) {
-            setLoginState(LoginState.InternalError);
             log.error('Unknown error while logging in', {
               username,
               status: res.status,
@@ -137,55 +151,63 @@ function useSendLogin(
           throw e;
         }
 
-        switch (body.code) {
-          case 'invalid-credentials':
-            setLoginState(LoginState.InvalidCredentials);
-            return;
-          default:
-            setLoginState(LoginState.InternalError);
-            log.error('Unknown error while logging in', {
-              username,
-              status: res.status,
-              body,
-            });
-            return;
+        const errors: FormError[] = [];
+        for (const error of body.errors) {
+          switch (error.code) {
+            case 'INVALID_CREDENTIALS':
+              errors.push(FormError.InvalidCredentials);
+              break;
+            default:
+              if (!errors.includes(FormError.InternalError)) {
+                errors.push(FormError.InternalError);
+              }
+
+              log.error('Unknown error while logging in', {
+                username,
+                status: res.status,
+                body,
+                code: error.code,
+              });
+              break;
+          }
         }
+
+        setFormErrors(errors);
+        return;
       }
 
-      const body = await res.json();
-
-      onLoginSuccess(body.jwt);
+      onSuccess(await res.json());
     },
-    [usernameRef, passwordRef, setLoginState, onLoginSuccess, log]
+    [usernameRef, passwordRef, setFormState, setFormErrors, onSuccess, log]
   );
 }
 
 function useLoginStateModal(
-  state: LoginState,
-  setLoginState: (s: LoginState) => void
+  state: FormState,
+  formErrors: readonly FormError[],
+  setFormState: (s: FormState) => void
 ) {
   const { t } = useT();
 
   const setIdle = useCallback(
-    () => setLoginState(LoginState.Idle),
-    [setLoginState]
+    () => setFormState(FormState.Idle),
+    [setFormState]
   );
 
   return useMemo(() => {
     switch (state) {
-      case LoginState.Idle:
+      case FormState.Idle:
         return null;
-      case LoginState.Loading:
+      case FormState.Loading:
         return (
           <LoadingModal
             title='schulhof.login.actions.login.modals.loading.title'
             description='schulhof.login.actions.login.modals.loading.description'
           />
         );
-      case LoginState.InternalError:
-      case LoginState.InvalidCredentials: {
-        const errorReasons = t(
-          `schulhof.login.actions.login.modals.error.reasons.${state}`
+      case FormState.Error: {
+        const errorReasons = formErrors.flatMap((err) =>
+          t(`schulhof.login.actions.login.modals.error.reasons.${err}`)
         );
 
         return (
@@ -210,5 +232,5 @@ function useLoginStateModal(
         );
       }
     }
-  }, [state, setIdle, t]);
+  }, [state, formErrors, setIdle, t]);
 }

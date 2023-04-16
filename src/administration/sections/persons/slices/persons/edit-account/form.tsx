@@ -1,5 +1,9 @@
 'use client';
 
+import {
+  EditAccountInput,
+  EditAccountOutputNotOk,
+} from '#/app/api/schulhof/administration/persons/persons/edit-account/route';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
@@ -12,46 +16,54 @@ import { Variant } from '#/ui/variants';
 import { sleep } from '#/utils';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-enum EditAccountState {
-  Idle = 'idle',
-  Loading = 'loading',
+enum FormState {
+  Idle,
+  Loading,
+  Error,
+  Success,
+}
+
+export enum FormError {
   InternalError = 'internal-error',
-  Success = 'success',
 }
 
 export const EditAccountForm = ({
   isOwnProfile,
   personId,
-  accountId,
   username,
   email,
 }: {
   isOwnProfile: boolean;
   personId: string;
-  accountId: string;
   username: string;
   email: string;
 }) => {
-  const [editAccountState, setEditAccountState] = useState<EditAccountState>(
-    EditAccountState.Idle
-  );
+  const [formState, setFormState] = useState<FormState>(FormState.Idle);
+  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
   const own = isOwnProfile ? 'own' : 'other';
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
 
-  const sendForgotPassword = useSendEditAccount(
-    accountId,
+  const sendEditAccount = useSendEditAccount(
+    personId,
     usernameRef,
     emailRef,
-    setEditAccountState
+    setFormState,
+    setFormErrors
   );
 
-  const modal = useEditAccountStateModal(editAccountState, setEditAccountState);
+  const modal = useEditAccountStateModal(
+    isOwnProfile,
+    personId,
+    formState,
+    formErrors,
+    setFormState
+  );
 
   return (
-    <Form onSubmit={sendForgotPassword}>
+    <Form onSubmit={sendEditAccount}>
       {modal}
       <Table>
         <Table.Body>
@@ -99,45 +111,49 @@ export const EditAccountForm = ({
 };
 
 function useSendEditAccount(
-  accountId: string,
+  personId: string,
   usernameRef: React.RefObject<HTMLInputElement>,
   emailRef: React.RefObject<HTMLInputElement>,
-  setEditAccountState: (s: EditAccountState) => void
+  setFormState: (s: FormState) => void,
+  setFormErrors: (e: readonly FormError[]) => void
 ) {
   const log = useLog();
 
   return useCallback(
-    async function sendForgotPassword() {
+    async function sendEditAccount() {
       const username = usernameRef.current!.value;
       const email = emailRef.current!.value;
 
-      setEditAccountState(EditAccountState.Loading);
+      setFormState(FormState.Loading);
 
       const [res] = await Promise.all([
-        fetch('/api/schulhof/auth/edit-account', {
+        fetch('/api/schulhof/administration/persons/persons/edit-account', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            accountId,
+            personId,
             username,
             email,
-          }),
+          } satisfies EditAccountInput),
         }),
         // Avoid flashing the loading dialogue
         sleep(500),
       ]);
 
       if (!res.ok) {
+        setFormState(FormState.Error);
+
         const bodyString = await res.text();
-        let body;
+        let body: EditAccountOutputNotOk;
         try {
           body = JSON.parse(bodyString);
         } catch (e) {
+          setFormErrors([FormError.InternalError]);
           if (e instanceof SyntaxError) {
-            setEditAccountState(EditAccountState.InternalError);
             log.error('Unknown error while editing account', {
+              personId,
               username,
               email,
               status: res.status,
@@ -149,50 +165,66 @@ function useSendEditAccount(
           throw e;
         }
 
-        switch (body.code) {
-          default:
-            setEditAccountState(EditAccountState.InternalError);
-            log.error('Unknown error while editing account', {
-              username,
-              email,
-              status: res.status,
-              body,
-            });
-            return;
+        const errors: FormError[] = [];
+        for (const error of body.errors) {
+          switch (error.code) {
+            default:
+              if (!errors.includes(FormError.InternalError)) {
+                errors.push(FormError.InternalError);
+              }
+
+              log.error('Unknown error while editing account', {
+                personId,
+                username,
+                email,
+                status: res.status,
+                body,
+                code: error.code,
+              });
+              break;
+          }
         }
+
+        setFormErrors(errors);
+        return;
       }
 
-      setEditAccountState(EditAccountState.Success);
+      setFormState(FormState.Success);
     },
-    [accountId, usernameRef, emailRef, setEditAccountState, log]
+    [personId, usernameRef, emailRef, setFormState, setFormErrors, log]
   );
 }
 
 function useEditAccountStateModal(
-  state: EditAccountState,
-  setEditAccountState: (s: EditAccountState) => void
+  isOwnProfile: boolean,
+  personId: string,
+  state: FormState,
+  formErrors: readonly FormError[],
+  setFormState: (s: FormState) => void
 ) {
   const { t } = useT();
 
   const setIdle = useCallback(
-    () => setEditAccountState(EditAccountState.Idle),
-    [setEditAccountState]
+    () => setFormState(FormState.Idle),
+    [setFormState]
   );
 
   return useMemo(() => {
     switch (state) {
-      case EditAccountState.Idle:
+      case FormState.Idle:
         return null;
-      case EditAccountState.Loading:
+      case FormState.Loading:
         return (
           <LoadingModal
             title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.title'
             description='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.description'
           />
         );
-      case EditAccountState.InternalError: {
-        const errorReasons = t(
-          `schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.reasons.${state}`
+      case FormState.Error: {
+        const errorReasons = formErrors.flatMap((err) =>
+          t(
+            `schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.reasons.${err}`
+          )
         );
 
         return (
@@ -216,7 +248,9 @@ function useEditAccountStateModal(
           </Modal>
         );
       }
-      case EditAccountState.Success:
+      case FormState.Success: {
+        const own = isOwnProfile ? 'own' : 'other';
+
         return (
           <Modal onClose={setIdle}>
             <Alert
@@ -229,16 +263,27 @@ function useEditAccountStateModal(
             </Alert>
             <ButtonGroup>
               <Button
-                href={[
-                  'paths.schulhof',
-                  'paths.schulhof.account',
-                  'paths.schulhof.account.profile',
-                ]}
-                t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.button'
+                href={
+                  isOwnProfile
+                    ? [
+                        'paths.schulhof',
+                        'paths.schulhof.account',
+                        'paths.schulhof.account.profile',
+                      ]
+                    : [
+                        'paths.schulhof',
+                        'paths.schulhof.administration',
+                        'paths.schulhof.administration.persons',
+                        'paths.schulhof.administration.persons.persons',
+                        `{${personId}}`,
+                      ]
+                }
+                t={`schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.button.${own}`}
               />
             </ButtonGroup>
           </Modal>
         );
+      }
     }
-  }, [state, setIdle, t]);
+  }, [isOwnProfile, personId, state, formErrors, setIdle, t]);
 }

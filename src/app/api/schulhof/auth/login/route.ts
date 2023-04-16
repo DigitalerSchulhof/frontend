@@ -11,6 +11,23 @@ import { ErrorWithPayload } from '#/utils';
 import { aql } from 'arangojs';
 import { NextResponse } from 'next/server';
 
+export type LoginInput = {
+  username: string;
+  password: string;
+};
+
+export type LoginOutputOk = {
+  code: 'OK';
+  jwt: string;
+};
+
+export type LoginOutputNotOk = {
+  code: 'NOT_OK';
+  errors: {
+    code: 'INVALID_CREDENTIALS';
+  }[];
+};
+
 export async function POST(req: Request) {
   const body = await req.json();
 

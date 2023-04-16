@@ -2,7 +2,7 @@
 
 import { useT } from '#/i18n/client';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
-import { Input } from '#/ui/Input';
+import { Input, InputProps } from '#/ui/Input';
 import { Table } from '#/ui/Table';
 import React, { forwardRef, useId } from 'react';
 import styled from 'styled-components';
@@ -27,10 +27,13 @@ export const Form = forwardRef<HTMLFormElement, FormProps>(function Form(
   );
 });
 
-export interface FormRowProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export const DisplayContentsForm = styled(Form)`
+  display: contents;
+`;
+
+export type FormRowProps = InputProps & {
   label: TranslationsWithStringTypeAndNoVariables;
-}
+};
 
 export const FormRow = forwardRef<HTMLInputElement, FormRowProps>(
   function FormRow({ label, ...props }, ref) {
@@ -50,6 +53,6 @@ export const FormRow = forwardRef<HTMLInputElement, FormRowProps>(
   }
 );
 
-const Label = styled.label`
+export const Label = styled.label`
   line-height: inherit;
 `;

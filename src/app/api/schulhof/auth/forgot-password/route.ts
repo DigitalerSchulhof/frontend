@@ -5,11 +5,31 @@ import {
   AccountEmailFilter,
   AccountUsernameFilter,
 } from '#/backend/repositories/content/account/filters';
-import { PersonBase } from '#/backend/repositories/content/person';
+import {
+  FormOfAddress,
+  PersonBase,
+} from '#/backend/repositories/content/person';
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { ErrorWithPayload } from '#/utils';
 import { NextResponse } from 'next/server';
+
+export type ForgotPasswordInput = {
+  username: string;
+  email: string;
+};
+
+export type ForgotPasswordOutputOk = {
+  code: 'OK';
+  formOfAddress: FormOfAddress;
+};
+
+export type ForgotPasswordOutputNotOk = {
+  code: 'NOT_OK';
+  errors: {
+    code: 'INVALID_CREDENTIALS';
+  }[];
+};
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -25,7 +45,13 @@ export async function POST(req: Request) {
   );
 
   if (!personAndAccount) {
-    return NextResponse.json({ code: 'invalid-credentials' }, { status: 401 });
+    return NextResponse.json(
+      {
+        code: 'NOT_OK',
+        errors: [{ code: 'INVALID_CREDENTIALS' }],
+      },
+      { status: 401 }
+    );
   }
 
   const { person, account } = personAndAccount;
@@ -33,6 +59,7 @@ export async function POST(req: Request) {
   await sendPasswordResetEmail(context, account);
 
   return NextResponse.json({
+    code: 'OK',
     formOfAddress: person.formOfAddress,
   });
 }

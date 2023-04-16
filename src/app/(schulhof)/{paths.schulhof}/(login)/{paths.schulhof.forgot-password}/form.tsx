@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  ForgotPasswordInput,
+  ForgotPasswordOutputNotOk,
+  ForgotPasswordOutputOk,
+} from '#/app/api/schulhof/auth/forgot-password/route';
 import { FormOfAddress } from '#/backend/repositories/content/person';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
@@ -13,17 +18,21 @@ import { Variant } from '#/ui/variants';
 import { ErrorWithPayload, sleep } from '#/utils';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-enum ForgotPasswordState {
-  Idle = 'idle',
-  Loading = 'loading',
+enum FormState {
+  Idle,
+  Loading,
+  Error,
+  Success,
+}
+
+export enum FormError {
   InternalError = 'internal-error',
   InvalidCredentials = 'invalid-credentials',
-  Success = 'success',
 }
 
 export const ForgotPasswordForm = () => {
-  const [forgotPasswordState, setForgotPasswordState] =
-    useState<ForgotPasswordState>(ForgotPasswordState.Idle);
+  const [formState, setFormState] = useState<FormState>(FormState.Idle);
+  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
   const [formOfAddress, setFormOfAddress] = useState<
     FormOfAddress | undefined
@@ -35,15 +44,22 @@ export const ForgotPasswordForm = () => {
   const sendForgotPassword = useSendForgotPassword(
     usernameRef,
     emailRef,
-    setForgotPasswordState,
-    setFormOfAddress
+    setFormState,
+    setFormErrors,
+    useCallback(
+      (res: ForgotPasswordOutputOk) => {
+        setFormOfAddress(res.formOfAddress);
+      },
+      [setFormOfAddress]
+    )
   );
 
   const modal = useForgotPasswordStateModal(
-    forgotPasswordState,
-    setForgotPasswordState,
+    formOfAddress,
     emailRef,
-    formOfAddress
+    formState,
+    formErrors,
+    setFormState
   );
 
   return (
@@ -89,8 +105,9 @@ export const ForgotPasswordForm = () => {
 function useSendForgotPassword(
   usernameRef: React.RefObject<HTMLInputElement>,
   emailRef: React.RefObject<HTMLInputElement>,
-  setForgotPasswordState: (s: ForgotPasswordState) => void,
-  setFormOfAddress: (s: FormOfAddress | undefined) => void
+  setFormState: (s: FormState) => void,
+  setFormErrors: (e: readonly FormError[]) => void,
+  onSuccess: (jwt: ForgotPasswordOutputOk) => void
 ) {
   const log = useLog();
 
@@ -99,7 +116,7 @@ function useSendForgotPassword(
       const username = usernameRef.current!.value;
       const email = emailRef.current!.value;
 
-      setForgotPasswordState(ForgotPasswordState.Loading);
+      setFormState(FormState.Loading);
 
       const [res] = await Promise.all([
         fetch('/api/schulhof/auth/forgot-password', {
@@ -110,20 +127,22 @@ function useSendForgotPassword(
           body: JSON.stringify({
             username,
             email,
-          }),
+          } satisfies ForgotPasswordInput),
         }),
         // Avoid flashing the loading dialogue
         sleep(500),
       ]);
 
       if (!res.ok) {
+        setFormState(FormState.Error);
+
         const bodyString = await res.text();
-        let body;
+        let body: ForgotPasswordOutputNotOk;
         try {
           body = JSON.parse(bodyString);
         } catch (e) {
+          setFormErrors([FormError.InternalError]);
           if (e instanceof SyntaxError) {
-            setForgotPasswordState(ForgotPasswordState.InternalError);
             log.error('Unknown error while sending forgot password link', {
               username,
               email,
@@ -136,59 +155,68 @@ function useSendForgotPassword(
           throw e;
         }
 
-        switch (body.code) {
-          case 'invalid-credentials':
-            setForgotPasswordState(ForgotPasswordState.InvalidCredentials);
-            return;
-          default:
-            setForgotPasswordState(ForgotPasswordState.InternalError);
-            log.error('Unknown error while sending forgot password link', {
-              username,
-              email,
-              status: res.status,
-              body,
-            });
-            return;
+        const errors: FormError[] = [];
+        for (const error of body.errors) {
+          switch (error.code) {
+            case 'INVALID_CREDENTIALS':
+              errors.push(FormError.InvalidCredentials);
+              break;
+            default:
+              if (!errors.includes(FormError.InternalError)) {
+                errors.push(FormError.InternalError);
+              }
+
+              log.error('Unknown error while logging in', {
+                username,
+                status: res.status,
+                body,
+                code: error.code,
+              });
+              break;
+          }
         }
+
+        setFormErrors(errors);
+        return;
       }
 
-      const body = await res.json();
-
-      setFormOfAddress(body.formOfAddress);
-      setForgotPasswordState(ForgotPasswordState.Success);
+      setFormState(FormState.Success);
+      onSuccess(await res.json());
     },
-    [usernameRef, emailRef, setFormOfAddress, setForgotPasswordState, log]
+    [usernameRef, emailRef, setFormState, setFormErrors, onSuccess, log]
   );
 }
 
 function useForgotPasswordStateModal(
-  state: ForgotPasswordState,
-  setForgotPasswordState: (s: ForgotPasswordState) => void,
+  formOfAddress: FormOfAddress | undefined,
   emailRef: React.RefObject<HTMLInputElement>,
-  formOfAddress: FormOfAddress | undefined
+  state: FormState,
+  formErrors: readonly FormError[],
+  setFormState: (s: FormState) => void
 ) {
   const { t } = useT();
 
   const setIdle = useCallback(
-    () => setForgotPasswordState(ForgotPasswordState.Idle),
-    [setForgotPasswordState]
+    () => setFormState(FormState.Idle),
+    [setFormState]
   );
 
   return useMemo(() => {
     switch (state) {
-      case ForgotPasswordState.Idle:
+      case FormState.Idle:
         return null;
-      case ForgotPasswordState.Loading:
+      case FormState.Loading:
         return (
           <LoadingModal
             title='schulhof.login.actions.forgot-password.modals.loading.title'
             description='schulhof.login.actions.forgot-password.modals.loading.description'
           />
         );
-      case ForgotPasswordState.InternalError:
-      case ForgotPasswordState.InvalidCredentials: {
-        const errorReasons = t(
-          `schulhof.login.actions.forgot-password.modals.error.reasons.${state}`
+      case FormState.Error: {
+        const errorReasons = formErrors.flatMap((err) =>
+          t(
+            `schulhof.login.actions.forgot-password.modals.error.reasons.${err}`
+          )
         );
 
         return (
@@ -212,10 +240,10 @@ function useForgotPasswordStateModal(
           </Modal>
         );
       }
-      case ForgotPasswordState.Success:
+      case FormState.Success:
         if (!formOfAddress) {
           throw new ErrorWithPayload(
-            'ForgotPasswordState.Success but formOfAddress is undefined',
+            'FormState.Success but formOfAddress is undefined',
             {
               formOfAddress,
             }
@@ -247,5 +275,5 @@ function useForgotPasswordStateModal(
           </Modal>
         );
     }
-  }, [state, setIdle, emailRef, formOfAddress, t]);
+  }, [formOfAddress, emailRef, state, formErrors, setIdle, t]);
 }

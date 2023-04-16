@@ -20,4 +20,6 @@ modals:
   success:
     title: Benutzerkonto bearbeiten
     description: Das Benutzerkonto wurde erfolgreich geändert.
-    button: Zurück zur Profilansicht
+    button:
+      own: Zurück zur Profilansicht
+      other: Zurück zur Benutzeransicht

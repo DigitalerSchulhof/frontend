@@ -1,5 +1,6 @@
 'use client';
 
+import { BreathingSpace } from '#/ui/BreathingSpace';
 import { Col } from '#/ui/Col';
 import { styled } from 'styled-components';
 import { Credits } from './credits';
@@ -10,6 +11,7 @@ export const Footer = () => {
     <FooterWrapper>
       <Col w='12'>
         <Links />
+        <BreathingSpace />
         <Credits />
       </Col>
     </FooterWrapper>

@@ -1,5 +1,9 @@
 'use client';
 
+import {
+  IdentityTheftInput,
+  IdentityTheftOutputNotOk,
+} from '#/app/api/schulhof/auth/identity-theft/route';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
@@ -12,18 +16,22 @@ import { Variant } from '#/ui/variants';
 import { sleep } from '#/utils';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-enum IdentityTheftState {
-  Idle = 'idle',
-  Loading = 'loading',
+enum FormState {
+  Idle,
+  Loading,
+  Error,
+  Success,
+}
+
+export enum FormError {
   InternalError = 'internal-error',
   InvalidCredentials = 'invalid-credentials',
   PasswordMismatch = 'password-mismatch',
-  Success = 'success',
 }
 
 export const IdentityTheftForm = () => {
-  const [identityTheftState, setIdentityTheftState] =
-    useState<IdentityTheftState>(IdentityTheftState.Idle);
+  const [formState, setFormState] = useState<FormState>(FormState.Idle);
+  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
   const oldPasswordRef = useRef<HTMLInputElement>(null);
   const newPasswordRef = useRef<HTMLInputElement>(null);
@@ -33,13 +41,11 @@ export const IdentityTheftForm = () => {
     oldPasswordRef,
     newPasswordRef,
     newPasswordAgainRef,
-    setIdentityTheftState
+    setFormState,
+    setFormErrors
   );
 
-  const modal = useIdentityTheftStateModal(
-    identityTheftState,
-    setIdentityTheftState
-  );
+  const modal = useIdentityTheftStateModal(formState, formErrors, setFormState);
 
   return (
     <Form onSubmit={sendIdentityTheft}>
@@ -94,7 +100,8 @@ function useSendIdentityTheft(
   oldPasswordRef: React.RefObject<HTMLInputElement>,
   newPasswordRef: React.RefObject<HTMLInputElement>,
   newPasswordAgainRef: React.RefObject<HTMLInputElement>,
-  setIdentityTheftState: (s: IdentityTheftState) => void
+  setFormState: (s: FormState) => void,
+  setFormErrors: (e: readonly FormError[]) => void
 ) {
   const log = useLog();
 
@@ -104,7 +111,7 @@ function useSendIdentityTheft(
       const newPassword = newPasswordRef.current!.value;
       const newPasswordAgain = newPasswordAgainRef.current!.value;
 
-      setIdentityTheftState(IdentityTheftState.Loading);
+      setFormState(FormState.Loading);
 
       const [res] = await Promise.all([
         fetch('/api/schulhof/account/profile/identity-theft', {
@@ -116,20 +123,22 @@ function useSendIdentityTheft(
             oldPassword,
             newPassword,
             newPasswordAgain,
-          }),
+          } satisfies IdentityTheftInput),
         }),
         // Avoid flashing the loading dialogue
         sleep(500),
       ]);
 
       if (!res.ok) {
+        setFormState(FormState.Error);
+
         const bodyString = await res.text();
-        let body;
+        let body: IdentityTheftOutputNotOk;
         try {
           body = JSON.parse(bodyString);
         } catch (e) {
+          setFormErrors([FormError.InternalError]);
           if (e instanceof SyntaxError) {
-            setIdentityTheftState(IdentityTheftState.InternalError);
             log.error('Unknown error while reporting identity theft', {
               status: res.status,
               body: bodyString,
@@ -140,62 +149,74 @@ function useSendIdentityTheft(
           throw e;
         }
 
-        switch (body.code) {
-          case 'invalid-credentials':
-            setIdentityTheftState(IdentityTheftState.InvalidCredentials);
-            return;
-          case 'password-mismatch':
-            setIdentityTheftState(IdentityTheftState.PasswordMismatch);
-            return;
-          default:
-            setIdentityTheftState(IdentityTheftState.InternalError);
-            log.error('Unknown error while reporting identity theft', {
-              status: res.status,
-              body,
-            });
-            return;
+        const errors: FormError[] = [];
+        for (const error of body.errors) {
+          switch (error.code) {
+            case 'INVALID_CREDENTIALS':
+              errors.push(FormError.InvalidCredentials);
+              break;
+            case 'PASSWORD_MISMATCH':
+              errors.push(FormError.PasswordMismatch);
+              break;
+            default:
+              if (!errors.includes(FormError.InternalError)) {
+                errors.push(FormError.InternalError);
+              }
+
+              log.error('Unknown error while reporting identity theft', {
+                status: res.status,
+                body,
+                code: error.code,
+              });
+              break;
+          }
         }
+
+        setFormErrors(errors);
+        return;
       }
 
-      setIdentityTheftState(IdentityTheftState.Success);
+      setFormState(FormState.Success);
     },
     [
       oldPasswordRef,
       newPasswordRef,
       newPasswordAgainRef,
-      setIdentityTheftState,
+      setFormState,
+      setFormErrors,
       log,
     ]
   );
 }
 
 function useIdentityTheftStateModal(
-  state: IdentityTheftState,
-  setIdentityTheftState: (s: IdentityTheftState) => void
+  state: FormState,
+  formErrors: readonly FormError[],
+  setFormState: (s: FormState) => void
 ) {
   const { t } = useT();
 
   const setIdle = useCallback(
-    () => setIdentityTheftState(IdentityTheftState.Idle),
-    [setIdentityTheftState]
+    () => setFormState(FormState.Idle),
+    [setFormState]
   );
 
   return useMemo(() => {
     switch (state) {
-      case IdentityTheftState.Idle:
+      case FormState.Idle:
         return null;
-      case IdentityTheftState.Loading:
+      case FormState.Loading:
         return (
           <LoadingModal
             title='schulhof.account.profile.identity-theft.modals.loading.title'
             description='schulhof.account.profile.identity-theft.modals.loading.description'
           />
         );
-      case IdentityTheftState.InternalError:
-      case IdentityTheftState.InvalidCredentials:
-      case IdentityTheftState.PasswordMismatch: {
-        const errorReasons = t(
-          `schulhof.account.profile.identity-theft.modals.error.reasons.${state}`
+      case FormState.Error: {
+        const errorReasons = formErrors.flatMap((err) =>
+          t(
+            `schulhof.account.profile.identity-theft.modals.error.reasons.${err}`
+          )
         );
 
         return (
@@ -219,7 +240,7 @@ function useIdentityTheftStateModal(
           </Modal>
         );
       }
-      case IdentityTheftState.Success:
+      case FormState.Success:
         return (
           <Modal onClose={setIdle}>
             <Alert
@@ -239,5 +260,5 @@ function useIdentityTheftStateModal(
           </Modal>
         );
     }
-  }, [state, setIdle, t]);
+  }, [state, formErrors, setIdle, t]);
 }
