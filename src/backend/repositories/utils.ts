@@ -3,7 +3,7 @@ import { ArrayCursor } from 'arangojs/cursor';
 import { Paginated } from './search';
 
 export type MakePatch<T> = {
-  [P in keyof T]?: MakePatch<T[P]>;
+  [P in keyof T]?: T[P];
 };
 
 export async function paginateCursor<T>(

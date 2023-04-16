@@ -1,9 +1,13 @@
 import { ObjectCache } from '#/backend/caches/object-cache';
-import { ArangoRepository, WithId } from '#/backend/repositories/arango';
+import { Services } from '#/backend/context/services';
+import {
+  ArangoRepository,
+  Serializable,
+  WithId,
+} from '#/backend/repositories/arango';
 import { Filter } from '#/backend/repositories/filters';
 import { MakeSearchQuery, Paginated } from '#/backend/repositories/search';
 import { MakePatch } from '#/backend/repositories/utils';
-import { Services } from '#/backend/context/services';
 import {
   getByIdCachedOrLoad,
   getByIdsCachedOrLoad,
@@ -12,7 +16,7 @@ import { Validator } from '#/backend/validators/base';
 
 export abstract class Service<
   Name extends string,
-  Base extends Record<string, string | number | boolean | null>,
+  Base extends Record<string, Serializable>,
   Repository extends ArangoRepository<Name, Base>
 > {
   constructor(

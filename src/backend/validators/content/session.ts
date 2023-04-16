@@ -11,9 +11,7 @@ export class SessionValidator extends Validator<'sessions', SessionBase> {
   override async assertCanCreate(post: SessionBase): Promise<void | never> {
     await this.assertAccountExists(post.accountId);
 
-    const error = await aggregateValidationErrors([]);
-
-    if (error) throw error;
+    await aggregateValidationErrors([]);
   }
 
   override async assertCanUpdate(
@@ -26,13 +24,11 @@ export class SessionValidator extends Validator<'sessions', SessionBase> {
       throw new IdNotFoundError();
     }
 
-    const error = await aggregateValidationErrors([
+    await aggregateValidationErrors([
       patch.accountId === undefined || patch.accountId === base.accountId
         ? null
         : this.throwValidationError(CANNOT_CHANGE_ACCOUNT_ID),
     ]);
-
-    if (error) throw error;
   }
 
   private async assertAccountExists(accountId: string): Promise<void | never> {

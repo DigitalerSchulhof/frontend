@@ -1,3 +1,4 @@
+import { MaybePromise } from '#/utils';
 import { isPromiseRejectedResult } from '../utils';
 
 export class InputValidationError extends Error {
@@ -13,13 +14,13 @@ export class AggregatedInputValidationError extends Error {
 }
 
 export async function aggregateValidationErrors(
-  promises: (Promise<unknown> | null)[]
+  promises: (MaybePromise<unknown> | null)[]
 ): Promise<void | AggregatedInputValidationError> {
   const results = await Promise.allSettled(promises);
 
   const errors = results.filter(isPromiseRejectedResult);
 
-  return aggregateValidationErrorsReasons(errors);
+  aggregateValidationErrorsReasons(errors);
 }
 
 function aggregateValidationErrorsReasons(
@@ -28,6 +29,8 @@ function aggregateValidationErrorsReasons(
   const errors = reasons.reduce<InputValidationError[]>((arr, acc) => {
     if (acc.reason instanceof InputValidationError) {
       arr.push(acc.reason);
+    } else if (acc.reason instanceof AggregatedInputValidationError) {
+      arr.push(...acc.reason.errors);
     } else {
       throw acc.reason;
     }
@@ -36,6 +39,6 @@ function aggregateValidationErrorsReasons(
   }, []);
 
   if (errors.length > 0) {
-    return new AggregatedInputValidationError(errors);
+    throw new AggregatedInputValidationError(errors);
   }
 }

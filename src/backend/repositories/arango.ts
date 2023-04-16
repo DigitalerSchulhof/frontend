@@ -18,11 +18,21 @@ import {
 } from './search';
 import { MakePatch, paginateCursor } from './utils';
 
+export type Serializable =
+  | string
+  | number
+  | boolean
+  | null
+  | Serializable[]
+  | {
+      [key: string]: Serializable;
+    };
+
 export type WithId<Base> = Base & { id: string; rev: string };
 
 export abstract class ArangoRepository<
   Name extends string,
-  Base extends Record<string, string | number | boolean | null>
+  Base extends Record<string, Serializable>
 > {
   protected abstract readonly collectionName: Name;
 

@@ -23,11 +23,9 @@ export class ClassValidator extends Validator<'classes', ClassBase> {
   override async assertCanCreate(post: ClassBase): Promise<void | never> {
     await this.assertLevelExists(post.levelId);
 
-    const error = await aggregateValidationErrors([
+    await aggregateValidationErrors([
       this.assertNameValid(post.levelId, post.name),
     ]);
-
-    if (error) throw error;
   }
 
   override async assertCanUpdate(
@@ -40,7 +38,7 @@ export class ClassValidator extends Validator<'classes', ClassBase> {
       throw new IdNotFoundError();
     }
 
-    const error = await aggregateValidationErrors([
+    await aggregateValidationErrors([
       patch.name === undefined
         ? null
         : this.assertNameValid(base.levelId, patch.name, id),
@@ -48,8 +46,6 @@ export class ClassValidator extends Validator<'classes', ClassBase> {
         ? null
         : this.throwValidationError(CANNOT_CHANGE_LEVEL_ID),
     ]);
-
-    if (error) throw error;
   }
 
   private async assertLevelExists(levelId: string): Promise<void | never> {

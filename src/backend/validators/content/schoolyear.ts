@@ -23,12 +23,10 @@ export class SchoolyearValidator extends Validator<
   SchoolyearBase
 > {
   override async assertCanCreate(post: SchoolyearBase): Promise<void | never> {
-    const error = await aggregateValidationErrors([
+    await aggregateValidationErrors([
       this.assertStartBeforeEnd(post.start, post.end),
       this.assertNameValid(post.name),
     ]);
-
-    if (error) throw error;
   }
 
   override async assertCanUpdate(
@@ -41,7 +39,7 @@ export class SchoolyearValidator extends Validator<
       throw new IdNotFoundError();
     }
 
-    const error = await aggregateValidationErrors([
+    await aggregateValidationErrors([
       patch.start === undefined && patch.end === undefined
         ? null
         : this.assertStartBeforeEnd(
@@ -50,8 +48,6 @@ export class SchoolyearValidator extends Validator<
           ),
       patch.name === undefined ? null : this.assertNameValid(patch.name, id),
     ]);
-
-    if (error) throw error;
   }
 
   private async assertStartBeforeEnd(

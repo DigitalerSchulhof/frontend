@@ -23,11 +23,9 @@ export class CourseValidator extends Validator<'courses', CourseBase> {
   override async assertCanCreate(post: CourseBase): Promise<void | never> {
     await this.assertClassExists(post.classId);
 
-    const error = await aggregateValidationErrors([
+    await aggregateValidationErrors([
       this.assertNameValid(post.classId, post.name),
     ]);
-
-    if (error) throw error;
   }
 
   override async assertCanUpdate(
@@ -40,7 +38,7 @@ export class CourseValidator extends Validator<'courses', CourseBase> {
       throw new IdNotFoundError();
     }
 
-    const error = await aggregateValidationErrors([
+    await aggregateValidationErrors([
       patch.name === undefined
         ? null
         : this.assertNameValid(base.classId, patch.name, id),
@@ -48,8 +46,6 @@ export class CourseValidator extends Validator<'courses', CourseBase> {
         ? null
         : this.throwValidationError(CANNOT_CHANGE_CLASS_ID),
     ]);
-
-    if (error) throw error;
   }
 
   private async assertClassExists(classId: string): Promise<void | never> {

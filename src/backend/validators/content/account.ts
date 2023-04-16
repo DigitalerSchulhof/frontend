@@ -11,9 +11,7 @@ export class AccountValidator extends Validator<'accounts', AccountBase> {
   override async assertCanCreate(post: AccountBase): Promise<void | never> {
     await this.assertPersonExists(post.personId);
 
-    const error = await aggregateValidationErrors([]);
-
-    if (error) throw error;
+    await aggregateValidationErrors([]);
   }
 
   override async assertCanUpdate(
@@ -26,13 +24,11 @@ export class AccountValidator extends Validator<'accounts', AccountBase> {
       throw new IdNotFoundError();
     }
 
-    const error = await aggregateValidationErrors([
+    await aggregateValidationErrors([
       patch.personId === undefined || patch.personId === base.personId
         ? null
         : this.throwValidationError(CANNOT_CHANGE_PERSON_ID),
     ]);
-
-    if (error) throw error;
   }
 
   private async assertPersonExists(personId: string): Promise<void | never> {
