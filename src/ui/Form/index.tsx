@@ -46,7 +46,7 @@ export const FormRow = forwardRef<HTMLInputElement, FormRowProps>(
           <Label htmlFor={id}>{t(label)}</Label>
         </Table.Header>
         <Table.Cell>
-          <Input ref={ref} id={id} {...props} />
+          <Input id={id} {...props} ref={ref} />
         </Table.Cell>
       </Table.Row>
     );
