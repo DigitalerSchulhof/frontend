@@ -88,7 +88,11 @@ export const IdentityTheftForm = () => {
           t='schulhof.account.profile.identity-theft.form.buttons.change-password'
         />
         <Button
-          href={['paths.schulhof', 'paths.schulhof.account']}
+          href={[
+            'paths.schulhof',
+            'paths.schulhof.account',
+            'paths.schulhof.account.profile',
+          ]}
           t='schulhof.account.profile.identity-theft.form.buttons.back'
         />
       </ButtonGroup>
@@ -252,7 +256,11 @@ function useIdentityTheftStateModal(
             </Alert>
             <ButtonGroup>
               <Button
-                href={['paths.schulhof', 'paths.schulhof.account']}
+                href={[
+                  'paths.schulhof',
+                  'paths.schulhof.account',
+                  'paths.schulhof.account.profile',
+                ]}
                 t='schulhof.account.profile.identity-theft.modals.success.button'
               />
             </ButtonGroup>

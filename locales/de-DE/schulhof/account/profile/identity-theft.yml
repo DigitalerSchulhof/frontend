@@ -14,7 +14,7 @@ form:
   buttons:
     submit: Identitätsdiebstahl melden
     change-password: Password ohne Identitätsdiebstahl ändern
-    back: Zurück zum Schulhof
+    back: Zurück zur Profilansicht
 modals:
   loading:
     title: Identitätsdiebstahl melden
@@ -32,4 +32,4 @@ modals:
   success:
     title: Identitätsdiebstahl gemeldet
     description: Der Identitätsdiebstahl wurde gemeldet und das Passwort wurde geändert.
-    button: Zurück zum Schulhof
+    button: Zurück zur Profilansicht
