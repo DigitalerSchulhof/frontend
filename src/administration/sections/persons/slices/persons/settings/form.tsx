@@ -90,84 +90,78 @@ export const SettingsForm = ({
           t='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.title'
         />
         <Table>
-          <Table.Body>
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newMessage'
-              type='checkbox'
-              defaultValue={settings.emailOn.newMessage}
-              ref={refs.emailOnNewMessage}
-            />
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newSubstitution'
-              type='checkbox'
-              defaultValue={settings.emailOn.newSubstitution}
-              ref={refs.emailOnNewSubstitution}
-            />
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newNews'
-              type='checkbox'
-              defaultValue={settings.emailOn.newNews}
-              ref={refs.emailOnNewNews}
-            />
-          </Table.Body>
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newMessage'
+            type='checkbox'
+            defaultValue={settings.emailOn.newMessage}
+            ref={refs.emailOnNewMessage}
+          />
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newSubstitution'
+            type='checkbox'
+            defaultValue={settings.emailOn.newSubstitution}
+            ref={refs.emailOnNewSubstitution}
+          />
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newNews'
+            type='checkbox'
+            defaultValue={settings.emailOn.newNews}
+            ref={refs.emailOnNewNews}
+          />
         </Table>
         <Heading
           size='2'
           t='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.title'
         />
         <Table>
-          <Table.Body>
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newMessage'
-              type='checkbox'
-              defaultValue={settings.pushOn.newMessage}
-              ref={refs.pushOnNewMessage}
-            />
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newSubstitution'
-              type='checkbox'
-              defaultValue={settings.pushOn.newSubstitution}
-              ref={refs.pushOnNewSubstitution}
-            />
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newNews'
-              type='checkbox'
-              defaultValue={settings.pushOn.newNews}
-              ref={refs.pushOnNewNews}
-            />
-          </Table.Body>
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newMessage'
+            type='checkbox'
+            defaultValue={settings.pushOn.newMessage}
+            ref={refs.pushOnNewMessage}
+          />
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newSubstitution'
+            type='checkbox'
+            defaultValue={settings.pushOn.newSubstitution}
+            ref={refs.pushOnNewSubstitution}
+          />
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newNews'
+            type='checkbox'
+            defaultValue={settings.pushOn.newNews}
+            ref={refs.pushOnNewNews}
+          />
         </Table>
         <Heading
           size='2'
           t='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.title'
         />
         <Table>
-          <Table.Body>
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newEvent'
-              type='checkbox'
-              defaultValue={settings.considerNews.newEvent}
-              ref={refs.considerNewsNewEvent}
-            />
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newBlog'
-              type='checkbox'
-              defaultValue={settings.considerNews.newBlog}
-              ref={refs.considerNewsNewBlog}
-            />
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newGallery'
-              type='checkbox'
-              defaultValue={settings.considerNews.newGallery}
-              ref={refs.considerNewsNewGallery}
-            />
-            <FormRow
-              label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.fileChanged'
-              type='checkbox'
-              defaultValue={settings.considerNews.fileChanged}
-              ref={refs.considerNewsFileChanged}
-            />
-          </Table.Body>
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newEvent'
+            type='checkbox'
+            defaultValue={settings.considerNews.newEvent}
+            ref={refs.considerNewsNewEvent}
+          />
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newBlog'
+            type='checkbox'
+            defaultValue={settings.considerNews.newBlog}
+            ref={refs.considerNewsNewBlog}
+          />
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newGallery'
+            type='checkbox'
+            defaultValue={settings.considerNews.newGallery}
+            ref={refs.considerNewsNewGallery}
+          />
+          <FormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.fileChanged'
+            type='checkbox'
+            defaultValue={settings.considerNews.fileChanged}
+            ref={refs.considerNewsFileChanged}
+          />
         </Table>
       </Col>
       <Col w='6'>
@@ -175,30 +169,26 @@ export const SettingsForm = ({
           size='2'
           t='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.title'
         />
-        <Table>
-          <Table.Body>
-            <MailboxDeleteAfterFormRow
-              valueRef={refs.mailboxDeleteAfter}
-              defaultValue={settings.mailbox.deleteAfter}
-            />
-            <MailboxDeleteAfterInBinFormRow
-              valueRef={refs.mailboxDeleteAfterInBin}
-              defaultValue={settings.mailbox.deleteAfterInBin}
-            />
-          </Table.Body>
+        <Table columns='1fr auto auto'>
+          <MailboxDeleteAfterFormRow
+            valueRef={refs.mailboxDeleteAfter}
+            defaultValue={settings.mailbox.deleteAfter}
+          />
+          <MailboxDeleteAfterInBinFormRow
+            valueRef={refs.mailboxDeleteAfterInBin}
+            defaultValue={settings.mailbox.deleteAfterInBin}
+          />
         </Table>
         <Heading
           size='2'
           t='schulhof.administration.sections.persons.slices.persons.settings.form.profile.title'
         />
         <Table>
-          <Table.Body>
-            <MailboxSessionTimeoutFormRow
-              inputRef={refs.profileSessionTimeout}
-              defaultValue={settings.profile.sessionTimeout}
-              maxSessionTimeout={maxSessionTimeout}
-            />
-          </Table.Body>
+          <MailboxSessionTimeoutFormRow
+            inputRef={refs.profileSessionTimeout}
+            defaultValue={settings.profile.sessionTimeout}
+            maxSessionTimeout={maxSessionTimeout}
+          />
         </Table>
       </Col>
       <Col w='12'>

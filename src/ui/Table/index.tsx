@@ -1,41 +1,78 @@
 'use client';
 
 import styled from 'styled-components';
+import { css } from 'styled-components';
 
-const StyledTable = styled.table`
-  background-color: #424242;
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  width: 100%;
-  margin: 10px 0;
+const StyledTable = styled.div<{ $h?: number | string; $w?: number | string }>(
+  ({ theme, $h, $w }) => {
+    const w = typeof $w === 'number' ? `repeat(${$w}, 1fr)` : $w;
+    const h = typeof $h === 'number' ? `repeat(${$h}, 1fr)` : $h;
 
-  &:first-child {
-    margin-top: 0;
+    return css`
+      display: grid;
+      ${w &&
+      css`
+        grid-template-columns: ${w};
+      `}
+      ${h &&
+      css`
+        grid-template-rows: ${h};
+      `}
+
+      background-color: #424242;
+      border-radius: ${theme.borderRadius.medium};
+      width: 100%;
+      margin: 10px 0;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    `;
   }
+);
 
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-export const Table = ({ children }: { children: React.ReactNode }) => {
-  return <StyledTable>{children}</StyledTable>;
+export type TableProps = {
+  rows?: number | string;
+  /**
+   * @default '1fr 2fr'
+   */
+  columns?: number | string;
+  children: React.ReactNode;
 };
 
-Table.Head = styled.thead``;
+export const Table = ({
+  rows: h,
+  columns: w = '1fr 2fr',
+  children,
+}: TableProps) => {
+  return (
+    <StyledTable $h={h} $w={w}>
+      {children}
+    </StyledTable>
+  );
+};
 
-Table.Body = styled.tbody``;
+Table.Row = styled.div`
+  display: contents;
+`;
 
-Table.Row = styled.tr``;
-
-Table.Header = styled.th`
-  text-align: left;
+const cellStyles = css`
   line-height: 1.5em;
   padding: 5px 7px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+`;
+
+Table.Header = styled.div`
+  ${cellStyles}
   font-weight: bold;
 `;
 
-Table.Cell = styled.td`
-  text-align: left;
-  padding: 5px 7px;
-  line-height: 1.5em;
+Table.Cell = styled.div`
+  ${cellStyles}
 `;

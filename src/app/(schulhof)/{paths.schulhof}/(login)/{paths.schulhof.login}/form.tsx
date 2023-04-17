@@ -63,19 +63,17 @@ export const LoginForm = () => {
     <Form onSubmit={sendLogin}>
       {modal}
       <Table>
-        <Table.Body>
-          <FormRow
-            label='schulhof.login.actions.login.form.username'
-            autoComplete='username'
-            ref={usernameRef}
-          />
-          <FormRow
-            label='schulhof.login.actions.login.form.password'
-            autoComplete='current-password'
-            type='password'
-            ref={passwordRef}
-          />
-        </Table.Body>
+        <FormRow
+          label='schulhof.login.actions.login.form.username'
+          autoComplete='username'
+          ref={usernameRef}
+        />
+        <FormRow
+          label='schulhof.login.actions.login.form.password'
+          autoComplete='current-password'
+          type='password'
+          ref={passwordRef}
+        />
       </Table>
       {t('schulhof.login.actions.login.privacy', {
         PrivacyLink: makeLink(['paths.privacy']),

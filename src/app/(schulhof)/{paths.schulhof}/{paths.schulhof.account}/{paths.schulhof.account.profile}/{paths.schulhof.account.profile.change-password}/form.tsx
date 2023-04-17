@@ -55,26 +55,24 @@ export const ChangePasswordForm = () => {
     <Form onSubmit={sendChangePassword}>
       {modal}
       <Table>
-        <Table.Body>
-          <FormRow
-            label='schulhof.account.profile.change-password.form.old-password'
-            autoComplete='current-password'
-            type='password'
-            ref={oldPasswordRef}
-          />
-          <FormRow
-            label='schulhof.account.profile.change-password.form.new-password'
-            autoComplete='new-password'
-            type='password'
-            ref={newPasswordRef}
-          />
-          <FormRow
-            label='schulhof.account.profile.change-password.form.new-password-again'
-            autoComplete='new-password'
-            type='password'
-            ref={newPasswordAgainRef}
-          />
-        </Table.Body>
+        <FormRow
+          label='schulhof.account.profile.change-password.form.old-password'
+          autoComplete='current-password'
+          type='password'
+          ref={oldPasswordRef}
+        />
+        <FormRow
+          label='schulhof.account.profile.change-password.form.new-password'
+          autoComplete='new-password'
+          type='password'
+          ref={newPasswordRef}
+        />
+        <FormRow
+          label='schulhof.account.profile.change-password.form.new-password-again'
+          autoComplete='new-password'
+          type='password'
+          ref={newPasswordAgainRef}
+        />
       </Table>
       <ButtonGroup>
         <Button

@@ -51,26 +51,24 @@ export const IdentityTheftForm = () => {
     <Form onSubmit={sendIdentityTheft}>
       {modal}
       <Table>
-        <Table.Body>
-          <FormRow
-            label='schulhof.account.profile.identity-theft.form.old-password'
-            autoComplete='current-password'
-            type='password'
-            ref={oldPasswordRef}
-          />
-          <FormRow
-            label='schulhof.account.profile.identity-theft.form.new-password'
-            autoComplete='new-password'
-            type='password'
-            ref={newPasswordRef}
-          />
-          <FormRow
-            label='schulhof.account.profile.identity-theft.form.new-password-again'
-            autoComplete='new-password'
-            type='password'
-            ref={newPasswordAgainRef}
-          />
-        </Table.Body>
+        <FormRow
+          label='schulhof.account.profile.identity-theft.form.old-password'
+          autoComplete='current-password'
+          type='password'
+          ref={oldPasswordRef}
+        />
+        <FormRow
+          label='schulhof.account.profile.identity-theft.form.new-password'
+          autoComplete='new-password'
+          type='password'
+          ref={newPasswordRef}
+        />
+        <FormRow
+          label='schulhof.account.profile.identity-theft.form.new-password-again'
+          autoComplete='new-password'
+          type='password'
+          ref={newPasswordAgainRef}
+        />
       </Table>
       <ButtonGroup>
         <Button

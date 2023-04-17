@@ -66,18 +66,16 @@ export const ForgotPasswordForm = () => {
     <Form onSubmit={sendForgotPassword}>
       {modal}
       <Table>
-        <Table.Body>
-          <FormRow
-            label='schulhof.login.actions.forgot-password.form.username'
-            autoComplete='username'
-            ref={usernameRef}
-          />
-          <FormRow
-            label='schulhof.login.actions.forgot-password.form.email'
-            autoComplete='email'
-            ref={emailRef}
-          />
-        </Table.Body>
+        <FormRow
+          label='schulhof.login.actions.forgot-password.form.username'
+          autoComplete='username'
+          ref={usernameRef}
+        />
+        <FormRow
+          label='schulhof.login.actions.forgot-password.form.email'
+          autoComplete='email'
+          ref={emailRef}
+        />
       </Table>
       <Alert
         variant={Variant.Information}

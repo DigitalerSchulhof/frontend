@@ -66,20 +66,18 @@ export const EditAccountForm = ({
     <Form onSubmit={sendEditAccount}>
       {modal}
       <Table>
-        <Table.Body>
-          <FormRow
-            label='schulhof.administration.sections.persons.slices.persons.edit-account.form.username'
-            autoComplete='username'
-            defaultValue={username}
-            ref={usernameRef}
-          />
-          <FormRow
-            label='schulhof.administration.sections.persons.slices.persons.edit-account.form.email'
-            autoComplete='email'
-            defaultValue={email}
-            ref={emailRef}
-          />
-        </Table.Body>
+        <FormRow
+          label='schulhof.administration.sections.persons.slices.persons.edit-account.form.username'
+          autoComplete='username'
+          defaultValue={username}
+          ref={usernameRef}
+        />
+        <FormRow
+          label='schulhof.administration.sections.persons.slices.persons.edit-account.form.email'
+          autoComplete='email'
+          defaultValue={email}
+          ref={emailRef}
+        />
       </Table>
       <ButtonGroup>
         <Button
