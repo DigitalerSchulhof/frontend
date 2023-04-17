@@ -1,6 +1,6 @@
 import { StyledButton, StyledLink } from '../Button';
 import { Icon } from '../Icon';
-import styled, { css } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 const cellProps = css`
   border: 1px solid #424242;

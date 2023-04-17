@@ -1,7 +1,7 @@
 'use client';
 
 import { ClassAttributes, InputHTMLAttributes, forwardRef } from 'react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 export type InputProps = ClassAttributes<HTMLInputElement> &
   Omit<

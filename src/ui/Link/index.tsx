@@ -4,7 +4,7 @@ import { useT } from '#/i18n/client';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import React from 'react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 export interface LinkProps extends Omit<NextLinkProps, 'href'> {
   children?: React.ReactNode;

@@ -1,5 +1,5 @@
 import type { StandardLonghandProperties } from 'csstype';
-import styled, { css } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 export interface FlexProps
   extends Pick<

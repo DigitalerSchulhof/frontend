@@ -1,7 +1,7 @@
 'use client';
 
 import { Link } from '#/ui/Link';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 export const StyledBreadcrumbs = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.small};

@@ -1,48 +1,80 @@
 'use client';
 
+import {
+  ChangeEventHandler,
+  InputHTMLAttributes,
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { styled } from 'styled-components';
 
-export type ToggleProps = {
-  defaultChecked?: boolean;
+export type ToggleProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'type' | 'onChange' | 'defaultValue'
+> & {
+  onChange?: (value: boolean) => void;
+  defaultValue?: boolean;
 };
 
-export const Toggle = ({ props }: ToggleProps) => {
-  return <StyledToggle type='checkbox' />;
-};
+export const Toggle = forwardRef<
+  {
+    value: boolean;
+  },
+  ToggleProps
+>(function Toggle({ onChange, defaultValue, ...props }, ref) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      get value() {
+        return inputRef.current!.checked;
+      },
+    }),
+    []
+  );
+
+  return (
+    <StyledToggle
+      type='checkbox'
+      ref={inputRef}
+      onChange={useCallback<ChangeEventHandler<HTMLInputElement>>(
+        (event) => {
+          onChange?.(event.target.checked);
+        },
+        [onChange]
+      )}
+      defaultChecked={defaultValue}
+      {...props}
+    />
+  );
+});
 
 export const StyledToggle = styled.input`
   appearance: none;
   margin: 0;
   position: relative;
-  width: 40px;
-  height: 20px;
   cursor: pointer;
 
-  &::before {
-    content: '';
+  display: block;
 
-    display: block;
-    position: absolute;
+  width: 42px;
+  height: 22px;
+  border-radius: 11px;
+  background-color: ${({ theme }) => theme.accents.error.regular.background};
+  border: 1px solid #212121;
 
-    width: 40px;
-    height: 20px;
-    border-radius: 11px;
-    background-color: ${({ theme }) => theme.accents.error.regular.background};
-    border: 1px solid #212121;
-    margin-top: -0.4px;
-    margin-left: -0.4px;
-
-    transition: background-color 0.2s ease-in-out;
-    will-change: background-color;
-  }
+  transition: background-color 0.2s ease-in-out;
+  will-change: background-color;
 
   &::after {
     content: '';
 
     display: block;
     position: absolute;
-    top: 0.4px;
-    left: 0.4px;
+    left: 0;
 
     width: 20px;
     height: 20px;
@@ -54,13 +86,11 @@ export const StyledToggle = styled.input`
   }
 
   &:checked {
-    &::before {
-      background-color: ${({ theme }) =>
-        theme.accents.success.regular.background};
-    }
+    background-color: ${({ theme }) =>
+      theme.accents.success.regular.background};
 
     &::after {
-      left: 20.6px;
+      left: 20px;
     }
   }
 `;

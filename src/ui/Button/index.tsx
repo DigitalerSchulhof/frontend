@@ -3,10 +3,11 @@
 import { Icon } from '../Icon';
 import React, { HTMLAttributes } from 'react';
 import { Link } from '#/ui/Link';
-import styled, {
+import {
   ExecutionContext,
   IStyledComponent,
   css,
+  styled,
 } from 'styled-components';
 import { Variant } from '../variants';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';

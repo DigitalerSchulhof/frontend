@@ -3,7 +3,7 @@
 import { T } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledBreadcrumbs } from '#/ui/Breadcrumbs/client';
-import styled, { css } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 export type HeadingSize = '1' | '2' | '3' | '4';
 

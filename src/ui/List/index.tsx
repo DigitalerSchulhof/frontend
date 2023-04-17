@@ -1,6 +1,6 @@
 'use client';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 const StyledList = styled.table`
   width: 100%;

@@ -19,6 +19,7 @@ import { Col } from '#/ui/Col';
 import { DisplayContentsForm, FormRow, Label } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
 import { Input } from '#/ui/Input';
+import { Toggle } from '#/ui/Input/toggle';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
@@ -550,18 +551,20 @@ const MailboxDeleteAfterFormRow = ({
         ) : null}
       </Table.Cell>
       <Table.Cell>
-        <Input
+        <Toggle
           id={checkboxId}
-          type='checkbox'
           defaultValue={defaultValue === null}
-          onChange={(e) => {
-            setIsDisabled(e.target.checked);
-            if (e.target.checked) {
-              valueRef.current = null;
-            } else {
-              valueRef.current = inputRef;
-            }
-          }}
+          onChange={useCallback(
+            (e: boolean) => {
+              setIsDisabled(e);
+              if (e) {
+                valueRef.current = null;
+              } else {
+                valueRef.current = inputRef;
+              }
+            },
+            [valueRef]
+          )}
         />
       </Table.Cell>
     </Table.Row>
@@ -579,6 +582,8 @@ const MailboxDeleteAfterInBinFormRow = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const numberId = useId();
   const checkboxId = useId();
+
+  const r = useRef(null);
 
   useEffect(() => {
     if (defaultValue !== null) {
@@ -612,13 +617,13 @@ const MailboxDeleteAfterInBinFormRow = ({
         ) : null}
       </Table.Cell>
       <Table.Cell>
-        <Input
+        <Toggle
           id={checkboxId}
-          type='checkbox'
           defaultValue={defaultValue === null}
-          onChange={(e) => {
-            setIsDisabled(e.target.checked);
-            if (e.target.checked) {
+          ref={r}
+          onChange={(checked) => {
+            setIsDisabled(checked);
+            if (checked) {
               valueRef.current = null;
             } else {
               valueRef.current = inputRef;

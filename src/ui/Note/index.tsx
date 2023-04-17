@@ -1,6 +1,6 @@
 'use client';
 
-import styled, { css } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { Variant } from '../variants';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { T } from '#/i18n';

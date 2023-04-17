@@ -5,7 +5,7 @@ import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Input, InputProps } from '#/ui/Input';
 import { Table } from '#/ui/Table';
 import React, { forwardRef, useId } from 'react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 export interface FormProps extends React.HTMLAttributes<HTMLFormElement> {}
 

@@ -1,6 +1,6 @@
 'use client';
 
-import styled, { css } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { Variant } from '../variants';
 
 export const StyledAlert = styled.div<{

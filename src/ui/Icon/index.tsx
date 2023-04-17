@@ -5,7 +5,7 @@ import { useT } from '#/i18n/client';
 import { TranslationsWithStringType } from '#/i18n/translations';
 import Image, { StaticImageData } from 'next/image';
 import { memo } from 'react';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 export const IconPersonStudent = makeIcon(
   require('../../../icons/16/user_student.png'),

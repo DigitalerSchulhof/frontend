@@ -1,6 +1,6 @@
 'use client';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 export type ColNr =
   | '1'

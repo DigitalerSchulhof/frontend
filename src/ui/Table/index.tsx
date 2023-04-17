@@ -1,6 +1,6 @@
 'use client';
 
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 import { css } from 'styled-components';
 
 const StyledTable = styled.div<{ $h?: number | string; $w?: number | string }>(

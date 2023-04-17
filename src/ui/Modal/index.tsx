@@ -7,7 +7,7 @@ import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Loading } from '#/ui/Loading';
 import { createPortal } from 'react-dom';
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 export interface ModalProps {
   onClose?: () => void;
