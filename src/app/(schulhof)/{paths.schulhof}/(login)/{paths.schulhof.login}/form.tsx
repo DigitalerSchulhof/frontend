@@ -49,9 +49,11 @@ export const LoginForm = () => {
     useCallback(
       (res: LoginOutputOk) => {
         Cookies.set('jwt', res.jwt);
-        router.refresh();
+        router.push(
+          `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
+        );
       },
-      [router]
+      [router, t]
     )
   );
 
