@@ -119,10 +119,10 @@ function useSendEditAccount(
 
   return useCallback(
     async function sendEditAccount() {
+      setFormState(FormState.Loading);
+
       const username = usernameRef.current!.value;
       const email = emailRef.current!.value;
-
-      setFormState(FormState.Loading);
 
       const [res] = await Promise.all([
         fetch('/api/schulhof/administration/persons/persons/edit-account', {

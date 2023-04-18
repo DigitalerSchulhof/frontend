@@ -1,47 +1,61 @@
 'use client';
 
-import { ClassAttributes, InputHTMLAttributes, forwardRef } from 'react';
+import {
+  ClassAttributes,
+  InputHTMLAttributes,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+} from 'react';
 import { styled } from 'styled-components';
+
+export { Toggle } from './toggle';
 
 export type InputProps = ClassAttributes<HTMLInputElement> &
   Omit<
     InputHTMLAttributes<HTMLInputElement>,
     'type' | 'defaultValue' | 'defaultChecked'
-  > &
-  (
-    | {
-        type?: 'text' | 'password';
-        defaultValue?: string;
-      }
-    | {
-        type?: 'number';
-        defaultValue?: number;
-      }
-    | {
-        type: 'checkbox';
-        defaultValue?: boolean;
-      }
-  );
+  >;
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { type, defaultValue, ...props },
-  ref
-) {
-  if (type === 'checkbox') {
-    return (
-      <StyledInput
-        ref={ref}
-        {...props}
-        type='checkbox'
-        defaultChecked={defaultValue}
-      />
-    );
+export type TextInputProps = InputProps & {
+  defaultValue?: string;
+  /**
+   * @default 'text'
+   */
+  type?: 'text' | 'password';
+};
+
+export const TextInput = forwardRef<{ value: string }, TextInputProps>(
+  function TextInput({ type = 'text', ...props }, ref) {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(ref, () => ({
+      get value() {
+        return inputRef.current!.value;
+      },
+    }));
+
+    return <StyledInput ref={inputRef} type={type} {...props} />;
   }
+);
 
-  return (
-    <StyledInput ref={ref} {...props} type={type} defaultValue={defaultValue} />
-  );
-});
+export type NumberInputProps = InputProps & {
+  defaultValue?: number;
+};
+
+export const NumberInput = forwardRef<{ value: number }, NumberInputProps>(
+  function NumberInput({ ...props }, ref) {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(ref, () => ({
+      get value() {
+        return inputRef.current!.valueAsNumber;
+      },
+    }));
+
+    return <StyledInput ref={inputRef} type='number' {...props} />;
+  }
+);
 
 export const StyledInput = styled.input`
   font-weight: normal;

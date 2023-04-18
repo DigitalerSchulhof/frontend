@@ -110,10 +110,10 @@ function useSendLogin(
 
   return useCallback(
     async function sendLogin() {
+      setFormState(FormState.Loading);
+
       const username = usernameRef.current!.value;
       const password = passwordRef.current!.value;
-
-      setFormState(FormState.Loading);
 
       const [res] = await Promise.all([
         fetch('/api/schulhof/auth/login', {

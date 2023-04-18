@@ -18,18 +18,17 @@ import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
 import { DisplayContentsForm, FormRow, Label } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
-import { Input } from '#/ui/Input';
-import { Toggle } from '#/ui/Input/toggle';
+import { NumberInput, Toggle } from '#/ui/Input';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
 import { sleep } from '#/utils';
 import {
-  MutableRefObject,
   RefObject,
+  forwardRef,
   useCallback,
-  useEffect,
   useId,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -93,19 +92,19 @@ export const SettingsForm = ({
         <Table>
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newMessage'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.emailOn.newMessage}
             ref={refs.emailOnNewMessage}
           />
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newSubstitution'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.emailOn.newSubstitution}
             ref={refs.emailOnNewSubstitution}
           />
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newNews'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.emailOn.newNews}
             ref={refs.emailOnNewNews}
           />
@@ -117,19 +116,19 @@ export const SettingsForm = ({
         <Table>
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newMessage'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.pushOn.newMessage}
             ref={refs.pushOnNewMessage}
           />
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newSubstitution'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.pushOn.newSubstitution}
             ref={refs.pushOnNewSubstitution}
           />
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newNews'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.pushOn.newNews}
             ref={refs.pushOnNewNews}
           />
@@ -141,25 +140,25 @@ export const SettingsForm = ({
         <Table>
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newEvent'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.considerNews.newEvent}
             ref={refs.considerNewsNewEvent}
           />
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newBlog'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.considerNews.newBlog}
             ref={refs.considerNewsNewBlog}
           />
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newGallery'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.considerNews.newGallery}
             ref={refs.considerNewsNewGallery}
           />
           <FormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.fileChanged'
-            type='checkbox'
+            type='toggle'
             defaultValue={settings.considerNews.fileChanged}
             ref={refs.considerNewsFileChanged}
           />
@@ -172,12 +171,12 @@ export const SettingsForm = ({
         />
         <Table columns='1fr auto auto'>
           <MailboxDeleteAfterFormRow
-            valueRef={refs.mailboxDeleteAfter}
             defaultValue={settings.mailbox.deleteAfter}
+            ref={refs.mailboxDeleteAfter}
           />
           <MailboxDeleteAfterInBinFormRow
-            valueRef={refs.mailboxDeleteAfterInBin}
             defaultValue={settings.mailbox.deleteAfterInBin}
+            ref={refs.mailboxDeleteAfterInBin}
           />
         </Table>
         <Heading
@@ -186,9 +185,9 @@ export const SettingsForm = ({
         />
         <Table>
           <MailboxSessionTimeoutFormRow
-            inputRef={refs.profileSessionTimeout}
             defaultValue={settings.profile.sessionTimeout}
             maxSessionTimeout={maxSessionTimeout}
+            ref={refs.profileSessionTimeout}
           />
         </Table>
       </Col>
@@ -232,21 +231,19 @@ export const SettingsForm = ({
 };
 
 function useRefs() {
-  const emailOnNewMessage = useRef<HTMLInputElement>(null);
-  const emailOnNewSubstitution = useRef<HTMLInputElement>(null);
-  const emailOnNewNews = useRef<HTMLInputElement>(null);
-  const pushOnNewMessage = useRef<HTMLInputElement>(null);
-  const pushOnNewSubstitution = useRef<HTMLInputElement>(null);
-  const pushOnNewNews = useRef<HTMLInputElement>(null);
-  const considerNewsNewEvent = useRef<HTMLInputElement>(null);
-  const considerNewsNewBlog = useRef<HTMLInputElement>(null);
-  const considerNewsNewGallery = useRef<HTMLInputElement>(null);
-  const considerNewsFileChanged = useRef<HTMLInputElement>(null);
-  const mailboxDeleteAfter = useRef<RefObject<HTMLInputElement> | null>(null);
-  const mailboxDeleteAfterInBin = useRef<RefObject<HTMLInputElement> | null>(
-    null
-  );
-  const profileSessionTimeout = useRef<HTMLInputElement>(null);
+  const emailOnNewMessage = useRef<{ value: boolean }>(null);
+  const emailOnNewSubstitution = useRef<{ value: boolean }>(null);
+  const emailOnNewNews = useRef<{ value: boolean }>(null);
+  const pushOnNewMessage = useRef<{ value: boolean }>(null);
+  const pushOnNewSubstitution = useRef<{ value: boolean }>(null);
+  const pushOnNewNews = useRef<{ value: boolean }>(null);
+  const considerNewsNewEvent = useRef<{ value: boolean }>(null);
+  const considerNewsNewBlog = useRef<{ value: boolean }>(null);
+  const considerNewsNewGallery = useRef<{ value: boolean }>(null);
+  const considerNewsFileChanged = useRef<{ value: boolean }>(null);
+  const mailboxDeleteAfter = useRef<{ value: number | null }>(null);
+  const mailboxDeleteAfterInBin = useRef<{ value: number | null }>(null);
+  const profileSessionTimeout = useRef<{ value: number }>(null);
 
   return useMemo(
     () => ({
@@ -285,19 +282,19 @@ function useRefs() {
 function useSendSettings(
   personId: string,
   refs: {
-    emailOnNewMessage: RefObject<HTMLInputElement>;
-    emailOnNewSubstitution: RefObject<HTMLInputElement>;
-    emailOnNewNews: RefObject<HTMLInputElement>;
-    pushOnNewMessage: RefObject<HTMLInputElement>;
-    pushOnNewSubstitution: RefObject<HTMLInputElement>;
-    pushOnNewNews: RefObject<HTMLInputElement>;
-    considerNewsNewEvent: RefObject<HTMLInputElement>;
-    considerNewsNewBlog: RefObject<HTMLInputElement>;
-    considerNewsNewGallery: RefObject<HTMLInputElement>;
-    considerNewsFileChanged: RefObject<HTMLInputElement>;
-    mailboxDeleteAfter: MutableRefObject<RefObject<HTMLInputElement> | null>;
-    mailboxDeleteAfterInBin: MutableRefObject<RefObject<HTMLInputElement> | null>;
-    profileSessionTimeout: RefObject<HTMLInputElement>;
+    emailOnNewMessage: RefObject<{ value: boolean }>;
+    emailOnNewSubstitution: RefObject<{ value: boolean }>;
+    emailOnNewNews: RefObject<{ value: boolean }>;
+    pushOnNewMessage: RefObject<{ value: boolean }>;
+    pushOnNewSubstitution: RefObject<{ value: boolean }>;
+    pushOnNewNews: RefObject<{ value: boolean }>;
+    considerNewsNewEvent: RefObject<{ value: boolean }>;
+    considerNewsNewBlog: RefObject<{ value: boolean }>;
+    considerNewsNewGallery: RefObject<{ value: boolean }>;
+    considerNewsFileChanged: RefObject<{ value: boolean }>;
+    mailboxDeleteAfter: RefObject<{ value: number | null }>;
+    mailboxDeleteAfterInBin: RefObject<{ value: number | null }>;
+    profileSessionTimeout: RefObject<{ value: number }>;
   },
   setFormState: (s: FormState) => void,
   setFormErrors: (e: readonly FormError[]) => void
@@ -306,39 +303,33 @@ function useSendSettings(
 
   return useCallback(
     async function sendSettings() {
+      setFormState(FormState.Loading);
+
       const settings = {
         emailOn: {
-          newMessage: refs.emailOnNewMessage.current!.value === 'on',
-          newSubstitution: refs.emailOnNewSubstitution.current!.value === 'on',
-          newNews: refs.emailOnNewNews.current!.value === 'on',
+          newMessage: refs.emailOnNewMessage.current!.value,
+          newSubstitution: refs.emailOnNewSubstitution.current!.value,
+          newNews: refs.emailOnNewNews.current!.value,
         },
         pushOn: {
-          newMessage: refs.pushOnNewMessage.current!.value === 'on',
-          newSubstitution: refs.pushOnNewSubstitution.current!.value === 'on',
-          newNews: refs.pushOnNewNews.current!.value === 'on',
+          newMessage: refs.pushOnNewMessage.current!.value,
+          newSubstitution: refs.pushOnNewSubstitution.current!.value,
+          newNews: refs.pushOnNewNews.current!.value,
         },
         considerNews: {
-          newEvent: refs.considerNewsNewEvent.current!.value === 'on',
-          newBlog: refs.considerNewsNewBlog.current!.value === 'on',
-          newGallery: refs.considerNewsNewGallery.current!.value === 'on',
-          fileChanged: refs.considerNewsFileChanged.current!.value === 'on',
+          newEvent: refs.considerNewsNewEvent.current!.value,
+          newBlog: refs.considerNewsNewBlog.current!.value,
+          newGallery: refs.considerNewsNewGallery.current!.value,
+          fileChanged: refs.considerNewsFileChanged.current!.value,
         },
         mailbox: {
-          deleteAfter:
-            refs.mailboxDeleteAfter.current === null
-              ? null
-              : parseInt(refs.mailboxDeleteAfter.current.current!.value),
-          deleteAfterInBin:
-            refs.mailboxDeleteAfterInBin.current === null
-              ? null
-              : parseInt(refs.mailboxDeleteAfterInBin.current.current!.value),
+          deleteAfter: refs.mailboxDeleteAfter.current!.value,
+          deleteAfterInBin: refs.mailboxDeleteAfterInBin.current!.value,
         },
         profile: {
-          sessionTimeout: parseInt(refs.profileSessionTimeout.current!.value),
+          sessionTimeout: refs.profileSessionTimeout.current!.value,
         },
       };
-
-      setFormState(FormState.Loading);
 
       const [res] = await Promise.all([
         fetch('/api/schulhof/administration/persons/persons/settings', {
@@ -507,23 +498,24 @@ function useSettingsStateModal(
   }, [isOwnProfile, personId, state, formErrors, setIdle, t]);
 }
 
-const MailboxDeleteAfterFormRow = ({
-  valueRef,
-  defaultValue,
-}: {
-  valueRef: MutableRefObject<RefObject<HTMLInputElement> | null>;
-  defaultValue: number | null;
-}) => {
+const MailboxDeleteAfterFormRow = forwardRef<
+  { value: number | null },
+  {
+    defaultValue: number | null;
+  }
+>(function MailboxDeleteAfterFormRow({ defaultValue }, ref) {
+  const inputRef = useRef<{ value: number }>(null);
+  const checkboxRef = useRef<{ value: boolean }>(null);
+
   const [isDisabled, setIsDisabled] = useState(defaultValue === null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const numberId = useId();
   const checkboxId = useId();
 
-  useEffect(() => {
-    if (defaultValue !== null) {
-      valueRef.current = inputRef;
-    }
-  }, [defaultValue, valueRef]);
+  useImperativeHandle(ref, () => ({
+    get value() {
+      return isDisabled ? null : inputRef.current!.value;
+    },
+  }));
 
   return (
     <Table.Row>
@@ -539,10 +531,9 @@ const MailboxDeleteAfterFormRow = ({
       <Table.Cell>
         {!isDisabled ? (
           <>
-            <Input
+            <NumberInput
               ref={inputRef}
               id={numberId}
-              type='number'
               min={0}
               defaultValue={defaultValue ?? 0}
             />
@@ -554,42 +545,37 @@ const MailboxDeleteAfterFormRow = ({
         <Toggle
           id={checkboxId}
           defaultValue={defaultValue === null}
+          ref={checkboxRef}
           onChange={useCallback(
-            (e: boolean) => {
-              setIsDisabled(e);
-              if (e) {
-                valueRef.current = null;
-              } else {
-                valueRef.current = inputRef;
-              }
+            (checked: boolean) => {
+              setIsDisabled(checked);
             },
-            [valueRef]
+            [setIsDisabled]
           )}
         />
       </Table.Cell>
     </Table.Row>
   );
-};
+});
 
-const MailboxDeleteAfterInBinFormRow = ({
-  valueRef,
-  defaultValue,
-}: {
-  valueRef: MutableRefObject<RefObject<HTMLInputElement> | null>;
-  defaultValue: number | null;
-}) => {
+const MailboxDeleteAfterInBinFormRow = forwardRef<
+  { value: number | null },
+  {
+    defaultValue: number | null;
+  }
+>(function MailboxDeleteAfterInBinFormRow({ defaultValue }, ref) {
+  const inputRef = useRef<{ value: number }>(null);
+  const checkboxRef = useRef<{ value: boolean }>(null);
+
   const [isDisabled, setIsDisabled] = useState(defaultValue === null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const numberId = useId();
   const checkboxId = useId();
 
-  const r = useRef(null);
-
-  useEffect(() => {
-    if (defaultValue !== null) {
-      valueRef.current = inputRef;
-    }
-  }, [defaultValue, valueRef]);
+  useImperativeHandle(ref, () => ({
+    get value() {
+      return isDisabled ? null : inputRef.current!.value;
+    },
+  }));
 
   return (
     <Table.Row>
@@ -605,10 +591,9 @@ const MailboxDeleteAfterInBinFormRow = ({
       <Table.Cell>
         {!isDisabled ? (
           <>
-            <Input
+            <NumberInput
               ref={inputRef}
               id={numberId}
-              type='number'
               min={0}
               defaultValue={defaultValue ?? 0}
             />
@@ -620,30 +605,29 @@ const MailboxDeleteAfterInBinFormRow = ({
         <Toggle
           id={checkboxId}
           defaultValue={defaultValue === null}
-          ref={r}
-          onChange={(checked) => {
-            setIsDisabled(checked);
-            if (checked) {
-              valueRef.current = null;
-            } else {
-              valueRef.current = inputRef;
-            }
-          }}
+          ref={checkboxRef}
+          onChange={useCallback(
+            (checked: boolean) => {
+              setIsDisabled(checked);
+            },
+            [setIsDisabled]
+          )}
         />
       </Table.Cell>
     </Table.Row>
   );
-};
+});
 
-const MailboxSessionTimeoutFormRow = ({
-  inputRef,
-  defaultValue,
-  maxSessionTimeout,
-}: {
-  inputRef: RefObject<HTMLInputElement>;
-  defaultValue: number;
-  maxSessionTimeout: number;
-}) => {
+const MailboxSessionTimeoutFormRow = forwardRef<
+  { value: number },
+  {
+    defaultValue: number;
+    maxSessionTimeout: number;
+  }
+>(function MailboxSessionTimeoutFormRow(
+  { defaultValue, maxSessionTimeout },
+  ref
+) {
   const id = useId();
 
   return (
@@ -656,10 +640,9 @@ const MailboxSessionTimeoutFormRow = ({
         </Label>
       </Table.Header>
       <Table.Cell>
-        <Input
-          ref={inputRef}
+        <NumberInput
+          ref={ref}
           id={id}
-          type='number'
           min={0}
           max={maxSessionTimeout}
           defaultValue={defaultValue}
@@ -668,4 +651,4 @@ const MailboxSessionTimeoutFormRow = ({
       </Table.Cell>
     </Table.Row>
   );
-};
+});

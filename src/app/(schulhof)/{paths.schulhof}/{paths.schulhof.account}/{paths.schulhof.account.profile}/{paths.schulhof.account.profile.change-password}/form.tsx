@@ -103,11 +103,11 @@ function useSendChangePassword(
 
   return useCallback(
     async function sendChangePassword() {
+      setFormState(FormState.Loading);
+
       const oldPassword = oldPasswordRef.current!.value;
       const newPassword = newPasswordRef.current!.value;
       const newPasswordAgain = newPasswordAgainRef.current!.value;
-
-      setFormState(FormState.Loading);
 
       const [res] = await Promise.all([
         fetch('/api/schulhof/account/profile/change-password', {

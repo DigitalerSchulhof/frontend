@@ -1,3 +1,3 @@
 - Identity theft endpoint
 - Change password endpoint
-- Delete account/person (my profile button; endpoint)
+- Delete account/person endpoint

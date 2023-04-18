@@ -111,10 +111,10 @@ function useSendForgotPassword(
 
   return useCallback(
     async function sendForgotPassword() {
+      setFormState(FormState.Loading);
+
       const username = usernameRef.current!.value;
       const email = emailRef.current!.value;
-
-      setFormState(FormState.Loading);
 
       const [res] = await Promise.all([
         fetch('/api/schulhof/auth/forgot-password', {
