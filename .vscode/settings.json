@@ -10,7 +10,6 @@
     "tsconfig.json": "tsconfig.*.json, tsconfig.tsbuildinfo"
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.tsdk": "node_modules/.pnpm/typescript@5.0.4/node_modules/typescript/lib",
   "cSpell.words": [
     "arango",
     "Arango",
@@ -22,7 +21,6 @@
     "schulhof"
   ],
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "colorize.languages": [
-    "typescript"
-  ]
+  "colorize.languages": ["typescript"],
+  "typescript.tsdk": "node_modules/.pnpm/typescript@5.1.0-beta/node_modules/typescript/lib"
 }
