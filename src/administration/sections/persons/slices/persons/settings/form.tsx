@@ -16,23 +16,18 @@ import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
-import { DisplayContentsForm, FormRow, Label } from '#/ui/Form';
+import {
+  DisplayContentsForm,
+  NumberFormRow,
+  NumberOrNullFormRow,
+  ToggleFormRow,
+} from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
-import { NumberInput, Toggle } from '#/ui/Input';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
 import { sleep } from '#/utils';
-import {
-  RefObject,
-  forwardRef,
-  useCallback,
-  useId,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
 
 enum FormState {
   Idle,
@@ -89,22 +84,19 @@ export const SettingsForm = ({
           size='2'
           t='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.title'
         />
-        <Table>
-          <FormRow
+        <Table columns='1fr auto'>
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newMessage'
-            type='toggle'
             defaultValue={settings.emailOn.newMessage}
             ref={refs.emailOnNewMessage}
           />
-          <FormRow
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newSubstitution'
-            type='toggle'
             defaultValue={settings.emailOn.newSubstitution}
             ref={refs.emailOnNewSubstitution}
           />
-          <FormRow
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newNews'
-            type='toggle'
             defaultValue={settings.emailOn.newNews}
             ref={refs.emailOnNewNews}
           />
@@ -113,22 +105,19 @@ export const SettingsForm = ({
           size='2'
           t='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.title'
         />
-        <Table>
-          <FormRow
+        <Table columns='1fr auto'>
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newMessage'
-            type='toggle'
             defaultValue={settings.pushOn.newMessage}
             ref={refs.pushOnNewMessage}
           />
-          <FormRow
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newSubstitution'
-            type='toggle'
             defaultValue={settings.pushOn.newSubstitution}
             ref={refs.pushOnNewSubstitution}
           />
-          <FormRow
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newNews'
-            type='toggle'
             defaultValue={settings.pushOn.newNews}
             ref={refs.pushOnNewNews}
           />
@@ -137,28 +126,24 @@ export const SettingsForm = ({
           size='2'
           t='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.title'
         />
-        <Table>
-          <FormRow
+        <Table columns='1fr auto'>
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newEvent'
-            type='toggle'
             defaultValue={settings.considerNews.newEvent}
             ref={refs.considerNewsNewEvent}
           />
-          <FormRow
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newBlog'
-            type='toggle'
             defaultValue={settings.considerNews.newBlog}
             ref={refs.considerNewsNewBlog}
           />
-          <FormRow
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newGallery'
-            type='toggle'
             defaultValue={settings.considerNews.newGallery}
             ref={refs.considerNewsNewGallery}
           />
-          <FormRow
+          <ToggleFormRow
             label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.fileChanged'
-            type='toggle'
             defaultValue={settings.considerNews.fileChanged}
             ref={refs.considerNewsFileChanged}
           />
@@ -169,25 +154,36 @@ export const SettingsForm = ({
           size='2'
           t='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.title'
         />
-        <Table columns='1fr auto auto'>
-          <MailboxDeleteAfterFormRow
+        <Table columns='1fr 150px'>
+          <NumberOrNullFormRow
+            whetherLabel='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfter.title.whether'
+            numberLabel='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfter.title.number'
+            unit='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.unit'
             defaultValue={settings.mailbox.deleteAfter}
             ref={refs.mailboxDeleteAfter}
+            min={0}
           />
-          <MailboxDeleteAfterInBinFormRow
+          <NumberOrNullFormRow
+            whetherLabel='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.title.whether'
+            numberLabel='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.title.number'
+            unit='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.unit'
             defaultValue={settings.mailbox.deleteAfterInBin}
             ref={refs.mailboxDeleteAfterInBin}
+            min={0}
           />
         </Table>
         <Heading
           size='2'
           t='schulhof.administration.sections.persons.slices.persons.settings.form.profile.title'
         />
-        <Table>
-          <MailboxSessionTimeoutFormRow
+        <Table columns='1fr 150px'>
+          <NumberFormRow
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.profile.sessionTimeout.title'
+            unit='schulhof.administration.sections.persons.slices.persons.settings.form.profile.sessionTimeout.unit'
             defaultValue={settings.profile.sessionTimeout}
-            maxSessionTimeout={maxSessionTimeout}
             ref={refs.profileSessionTimeout}
+            min={0}
+            max={maxSessionTimeout}
           />
         </Table>
       </Col>
@@ -497,158 +493,3 @@ function useSettingsStateModal(
     }
   }, [isOwnProfile, personId, state, formErrors, setIdle, t]);
 }
-
-const MailboxDeleteAfterFormRow = forwardRef<
-  { value: number | null },
-  {
-    defaultValue: number | null;
-  }
->(function MailboxDeleteAfterFormRow({ defaultValue }, ref) {
-  const inputRef = useRef<{ value: number }>(null);
-  const checkboxRef = useRef<{ value: boolean }>(null);
-
-  const [isDisabled, setIsDisabled] = useState(defaultValue === null);
-  const numberId = useId();
-  const checkboxId = useId();
-
-  useImperativeHandle(ref, () => ({
-    get value() {
-      return isDisabled ? null : inputRef.current!.value;
-    },
-  }));
-
-  return (
-    <Table.Row>
-      <Table.Header>
-        <Label htmlFor={isDisabled ? checkboxId : numberId}>
-          <T
-            t={`schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfter.title.${
-              isDisabled ? 'disabled' : 'days'
-            }`}
-          />
-        </Label>
-      </Table.Header>
-      <Table.Cell>
-        {!isDisabled ? (
-          <>
-            <NumberInput
-              ref={inputRef}
-              id={numberId}
-              min={0}
-              defaultValue={defaultValue ?? 0}
-            />
-            <T t='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.unit' />
-          </>
-        ) : null}
-      </Table.Cell>
-      <Table.Cell>
-        <Toggle
-          id={checkboxId}
-          defaultValue={defaultValue === null}
-          ref={checkboxRef}
-          onChange={useCallback(
-            (checked: boolean) => {
-              setIsDisabled(checked);
-            },
-            [setIsDisabled]
-          )}
-        />
-      </Table.Cell>
-    </Table.Row>
-  );
-});
-
-const MailboxDeleteAfterInBinFormRow = forwardRef<
-  { value: number | null },
-  {
-    defaultValue: number | null;
-  }
->(function MailboxDeleteAfterInBinFormRow({ defaultValue }, ref) {
-  const inputRef = useRef<{ value: number }>(null);
-  const checkboxRef = useRef<{ value: boolean }>(null);
-
-  const [isDisabled, setIsDisabled] = useState(defaultValue === null);
-  const numberId = useId();
-  const checkboxId = useId();
-
-  useImperativeHandle(ref, () => ({
-    get value() {
-      return isDisabled ? null : inputRef.current!.value;
-    },
-  }));
-
-  return (
-    <Table.Row>
-      <Table.Header>
-        <Label htmlFor={isDisabled ? checkboxId : numberId}>
-          <T
-            t={`schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.title.${
-              isDisabled ? 'disabled' : 'days'
-            }`}
-          />
-        </Label>
-      </Table.Header>
-      <Table.Cell>
-        {!isDisabled ? (
-          <>
-            <NumberInput
-              ref={inputRef}
-              id={numberId}
-              min={0}
-              defaultValue={defaultValue ?? 0}
-            />
-            <T t='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.unit' />
-          </>
-        ) : null}
-      </Table.Cell>
-      <Table.Cell>
-        <Toggle
-          id={checkboxId}
-          defaultValue={defaultValue === null}
-          ref={checkboxRef}
-          onChange={useCallback(
-            (checked: boolean) => {
-              setIsDisabled(checked);
-            },
-            [setIsDisabled]
-          )}
-        />
-      </Table.Cell>
-    </Table.Row>
-  );
-});
-
-const MailboxSessionTimeoutFormRow = forwardRef<
-  { value: number },
-  {
-    defaultValue: number;
-    maxSessionTimeout: number;
-  }
->(function MailboxSessionTimeoutFormRow(
-  { defaultValue, maxSessionTimeout },
-  ref
-) {
-  const id = useId();
-
-  return (
-    <Table.Row>
-      <Table.Header>
-        <Label htmlFor={id}>
-          <T
-            t={`schulhof.administration.sections.persons.slices.persons.settings.form.profile.sessionTimeout.title`}
-          />
-        </Label>
-      </Table.Header>
-      <Table.Cell>
-        <NumberInput
-          ref={ref}
-          id={id}
-          min={0}
-          max={maxSessionTimeout}
-          defaultValue={defaultValue}
-        />
-        <T t='schulhof.administration.sections.persons.slices.persons.settings.form.profile.sessionTimeout.unit' />
-      </Table.Cell>
-    </Table.Row>
-  );
-});

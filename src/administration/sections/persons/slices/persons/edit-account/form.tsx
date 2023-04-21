@@ -9,7 +9,7 @@ import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { Form, FormRow } from '#/ui/Form';
+import { Form, TextFormRow } from '#/ui/Form';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
@@ -43,8 +43,8 @@ export const EditAccountForm = ({
 
   const own = isOwnProfile ? 'own' : 'other';
 
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<{ value: string }>(null);
+  const emailRef = useRef<{ value: string }>(null);
 
   const sendEditAccount = useSendEditAccount(
     personId,
@@ -66,13 +66,13 @@ export const EditAccountForm = ({
     <Form onSubmit={sendEditAccount}>
       {modal}
       <Table>
-        <FormRow
+        <TextFormRow
           label='schulhof.administration.sections.persons.slices.persons.edit-account.form.username'
           autoComplete='username'
           defaultValue={username}
           ref={usernameRef}
         />
-        <FormRow
+        <TextFormRow
           label='schulhof.administration.sections.persons.slices.persons.edit-account.form.email'
           autoComplete='email'
           defaultValue={email}
@@ -110,8 +110,8 @@ export const EditAccountForm = ({
 
 function useSendEditAccount(
   personId: string,
-  usernameRef: React.RefObject<HTMLInputElement>,
-  emailRef: React.RefObject<HTMLInputElement>,
+  usernameRef: React.RefObject<{ value: string }>,
+  emailRef: React.RefObject<{ value: string }>,
   setFormState: (s: FormState) => void,
   setFormErrors: (e: readonly FormError[]) => void
 ) {

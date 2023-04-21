@@ -11,7 +11,7 @@ import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { Form, FormRow } from '#/ui/Form';
+import { Form, TextFormRow } from '#/ui/Form';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
@@ -38,8 +38,8 @@ export const ForgotPasswordForm = () => {
     FormOfAddress | undefined
   >();
 
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<{ value: string }>(null);
+  const emailRef = useRef<{ value: string }>(null);
 
   const sendForgotPassword = useSendForgotPassword(
     usernameRef,
@@ -66,12 +66,12 @@ export const ForgotPasswordForm = () => {
     <Form onSubmit={sendForgotPassword}>
       {modal}
       <Table>
-        <FormRow
+        <TextFormRow
           label='schulhof.login.actions.forgot-password.form.username'
           autoComplete='username'
           ref={usernameRef}
         />
-        <FormRow
+        <TextFormRow
           label='schulhof.login.actions.forgot-password.form.email'
           autoComplete='email'
           ref={emailRef}
@@ -101,8 +101,8 @@ export const ForgotPasswordForm = () => {
 };
 
 function useSendForgotPassword(
-  usernameRef: React.RefObject<HTMLInputElement>,
-  emailRef: React.RefObject<HTMLInputElement>,
+  usernameRef: React.RefObject<{ value: string }>,
+  emailRef: React.RefObject<{ value: string }>,
   setFormState: (s: FormState) => void,
   setFormErrors: (e: readonly FormError[]) => void,
   onSuccess: (jwt: ForgotPasswordOutputOk) => void
@@ -188,7 +188,7 @@ function useSendForgotPassword(
 
 function useForgotPasswordStateModal(
   formOfAddress: FormOfAddress | undefined,
-  emailRef: React.RefObject<HTMLInputElement>,
+  emailRef: React.RefObject<{ value: string }>,
   state: FormState,
   formErrors: readonly FormError[],
   setFormState: (s: FormState) => void

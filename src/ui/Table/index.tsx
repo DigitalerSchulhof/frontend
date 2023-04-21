@@ -1,5 +1,6 @@
 'use client';
 
+import { StyledToggle } from '#/ui/Input/toggle';
 import { styled } from 'styled-components';
 import { css } from 'styled-components';
 
@@ -66,6 +67,7 @@ const cellStyles = css`
   display: flex;
   align-items: center;
   justify-content: left;
+  gap: 5px;
 `;
 
 Table.Header = styled.div`
@@ -75,4 +77,8 @@ Table.Header = styled.div`
 
 Table.Cell = styled.div`
   ${cellStyles}
+
+  & > ${StyledToggle}:first-child:last-child {
+    margin-left: auto;
+  }
 `;

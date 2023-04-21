@@ -3,3 +3,4 @@ last-login: Die letzte Anmeldung erfolgte am <b>{last_login, date, long}</b> um 
 my-account:
   title: Mein Konto
   details: Profildaten
+  settings: Einstellungen

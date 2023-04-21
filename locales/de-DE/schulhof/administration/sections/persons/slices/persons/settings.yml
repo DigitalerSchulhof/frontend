@@ -20,13 +20,15 @@ form:
     title: Postfach
     deleteAfter:
       title:
-        disabled: Nachrichten nicht automatisch löschen
-        days: Nachrichten automatisch löschen nach ...
+        whether: Nachrichten automatisch löschen
+        # \u00a0 = &nbsp;
+        number: "Nachrichten automatisch löschen nach\u00a0..."
       unit: Tag(en)
     deleteAfterInBin:
       title:
-        disabled: Nachrichten im Papierkorb nicht automatisch löschen
-        days: Nachrichten im Papierkorb automatisch löschen nach ...
+        whether: Nachrichten im Papierkorb automatisch löschen
+        # \u00a0 = &nbsp;
+        number: "Nachrichten im Papierkorb automatisch löschen nach\u00a0..."
       unit: Tag(en)
   profile:
     title: Profileinstellungen

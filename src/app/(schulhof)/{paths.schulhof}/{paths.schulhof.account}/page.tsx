@@ -44,6 +44,15 @@ export default async function Page() {
             ]}
             t='schulhof.account.my-account.details'
           />
+          <Button
+            href={[
+              'paths.schulhof',
+              'paths.schulhof.account',
+              'paths.schulhof.account.profile',
+              'paths.schulhof.account.profile.settings',
+            ]}
+            t='schulhof.account.my-account.settings'
+          />
         </ButtonGroup>
       </Col>
     </>

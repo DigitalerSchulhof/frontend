@@ -9,7 +9,7 @@ import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { Form, FormRow } from '#/ui/Form';
+import { Form, TextFormRow } from '#/ui/Form';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
@@ -33,9 +33,9 @@ export const ChangePasswordForm = () => {
   const [formState, setFormState] = useState<FormState>(FormState.Idle);
   const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
-  const oldPasswordRef = useRef<HTMLInputElement>(null);
-  const newPasswordRef = useRef<HTMLInputElement>(null);
-  const newPasswordAgainRef = useRef<HTMLInputElement>(null);
+  const oldPasswordRef = useRef<{ value: string }>(null);
+  const newPasswordRef = useRef<{ value: string }>(null);
+  const newPasswordAgainRef = useRef<{ value: string }>(null);
 
   const sendChangePassword = useSendChangePassword(
     oldPasswordRef,
@@ -55,19 +55,19 @@ export const ChangePasswordForm = () => {
     <Form onSubmit={sendChangePassword}>
       {modal}
       <Table>
-        <FormRow
+        <TextFormRow
           label='schulhof.account.profile.change-password.form.old-password'
           autoComplete='current-password'
           type='password'
           ref={oldPasswordRef}
         />
-        <FormRow
+        <TextFormRow
           label='schulhof.account.profile.change-password.form.new-password'
           autoComplete='new-password'
           type='password'
           ref={newPasswordRef}
         />
-        <FormRow
+        <TextFormRow
           label='schulhof.account.profile.change-password.form.new-password-again'
           autoComplete='new-password'
           type='password'
@@ -93,9 +93,9 @@ export const ChangePasswordForm = () => {
 };
 
 function useSendChangePassword(
-  oldPasswordRef: React.RefObject<HTMLInputElement>,
-  newPasswordRef: React.RefObject<HTMLInputElement>,
-  newPasswordAgainRef: React.RefObject<HTMLInputElement>,
+  oldPasswordRef: React.RefObject<{ value: string }>,
+  newPasswordRef: React.RefObject<{ value: string }>,
+  newPasswordAgainRef: React.RefObject<{ value: string }>,
   setFormState: (s: FormState) => void,
   setFormErrors: (e: readonly FormError[]) => void
 ) {

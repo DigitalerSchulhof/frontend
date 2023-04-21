@@ -10,7 +10,7 @@ import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { Form, FormRow } from '#/ui/Form';
+import { Form, TextFormRow } from '#/ui/Form';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
@@ -38,8 +38,8 @@ export const LoginForm = () => {
   const [formState, setFormState] = useState<FormState>(FormState.Idle);
   const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<{ value: string }>(null);
+  const passwordRef = useRef<{ value: string }>(null);
 
   const sendLogin = useSendLogin(
     usernameRef,
@@ -63,12 +63,12 @@ export const LoginForm = () => {
     <Form onSubmit={sendLogin}>
       {modal}
       <Table>
-        <FormRow
+        <TextFormRow
           label='schulhof.login.actions.login.form.username'
           autoComplete='username'
           ref={usernameRef}
         />
-        <FormRow
+        <TextFormRow
           label='schulhof.login.actions.login.form.password'
           autoComplete='current-password'
           type='password'
@@ -100,8 +100,8 @@ export const LoginForm = () => {
 };
 
 function useSendLogin(
-  usernameRef: React.RefObject<HTMLInputElement>,
-  passwordRef: React.RefObject<HTMLInputElement>,
+  usernameRef: React.RefObject<{ value: string }>,
+  passwordRef: React.RefObject<{ value: string }>,
   setFormState: (s: FormState) => void,
   setFormErrors: (e: readonly FormError[]) => void,
   onSuccess: (jwt: LoginOutputOk) => void
