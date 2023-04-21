@@ -33,8 +33,8 @@ export const GlobalStyles = createGlobalStyle`
     text-decoration: none;
   }
 
-  p, ul, li, section, hr {
-    margin-top:7px;
+  p, ul, li, hr {
+    margin-top: 7px;
     margin-bottom: 7px;
 
     &:first-child {
