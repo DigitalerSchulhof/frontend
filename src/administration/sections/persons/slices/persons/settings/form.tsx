@@ -27,7 +27,7 @@ import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
 import { sleep } from '#/utils';
-import { RefObject, useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 enum FormState {
   Idle,
@@ -278,19 +278,19 @@ function useRefs() {
 function useSendSettings(
   personId: string,
   refs: {
-    emailOnNewMessage: RefObject<{ value: boolean }>;
-    emailOnNewSubstitution: RefObject<{ value: boolean }>;
-    emailOnNewNews: RefObject<{ value: boolean }>;
-    pushOnNewMessage: RefObject<{ value: boolean }>;
-    pushOnNewSubstitution: RefObject<{ value: boolean }>;
-    pushOnNewNews: RefObject<{ value: boolean }>;
-    considerNewsNewEvent: RefObject<{ value: boolean }>;
-    considerNewsNewBlog: RefObject<{ value: boolean }>;
-    considerNewsNewGallery: RefObject<{ value: boolean }>;
-    considerNewsFileChanged: RefObject<{ value: boolean }>;
-    mailboxDeleteAfter: RefObject<{ value: number | null }>;
-    mailboxDeleteAfterInBin: RefObject<{ value: number | null }>;
-    profileSessionTimeout: RefObject<{ value: number }>;
+    emailOnNewMessage: React.RefObject<{ value: boolean }>;
+    emailOnNewSubstitution: React.RefObject<{ value: boolean }>;
+    emailOnNewNews: React.RefObject<{ value: boolean }>;
+    pushOnNewMessage: React.RefObject<{ value: boolean }>;
+    pushOnNewSubstitution: React.RefObject<{ value: boolean }>;
+    pushOnNewNews: React.RefObject<{ value: boolean }>;
+    considerNewsNewEvent: React.RefObject<{ value: boolean }>;
+    considerNewsNewBlog: React.RefObject<{ value: boolean }>;
+    considerNewsNewGallery: React.RefObject<{ value: boolean }>;
+    considerNewsFileChanged: React.RefObject<{ value: boolean }>;
+    mailboxDeleteAfter: React.RefObject<{ value: number | null }>;
+    mailboxDeleteAfterInBin: React.RefObject<{ value: number | null }>;
+    profileSessionTimeout: React.RefObject<{ value: number }>;
   },
   setFormState: (s: FormState) => void,
   setFormErrors: (e: readonly FormError[]) => void

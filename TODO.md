@@ -1,3 +1,0 @@
-- Identity theft endpoint
-- Change password endpoint
-- Delete account/person endpoint
