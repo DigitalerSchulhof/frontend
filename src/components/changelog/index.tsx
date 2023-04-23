@@ -13,35 +13,32 @@ export const Changelog = () => {
   return (
     <>
       <Heading size='2' t='schulhof.login.changelog.title' />
-      <div>
-        <VisibilityToggle
-          show={t('schulhof.login.changelog.specific.show', {
-            version: mostRecentEntry.version,
-          })}
-          hide={t('schulhof.login.changelog.specific.hide', {
-            version: mostRecentEntry.version,
-          })}
-          content={<ChangelogEntry entry={mostRecentEntry} />}
-          defaultVisible
-        />
-
-        <VisibilityToggle
-          show={t('schulhof.login.changelog.all.show')}
-          hide={t('schulhof.login.changelog.all.hide')}
-          content={oldEntries.map((entry, i) => (
-            <VisibilityToggle
-              key={i}
-              show={t('schulhof.login.changelog.specific.show', {
-                version: entry.version,
-              })}
-              hide={t('schulhof.login.changelog.specific.hide', {
-                version: entry.version,
-              })}
-              content={<ChangelogEntry entry={entry} />}
-            />
-          ))}
-        />
-      </div>
+      <VisibilityToggle
+        show={t('schulhof.login.changelog.specific.show', {
+          version: mostRecentEntry.version,
+        })}
+        hide={t('schulhof.login.changelog.specific.hide', {
+          version: mostRecentEntry.version,
+        })}
+        content={<ChangelogEntry entry={mostRecentEntry} />}
+        defaultVisible
+      />
+      <VisibilityToggle
+        show={t('schulhof.login.changelog.all.show')}
+        hide={t('schulhof.login.changelog.all.hide')}
+        content={oldEntries.map((entry, i) => (
+          <VisibilityToggle
+            key={i}
+            show={t('schulhof.login.changelog.specific.show', {
+              version: entry.version,
+            })}
+            hide={t('schulhof.login.changelog.specific.hide', {
+              version: entry.version,
+            })}
+            content={<ChangelogEntry entry={entry} />}
+          />
+        ))}
+      />
     </>
   );
 };

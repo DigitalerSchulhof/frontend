@@ -13,7 +13,7 @@ form:
     text: Mir ist bewusst, dass ich gerade einen Identitätsdiebstahl melde.
   buttons:
     submit: Identitätsdiebstahl melden
-    change-password: Password ohne Identitätsdiebstahl ändern
+    change-password: Passwort ohne Identitätsdiebstahl ändern
     back: Zurück zur Profilansicht
 modals:
   loading:
@@ -26,9 +26,9 @@ modals:
       internal-error:
         - es ist ein interner Fehler aufgetreten.
       invalid-credentials:
-        - das alte Password ist ungültig.
+        - das alte Passwort ist ungültig.
       password-mismatch:
-        - das neue Password stimmt nicht mit der Wiederholung überein.
+        - das neue Passwort stimmt nicht mit der Wiederholung überein.
   success:
     title: Identitätsdiebstahl gemeldet
     description: Der Identitätsdiebstahl wurde gemeldet und das Passwort wurde geändert.

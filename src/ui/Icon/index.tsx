@@ -127,12 +127,6 @@ export const LargeIconError = makeIcon(
   32
 );
 
-export const LargeIconScript = makeIcon(
-  require('../../../icons/32/script.png'),
-  'icons.warning',
-  32
-);
-
 function makeIcon(
   src: StaticImageData,
   alt: TranslationsWithStringType,

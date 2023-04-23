@@ -34,7 +34,7 @@ actions:
       username: "Benutzername: "
       email: "E-Mail-Adresse: "
       buttons:
-        send: Neues Password zuschicken
+        send: Neues Passwort zuschicken
         login: Zur Anmeldung
     info:
       title: "Bitte beachten:"
@@ -42,7 +42,7 @@ actions:
     modals:
       loading:
         title: Neues Passwort zuschicken
-        description: Die eingegebenen Daten werden überprüft und das neue Password wird verschickt.
+        description: Die eingegebenen Daten werden überprüft und das neue Passwort wird verschickt.
       error:
         title: Neues Passwort Zuschicken fehlgeschlagen
         description: Es wurde kein neues Passwort verschickt, denn ...
@@ -73,7 +73,6 @@ changelog:
 system-requirements:
   version: Version {version}
   cookies: Cookies aktiv?
-  javascript: JavaScript aktiv?
   one-user: Nur ein Nutzer pro Browser zur selben Zeit.
   check:
     yes: Der Browser unterstützt alle Funktionen des Digitalen Schulhofs.

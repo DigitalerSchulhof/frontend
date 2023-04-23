@@ -3,7 +3,6 @@ import { useT } from '#/i18n';
 import {
   LargeIconCookies,
   LargeIconGroupError,
-  LargeIconScript,
   LargeIconVersion,
 } from '#/ui/Icon';
 import {
@@ -29,11 +28,6 @@ export const SystemRequirements = () => {
         <LargeIconCookies />
         <br />
         {t('schulhof.login.system-requirements.cookies')}
-      </SystemRequirementsItem>
-      <SystemRequirementsItem>
-        <LargeIconScript />
-        <br />
-        {t('schulhof.login.system-requirements.javascript')}
       </SystemRequirementsItem>
       <SystemRequirementsItem>
         <LargeIconGroupError />

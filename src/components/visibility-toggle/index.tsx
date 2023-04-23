@@ -21,7 +21,6 @@ export const VisibilityToggle = ({
   return (
     <>
       {visible ? content : null}
-      <BreathingSpace />
       {visible ? (
         // Force a key change to force a re-render of the button
         // Else the button will only sort of change its colors when the cursor is moved and stuff is.. updated.. due to the transition?
@@ -34,7 +33,6 @@ export const VisibilityToggle = ({
           {show}
         </ToggleButton>
       )}
-      <BreathingSpace />
     </>
   );
 };
@@ -45,6 +43,9 @@ const ToggleButton = styled(StyledButton).withConfig({
   shouldForwardProp: (prop) => !noForwardProps.has(prop),
 })<{ mode: 'show' | 'hide' }>(
   ({ mode: $mode, theme }) => css`
+    display: block;
+    margin: 7px 0;
+
     background-color: ${theme.accents[$mode === 'show' ? 'default' : 'success']
       .regular.background};
     color: ${theme.accents[$mode === 'show' ? 'default' : 'success'].regular

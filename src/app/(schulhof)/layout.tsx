@@ -19,3 +19,6 @@ export default function SchulhofLayout({
     </>
   );
 }
+
+// Because the entire Schulhof depends on dynamic data (and requires to be logged it), it must be dynamic
+export const dynamic = 'force-dynamic';

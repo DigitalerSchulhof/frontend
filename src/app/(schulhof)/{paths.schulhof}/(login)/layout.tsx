@@ -33,10 +33,12 @@ export default async function LoginLayout({
           <T t='schulhof.login.actions.login.subtitle' />
         </p>
         {children}
-        <Changelog />
       </Col>
       <Col w='4'>
         <SystemRequirements />
+      </Col>
+      <Col w='12'>
+        <Changelog />
       </Col>
     </>
   );
