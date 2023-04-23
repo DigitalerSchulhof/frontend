@@ -3,4 +3,5 @@ export {
   getCurrentPerson,
   useRequireLogin,
   useRequireNoLogin,
+  NotLoggedInError,
 } from './require-login';
