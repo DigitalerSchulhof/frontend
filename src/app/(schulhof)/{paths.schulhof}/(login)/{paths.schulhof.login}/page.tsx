@@ -1,4 +1,4 @@
-import { useRequireNoLogin } from '#/auth/server';
+import { useRequireNoLogin } from '#/auth';
 import { LoginForm } from './form';
 
 export default async function Page() {

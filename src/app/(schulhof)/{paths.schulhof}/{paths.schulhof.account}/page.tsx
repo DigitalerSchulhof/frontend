@@ -1,4 +1,4 @@
-import { useRequireLogin } from '#/auth/server';
+import { useRequireLogin } from '#/auth';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Button, ButtonGroup } from '#/ui/Button';

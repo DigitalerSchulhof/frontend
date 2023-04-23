@@ -1,5 +1,5 @@
-import { getCurrentSession } from '#/auth/server';
-import { NotLoggedInError } from '#/auth/server/require-login';
+import { getCurrentSession } from '#/auth';
+import { NotLoggedInError } from '#/auth';
 import { getContext } from '#/backend/context';
 import { useT } from '#/i18n';
 import { redirect } from 'next/navigation';

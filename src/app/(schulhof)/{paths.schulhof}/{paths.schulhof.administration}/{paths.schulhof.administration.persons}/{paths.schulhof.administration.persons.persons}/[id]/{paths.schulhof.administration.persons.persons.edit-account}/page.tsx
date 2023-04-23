@@ -1,5 +1,5 @@
 import { EditAccount } from '#/administration/sections/persons/slices/persons/edit-account';
-import { useRequireLogin } from '#/auth/server';
+import { useRequireLogin } from '#/auth';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';

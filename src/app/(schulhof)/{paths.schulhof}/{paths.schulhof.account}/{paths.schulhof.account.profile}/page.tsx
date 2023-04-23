@@ -1,5 +1,5 @@
 import { PersonDetails } from '#/administration/sections/persons/slices/persons/details';
-import { useRequireLogin } from '#/auth/server/require-login';
+import { useRequireLogin } from '#/auth';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';

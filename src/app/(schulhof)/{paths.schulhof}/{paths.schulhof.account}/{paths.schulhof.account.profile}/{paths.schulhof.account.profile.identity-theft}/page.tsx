@@ -1,4 +1,4 @@
-import { useRequireLogin } from '#/auth/server';
+import { useRequireLogin } from '#/auth';
 import { useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
