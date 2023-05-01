@@ -18,54 +18,11 @@ import { ErrorWithPayload } from '#/utils';
 import { FormState, useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-type FormError = 'internal-error' | 'invalid-credentials';
-
 export const ForgotPasswordForm = () => {
-  const [formState, setFormState] = useState(FormState.Idle);
-
-  const [formOfAddress, setFormOfAddress] = useState<FormOfAddress>();
-  const [email, setEmail] = useState<string>();
-
   const usernameRef = useRef<{ value: string }>(null);
   const emailRef = useRef<{ value: string }>(null);
 
-  const [sendForgotPassword, formErrors] = useSend<
-    ForgotPasswordInput,
-    ForgotPasswordOutputOk,
-    ForgotPasswordOutputNotOk,
-    FormError
-  >(
-    '/api/schulhof/auth/forgot-password',
-    setFormState,
-    useCallback(
-      () => ({
-        username: usernameRef.current!.value,
-        email: emailRef.current!.value,
-      }),
-      [usernameRef, emailRef]
-    ),
-    useMemo(
-      () => ({
-        INVALID_CREDENTIALS: 'invalid-credentials',
-      }),
-      []
-    ),
-    useCallback(
-      (res: ForgotPasswordOutputOk) => {
-        setEmail(res.email);
-        setFormOfAddress(res.formOfAddress);
-      },
-      [setFormOfAddress]
-    )
-  );
-
-  const modal = useForgotPasswordStateModal(
-    formOfAddress,
-    email,
-    formState,
-    formErrors,
-    setFormState
-  );
+  const [sendForgotPassword, modal] = useSubmit(usernameRef, emailRef);
 
   return (
     <Form onSubmit={sendForgotPassword}>
@@ -105,94 +62,120 @@ export const ForgotPasswordForm = () => {
   );
 };
 
-function useForgotPasswordStateModal(
-  formOfAddress: FormOfAddress | undefined,
-  email: string | undefined,
-  state: FormState,
-  formErrors: readonly FormError[],
-  setFormState: (s: FormState) => void
+type FormError = 'internal-error' | 'invalid-credentials';
+
+function useSubmit(
+  usernameRef: React.RefObject<{ value: string }>,
+  emailRef: React.RefObject<{ value: string }>
 ) {
   const { t } = useT();
 
-  const setIdle = useCallback(
-    () => setFormState(FormState.Idle),
-    [setFormState]
-  );
+  const [formOfAddress, setFormOfAddress] = useState<FormOfAddress>();
+  const [email, setEmail] = useState<string>();
 
-  return useMemo(() => {
-    switch (state) {
-      case FormState.Idle:
-        return null;
-      case FormState.Loading:
-        return (
-          <LoadingModal
-            title='schulhof.login.actions.forgot-password.modals.loading.title'
-            description='schulhof.login.actions.forgot-password.modals.loading.description'
-          />
-        );
-      case FormState.Error: {
-        const errorReasons = formErrors.flatMap((err) =>
-          t(
-            `schulhof.login.actions.forgot-password.modals.error.reasons.${err}`
-          )
-        );
-
-        return (
-          <Modal onClose={setIdle}>
-            <Alert
-              variant={Variant.Error}
-              title='schulhof.login.actions.forgot-password.modals.error.title'
-            >
-              <p>
-                <T t='schulhof.login.actions.forgot-password.modals.error.description' />
-              </p>
-              <ul>
-                {errorReasons.map((s, i) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ul>
-            </Alert>
-            <ButtonGroup>
-              <Button onClick={setIdle} t='generic.back' />
-            </ButtonGroup>
-          </Modal>
-        );
-      }
-      case FormState.Success:
-        if (!formOfAddress || !email) {
-          throw new ErrorWithPayload(
-            'FormState.Success but formOfAddress or email is undefined',
-            {
-              formOfAddress,
-              email,
-            }
-          );
-        }
-
-        return (
-          <Modal onClose={setIdle}>
-            <Alert
-              variant={Variant.Success}
-              title='schulhof.login.actions.forgot-password.modals.success.title'
-            >
-              <p>
-                <T
-                  t='schulhof.login.actions.forgot-password.modals.success.description'
-                  args={{
-                    email,
-                    form_of_address: formOfAddress,
-                  }}
-                />
-              </p>
-            </Alert>
-            <ButtonGroup>
-              <Button
-                href={['paths.schulhof', 'paths.schulhof.login']}
-                t='schulhof.login.actions.forgot-password.modals.success.button'
+  return useSend<
+    ForgotPasswordInput,
+    ForgotPasswordOutputOk,
+    ForgotPasswordOutputNotOk,
+    FormError
+  >(
+    '/api/schulhof/auth/forgot-password',
+    useCallback(
+      () => ({
+        username: usernameRef.current!.value,
+        email: emailRef.current!.value,
+      }),
+      [usernameRef, emailRef]
+    ),
+    useMemo(
+      () => ({
+        INVALID_CREDENTIALS: 'invalid-credentials',
+      }),
+      []
+    ),
+    useCallback(
+      (state, errors, close) => {
+        switch (state) {
+          case FormState.Loading:
+            return (
+              <LoadingModal
+                title='schulhof.login.actions.forgot-password.modals.loading.title'
+                description='schulhof.login.actions.forgot-password.modals.loading.description'
               />
-            </ButtonGroup>
-          </Modal>
-        );
-    }
-  }, [formOfAddress, email, state, formErrors, setIdle, t]);
+            );
+          case FormState.Error: {
+            const errorReasons = errors.flatMap((err) =>
+              t(
+                `schulhof.login.actions.forgot-password.modals.error.reasons.${err}`
+              )
+            );
+
+            return (
+              <Modal onClose={close}>
+                <Alert
+                  variant={Variant.Error}
+                  title='schulhof.login.actions.forgot-password.modals.error.title'
+                >
+                  <p>
+                    <T t='schulhof.login.actions.forgot-password.modals.error.description' />
+                  </p>
+                  <ul>
+                    {errorReasons.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                </Alert>
+                <ButtonGroup>
+                  <Button onClick={close} t='generic.back' />
+                </ButtonGroup>
+              </Modal>
+            );
+          }
+          case FormState.Success:
+            if (!formOfAddress || !email) {
+              throw new ErrorWithPayload(
+                'FormState.Success but formOfAddress or email is undefined',
+                {
+                  formOfAddress,
+                  email,
+                }
+              );
+            }
+
+            return (
+              <Modal onClose={close}>
+                <Alert
+                  variant={Variant.Success}
+                  title='schulhof.login.actions.forgot-password.modals.success.title'
+                >
+                  <p>
+                    <T
+                      t='schulhof.login.actions.forgot-password.modals.success.description'
+                      args={{
+                        email,
+                        form_of_address: formOfAddress,
+                      }}
+                    />
+                  </p>
+                </Alert>
+                <ButtonGroup>
+                  <Button
+                    href={['paths.schulhof', 'paths.schulhof.login']}
+                    t='schulhof.login.actions.forgot-password.modals.success.button'
+                  />
+                </ButtonGroup>
+              </Modal>
+            );
+        }
+      },
+      [t, formOfAddress, email]
+    ),
+    useCallback(
+      (res: ForgotPasswordOutputOk) => {
+        setEmail(res.email);
+        setFormOfAddress(res.formOfAddress);
+      },
+      [setFormOfAddress]
+    )
+  );
 }

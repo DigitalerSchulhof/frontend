@@ -20,75 +20,13 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-type FormError = 'internal-error' | 'invalid-credentials' | 'password-expired';
-
 export const LoginForm = () => {
   const { t } = useT();
-  const router = useRouter();
-
-  const [formState, setFormState] = useState(FormState.Idle);
-
-  const [formOfAddress, setFormOfAddress] = useState<FormOfAddress>();
 
   const usernameRef = useRef<{ value: string }>(null);
   const passwordRef = useRef<{ value: string }>(null);
 
-  const [sendLogin, formErrors] = useSend<
-    LoginInput,
-    LoginOutputOk,
-    LoginOutputNotOk,
-    FormError
-  >(
-    '/api/schulhof/auth/login',
-    setFormState,
-    useCallback(
-      () => ({
-        username: usernameRef.current!.value,
-        password: passwordRef.current!.value,
-      }),
-      [usernameRef, passwordRef]
-    ),
-    useMemo(
-      () => ({
-        INVALID_CREDENTIALS: 'invalid-credentials',
-        PASSWORD_EXPIRED: 'password-expired',
-      }),
-      []
-    ),
-    useCallback(
-      (res: LoginOutputOk) => {
-        Cookies.set('jwt', res.jwt);
-        router.push(
-          `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
-        );
-      },
-      [router, t]
-    ),
-    useCallback(
-      (res: LoginOutputNotOk) => {
-        for (const err of res.errors) {
-          if (err.code === 'PASSWORD_EXPIRED') {
-            setFormOfAddress(err.formOfAddress);
-          }
-        }
-      },
-      [setFormOfAddress]
-    ),
-    useMemo(
-      () => ({
-        editInput: ({ password: _, ...inputWithoutPassword }) =>
-          inputWithoutPassword,
-      }),
-      []
-    )
-  );
-
-  const modal = useLoginStateModal(
-    formOfAddress,
-    formState,
-    formErrors,
-    setFormState
-  );
+  const [sendLogin, modal] = useSubmit(usernameRef, passwordRef);
 
   return (
     <Form onSubmit={sendLogin}>
@@ -130,64 +68,107 @@ export const LoginForm = () => {
   );
 };
 
-function useLoginStateModal(
-  formOfAddress: FormOfAddress | undefined,
-  state: FormState,
-  formErrors: readonly FormError[],
-  setFormState: (s: FormState) => void
+type FormError = 'internal-error' | 'invalid-credentials' | 'password-expired';
+
+function useSubmit(
+  usernameRef: React.RefObject<{ value: string }>,
+  passwordRef: React.RefObject<{ value: string }>
 ) {
   const { t } = useT();
+  const router = useRouter();
 
-  const setIdle = useCallback(
-    () => setFormState(FormState.Idle),
-    [setFormState]
+  const [formOfAddress, setFormOfAddress] = useState<FormOfAddress>();
+
+  return useSend<LoginInput, LoginOutputOk, LoginOutputNotOk, FormError>(
+    '/api/schulhof/auth/login',
+    useCallback(
+      () => ({
+        username: usernameRef.current!.value,
+        password: passwordRef.current!.value,
+      }),
+      [usernameRef, passwordRef]
+    ),
+    useMemo(
+      () => ({
+        INVALID_CREDENTIALS: 'invalid-credentials',
+        PASSWORD_EXPIRED: 'password-expired',
+      }),
+      []
+    ),
+    useCallback(
+      (state, errors, close) => {
+        switch (state) {
+          // We redirect on success, so we let keep the loading animation until the redirect is completed
+          // The modal is automatically closed when unmounted
+          case FormState.Success:
+          case FormState.Loading:
+            return (
+              <LoadingModal
+                title='schulhof.login.actions.login.modals.loading.title'
+                description='schulhof.login.actions.login.modals.loading.description'
+              />
+            );
+          case FormState.Error: {
+            const errorReasons = errors.flatMap((err) =>
+              t(`schulhof.login.actions.login.modals.error.reasons.${err}`, {
+                form_of_address: formOfAddress!,
+                ForgotPasswordLink: makeLink([
+                  'paths.schulhof',
+                  'paths.schulhof.forgot-password',
+                ]),
+              })
+            );
+
+            return (
+              <Modal onClose={close}>
+                <Alert
+                  variant={Variant.Error}
+                  title='schulhof.login.actions.login.modals.error.title'
+                >
+                  <p>
+                    <T t='schulhof.login.actions.login.modals.error.description' />
+                  </p>
+                  <ul>
+                    {errorReasons.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                </Alert>
+                <ButtonGroup>
+                  <Button onClick={close} t='generic.back' />
+                </ButtonGroup>
+              </Modal>
+            );
+          }
+        }
+      },
+      [t, formOfAddress]
+    ),
+    useCallback(
+      (res: LoginOutputOk) => {
+        Cookies.set('jwt', res.jwt);
+        router.push(
+          `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
+        );
+      },
+      [router, t]
+    ),
+    useCallback(
+      (res: LoginOutputNotOk) => {
+        for (const err of res.errors) {
+          if (err.code === 'PASSWORD_EXPIRED') {
+            setFormOfAddress(err.formOfAddress);
+          }
+        }
+      },
+      [setFormOfAddress]
+    ),
+    useMemo(
+      () => ({
+        editInput: ({ password: _, ...inputWithoutPassword }) =>
+          inputWithoutPassword,
+      }),
+      []
+    )
   );
-
-  return useMemo(() => {
-    switch (state) {
-      case FormState.Idle:
-        return null;
-      // We redirect on success, so we let keep the loading animation until the redirect is completed
-      case FormState.Success:
-      case FormState.Loading:
-        return (
-          <LoadingModal
-            title='schulhof.login.actions.login.modals.loading.title'
-            description='schulhof.login.actions.login.modals.loading.description'
-          />
-        );
-      case FormState.Error: {
-        const errorReasons = formErrors.flatMap((err) =>
-          t(`schulhof.login.actions.login.modals.error.reasons.${err}`, {
-            form_of_address: formOfAddress!,
-            ForgotPasswordLink: makeLink([
-              'paths.schulhof',
-              'paths.schulhof.forgot-password',
-            ]),
-          })
-        );
-
-        return (
-          <Modal onClose={setIdle}>
-            <Alert
-              variant={Variant.Error}
-              title='schulhof.login.actions.login.modals.error.title'
-            >
-              <p>
-                <T t='schulhof.login.actions.login.modals.error.description' />
-              </p>
-              <ul>
-                {errorReasons.map((s, i) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ul>
-            </Alert>
-            <ButtonGroup>
-              <Button onClick={setIdle} t='generic.back' />
-            </ButtonGroup>
-          </Modal>
-        );
-      }
-    }
-  }, [formOfAddress, state, formErrors, setIdle, t]);
 }

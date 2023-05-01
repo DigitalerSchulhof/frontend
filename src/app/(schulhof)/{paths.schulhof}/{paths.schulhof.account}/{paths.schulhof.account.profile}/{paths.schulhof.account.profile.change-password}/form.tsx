@@ -14,54 +14,17 @@ import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
 import { FormState, useSend } from '#/utils/form';
-import { useCallback, useMemo, useRef, useState } from 'react';
-
-type FormError = 'internal-error' | 'invalid-credentials' | 'password-mismatch';
+import { useCallback, useMemo, useRef } from 'react';
 
 export const ChangePasswordForm = () => {
-  const [formState, setFormState] = useState(FormState.Idle);
-
   const oldPasswordRef = useRef<{ value: string }>(null);
   const newPasswordRef = useRef<{ value: string }>(null);
   const newPasswordAgainRef = useRef<{ value: string }>(null);
 
-  const [sendChangePassword, formErrors] = useSend<
-    ChangePasswordInput,
-    ChangePasswordOutputOk,
-    ChangePasswordOutputNotOk,
-    FormError
-  >(
-    '/api/schulhof/account/profile/change-password',
-    setFormState,
-    useCallback(
-      () => ({
-        oldPassword: oldPasswordRef.current!.value,
-        newPassword: newPasswordRef.current!.value,
-        newPasswordAgain: newPasswordAgainRef.current!.value,
-      }),
-      [oldPasswordRef, newPasswordRef, newPasswordAgainRef]
-    ),
-    useMemo(
-      () => ({
-        INVALID_CREDENTIALS: 'invalid-credentials',
-        PASSWORD_MISMATCH: 'password-mismatch',
-      }),
-      []
-    ),
-    undefined,
-    undefined,
-    useMemo(
-      () => ({
-        attachInput: false,
-      }),
-      []
-    )
-  );
-
-  const modal = useChangePasswordStateModal(
-    formState,
-    formErrors,
-    setFormState
+  const [sendChangePassword, modal] = useSubmit(
+    oldPasswordRef,
+    newPasswordRef,
+    newPasswordAgainRef
   );
 
   return (
@@ -105,80 +68,109 @@ export const ChangePasswordForm = () => {
   );
 };
 
-function useChangePasswordStateModal(
-  state: FormState,
-  formErrors: readonly FormError[],
-  setFormState: (s: FormState) => void
+type FormError = 'internal-error' | 'invalid-credentials' | 'password-mismatch';
+
+function useSubmit(
+  oldPasswordRef: React.RefObject<{ value: string }>,
+  newPasswordRef: React.RefObject<{ value: string }>,
+  newPasswordAgainRef: React.RefObject<{ value: string }>
 ) {
   const { t } = useT();
 
-  const setIdle = useCallback(
-    () => setFormState(FormState.Idle),
-    [setFormState]
-  );
-
-  return useMemo(() => {
-    switch (state) {
-      case FormState.Idle:
-        return null;
-      case FormState.Loading:
-        return (
-          <LoadingModal
-            title='schulhof.account.profile.change-password.modals.loading.title'
-            description='schulhof.account.profile.change-password.modals.loading.description'
-          />
-        );
-      case FormState.Error: {
-        const errorReasons = formErrors.flatMap((err) =>
-          t(
-            `schulhof.account.profile.change-password.modals.error.reasons.${err}`
-          )
-        );
-
-        return (
-          <Modal onClose={setIdle}>
-            <Alert
-              variant={Variant.Error}
-              title='schulhof.account.profile.change-password.modals.error.title'
-            >
-              <p>
-                <T t='schulhof.account.profile.change-password.modals.error.description' />
-              </p>
-              <ul>
-                {errorReasons.map((s, i) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ul>
-            </Alert>
-            <ButtonGroup>
-              <Button onClick={setIdle} t='generic.back' />
-            </ButtonGroup>
-          </Modal>
-        );
-      }
-      case FormState.Success:
-        return (
-          <Modal onClose={setIdle}>
-            <Alert
-              variant={Variant.Success}
-              title='schulhof.account.profile.change-password.modals.success.title'
-            >
-              <p>
-                <T t='schulhof.account.profile.change-password.modals.success.description' />
-              </p>
-            </Alert>
-            <ButtonGroup>
-              <Button
-                href={[
-                  'paths.schulhof',
-                  'paths.schulhof.account',
-                  'paths.schulhof.account.profile',
-                ]}
-                t='schulhof.account.profile.change-password.modals.success.button'
+  return useSend<
+    ChangePasswordInput,
+    ChangePasswordOutputOk,
+    ChangePasswordOutputNotOk,
+    FormError
+  >(
+    '/api/schulhof/account/profile/change-password',
+    useCallback(
+      () => ({
+        oldPassword: oldPasswordRef.current!.value,
+        newPassword: newPasswordRef.current!.value,
+        newPasswordAgain: newPasswordAgainRef.current!.value,
+      }),
+      [oldPasswordRef, newPasswordRef, newPasswordAgainRef]
+    ),
+    useMemo(
+      () => ({
+        INVALID_CREDENTIALS: 'invalid-credentials',
+        PASSWORD_MISMATCH: 'password-mismatch',
+      }),
+      []
+    ),
+    useCallback(
+      (state, errors, close) => {
+        switch (state) {
+          case FormState.Loading:
+            return (
+              <LoadingModal
+                title='schulhof.account.profile.change-password.modals.loading.title'
+                description='schulhof.account.profile.change-password.modals.loading.description'
               />
-            </ButtonGroup>
-          </Modal>
-        );
-    }
-  }, [state, formErrors, setIdle, t]);
+            );
+          case FormState.Error: {
+            const errorReasons = errors.flatMap((err) =>
+              t(
+                `schulhof.account.profile.change-password.modals.error.reasons.${err}`
+              )
+            );
+
+            return (
+              <Modal onClose={close}>
+                <Alert
+                  variant={Variant.Error}
+                  title='schulhof.account.profile.change-password.modals.error.title'
+                >
+                  <p>
+                    <T t='schulhof.account.profile.change-password.modals.error.description' />
+                  </p>
+                  <ul>
+                    {errorReasons.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                </Alert>
+                <ButtonGroup>
+                  <Button onClick={close} t='generic.back' />
+                </ButtonGroup>
+              </Modal>
+            );
+          }
+          case FormState.Success:
+            return (
+              <Modal onClose={close}>
+                <Alert
+                  variant={Variant.Success}
+                  title='schulhof.account.profile.change-password.modals.success.title'
+                >
+                  <p>
+                    <T t='schulhof.account.profile.change-password.modals.success.description' />
+                  </p>
+                </Alert>
+                <ButtonGroup>
+                  <Button
+                    href={[
+                      'paths.schulhof',
+                      'paths.schulhof.account',
+                      'paths.schulhof.account.profile',
+                    ]}
+                    t='schulhof.account.profile.change-password.modals.success.button'
+                  />
+                </ButtonGroup>
+              </Modal>
+            );
+        }
+      },
+      [t]
+    ),
+    undefined,
+    undefined,
+    useMemo(
+      () => ({
+        attachInput: false,
+      }),
+      []
+    )
+  );
 }

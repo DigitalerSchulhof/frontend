@@ -23,9 +23,13 @@ export function useSend<
   FormError extends string
 >(
   endpoint: string,
-  setFormState: (state: FormState) => void,
   makeInput: () => Input,
   errorCodeMap: Record<OutputNotOk['errors'][number]['code'], FormError>,
+  makeModalContent: (
+    state: Exclude<FormState, FormState.Idle>,
+    formErrors: readonly FormError[],
+    close: () => void
+  ) => JSX.Element,
   onSuccess?: (body: OutputOk) => void,
   onError?: (body: OutputNotOk) => void,
   logOptions?: {
@@ -38,7 +42,8 @@ export function useSend<
      */
     editInput?: (input: Input) => unknown;
   }
-): [() => Promise<void>, readonly FormError[]] {
+): [() => Promise<void>, JSX.Element | null] {
+  const [formState, setFormState] = useState(FormState.Idle);
   const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
   const makeLogInput = useCallback(
@@ -137,5 +142,18 @@ export function useSend<
     ]
   );
 
-  return useMemo(() => [send, formErrors], [send, formErrors]);
+  const setIdle = useCallback(
+    () => setFormState(FormState.Idle),
+    [setFormState]
+  );
+
+  const modal = useMemo(() => {
+    if (formState === FormState.Idle) {
+      return null;
+    }
+
+    return makeModalContent(formState, formErrors, setIdle);
+  }, [formState, setIdle, formErrors, makeModalContent]);
+
+  return useMemo(() => [send, modal], [send, modal]);
 }

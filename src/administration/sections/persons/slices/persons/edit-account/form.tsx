@@ -14,9 +14,7 @@ import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
 import { FormState, useSend } from '#/utils/form';
-import { useCallback, useMemo, useRef, useState } from 'react';
-
-type FormError = 'internal-error';
+import { useCallback, useMemo, useRef } from 'react';
 
 export const EditAccountForm = ({
   isOwnProfile,
@@ -29,38 +27,16 @@ export const EditAccountForm = ({
   username: string;
   email: string;
 }) => {
-  const [formState, setFormState] = useState(FormState.Idle);
-
   const own = isOwnProfile ? 'own' : 'other';
 
   const usernameRef = useRef<{ value: string }>(null);
   const emailRef = useRef<{ value: string }>(null);
 
-  const [sendEditAccount, formErrors] = useSend<
-    EditAccountInput,
-    EditAccountOutputOk,
-    EditAccountOutputNotOk,
-    FormError
-  >(
-    '/api/schulhof/administration/persons/persons/edit-account',
-    setFormState,
-    useCallback(
-      () => ({
-        personId,
-        username: usernameRef.current!.value,
-        email: emailRef.current!.value,
-      }),
-      [personId, usernameRef, emailRef]
-    ),
-    useMemo(() => ({}), [])
-  );
-
-  const modal = useEditAccountStateModal(
+  const [sendEditAccount, modal] = useSubmit(
     isOwnProfile,
     personId,
-    formState,
-    formErrors,
-    setFormState
+    usernameRef,
+    emailRef
   );
 
   return (
@@ -109,95 +85,109 @@ export const EditAccountForm = ({
   );
 };
 
-function useEditAccountStateModal(
+type FormError = 'internal-error';
+
+function useSubmit(
   isOwnProfile: boolean,
   personId: string,
-  state: FormState,
-  formErrors: readonly FormError[],
-  setFormState: (s: FormState) => void
+  usernameRef: React.RefObject<{ value: string }>,
+  emailRef: React.RefObject<{ value: string }>
 ) {
   const { t } = useT();
 
-  const setIdle = useCallback(
-    () => setFormState(FormState.Idle),
-    [setFormState]
-  );
-
-  return useMemo(() => {
-    switch (state) {
-      case FormState.Idle:
-        return null;
-      case FormState.Loading:
-        return (
-          <LoadingModal
-            title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.title'
-            description='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.description'
-          />
-        );
-      case FormState.Error: {
-        const errorReasons = formErrors.flatMap((err) =>
-          t(
-            `schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.reasons.${err}`
-          )
-        );
-
-        return (
-          <Modal onClose={setIdle}>
-            <Alert
-              variant={Variant.Error}
-              title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.title'
-            >
-              <p>
-                <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.description' />
-              </p>
-              <ul>
-                {errorReasons.map((s, i) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ul>
-            </Alert>
-            <ButtonGroup>
-              <Button onClick={setIdle} t='generic.back' />
-            </ButtonGroup>
-          </Modal>
-        );
-      }
-      case FormState.Success: {
-        const own = isOwnProfile ? 'own' : 'other';
-
-        return (
-          <Modal onClose={setIdle}>
-            <Alert
-              variant={Variant.Success}
-              title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.title'
-            >
-              <p>
-                <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.description' />
-              </p>
-            </Alert>
-            <ButtonGroup>
-              <Button
-                href={
-                  isOwnProfile
-                    ? [
-                        'paths.schulhof',
-                        'paths.schulhof.account',
-                        'paths.schulhof.account.profile',
-                      ]
-                    : [
-                        'paths.schulhof',
-                        'paths.schulhof.administration',
-                        'paths.schulhof.administration.persons',
-                        'paths.schulhof.administration.persons.persons',
-                        `{${personId}}`,
-                      ]
-                }
-                t={`schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.button.${own}`}
+  return useSend<
+    EditAccountInput,
+    EditAccountOutputOk,
+    EditAccountOutputNotOk,
+    FormError
+  >(
+    '/api/schulhof/administration/persons/persons/edit-account',
+    useCallback(
+      () => ({
+        personId,
+        username: usernameRef.current!.value,
+        email: emailRef.current!.value,
+      }),
+      [personId, usernameRef, emailRef]
+    ),
+    useMemo(() => ({}), []),
+    useCallback(
+      (state, errors, close) => {
+        switch (state) {
+          case FormState.Loading:
+            return (
+              <LoadingModal
+                title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.title'
+                description='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.description'
               />
-            </ButtonGroup>
-          </Modal>
-        );
-      }
-    }
-  }, [isOwnProfile, personId, state, formErrors, setIdle, t]);
+            );
+          case FormState.Error: {
+            const errorReasons = errors.flatMap((err) =>
+              t(
+                `schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.reasons.${err}`
+              )
+            );
+
+            return (
+              <Modal onClose={close}>
+                <Alert
+                  variant={Variant.Error}
+                  title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.title'
+                >
+                  <p>
+                    <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.description' />
+                  </p>
+                  <ul>
+                    {errorReasons.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                </Alert>
+                <ButtonGroup>
+                  <Button onClick={close} t='generic.back' />
+                </ButtonGroup>
+              </Modal>
+            );
+          }
+          case FormState.Success: {
+            const own = isOwnProfile ? 'own' : 'other';
+
+            return (
+              <Modal onClose={close}>
+                <Alert
+                  variant={Variant.Success}
+                  title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.title'
+                >
+                  <p>
+                    <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.description' />
+                  </p>
+                </Alert>
+                <ButtonGroup>
+                  <Button
+                    href={
+                      isOwnProfile
+                        ? [
+                            'paths.schulhof',
+                            'paths.schulhof.account',
+                            'paths.schulhof.account.profile',
+                          ]
+                        : [
+                            'paths.schulhof',
+                            'paths.schulhof.administration',
+                            'paths.schulhof.administration.persons',
+                            'paths.schulhof.administration.persons.persons',
+                            `{${personId}}`,
+                          ]
+                    }
+                    t={`schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.button.${own}`}
+                  />
+                </ButtonGroup>
+              </Modal>
+            );
+          }
+        }
+      },
+      [t, isOwnProfile, personId]
+    )
+  );
 }
