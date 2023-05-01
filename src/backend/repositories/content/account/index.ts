@@ -11,6 +11,8 @@ export type AccountBase = {
   username: string;
   email: string;
   password: string;
+  salt: string;
+  passwordExpires: number | null;
   lastLogin: number | null;
   secondLastLogin: number | null;
   formOfAddress: FormOfAddress;

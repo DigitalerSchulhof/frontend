@@ -14,6 +14,18 @@ export class AccountEmailSort extends AccountSort {
   protected readonly propertyName = 'email';
 }
 
+export class AccountPasswordSort extends AccountSort {
+  protected readonly propertyName = 'password';
+}
+
+export class AccountSaltSort extends AccountSort {
+  protected readonly propertyName = 'salt';
+}
+
+export class AccountPasswordExpiresSort extends AccountSort {
+  protected readonly propertyName = 'passwordExpires';
+}
+
 export class AccountPersonIdSort extends AccountSort {
   protected readonly propertyName = 'personId';
 }

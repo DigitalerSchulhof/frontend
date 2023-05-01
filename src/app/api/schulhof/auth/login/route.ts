@@ -2,11 +2,15 @@ import { BackendContext, getContext } from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
 import { AccountBase } from '#/backend/repositories/content/account';
 import {
+  AccountPasswordExpiresFilter,
   AccountPasswordFilter,
   AccountUsernameFilter,
 } from '#/backend/repositories/content/account/filters';
-import { AndFilter } from '#/backend/repositories/filters';
-import { EqFilterOperator } from '#/backend/repositories/filters/operators';
+import { AndFilter, OrFilter } from '#/backend/repositories/filters';
+import {
+  EqFilterOperator,
+  GtFilterOperator,
+} from '#/backend/repositories/filters/operators';
 import { ErrorWithPayload } from '#/utils';
 import { aql } from 'arangojs';
 import { NextResponse } from 'next/server';
@@ -90,6 +94,12 @@ async function getAccountFromUsernameAndPassword(
             SHA512(CONCAT(${password}, ${variableName}.salt))
           `
         )
+    ),
+    new OrFilter(
+      new AccountPasswordExpiresFilter(new EqFilterOperator(null)),
+      new AccountPasswordExpiresFilter(
+        new GtFilterOperator(new Date().getTime())
+      )
     )
   );
 

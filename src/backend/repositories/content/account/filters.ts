@@ -58,6 +58,14 @@ export class AccountPasswordFilter extends ScalarAccountFilter<StringFilterOpera
   protected readonly propertyName = 'password';
 }
 
+export class AccountSaltFilter extends ScalarAccountFilter<StringFilterOperator> {
+  protected readonly propertyName = 'salt';
+}
+
+export class AccountPasswordExpiresFilter extends ScalarAccountFilter<NullableNumberFilterOperator> {
+  protected readonly propertyName = 'passwordExpires';
+}
+
 export class AccountLastLoginFilter extends ScalarPersonFilter<NullableNumberFilterOperator> {
   protected readonly propertyName = 'lastLogin';
 }
