@@ -53,7 +53,7 @@ function useGetWriteMessageButton(
   if (!mayMessagePerson(context, person)) {
     return (
       <MayNotMessagePersonButton
-        formOfAddress={context.person.formOfAddress}
+        formOfAddress={context.account.formOfAddress}
         personName={formatName(person)}
       />
     );

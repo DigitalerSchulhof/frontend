@@ -1,6 +1,6 @@
 'use client';
 
-import { FormOfAddress } from '#/backend/repositories/content/person';
+import { FormOfAddress } from '#/backend/repositories/content/account';
 import { useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';

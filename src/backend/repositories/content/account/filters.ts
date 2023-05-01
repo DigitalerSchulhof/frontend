@@ -1,12 +1,25 @@
+import { FormOfAddress } from '#/backend/repositories/content/account';
 import { MaybeArray } from '../../../utils';
 import { Filter, RelationalFilter, ScalarFilter } from '../../filters';
 import {
+  BooleanFilterOperator,
+  EqFilterOperator,
   FilterOperator,
   IDFilterOperator,
+  InFilterOperator,
+  NeqFilterOperator,
+  NinFilterOperator,
   NullableNumberFilterOperator,
+  NumberFilterOperator,
   StringFilterOperator,
 } from '../../filters/operators';
 import { PersonFilter, ScalarPersonFilter } from '../person/filters';
+
+export type FormOfAddressFilterOperator =
+  | EqFilterOperator<FormOfAddress | null>
+  | NeqFilterOperator<FormOfAddress | null>
+  | InFilterOperator<FormOfAddress | null>
+  | NinFilterOperator<FormOfAddress | null>;
 
 export abstract class AccountFilter extends Filter<'accounts'> {}
 
@@ -51,4 +64,48 @@ export class AccountLastLoginFilter extends ScalarPersonFilter<NullableNumberFil
 
 export class AccountSecondLastLoginFilter extends ScalarPersonFilter<NullableNumberFilterOperator> {
   protected readonly propertyName = 'secondLastLogin';
+}
+
+export class AccountFormOfAddressFilter extends ScalarAccountFilter<FormOfAddressFilterOperator> {
+  protected readonly propertyName = 'formOfAddress';
+}
+
+export class AccountSettingsEmailOnNewMessageFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.emailOn.newMessage';
+}
+export class AccountSettingsEmailOnNewSubstitutionFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.emailOn.newSubstitution';
+}
+export class AccountSettingsEmailOnNewNewsFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.emailOn.newNews';
+}
+export class AccountSettingsPushOnNewMessageFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.pushOn.newMessage';
+}
+export class AccountSettingsPushOnNewSubstitutionFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.pushOn.newSubstitution';
+}
+export class AccountSettingsPushOnNewNewsFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.pushOn.newNews';
+}
+export class AccountSettingsConsiderNewsNewEventFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.considerNews.newEvent';
+}
+export class AccountSettingsConsiderNewsNewBlogFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.considerNews.newBlog';
+}
+export class AccountSettingsConsiderNewsNewGalleryFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.considerNews.newGallery';
+}
+export class AccountSettingsConsiderNewsFileChangedFilter extends ScalarAccountFilter<BooleanFilterOperator> {
+  protected readonly propertyName = 'settings.considerNews.fileChanged';
+}
+export class AccountSettingsMailboxDeleteAfterFilter extends ScalarAccountFilter<NullableNumberFilterOperator> {
+  protected readonly propertyName = 'settings.mailbox.deleteAfter';
+}
+export class AccountSettingsMailboxDeleteAfterInBinFilter extends ScalarAccountFilter<NullableNumberFilterOperator> {
+  protected readonly propertyName = 'settings.mailbox.deleteAfterInBin';
+}
+export class AccountSettingsProfileSessionTimeoutFilter extends ScalarAccountFilter<NumberFilterOperator> {
+  protected readonly propertyName = 'settings.profile.sessionTimeout';
 }

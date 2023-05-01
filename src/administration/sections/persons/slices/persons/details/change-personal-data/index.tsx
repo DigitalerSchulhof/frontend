@@ -1,8 +1,6 @@
 import { LoggedInBackendContext } from '#/backend/context';
-import {
-  FormOfAddress,
-  PersonType,
-} from '#/backend/repositories/content/person';
+import { FormOfAddress } from '#/backend/repositories/content/account';
+import { PersonType } from '#/backend/repositories/content/person';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Note } from '#/ui/Note';
@@ -35,7 +33,7 @@ export const PersonDetailsChangePersonalDataSection = ({
       />
       <ButtonGroup>
         <UserButtons
-          formOfAddress={context.person.formOfAddress}
+          formOfAddress={context.account.formOfAddress}
           isOwnProfile={isOwnProfile}
           person={person}
           account={account}
@@ -43,7 +41,7 @@ export const PersonDetailsChangePersonalDataSection = ({
       </ButtonGroup>
       <ButtonGroup>
         <AdminButtons
-          formOfAddress={context.person.formOfAddress}
+          formOfAddress={context.account.formOfAddress}
           person={person}
           account={account}
         />

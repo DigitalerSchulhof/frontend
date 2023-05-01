@@ -1,14 +1,13 @@
 import { BackendContext, getContext } from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
-import { AccountBase } from '#/backend/repositories/content/account';
+import {
+  AccountBase,
+  FormOfAddress,
+} from '#/backend/repositories/content/account';
 import {
   AccountEmailFilter,
   AccountUsernameFilter,
 } from '#/backend/repositories/content/account/filters';
-import {
-  FormOfAddress,
-  PersonBase,
-} from '#/backend/repositories/content/person';
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { ErrorWithPayload } from '#/utils';
@@ -48,13 +47,13 @@ export async function POST(req: Request) {
     );
   }
 
-  const personAndAccount = await getPersonAndAccountFromUsernameAndEmail(
+  const account = await getPersonAndAccountFromUsernameAndEmail(
     context,
     username,
     email
   );
 
-  if (!personAndAccount) {
+  if (!account) {
     return NextResponse.json(
       {
         code: 'NOT_OK',
@@ -64,13 +63,11 @@ export async function POST(req: Request) {
     );
   }
 
-  const { person, account } = personAndAccount;
-
   await sendPasswordResetEmail(context, account);
 
   return NextResponse.json({
     code: 'OK',
-    formOfAddress: person.formOfAddress,
+    formOfAddress: account.formOfAddress,
   });
 }
 
@@ -78,10 +75,8 @@ async function getPersonAndAccountFromUsernameAndEmail(
   context: BackendContext,
   username: string,
   email: string
-): Promise<{
-  person: WithId<PersonBase>;
-  account: WithId<AccountBase>;
-} | null> {
+): Promise<WithId<AccountBase> | null> {
+  // Short-circuit if username or email is not provided
   if (!username || !email) {
     return null;
   }
@@ -105,11 +100,7 @@ async function getPersonAndAccountFromUsernameAndEmail(
     });
   }
 
-  const person = (await context.services.person.getById(
-    accounts.nodes[0].personId
-  ))!;
-
-  return { person, account: accounts.nodes[0] };
+  return accounts.nodes[0];
 }
 
 async function sendPasswordResetEmail(

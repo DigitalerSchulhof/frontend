@@ -5,7 +5,7 @@ import {
   ForgotPasswordOutputNotOk,
   ForgotPasswordOutputOk,
 } from '#/app/api/schulhof/auth/forgot-password/route';
-import { FormOfAddress } from '#/backend/repositories/content/person';
+import { FormOfAddress } from '#/backend/repositories/content/account';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
