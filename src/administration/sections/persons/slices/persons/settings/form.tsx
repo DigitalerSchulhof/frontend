@@ -4,7 +4,7 @@ import {
   SettingsInput,
   SettingsOutputNotOk,
 } from '#/app/api/schulhof/administration/persons/persons/settings/route';
-import { PersonSettings } from '#/backend/repositories/content/person';
+import { AccountSettings } from '#/backend/repositories/content/account';
 import {
   PERSON_MAILBOX_DELETE_AFTER_INVALID,
   PERSON_MAILBOX_DELETE_AFTER_IN_BIN_INVALID,
@@ -51,7 +51,7 @@ export const SettingsForm = ({
 }: {
   isOwnProfile: boolean;
   personId: string;
-  settings: PersonSettings;
+  settings: AccountSettings;
   maxSessionTimeout: number;
 }) => {
   const [formState, setFormState] = useState<FormState>(FormState.Idle);

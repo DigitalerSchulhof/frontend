@@ -1,16 +1,15 @@
 import { BackendContext, getContext } from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
-import { AccountBase } from '#/backend/repositories/content/account';
 import {
-  AccountPasswordExpiresFilter,
+  AccountBase,
+  FormOfAddress,
+} from '#/backend/repositories/content/account';
+import {
   AccountPasswordFilter,
   AccountUsernameFilter,
 } from '#/backend/repositories/content/account/filters';
-import { AndFilter, OrFilter } from '#/backend/repositories/filters';
-import {
-  EqFilterOperator,
-  GtFilterOperator,
-} from '#/backend/repositories/filters/operators';
+import { AndFilter } from '#/backend/repositories/filters';
+import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { ErrorWithPayload } from '#/utils';
 import { aql } from 'arangojs';
 import { NextResponse } from 'next/server';
@@ -27,9 +26,15 @@ export type LoginOutputOk = {
 
 export type LoginOutputNotOk = {
   code: 'NOT_OK';
-  errors: {
-    code: 'INVALID_INPUT' | 'INVALID_CREDENTIALS';
-  }[];
+  errors: (
+    | {
+        code: 'INVALID_INPUT' | 'INVALID_CREDENTIALS';
+      }
+    | {
+        code: 'PASSWORD_EXPIRED';
+        formOfAddress: FormOfAddress;
+      }
+  )[];
 };
 
 export async function POST(req: Request) {
@@ -65,6 +70,24 @@ export async function POST(req: Request) {
     );
   }
 
+  if (
+    account.passwordExpiresAt !== null &&
+    account.passwordExpiresAt < new Date().getTime()
+  ) {
+    return NextResponse.json(
+      {
+        code: 'NOT_OK',
+        errors: [
+          {
+            code: 'PASSWORD_EXPIRED',
+            formOfAddress: account.formOfAddress,
+          },
+        ],
+      },
+      { status: 401 }
+    );
+  }
+
   const jwt = await context.services.session.createJwt(account.id);
 
   await context.services.account.updateLastLogin(account.id);
@@ -94,12 +117,6 @@ async function getAccountFromUsernameAndPassword(
             SHA512(CONCAT(${password}, ${variableName}.salt))
           `
         )
-    ),
-    new OrFilter(
-      new AccountPasswordExpiresFilter(new EqFilterOperator(null)),
-      new AccountPasswordExpiresFilter(
-        new GtFilterOperator(new Date().getTime())
-      )
     )
   );
 
@@ -117,5 +134,7 @@ async function getAccountFromUsernameAndPassword(
     });
   }
 
-  return accounts.nodes[0];
+  const account = accounts.nodes[0];
+
+  return account;
 }

@@ -62,8 +62,8 @@ export class AccountSaltFilter extends ScalarAccountFilter<StringFilterOperator>
   protected readonly propertyName = 'salt';
 }
 
-export class AccountPasswordExpiresFilter extends ScalarAccountFilter<NullableNumberFilterOperator> {
-  protected readonly propertyName = 'passwordExpires';
+export class AccountPasswordExpiresAtFilter extends ScalarAccountFilter<NullableNumberFilterOperator> {
+  protected readonly propertyName = 'passwordExpiresAt';
 }
 
 export class AccountLastLoginFilter extends ScalarPersonFilter<NullableNumberFilterOperator> {

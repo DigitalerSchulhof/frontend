@@ -5,6 +5,7 @@ import {
   LoginOutputNotOk,
   LoginOutputOk,
 } from '#/app/api/schulhof/auth/login/route';
+import { FormOfAddress } from '#/backend/repositories/content/account';
 import { T, makeLink } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { useLog } from '#/log/client';
@@ -29,6 +30,7 @@ enum FormState {
 export enum FormError {
   InternalError = 'internal-error',
   InvalidCredentials = 'invalid-credentials',
+  PasswordExpired = 'password-expired',
 }
 
 export const LoginForm = () => {
@@ -38,6 +40,8 @@ export const LoginForm = () => {
   const [formState, setFormState] = useState<FormState>(FormState.Idle);
   const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
+  const [formOfAddress, setFormOfAddress] = useState<FormOfAddress>();
+
   const usernameRef = useRef<{ value: string }>(null);
   const passwordRef = useRef<{ value: string }>(null);
 
@@ -46,6 +50,16 @@ export const LoginForm = () => {
     passwordRef,
     setFormState,
     setFormErrors,
+    useCallback(
+      (res: LoginOutputNotOk) => {
+        for (const err of res.errors) {
+          if (err.code === 'PASSWORD_EXPIRED') {
+            setFormOfAddress(err.formOfAddress);
+          }
+        }
+      },
+      [setFormOfAddress]
+    ),
     useCallback(
       (res: LoginOutputOk) => {
         Cookies.set('jwt', res.jwt);
@@ -57,7 +71,12 @@ export const LoginForm = () => {
     )
   );
 
-  const modal = useLoginStateModal(formState, formErrors, setFormState);
+  const modal = useLoginStateModal(
+    formOfAddress,
+    formState,
+    formErrors,
+    setFormState
+  );
 
   return (
     <Form onSubmit={sendLogin}>
@@ -104,6 +123,7 @@ function useSendLogin(
   passwordRef: React.RefObject<{ value: string }>,
   setFormState: (s: FormState) => void,
   setFormErrors: (e: readonly FormError[]) => void,
+  onError: (res: LoginOutputNotOk) => void,
   onSuccess: (jwt: LoginOutputOk) => void
 ) {
   const log = useLog();
@@ -156,6 +176,9 @@ function useSendLogin(
             case 'INVALID_CREDENTIALS':
               errors.push(FormError.InvalidCredentials);
               break;
+            case 'PASSWORD_EXPIRED':
+              errors.push(FormError.PasswordExpired);
+              break;
             default:
               if (!errors.includes(FormError.InternalError)) {
                 errors.push(FormError.InternalError);
@@ -171,17 +194,27 @@ function useSendLogin(
           }
         }
 
+        onError(body);
         setFormErrors(errors);
         return;
       }
 
       onSuccess(await res.json());
     },
-    [usernameRef, passwordRef, setFormState, setFormErrors, onSuccess, log]
+    [
+      usernameRef,
+      passwordRef,
+      setFormState,
+      setFormErrors,
+      onError,
+      onSuccess,
+      log,
+    ]
   );
 }
 
 function useLoginStateModal(
+  formOfAddress: FormOfAddress | undefined,
   state: FormState,
   formErrors: readonly FormError[],
   setFormState: (s: FormState) => void
@@ -206,7 +239,13 @@ function useLoginStateModal(
         );
       case FormState.Error: {
         const errorReasons = formErrors.flatMap((err) =>
-          t(`schulhof.login.actions.login.modals.error.reasons.${err}`)
+          t(`schulhof.login.actions.login.modals.error.reasons.${err}`, {
+            form_of_address: formOfAddress!,
+            ForgotPasswordLink: makeLink([
+              'paths.schulhof',
+              'paths.schulhof.forgot-password',
+            ]),
+          })
         );
 
         return (
@@ -231,5 +270,5 @@ function useLoginStateModal(
         );
       }
     }
-  }, [state, formErrors, setIdle, t]);
+  }, [formOfAddress, state, formErrors, setIdle, t]);
 }

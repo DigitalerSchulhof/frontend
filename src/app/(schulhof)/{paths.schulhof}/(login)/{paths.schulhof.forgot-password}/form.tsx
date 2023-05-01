@@ -34,9 +34,8 @@ export const ForgotPasswordForm = () => {
   const [formState, setFormState] = useState<FormState>(FormState.Idle);
   const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
-  const [formOfAddress, setFormOfAddress] = useState<
-    FormOfAddress | undefined
-  >();
+  const [formOfAddress, setFormOfAddress] = useState<FormOfAddress>();
+  const [email, setEmail] = useState<string>();
 
   const usernameRef = useRef<{ value: string }>(null);
   const emailRef = useRef<{ value: string }>(null);
@@ -48,6 +47,7 @@ export const ForgotPasswordForm = () => {
     setFormErrors,
     useCallback(
       (res: ForgotPasswordOutputOk) => {
+        setEmail(res.email);
         setFormOfAddress(res.formOfAddress);
       },
       [setFormOfAddress]
@@ -56,7 +56,7 @@ export const ForgotPasswordForm = () => {
 
   const modal = useForgotPasswordStateModal(
     formOfAddress,
-    emailRef,
+    email,
     formState,
     formErrors,
     setFormState
@@ -188,7 +188,7 @@ function useSendForgotPassword(
 
 function useForgotPasswordStateModal(
   formOfAddress: FormOfAddress | undefined,
-  emailRef: React.RefObject<{ value: string }>,
+  email: string | undefined,
   state: FormState,
   formErrors: readonly FormError[],
   setFormState: (s: FormState) => void
@@ -240,11 +240,12 @@ function useForgotPasswordStateModal(
         );
       }
       case FormState.Success:
-        if (!formOfAddress) {
+        if (!formOfAddress || !email) {
           throw new ErrorWithPayload(
-            'FormState.Success but formOfAddress is undefined',
+            'FormState.Success but formOfAddress or email is undefined',
             {
               formOfAddress,
+              email,
             }
           );
         }
@@ -259,7 +260,7 @@ function useForgotPasswordStateModal(
                 <T
                   t='schulhof.login.actions.forgot-password.modals.success.description'
                   args={{
-                    email: emailRef.current!.value,
+                    email,
                     form_of_address: formOfAddress,
                   }}
                 />
@@ -274,5 +275,5 @@ function useForgotPasswordStateModal(
           </Modal>
         );
     }
-  }, [formOfAddress, emailRef, state, formErrors, setIdle, t]);
+  }, [formOfAddress, email, state, formErrors, setIdle, t]);
 }

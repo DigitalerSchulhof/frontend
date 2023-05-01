@@ -21,6 +21,7 @@ export type ForgotPasswordInput = {
 export type ForgotPasswordOutputOk = {
   code: 'OK';
   formOfAddress: FormOfAddress;
+  email: string;
 };
 
 export type ForgotPasswordOutputNotOk = {
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
   return NextResponse.json({
     code: 'OK',
     formOfAddress: account.formOfAddress,
+    email: account.email,
   });
 }
 

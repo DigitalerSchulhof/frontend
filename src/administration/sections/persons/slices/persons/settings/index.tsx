@@ -1,12 +1,12 @@
-import { PersonSettings } from '#/backend/repositories/content/person';
-import { MAX_SESSION_TIMEOUT } from '#/backend/validators/content/person';
+import { AccountSettings } from '#/backend/repositories/content/account';
+import { MAX_SESSION_TIMEOUT } from '#/backend/validators/content/account';
 import { SettingsForm } from './form';
 
 export type SettingsProps = {
   isOwnProfile?: boolean;
   person: {
     id: string;
-    settings: PersonSettings;
+    settings: AccountSettings;
   };
 };
 

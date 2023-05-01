@@ -12,7 +12,7 @@ export type AccountBase = {
   email: string;
   password: string;
   salt: string;
-  passwordExpires: number | null;
+  passwordExpiresAt: number | null;
   lastLogin: number | null;
   secondLastLogin: number | null;
   formOfAddress: FormOfAddress;

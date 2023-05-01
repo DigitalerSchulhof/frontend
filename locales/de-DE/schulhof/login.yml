@@ -27,6 +27,8 @@ actions:
             - der Benutzername wurde nicht gefunden oder
             - das Passwort passt nicht zum Benutzernamen oder
             - das Passwort ist nicht mehr gültig.
+          password-expired:
+            - "{form_of_address, select, informal {dein} formal {Ihr} other {~}} Passwort ist abgelaufen. {form_of_address, select, informal {Du kannst} formal {Sie können} other {~}} es unter <ForgotPasswordLink>»Passwort vergessen«</ForgotPasswordLink> zurücksetzen."
   forgot-password:
     title: Passwort vergessen
     subtitle: Um ein neues Passwort zu erhalten, müssen der Benutzername und die E-Mail-Adresse angegeben werden.
@@ -54,7 +56,7 @@ actions:
             - die E-Mail-Adresse passt nicht zum Benutzernamen.
       success:
         title: Neues Passwort zugeschickt
-        description: Das neue Passwort wurde erfolgreich an <b>{email}</b> verschickt. {form_of_address, select, informal {Vergiss nicht} formal {Beachten Sie} other {~}}, dass {form_of_address, select, informal {es} formal {dieses} other {~}} nur eine Stunde lang gültig ist.
+        description: Das neue Passwort wurde erfolgreich an <b>{email}</b> verschickt. {form_of_address, select, informal {Beachte} formal {Beachten Sie} other {~}}, dass {form_of_address, select, informal {es} formal {dieses} other {~}} nur eine Stunde lang gültig ist.
         button: Zur Anmeldung
 apps:
   title: Jetzt auch als App
