@@ -3,16 +3,11 @@
 import {
   SettingsInput,
   SettingsOutputNotOk,
+  SettingsOutputOk,
 } from '#/app/api/schulhof/administration/persons/persons/settings/route';
 import { AccountSettings } from '#/backend/repositories/content/account';
-import {
-  PERSON_MAILBOX_DELETE_AFTER_INVALID,
-  PERSON_MAILBOX_DELETE_AFTER_IN_BIN_INVALID,
-  PERSON_PROFILE_SESSION_TIMEOUT_INVALID,
-} from '#/backend/validators/content/person';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
-import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
@@ -26,22 +21,14 @@ import { Heading } from '#/ui/Heading';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
-import { sleep } from '#/utils';
+import { FormState, useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-enum FormState {
-  Idle,
-  Loading,
-  Error,
-  Success,
-}
-
-export enum FormError {
-  InternalError = 'internal-error',
-  InvalidMailboxDeleteAfter = 'invalid-mailbox-delete-after',
-  InvalidMailboxDeleteAfterInBin = 'invalid-mailbox-delete-after-in-bin',
-  InvalidSessionTimeout = 'invalid-session-timeout',
-}
+type FormError =
+  | 'internal-error'
+  | 'invalid-mailbox-delete-after'
+  | 'invalid-mailbox-delete-after-in-bin'
+  | 'invalid-session-timeout';
 
 export const SettingsForm = ({
   isOwnProfile,
@@ -54,18 +41,62 @@ export const SettingsForm = ({
   settings: AccountSettings;
   maxSessionTimeout: number;
 }) => {
-  const [formState, setFormState] = useState<FormState>(FormState.Idle);
-  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
+  const [formState, setFormState] = useState(FormState.Idle);
 
   const own = isOwnProfile ? 'own' : 'other';
 
   const refs = useRefs();
 
-  const sendSettings = useSendSettings(
-    personId,
-    refs,
+  const [sendSettings, formErrors] = useSend<
+    SettingsInput,
+    SettingsOutputOk,
+    SettingsOutputNotOk,
+    FormError
+  >(
+    '/api/schulhof/administration/persons/persons/settings',
     setFormState,
-    setFormErrors
+    useCallback(
+      () => ({
+        personId,
+        settings: {
+          emailOn: {
+            newMessage: refs.emailOnNewMessage.current!.value,
+            newSubstitution: refs.emailOnNewSubstitution.current!.value,
+            newNews: refs.emailOnNewNews.current!.value,
+          },
+          pushOn: {
+            newMessage: refs.pushOnNewMessage.current!.value,
+            newSubstitution: refs.pushOnNewSubstitution.current!.value,
+            newNews: refs.pushOnNewNews.current!.value,
+          },
+          considerNews: {
+            newEvent: refs.considerNewsNewEvent.current!.value,
+            newBlog: refs.considerNewsNewBlog.current!.value,
+            newGallery: refs.considerNewsNewGallery.current!.value,
+            fileChanged: refs.considerNewsFileChanged.current!.value,
+          },
+          mailbox: {
+            deleteAfter: refs.mailboxDeleteAfter.current!.value,
+            deleteAfterInBin: refs.mailboxDeleteAfterInBin.current!.value,
+          },
+          profile: {
+            sessionTimeout: refs.profileSessionTimeout.current!.value,
+          },
+        },
+      }),
+      [personId, refs]
+    ),
+    useMemo(
+      () => ({
+        ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_IN_BIN_INVALID:
+          'invalid-mailbox-delete-after-in-bin',
+        ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_INVALID:
+          'invalid-mailbox-delete-after',
+        ACCOUNT_SETTINGS_PROFILE_SESSION_TIMEOUT_INVALID:
+          'invalid-session-timeout',
+      }),
+      []
+    )
   );
 
   const modal = useSettingsStateModal(
@@ -272,132 +303,6 @@ function useRefs() {
       mailboxDeleteAfterInBin,
       profileSessionTimeout,
     ]
-  );
-}
-
-function useSendSettings(
-  personId: string,
-  refs: {
-    emailOnNewMessage: React.RefObject<{ value: boolean }>;
-    emailOnNewSubstitution: React.RefObject<{ value: boolean }>;
-    emailOnNewNews: React.RefObject<{ value: boolean }>;
-    pushOnNewMessage: React.RefObject<{ value: boolean }>;
-    pushOnNewSubstitution: React.RefObject<{ value: boolean }>;
-    pushOnNewNews: React.RefObject<{ value: boolean }>;
-    considerNewsNewEvent: React.RefObject<{ value: boolean }>;
-    considerNewsNewBlog: React.RefObject<{ value: boolean }>;
-    considerNewsNewGallery: React.RefObject<{ value: boolean }>;
-    considerNewsFileChanged: React.RefObject<{ value: boolean }>;
-    mailboxDeleteAfter: React.RefObject<{ value: number | null }>;
-    mailboxDeleteAfterInBin: React.RefObject<{ value: number | null }>;
-    profileSessionTimeout: React.RefObject<{ value: number }>;
-  },
-  setFormState: (s: FormState) => void,
-  setFormErrors: (e: readonly FormError[]) => void
-) {
-  const log = useLog();
-
-  return useCallback(
-    async function sendSettings() {
-      setFormState(FormState.Loading);
-
-      const settings = {
-        emailOn: {
-          newMessage: refs.emailOnNewMessage.current!.value,
-          newSubstitution: refs.emailOnNewSubstitution.current!.value,
-          newNews: refs.emailOnNewNews.current!.value,
-        },
-        pushOn: {
-          newMessage: refs.pushOnNewMessage.current!.value,
-          newSubstitution: refs.pushOnNewSubstitution.current!.value,
-          newNews: refs.pushOnNewNews.current!.value,
-        },
-        considerNews: {
-          newEvent: refs.considerNewsNewEvent.current!.value,
-          newBlog: refs.considerNewsNewBlog.current!.value,
-          newGallery: refs.considerNewsNewGallery.current!.value,
-          fileChanged: refs.considerNewsFileChanged.current!.value,
-        },
-        mailbox: {
-          deleteAfter: refs.mailboxDeleteAfter.current!.value,
-          deleteAfterInBin: refs.mailboxDeleteAfterInBin.current!.value,
-        },
-        profile: {
-          sessionTimeout: refs.profileSessionTimeout.current!.value,
-        },
-      };
-
-      const [res] = await Promise.all([
-        fetch('/api/schulhof/administration/persons/persons/settings', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            personId,
-            settings,
-          } satisfies SettingsInput),
-        }),
-        // Avoid flashing the loading dialogue
-        sleep(500),
-      ]);
-
-      if (!res.ok) {
-        const bodyString = await res.text();
-        setFormState(FormState.Error);
-        let body: SettingsOutputNotOk;
-        try {
-          body = JSON.parse(bodyString);
-        } catch (e) {
-          setFormErrors([FormError.InternalError]);
-          if (e instanceof SyntaxError) {
-            log.error('Unknown error while changing settings', {
-              personId,
-              settings,
-              status: res.status,
-              body: bodyString,
-            });
-            return;
-          }
-
-          throw e;
-        }
-
-        const errors: FormError[] = [];
-        for (const error of body.errors) {
-          switch (error.code) {
-            case PERSON_MAILBOX_DELETE_AFTER_INVALID:
-              errors.push(FormError.InvalidMailboxDeleteAfter);
-              break;
-            case PERSON_MAILBOX_DELETE_AFTER_IN_BIN_INVALID:
-              errors.push(FormError.InvalidMailboxDeleteAfterInBin);
-              break;
-            case PERSON_PROFILE_SESSION_TIMEOUT_INVALID:
-              errors.push(FormError.InvalidSessionTimeout);
-              break;
-            default:
-              if (!errors.includes(FormError.InternalError)) {
-                errors.push(FormError.InternalError);
-              }
-
-              log.error('Unknown error while changing settings', {
-                personId,
-                settings,
-                status: res.status,
-                body,
-                code: error.code,
-              });
-              break;
-          }
-        }
-
-        setFormErrors(errors);
-        return;
-      }
-
-      setFormState(FormState.Success);
-    },
-    [personId, refs, setFormState, setFormErrors, log]
   );
 }
 

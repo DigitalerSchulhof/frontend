@@ -14,7 +14,7 @@ export type ChangePasswordOutputOk = {
 export type ChangePasswordOutputNotOk = {
   code: 'NOT_OK';
   errors: {
-    code: 'INVALID_INPUT' | 'INVALID_CREDENTIALS' | 'PASSWORD_MISMATCH';
+    code: 'INVALID_CREDENTIALS' | 'PASSWORD_MISMATCH';
   }[];
 };
 

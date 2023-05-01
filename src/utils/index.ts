@@ -45,3 +45,10 @@ export function formatName({
 }) {
   return `${firstname} ${lastname}`;
 }
+
+/**
+ * The identity function.
+ */
+export function identity<T>(x: T): T {
+  return x;
+}

@@ -28,7 +28,7 @@ export type LoginOutputNotOk = {
   code: 'NOT_OK';
   errors: (
     | {
-        code: 'INVALID_INPUT' | 'INVALID_CREDENTIALS';
+        code: 'INVALID_CREDENTIALS';
       }
     | {
         code: 'PASSWORD_EXPIRED';

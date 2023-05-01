@@ -3,29 +3,20 @@
 import {
   EditAccountInput,
   EditAccountOutputNotOk,
+  EditAccountOutputOk,
 } from '#/app/api/schulhof/administration/persons/persons/edit-account/route';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
-import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, TextFormRow } from '#/ui/Form';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
-import { sleep } from '#/utils';
+import { FormState, useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-enum FormState {
-  Idle,
-  Loading,
-  Error,
-  Success,
-}
-
-export enum FormError {
-  InternalError = 'internal-error',
-}
+type FormError = 'internal-error';
 
 export const EditAccountForm = ({
   isOwnProfile,
@@ -38,20 +29,30 @@ export const EditAccountForm = ({
   username: string;
   email: string;
 }) => {
-  const [formState, setFormState] = useState<FormState>(FormState.Idle);
-  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
+  const [formState, setFormState] = useState(FormState.Idle);
 
   const own = isOwnProfile ? 'own' : 'other';
 
   const usernameRef = useRef<{ value: string }>(null);
   const emailRef = useRef<{ value: string }>(null);
 
-  const sendEditAccount = useSendEditAccount(
-    personId,
-    usernameRef,
-    emailRef,
+  const [sendEditAccount, formErrors] = useSend<
+    EditAccountInput,
+    EditAccountOutputOk,
+    EditAccountOutputNotOk,
+    FormError
+  >(
+    '/api/schulhof/administration/persons/persons/edit-account',
     setFormState,
-    setFormErrors
+    useCallback(
+      () => ({
+        personId,
+        username: usernameRef.current!.value,
+        email: emailRef.current!.value,
+      }),
+      [personId, usernameRef, emailRef]
+    ),
+    useMemo(() => ({}), [])
   );
 
   const modal = useEditAccountStateModal(
@@ -107,90 +108,6 @@ export const EditAccountForm = ({
     </Form>
   );
 };
-
-function useSendEditAccount(
-  personId: string,
-  usernameRef: React.RefObject<{ value: string }>,
-  emailRef: React.RefObject<{ value: string }>,
-  setFormState: (s: FormState) => void,
-  setFormErrors: (e: readonly FormError[]) => void
-) {
-  const log = useLog();
-
-  return useCallback(
-    async function sendEditAccount() {
-      setFormState(FormState.Loading);
-
-      const username = usernameRef.current!.value;
-      const email = emailRef.current!.value;
-
-      const [res] = await Promise.all([
-        fetch('/api/schulhof/administration/persons/persons/edit-account', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            personId,
-            username,
-            email,
-          } satisfies EditAccountInput),
-        }),
-        // Avoid flashing the loading dialogue
-        sleep(500),
-      ]);
-
-      if (!res.ok) {
-        const bodyString = await res.text();
-        setFormState(FormState.Error);
-        let body: EditAccountOutputNotOk;
-        try {
-          body = JSON.parse(bodyString);
-        } catch (e) {
-          setFormErrors([FormError.InternalError]);
-          if (e instanceof SyntaxError) {
-            log.error('Unknown error while editing account', {
-              personId,
-              username,
-              email,
-              status: res.status,
-              body: bodyString,
-            });
-            return;
-          }
-
-          throw e;
-        }
-
-        const errors: FormError[] = [];
-        for (const error of body.errors) {
-          switch (error.code) {
-            default:
-              if (!errors.includes(FormError.InternalError)) {
-                errors.push(FormError.InternalError);
-              }
-
-              log.error('Unknown error while editing account', {
-                personId,
-                username,
-                email,
-                status: res.status,
-                body,
-                code: error.code,
-              });
-              break;
-          }
-        }
-
-        setFormErrors(errors);
-        return;
-      }
-
-      setFormState(FormState.Success);
-    },
-    [personId, usernameRef, emailRef, setFormState, setFormErrors, log]
-  );
-}
 
 function useEditAccountStateModal(
   isOwnProfile: boolean,

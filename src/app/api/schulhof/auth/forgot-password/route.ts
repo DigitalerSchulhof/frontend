@@ -27,7 +27,7 @@ export type ForgotPasswordOutputOk = {
 export type ForgotPasswordOutputNotOk = {
   code: 'NOT_OK';
   errors: {
-    code: 'INVALID_INPUT' | 'INVALID_CREDENTIALS';
+    code: 'INVALID_CREDENTIALS';
   }[];
 };
 

@@ -8,31 +8,20 @@ import {
 import { FormOfAddress } from '#/backend/repositories/content/account';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
-import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, TextFormRow } from '#/ui/Form';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
-import { ErrorWithPayload, sleep } from '#/utils';
+import { ErrorWithPayload } from '#/utils';
+import { FormState, useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-enum FormState {
-  Idle,
-  Loading,
-  Error,
-  Success,
-}
-
-export enum FormError {
-  InternalError = 'internal-error',
-  InvalidCredentials = 'invalid-credentials',
-}
+type FormError = 'internal-error' | 'invalid-credentials';
 
 export const ForgotPasswordForm = () => {
-  const [formState, setFormState] = useState<FormState>(FormState.Idle);
-  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
+  const [formState, setFormState] = useState(FormState.Idle);
 
   const [formOfAddress, setFormOfAddress] = useState<FormOfAddress>();
   const [email, setEmail] = useState<string>();
@@ -40,11 +29,27 @@ export const ForgotPasswordForm = () => {
   const usernameRef = useRef<{ value: string }>(null);
   const emailRef = useRef<{ value: string }>(null);
 
-  const sendForgotPassword = useSendForgotPassword(
-    usernameRef,
-    emailRef,
+  const [sendForgotPassword, formErrors] = useSend<
+    ForgotPasswordInput,
+    ForgotPasswordOutputOk,
+    ForgotPasswordOutputNotOk,
+    FormError
+  >(
+    '/api/schulhof/auth/forgot-password',
     setFormState,
-    setFormErrors,
+    useCallback(
+      () => ({
+        username: usernameRef.current!.value,
+        email: emailRef.current!.value,
+      }),
+      [usernameRef, emailRef]
+    ),
+    useMemo(
+      () => ({
+        INVALID_CREDENTIALS: 'invalid-credentials',
+      }),
+      []
+    ),
     useCallback(
       (res: ForgotPasswordOutputOk) => {
         setEmail(res.email);
@@ -99,92 +104,6 @@ export const ForgotPasswordForm = () => {
     </Form>
   );
 };
-
-function useSendForgotPassword(
-  usernameRef: React.RefObject<{ value: string }>,
-  emailRef: React.RefObject<{ value: string }>,
-  setFormState: (s: FormState) => void,
-  setFormErrors: (e: readonly FormError[]) => void,
-  onSuccess: (jwt: ForgotPasswordOutputOk) => void
-) {
-  const log = useLog();
-
-  return useCallback(
-    async function sendForgotPassword() {
-      setFormState(FormState.Loading);
-
-      const username = usernameRef.current!.value;
-      const email = emailRef.current!.value;
-
-      const [res] = await Promise.all([
-        fetch('/api/schulhof/auth/forgot-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username,
-            email,
-          } satisfies ForgotPasswordInput),
-        }),
-        // Avoid flashing the loading dialogue
-        sleep(500),
-      ]);
-
-      if (!res.ok) {
-        const bodyString = await res.text();
-        setFormState(FormState.Error);
-        let body: ForgotPasswordOutputNotOk;
-        try {
-          body = JSON.parse(bodyString);
-        } catch (e) {
-          setFormErrors([FormError.InternalError]);
-          if (e instanceof SyntaxError) {
-            log.error('Unknown error while sending forgot password link', {
-              username,
-              email,
-              status: res.status,
-              body: bodyString,
-            });
-            return;
-          }
-
-          throw e;
-        }
-
-        const errors: FormError[] = [];
-        for (const error of body.errors) {
-          switch (error.code) {
-            case 'INVALID_CREDENTIALS':
-              errors.push(FormError.InvalidCredentials);
-              break;
-            default:
-              if (!errors.includes(FormError.InternalError)) {
-                errors.push(FormError.InternalError);
-              }
-
-              log.error('Unknown error while logging in', {
-                username,
-                status: res.status,
-                body,
-                code: error.code,
-              });
-              break;
-          }
-        }
-
-        setFormErrors(errors);
-        return;
-      }
-
-      const body: ForgotPasswordOutputOk = await res.json();
-
-      setFormState(FormState.Success);
-      onSuccess(body);
-    },
-    [usernameRef, emailRef, setFormState, setFormErrors, onSuccess, log]
-  );
-}
 
 function useForgotPasswordStateModal(
   formOfAddress: FormOfAddress | undefined,

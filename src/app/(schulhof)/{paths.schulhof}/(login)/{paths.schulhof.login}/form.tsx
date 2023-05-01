@@ -8,7 +8,6 @@ import {
 import { FormOfAddress } from '#/backend/repositories/content/account';
 import { T, makeLink } from '#/i18n';
 import { useT } from '#/i18n/client';
-import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, TextFormRow } from '#/ui/Form';
@@ -16,40 +15,55 @@ import { LoadingModal, Modal } from '#/ui/Modal';
 import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
-import { sleep } from '#/utils';
+import { FormState, useSend } from '#/utils/form';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-enum FormState {
-  Idle,
-  Loading,
-  Error,
-}
-
-export enum FormError {
-  InternalError = 'internal-error',
-  InvalidCredentials = 'invalid-credentials',
-  PasswordExpired = 'password-expired',
-}
+type FormError = 'internal-error' | 'invalid-credentials' | 'password-expired';
 
 export const LoginForm = () => {
   const { t } = useT();
   const router = useRouter();
 
-  const [formState, setFormState] = useState<FormState>(FormState.Idle);
-  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
+  const [formState, setFormState] = useState(FormState.Idle);
 
   const [formOfAddress, setFormOfAddress] = useState<FormOfAddress>();
 
   const usernameRef = useRef<{ value: string }>(null);
   const passwordRef = useRef<{ value: string }>(null);
 
-  const sendLogin = useSendLogin(
-    usernameRef,
-    passwordRef,
+  const [sendLogin, formErrors] = useSend<
+    LoginInput,
+    LoginOutputOk,
+    LoginOutputNotOk,
+    FormError
+  >(
+    '/api/schulhof/auth/login',
     setFormState,
-    setFormErrors,
+    useCallback(
+      () => ({
+        username: usernameRef.current!.value,
+        password: passwordRef.current!.value,
+      }),
+      [usernameRef, passwordRef]
+    ),
+    useMemo(
+      () => ({
+        INVALID_CREDENTIALS: 'invalid-credentials',
+        PASSWORD_EXPIRED: 'password-expired',
+      }),
+      []
+    ),
+    useCallback(
+      (res: LoginOutputOk) => {
+        Cookies.set('jwt', res.jwt);
+        router.push(
+          `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
+        );
+      },
+      [router, t]
+    ),
     useCallback(
       (res: LoginOutputNotOk) => {
         for (const err of res.errors) {
@@ -60,14 +74,12 @@ export const LoginForm = () => {
       },
       [setFormOfAddress]
     ),
-    useCallback(
-      (res: LoginOutputOk) => {
-        Cookies.set('jwt', res.jwt);
-        router.push(
-          `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
-        );
-      },
-      [router, t]
+    useMemo(
+      () => ({
+        editInput: ({ password: _, ...inputWithoutPassword }) =>
+          inputWithoutPassword,
+      }),
+      []
     )
   );
 
@@ -118,101 +130,6 @@ export const LoginForm = () => {
   );
 };
 
-function useSendLogin(
-  usernameRef: React.RefObject<{ value: string }>,
-  passwordRef: React.RefObject<{ value: string }>,
-  setFormState: (s: FormState) => void,
-  setFormErrors: (e: readonly FormError[]) => void,
-  onError: (res: LoginOutputNotOk) => void,
-  onSuccess: (jwt: LoginOutputOk) => void
-) {
-  const log = useLog();
-
-  return useCallback(
-    async function sendLogin() {
-      setFormState(FormState.Loading);
-
-      const username = usernameRef.current!.value;
-      const password = passwordRef.current!.value;
-
-      const [res] = await Promise.all([
-        fetch('/api/schulhof/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username,
-            password,
-          } satisfies LoginInput),
-        }),
-        // Avoid flashing the loading dialogue
-        sleep(500),
-      ]);
-
-      if (!res.ok) {
-        const bodyString = await res.text();
-        setFormState(FormState.Error);
-        let body: LoginOutputNotOk;
-        try {
-          body = JSON.parse(bodyString);
-        } catch (e) {
-          setFormErrors([FormError.InternalError]);
-          if (e instanceof SyntaxError) {
-            log.error('Unknown error while logging in', {
-              username,
-              status: res.status,
-              body: bodyString,
-            });
-            return;
-          }
-
-          throw e;
-        }
-
-        const errors: FormError[] = [];
-        for (const error of body.errors) {
-          switch (error.code) {
-            case 'INVALID_CREDENTIALS':
-              errors.push(FormError.InvalidCredentials);
-              break;
-            case 'PASSWORD_EXPIRED':
-              errors.push(FormError.PasswordExpired);
-              break;
-            default:
-              if (!errors.includes(FormError.InternalError)) {
-                errors.push(FormError.InternalError);
-              }
-
-              log.error('Unknown error while logging in', {
-                username,
-                status: res.status,
-                body,
-                code: error.code,
-              });
-              break;
-          }
-        }
-
-        onError(body);
-        setFormErrors(errors);
-        return;
-      }
-
-      onSuccess(await res.json());
-    },
-    [
-      usernameRef,
-      passwordRef,
-      setFormState,
-      setFormErrors,
-      onError,
-      onSuccess,
-      log,
-    ]
-  );
-}
-
 function useLoginStateModal(
   formOfAddress: FormOfAddress | undefined,
   state: FormState,
@@ -230,6 +147,8 @@ function useLoginStateModal(
     switch (state) {
       case FormState.Idle:
         return null;
+      // We redirect on success, so we let keep the loading animation until the redirect is completed
+      case FormState.Success:
       case FormState.Loading:
         return (
           <LoadingModal

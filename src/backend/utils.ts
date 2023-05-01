@@ -6,13 +6,6 @@ export type DeepNonNull<T> = T extends object
   : NonNullable<T>;
 
 /**
- * The identity function.
- */
-export function identity<T>(x: T): T {
-  return x;
-}
-
-/**
  * Returns whether the given `PromiseSettledResult` is a `PromiseRejectedResult`.
  */
 export function isPromiseRejectedResult<T>(

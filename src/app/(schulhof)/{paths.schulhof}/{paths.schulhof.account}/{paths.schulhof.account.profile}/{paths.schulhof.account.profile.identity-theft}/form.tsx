@@ -3,46 +3,59 @@
 import {
   IdentityTheftInput,
   IdentityTheftOutputNotOk,
+  IdentityTheftOutputOk,
 } from '#/app/api/schulhof/account/profile/identity-theft/route';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
-import { useLog } from '#/log/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, TextFormRow } from '#/ui/Form';
 import { LoadingModal, Modal } from '#/ui/Modal';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
-import { sleep } from '#/utils';
+import { FormState, useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-enum FormState {
-  Idle,
-  Loading,
-  Error,
-  Success,
-}
-
-export enum FormError {
-  InternalError = 'internal-error',
-  InvalidCredentials = 'invalid-credentials',
-  PasswordMismatch = 'password-mismatch',
-}
+type FormError = 'internal-error' | 'invalid-credentials' | 'password-mismatch';
 
 export const IdentityTheftForm = () => {
-  const [formState, setFormState] = useState<FormState>(FormState.Idle);
-  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
+  const [formState, setFormState] = useState(FormState.Idle);
 
   const oldPasswordRef = useRef<{ value: string }>(null);
   const newPasswordRef = useRef<{ value: string }>(null);
   const newPasswordAgainRef = useRef<{ value: string }>(null);
 
-  const sendIdentityTheft = useSendIdentityTheft(
-    oldPasswordRef,
-    newPasswordRef,
-    newPasswordAgainRef,
+  const [sendIdentityTheft, formErrors] = useSend<
+    IdentityTheftInput,
+    IdentityTheftOutputOk,
+    IdentityTheftOutputNotOk,
+    FormError
+  >(
+    '/api/schulhof/account/profile/identity-theft',
     setFormState,
-    setFormErrors
+    useCallback(
+      () => ({
+        oldPassword: oldPasswordRef.current!.value,
+        newPassword: newPasswordRef.current!.value,
+        newPasswordAgain: newPasswordAgainRef.current!.value,
+      }),
+      [oldPasswordRef, newPasswordRef, newPasswordAgainRef]
+    ),
+    useMemo(
+      () => ({
+        INVALID_CREDENTIALS: 'invalid-credentials',
+        PASSWORD_MISMATCH: 'password-mismatch',
+      }),
+      []
+    ),
+    undefined,
+    undefined,
+    useMemo(
+      () => ({
+        attachInput: false,
+      }),
+      []
+    )
   );
 
   const modal = useIdentityTheftStateModal(formState, formErrors, setFormState);
@@ -97,98 +110,6 @@ export const IdentityTheftForm = () => {
     </Form>
   );
 };
-
-function useSendIdentityTheft(
-  oldPasswordRef: React.RefObject<{ value: string }>,
-  newPasswordRef: React.RefObject<{ value: string }>,
-  newPasswordAgainRef: React.RefObject<{ value: string }>,
-  setFormState: (s: FormState) => void,
-  setFormErrors: (e: readonly FormError[]) => void
-) {
-  const log = useLog();
-
-  return useCallback(
-    async function sendIdentityTheft() {
-      setFormState(FormState.Loading);
-
-      const oldPassword = oldPasswordRef.current!.value;
-      const newPassword = newPasswordRef.current!.value;
-      const newPasswordAgain = newPasswordAgainRef.current!.value;
-
-      const [res] = await Promise.all([
-        fetch('/api/schulhof/account/profile/identity-theft', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            oldPassword,
-            newPassword,
-            newPasswordAgain,
-          } satisfies IdentityTheftInput),
-        }),
-        // Avoid flashing the loading dialogue
-        sleep(500),
-      ]);
-
-      if (!res.ok) {
-        const bodyString = await res.text();
-        setFormState(FormState.Error);
-        let body: IdentityTheftOutputNotOk;
-        try {
-          body = JSON.parse(bodyString);
-        } catch (e) {
-          setFormErrors([FormError.InternalError]);
-          if (e instanceof SyntaxError) {
-            log.error('Unknown error while reporting identity theft', {
-              status: res.status,
-              body: bodyString,
-            });
-            return;
-          }
-
-          throw e;
-        }
-
-        const errors: FormError[] = [];
-        for (const error of body.errors) {
-          switch (error.code) {
-            case 'INVALID_CREDENTIALS':
-              errors.push(FormError.InvalidCredentials);
-              break;
-            case 'PASSWORD_MISMATCH':
-              errors.push(FormError.PasswordMismatch);
-              break;
-            default:
-              if (!errors.includes(FormError.InternalError)) {
-                errors.push(FormError.InternalError);
-              }
-
-              log.error('Unknown error while reporting identity theft', {
-                status: res.status,
-                body,
-                code: error.code,
-              });
-              break;
-          }
-        }
-
-        setFormErrors(errors);
-        return;
-      }
-
-      setFormState(FormState.Success);
-    },
-    [
-      oldPasswordRef,
-      newPasswordRef,
-      newPasswordAgainRef,
-      setFormState,
-      setFormErrors,
-      log,
-    ]
-  );
-}
 
 function useIdentityTheftStateModal(
   state: FormState,
