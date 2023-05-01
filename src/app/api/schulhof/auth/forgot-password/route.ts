@@ -27,7 +27,7 @@ export type ForgotPasswordOutputOk = {
 export type ForgotPasswordOutputNotOk = {
   code: 'NOT_OK';
   errors: {
-    code: 'INVALID_CREDENTIALS';
+    code: 'INVALID_INPUT' | 'INVALID_CREDENTIALS';
   }[];
 };
 
@@ -37,6 +37,16 @@ export async function POST(req: Request) {
   const { username, email } = body;
 
   const context = getContext(req);
+
+  if (typeof username !== 'string' || typeof email !== 'string') {
+    return NextResponse.json(
+      {
+        code: 'NOT_OK',
+        errors: [{ code: 'INVALID_INPUT' }],
+      },
+      { status: 400 }
+    );
+  }
 
   const personAndAccount = await getPersonAndAccountFromUsernameAndEmail(
     context,
@@ -66,17 +76,13 @@ export async function POST(req: Request) {
 
 async function getPersonAndAccountFromUsernameAndEmail(
   context: BackendContext,
-  username: unknown,
-  email: unknown
+  username: string,
+  email: string
 ): Promise<{
   person: WithId<PersonBase>;
   account: WithId<AccountBase>;
 } | null> {
   if (!username || !email) {
-    return null;
-  }
-
-  if (typeof username !== 'string' || typeof email !== 'string') {
     return null;
   }
 
