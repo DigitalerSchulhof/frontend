@@ -38,7 +38,7 @@ export function useSend<
      */
     editInput?: (input: Input) => unknown;
   }
-) {
+): [() => Promise<void>, readonly FormError[]] {
   const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
 
   const makeLogInput = useCallback(
@@ -46,10 +46,10 @@ export function useSend<
       const { attachInput = false, editInput = identity } = logOptions ?? {};
 
       if (!attachInput) {
-        return '[removed]';
+        return {};
       }
 
-      return editInput(input);
+      return { input: editInput(input) };
     },
     [logOptions]
   );
@@ -87,7 +87,7 @@ export function useSend<
               endpoint,
               status: res.status,
               body: bodyString,
-              input: makeLogInput(input),
+              ...makeLogInput(input),
             });
             return;
           }
@@ -112,7 +112,7 @@ export function useSend<
             status: res.status,
             body,
             code: error.code,
-            input: makeLogInput(input),
+            ...makeLogInput(input),
           });
         }
 
@@ -137,5 +137,5 @@ export function useSend<
     ]
   );
 
-  return useMemo(() => [send, formErrors] as const, [send, formErrors]);
+  return useMemo(() => [send, formErrors], [send, formErrors]);
 }
