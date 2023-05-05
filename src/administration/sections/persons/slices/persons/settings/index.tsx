@@ -6,6 +6,8 @@ export type SettingsProps = {
   isOwnProfile?: boolean;
   person: {
     id: string;
+  };
+  account: {
     settings: AccountSettings;
   };
 };
@@ -13,12 +15,13 @@ export type SettingsProps = {
 export const Settings = async ({
   isOwnProfile = false,
   person,
+  account,
 }: SettingsProps) => {
   return (
     <SettingsForm
       isOwnProfile={isOwnProfile}
       personId={person.id}
-      settings={person.settings}
+      settings={account.settings}
       maxSessionTimeout={MAX_SESSION_TIMEOUT}
     />
   );

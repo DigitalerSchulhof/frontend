@@ -51,7 +51,7 @@ export const SettingsForm = ({
         />
         <Table columns='1fr auto'>
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newMessage'
+            label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.title'
             defaultValue={settings.emailOn.newMessage}
             ref={refs.emailOnNewMessage}
           />
