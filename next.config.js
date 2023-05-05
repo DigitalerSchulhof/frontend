@@ -5,5 +5,9 @@
 module.exports = {
   experimental: {
     appDir: true,
+    serverActions: true,
+  },
+  compiler: {
+    styledComponents: true,
   },
 };
