@@ -1,4 +1,8 @@
-import { AggregateClientError, ClientError, MaybePromise } from '#/utils';
+import {
+  AggregateClientError,
+  ClientError,
+  MaybePromise,
+} from '#/utils/server';
 import { isPromiseRejectedResult } from '../utils';
 
 export class InputValidationError extends ClientError {}

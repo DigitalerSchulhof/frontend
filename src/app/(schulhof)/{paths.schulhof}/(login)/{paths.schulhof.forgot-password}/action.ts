@@ -1,9 +1,8 @@
+'use server';
+
 import { BackendContext, getContext } from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
-import {
-  AccountBase,
-  FormOfAddress,
-} from '#/backend/repositories/content/account';
+import { AccountBase } from '#/backend/repositories/content/account';
 import {
   AccountEmailFilter,
   AccountUsernameFilter,
@@ -11,67 +10,30 @@ import {
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { ErrorWithPayload } from '#/utils';
-import { NextResponse } from 'next/server';
+import { ClientError, wrapAction } from '#/utils/server';
 
-export type ForgotPasswordInput = {
-  username: string;
-  email: string;
-};
+export const forgotPassword = wrapAction(
+  async (username: string, email: string) => {
+    const context = getContext();
 
-export type ForgotPasswordOutputOk = {
-  code: 'OK';
-  formOfAddress: FormOfAddress;
-  email: string;
-};
-
-export type ForgotPasswordOutputNotOk = {
-  code: 'NOT_OK';
-  errors: {
-    code: 'INVALID_CREDENTIALS';
-  }[];
-};
-
-export async function POST(req: Request) {
-  const body = await req.json();
-
-  const { username, email } = body;
-
-  const context = getContext(req);
-
-  if (typeof username !== 'string' || typeof email !== 'string') {
-    return NextResponse.json(
-      {
-        code: 'NOT_OK',
-        errors: [{ code: 'INVALID_INPUT' }],
-      },
-      { status: 400 }
+    const account = await getPersonAndAccountFromUsernameAndEmail(
+      context,
+      username,
+      email
     );
+
+    if (!account) {
+      throw new ClientError('INVALID_CREDENTIALS');
+    }
+
+    await sendPasswordResetEmail(context, account);
+
+    return {
+      formOfAddress: account.formOfAddress,
+      email: account.email,
+    };
   }
-
-  const account = await getPersonAndAccountFromUsernameAndEmail(
-    context,
-    username,
-    email
-  );
-
-  if (!account) {
-    return NextResponse.json(
-      {
-        code: 'NOT_OK',
-        errors: [{ code: 'INVALID_CREDENTIALS' }],
-      },
-      { status: 401 }
-    );
-  }
-
-  await sendPasswordResetEmail(context, account);
-
-  return NextResponse.json({
-    code: 'OK',
-    formOfAddress: account.formOfAddress,
-    email: account.email,
-  });
-}
+);
 
 async function getPersonAndAccountFromUsernameAndEmail(
   context: BackendContext,

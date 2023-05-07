@@ -9,7 +9,8 @@ import {
 } from '#/backend/repositories/content/account/filters';
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
-import { ClientError, ErrorWithPayload, wrapAction } from '#/utils';
+import { ErrorWithPayload } from '#/utils';
+import { wrapAction, ClientError } from '#/utils/server';
 import { aql } from 'arangojs';
 
 export const login = wrapAction(async (username: string, password: string) => {

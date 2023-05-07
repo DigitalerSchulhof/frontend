@@ -12,19 +12,21 @@ export enum FormState {
   Success,
 }
 
-export function useSend(
-  action: () => Promise<void>,
-  makeModalContent: (
-    state: Exclude<FormState, FormState.Idle>,
-    formErrors: readonly string[],
+export function useSend<R>(
+  action: () => Promise<R>,
+  makeLoadingModalContent: (close: () => void) => JSX.Element,
+  makeErrorModalContent: (
     close: () => void,
-    serverActionErrors: readonly ServerActionError[]
-  ) => JSX.Element
+    actionErrorCodes: readonly string[],
+    actionErrors: readonly ServerActionError[]
+  ) => JSX.Element,
+  makeSuccessModalContent: (close: () => void, data: R) => JSX.Element
 ): [() => Promise<void>, JSX.Element | null] {
   const [formState, setFormState] = useState(FormState.Idle);
-  const [formErrors, setFormErrors] = useState<readonly ServerActionError[]>(
-    []
-  );
+  const [actionRes, setActionRes] = useState<R | null>(null);
+  const [actionErrors, setActionErrors] = useState<
+    readonly ServerActionError[]
+  >([]);
 
   const log = useLog();
 
@@ -43,22 +45,23 @@ export function useSend(
         setFormState(FormState.Error);
 
         if (err instanceof ServerActionError) {
-          setFormErrors([err]);
+          setActionErrors([err]);
           return;
         } else if (err instanceof AggregateServerActionError) {
-          setFormErrors(err.errors);
+          setActionErrors(err.errors);
           return;
         }
 
-        setFormErrors([new ServerActionError('INTERNAL_ERROR')]);
+        setActionErrors([new ServerActionError('INTERNAL_ERROR')]);
         log.error(err);
 
         return;
       }
 
       setFormState(FormState.Success);
+      setActionRes(res.value);
     },
-    [setFormState, setFormErrors, action, log]
+    [setFormState, setActionErrors, action, log]
   );
 
   const setIdle = useCallback(
@@ -67,17 +70,29 @@ export function useSend(
   );
 
   const modal = useMemo(() => {
-    if (formState === FormState.Idle) {
-      return null;
+    switch (formState) {
+      case FormState.Idle:
+        return null;
+      case FormState.Loading:
+        return makeLoadingModalContent(setIdle);
+      case FormState.Error:
+        return makeErrorModalContent(
+          setIdle,
+          actionErrors.map((e) => e.code),
+          actionErrors
+        );
+      case FormState.Success:
+        return makeSuccessModalContent(setIdle, actionRes!);
     }
-
-    return makeModalContent(
-      formState,
-      formErrors.map((e) => e.code),
-      setIdle,
-      formErrors
-    );
-  }, [formState, setIdle, formErrors, makeModalContent]);
+  }, [
+    formState,
+    setIdle,
+    actionErrors,
+    actionRes,
+    makeLoadingModalContent,
+    makeErrorModalContent,
+    makeSuccessModalContent,
+  ]);
 
   return useMemo(() => [send, modal], [send, modal]);
 }

@@ -10,7 +10,7 @@ import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
 import { unwrapAction } from '#/utils/client';
-import { FormState, useSend } from '#/utils/form';
+import { useSend } from '#/utils/form';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useCallback, useRef } from 'react';
@@ -94,58 +94,62 @@ function useSubmit(
       );
     }, [usernameRef, passwordRef, router, t]),
     useCallback(
-      (state, _, close, errors) => {
-        switch (state) {
-          // We redirect on success, so we let keep the loading animation until the redirect is completed
-          // The modal is automatically closed when unmounted
-          case FormState.Success:
-          case FormState.Loading:
-            return (
-              <LoadingModal
-                title='schulhof.login.actions.login.modals.loading.title'
-                description='schulhof.login.actions.login.modals.loading.description'
-              />
-            );
-          case FormState.Error: {
-            const errorReasons = errors.flatMap((err) =>
-              t(
-                `schulhof.login.actions.login.modals.error.reasons.${mapError(
-                  err.code
-                )}`,
-                {
-                  form_of_address: err.baggage?.formOfAddress as FormOfAddress,
-                  ForgotPasswordLink: makeLink([
-                    'paths.schulhof',
-                    'paths.schulhof.forgot-password',
-                  ]),
-                }
-              )
-            );
+      () => (
+        <LoadingModal
+          title='schulhof.login.actions.login.modals.loading.title'
+          description='schulhof.login.actions.login.modals.loading.description'
+        />
+      ),
+      []
+    ),
+    useCallback(
+      (close, _, errors) => {
+        const errorReasons = errors.flatMap((err) =>
+          t(
+            `schulhof.login.actions.login.modals.error.reasons.${mapError(
+              err.code
+            )}`,
+            {
+              form_of_address: err.baggage?.formOfAddress as FormOfAddress,
+              ForgotPasswordLink: makeLink([
+                'paths.schulhof',
+                'paths.schulhof.forgot-password',
+              ]),
+            }
+          )
+        );
 
-            return (
-              <Modal onClose={close}>
-                <Alert
-                  variant={Variant.Error}
-                  title='schulhof.login.actions.login.modals.error.title'
-                >
-                  <p>
-                    <T t='schulhof.login.actions.login.modals.error.description' />
-                  </p>
-                  <ul>
-                    {errorReasons.map((s, i) => (
-                      <li key={i}>{s}</li>
-                    ))}
-                  </ul>
-                </Alert>
-                <ButtonGroup>
-                  <Button onClick={close} t='generic.back' />
-                </ButtonGroup>
-              </Modal>
-            );
-          }
-        }
+        return (
+          <Modal onClose={close}>
+            <Alert
+              variant={Variant.Error}
+              title='schulhof.login.actions.login.modals.error.title'
+            >
+              <p>
+                <T t='schulhof.login.actions.login.modals.error.description' />
+              </p>
+              <ul>
+                {errorReasons.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ul>
+            </Alert>
+            <ButtonGroup>
+              <Button onClick={close} t='generic.back' />
+            </ButtonGroup>
+          </Modal>
+        );
       },
       [t]
+    ),
+    useCallback(
+      () => (
+        <LoadingModal
+          title='schulhof.login.actions.login.modals.loading.title'
+          description='schulhof.login.actions.login.modals.loading.description'
+        />
+      ),
+      []
     )
   );
 }

@@ -1,5 +1,5 @@
 export class Logger {
-  error(message: string, ...args: any[]): void {
-    console.error(message, ...args);
+  error(...args: any[]): void {
+    console.error(...args);
   }
 }

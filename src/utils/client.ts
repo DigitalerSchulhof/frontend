@@ -1,7 +1,20 @@
 'use client';
 
-import { WrappedActionResult } from '#/utils';
+import type { WrappedActionResult } from '#/utils/server';
 import { useCallback, useState } from 'react';
+
+export class ServerActionError extends Error {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(readonly code: string, readonly baggage?: Record<string, any>) {
+    super(`Client Error: ${code}`);
+  }
+}
+
+export class AggregateServerActionError extends AggregateError {
+  constructor(errors: readonly ServerActionError[]) {
+    super(errors, `Client Errors: ${errors.map((e) => e.code).join(', ')}`);
+  }
+}
 
 export function useToggle(
   initialValue = false
@@ -41,16 +54,4 @@ export async function unwrapAction<R>(
   }
 
   return result.data;
-}
-
-export class ServerActionError extends Error {
-  constructor(readonly code: string, readonly baggage?: Record<string, any>) {
-    super(`Client Error: ${code}`);
-  }
-}
-
-export class AggregateServerActionError extends AggregateError {
-  constructor(errors: readonly ServerActionError[]) {
-    super(errors, `Client Errors: ${errors.map((e) => e.code).join(', ')}`);
-  }
 }
