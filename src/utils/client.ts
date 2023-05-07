@@ -4,8 +4,10 @@ import type { WrappedActionResult } from '#/utils/server';
 import { useCallback, useState } from 'react';
 
 export class ServerActionError extends Error {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(readonly code: string, readonly baggage?: Record<string, any>) {
+  constructor(
+    readonly code: string,
+    readonly baggage?: Record<string, unknown>
+  ) {
     super(`Client Error: ${code}`);
   }
 }
