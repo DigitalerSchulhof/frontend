@@ -33,6 +33,16 @@ export const LoginForm = () => {
   const usernameRef = useRef<{ value: string }>(null);
   const passwordRef = useRef<{ value: string }>(null);
 
+  const makeLoading = useCallback(
+    () => (
+      <LoadingModal
+        title='schulhof.login.actions.login.modals.loading.title'
+        description='schulhof.login.actions.login.modals.loading.description'
+      />
+    ),
+    []
+  );
+
   return (
     <Form
       action={useCallback(async () => {
@@ -45,15 +55,7 @@ export const LoginForm = () => {
           `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
         );
       }, [usernameRef, passwordRef, router, t])}
-      makeLoading={useCallback(
-        () => (
-          <LoadingModal
-            title='schulhof.login.actions.login.modals.loading.title'
-            description='schulhof.login.actions.login.modals.loading.description'
-          />
-        ),
-        []
-      )}
+      makeLoading={makeLoading}
       makeError={useCallback(
         (close, _, errors) => {
           const errorReasons = errors.flatMap((err) =>
@@ -94,15 +96,8 @@ export const LoginForm = () => {
         },
         [t]
       )}
-      makeSuccess={useCallback(
-        () => (
-          <LoadingModal
-            title='schulhof.login.actions.login.modals.loading.title'
-            description='schulhof.login.actions.login.modals.loading.description'
-          />
-        ),
-        []
-      )}
+      // Keep loading form until the user is logged in and automatically redirected
+      makeSuccess={makeLoading}
     >
       <Table>
         <TextFormRow
