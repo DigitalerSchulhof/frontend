@@ -1,17 +1,9 @@
-import { MaybePromise } from '#/utils';
+import { AggregateClientError, ClientError, MaybePromise } from '#/utils';
 import { isPromiseRejectedResult } from '../utils';
 
-export class InputValidationError extends Error {
-  constructor(readonly code: string) {
-    super('Invalid input!');
-  }
-}
+export class InputValidationError extends ClientError {}
 
-export class AggregatedInputValidationError extends Error {
-  constructor(readonly errors: InputValidationError[]) {
-    super('Invalid input!');
-  }
-}
+export class AggregatedInputValidationError extends AggregateClientError {}
 
 export async function aggregateValidationErrors(
   promises: (MaybePromise<unknown> | null)[]

@@ -1,4 +1,4 @@
-import { useRequireLogin } from '#/auth';
+import { requireLogin } from '#/auth';
 import { useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -8,7 +8,7 @@ import { Variant } from '#/ui/variants';
 import { IdentityTheftForm } from './form';
 
 export default async function Page() {
-  const { context } = await useRequireLogin();
+  const { context } = await requireLogin();
   const { t } = useT();
 
   return (

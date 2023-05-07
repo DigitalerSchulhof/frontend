@@ -1,7 +1,8 @@
 'use client';
 
 import { useLog } from '#/log/client';
-import { identity, sleep } from '#/utils';
+import { sleep } from '#/utils';
+import { AggregateServerActionError, ServerActionError } from '#/utils/client';
 import { useCallback, useMemo, useState } from 'react';
 
 export enum FormState {
@@ -11,52 +12,18 @@ export enum FormState {
   Success,
 }
 
-export function useSend<
-  Input extends Record<string, unknown>,
-  OutputOk extends {
-    code: 'OK';
-  },
-  OutputNotOk extends {
-    code: 'NOT_OK';
-    errors: { code: string }[];
-  },
-  FormError extends string
->(
-  endpoint: string,
-  makeInput: () => Input,
-  errorCodeMap: Record<OutputNotOk['errors'][number]['code'], FormError>,
+export function useSend(
+  action: () => Promise<void>,
   makeModalContent: (
     state: Exclude<FormState, FormState.Idle>,
-    formErrors: readonly FormError[],
-    close: () => void
-  ) => JSX.Element,
-  onSuccess?: (body: OutputOk) => void,
-  onError?: (body: OutputNotOk) => void,
-  logOptions?: {
-    /**
-     * @default true
-     */
-    attachInput?: boolean;
-    /**
-     * @default identity
-     */
-    editInput?: (input: Input) => unknown;
-  }
+    formErrors: readonly string[],
+    close: () => void,
+    serverActionErrors: readonly ServerActionError[]
+  ) => JSX.Element
 ): [() => Promise<void>, JSX.Element | null] {
   const [formState, setFormState] = useState(FormState.Idle);
-  const [formErrors, setFormErrors] = useState<readonly FormError[]>([]);
-
-  const makeLogInput = useCallback(
-    (input: Input) => {
-      const { attachInput = false, editInput = identity } = logOptions ?? {};
-
-      if (!attachInput) {
-        return {};
-      }
-
-      return { input: editInput(input) };
-    },
-    [logOptions]
+  const [formErrors, setFormErrors] = useState<readonly ServerActionError[]>(
+    []
   );
 
   const log = useLog();
@@ -65,81 +32,33 @@ export function useSend<
     async function send() {
       setFormState(FormState.Loading);
 
-      const input = makeInput();
-
-      const [res] = await Promise.all([
-        fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(input),
-        }),
+      const [res] = await Promise.allSettled([
+        action(),
         // Avoid flashing the loading dialogue
         sleep(500),
       ]);
 
-      if (!res.ok) {
-        const bodyString = await res.text();
+      if (res.status === 'rejected') {
+        const err = res.reason;
         setFormState(FormState.Error);
-        let body: OutputNotOk;
-        try {
-          body = JSON.parse(bodyString);
-        } catch (e) {
-          setFormErrors(['internal-error' as FormError]);
-          if (e instanceof SyntaxError) {
-            log.error(`Unknown error requesting '${endpoint}'`, {
-              endpoint,
-              status: res.status,
-              body: bodyString,
-              ...makeLogInput(input),
-            });
-            return;
-          }
 
-          throw e;
+        if (err instanceof ServerActionError) {
+          setFormErrors([err]);
+          return;
+        } else if (err instanceof AggregateServerActionError) {
+          setFormErrors(err.errors);
+          return;
         }
 
-        const errors: FormError[] = [];
-        for (const error of body.errors) {
-          if (error.code in errorCodeMap) {
-            // @ts-expect-error -- Object access
-            errors.push(errorCodeMap[error.code]);
-            continue;
-          }
+        setFormErrors([new ServerActionError('INTERNAL_ERROR')]);
+        log.error(err);
 
-          if (!errors.includes('internal-error' as FormError)) {
-            errors.push('internal-error' as FormError);
-          }
-
-          log.error(`Unknown error requesting '${endpoint}'`, {
-            endpoint,
-            status: res.status,
-            body,
-            code: error.code,
-            ...makeLogInput(input),
-          });
-        }
-
-        setFormErrors(errors);
-        onError?.(body);
         return;
       }
 
       setFormState(FormState.Success);
-      onSuccess?.(await res.json());
     },
-    [
-      endpoint,
-      setFormState,
-      setFormErrors,
-      makeInput,
-      errorCodeMap,
-      onSuccess,
-      onError,
-      log,
-      makeLogInput,
-    ]
+    [setFormState, setFormErrors, action, log]
   );
 
   const setIdle = useCallback(
@@ -152,7 +71,12 @@ export function useSend<
       return null;
     }
 
-    return makeModalContent(formState, formErrors, setIdle);
+    return makeModalContent(
+      formState,
+      formErrors.map((e) => e.code),
+      setIdle,
+      formErrors
+    );
   }, [formState, setIdle, formErrors, makeModalContent]);
 
   return useMemo(() => [send, modal], [send, modal]);

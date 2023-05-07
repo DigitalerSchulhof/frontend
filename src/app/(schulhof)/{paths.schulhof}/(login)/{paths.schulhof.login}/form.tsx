@@ -1,13 +1,7 @@
 'use client';
 
-import {
-  LoginInput,
-  LoginOutputNotOk,
-  LoginOutputOk,
-} from '#/app/api/schulhof/auth/login/route';
 import { FormOfAddress } from '#/backend/repositories/content/account';
-import { T, makeLink } from '#/i18n';
-import { useT } from '#/i18n/client';
+import { T, makeLink, useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, TextFormRow } from '#/ui/Form';
@@ -15,10 +9,12 @@ import { LoadingModal, Modal } from '#/ui/Modal';
 import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
+import { unwrapAction } from '#/utils/client';
 import { FormState, useSend } from '#/utils/form';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
+import { login } from './action';
 
 export const LoginForm = () => {
   const { t } = useT();
@@ -68,7 +64,16 @@ export const LoginForm = () => {
   );
 };
 
-type FormError = 'internal-error' | 'invalid-credentials' | 'password-expired';
+function mapError(err: string) {
+  switch (err) {
+    case 'INVALID_CREDENTIALS':
+      return 'invalid-credentials';
+    case 'PASSWORD_EXPIRED':
+      return 'password-expired';
+    default:
+      return 'internal-error';
+  }
+}
 
 function useSubmit(
   usernameRef: React.RefObject<{ value: string }>,
@@ -77,26 +82,19 @@ function useSubmit(
   const { t } = useT();
   const router = useRouter();
 
-  const [formOfAddress, setFormOfAddress] = useState<FormOfAddress>();
+  return useSend(
+    useCallback(async () => {
+      const jwt = await unwrapAction(
+        login(usernameRef.current!.value, passwordRef.current!.value)
+      );
 
-  return useSend<LoginInput, LoginOutputOk, LoginOutputNotOk, FormError>(
-    '/api/schulhof/auth/login',
+      Cookies.set('jwt', jwt);
+      router.push(
+        `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
+      );
+    }, [usernameRef, passwordRef, router, t]),
     useCallback(
-      () => ({
-        username: usernameRef.current!.value,
-        password: passwordRef.current!.value,
-      }),
-      [usernameRef, passwordRef]
-    ),
-    useMemo(
-      () => ({
-        INVALID_CREDENTIALS: 'invalid-credentials',
-        PASSWORD_EXPIRED: 'password-expired',
-      }),
-      []
-    ),
-    useCallback(
-      (state, errors, close) => {
+      (state, _, close, errors) => {
         switch (state) {
           // We redirect on success, so we let keep the loading animation until the redirect is completed
           // The modal is automatically closed when unmounted
@@ -110,13 +108,18 @@ function useSubmit(
             );
           case FormState.Error: {
             const errorReasons = errors.flatMap((err) =>
-              t(`schulhof.login.actions.login.modals.error.reasons.${err}`, {
-                form_of_address: formOfAddress!,
-                ForgotPasswordLink: makeLink([
-                  'paths.schulhof',
-                  'paths.schulhof.forgot-password',
-                ]),
-              })
+              t(
+                `schulhof.login.actions.login.modals.error.reasons.${mapError(
+                  err.code
+                )}`,
+                {
+                  form_of_address: err.baggage?.formOfAddress as FormOfAddress,
+                  ForgotPasswordLink: makeLink([
+                    'paths.schulhof',
+                    'paths.schulhof.forgot-password',
+                  ]),
+                }
+              )
             );
 
             return (
@@ -142,33 +145,7 @@ function useSubmit(
           }
         }
       },
-      [t, formOfAddress]
-    ),
-    useCallback(
-      (res: LoginOutputOk) => {
-        Cookies.set('jwt', res.jwt);
-        router.push(
-          `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
-        );
-      },
-      [router, t]
-    ),
-    useCallback(
-      (res: LoginOutputNotOk) => {
-        for (const err of res.errors) {
-          if (err.code === 'PASSWORD_EXPIRED') {
-            setFormOfAddress(err.formOfAddress);
-          }
-        }
-      },
-      [setFormOfAddress]
-    ),
-    useMemo(
-      () => ({
-        editInput: ({ password: _, ...inputWithoutPassword }) =>
-          inputWithoutPassword,
-      }),
-      []
+      [t]
     )
   );
 }

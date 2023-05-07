@@ -12,10 +12,11 @@ import { useT } from '#/i18n';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-export async function useRequireLogin(): Promise<{
+export async function requireLogin(): Promise<{
   context: LoggedInBackendContext;
   jwtPayload: JwtPayload;
 }> {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t } = useT();
   const context = getContext();
 
@@ -40,7 +41,8 @@ export async function useRequireLogin(): Promise<{
   }
 }
 
-export async function useRequireNoLogin(): Promise<void> {
+export async function requireNoLogin(): Promise<void> {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t } = useT();
   const context = getContext();
 

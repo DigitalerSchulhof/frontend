@@ -1,58 +1,19 @@
+'use server';
+
 import { BackendContext, getContext } from '#/backend/context';
 import { WithId } from '#/backend/repositories/arango';
-import {
-  AccountBase,
-  FormOfAddress,
-} from '#/backend/repositories/content/account';
+import { AccountBase } from '#/backend/repositories/content/account';
 import {
   AccountPasswordFilter,
   AccountUsernameFilter,
 } from '#/backend/repositories/content/account/filters';
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
-import { ErrorWithPayload } from '#/utils';
+import { ClientError, ErrorWithPayload, wrapAction } from '#/utils';
 import { aql } from 'arangojs';
-import { NextResponse } from 'next/server';
 
-export type LoginInput = {
-  username: string;
-  password: string;
-};
-
-export type LoginOutputOk = {
-  code: 'OK';
-  jwt: string;
-};
-
-export type LoginOutputNotOk = {
-  code: 'NOT_OK';
-  errors: (
-    | {
-        code: 'INVALID_CREDENTIALS';
-      }
-    | {
-        code: 'PASSWORD_EXPIRED';
-        formOfAddress: FormOfAddress;
-      }
-  )[];
-};
-
-export async function POST(req: Request) {
-  const body = await req.json();
-
-  const { username, password } = body;
-
-  const context = getContext(req);
-
-  if (typeof username !== 'string' || typeof password !== 'string') {
-    return NextResponse.json(
-      {
-        code: 'NOT_OK',
-        errors: [{ code: 'INVALID_INPUT' }],
-      },
-      { status: 400 }
-    );
-  }
+export const login = wrapAction(async (username: string, password: string) => {
+  const context = getContext();
 
   const account = await getAccountFromUsernameAndPassword(
     context,
@@ -61,49 +22,30 @@ export async function POST(req: Request) {
   );
 
   if (!account) {
-    return NextResponse.json(
-      {
-        code: 'NOT_OK',
-        errors: [{ code: 'INVALID_CREDENTIALS' }],
-      },
-      { status: 401 }
-    );
+    throw new ClientError('INVALID_CREDENTIALS');
   }
 
   if (
     account.passwordExpiresAt !== null &&
     account.passwordExpiresAt < new Date().getTime()
   ) {
-    return NextResponse.json(
-      {
-        code: 'NOT_OK',
-        errors: [
-          {
-            code: 'PASSWORD_EXPIRED',
-            formOfAddress: account.formOfAddress,
-          },
-        ],
-      },
-      { status: 401 }
-    );
+    throw new ClientError('PASSWORD_EXPIRED', {
+      formOfAddress: account.formOfAddress,
+    });
   }
 
   const jwt = await context.services.session.createJwt(account.id);
 
   await context.services.account.updateLastLogin(account.id);
 
-  return NextResponse.json({
-    code: 'OK',
-    jwt,
-  });
-}
+  return jwt;
+});
 
 async function getAccountFromUsernameAndPassword(
   context: BackendContext,
   username: string,
   password: string
 ): Promise<WithId<AccountBase> | null> {
-  // Short-circuit if username or password is not provided
   if (!username || !password) {
     return null;
   }

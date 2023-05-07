@@ -36,6 +36,18 @@ export class ErrorWithPayload extends Error {
   }
 }
 
+export class ClientError extends Error {
+  constructor(readonly code: string, readonly baggage?: object) {
+    super(`Client Error: ${code}`);
+  }
+}
+
+export class AggregateClientError extends AggregateError {
+  constructor(errors: readonly ClientError[]) {
+    super(errors, `Client Errors: ${errors.map((e) => e.code).join(', ')}`);
+  }
+}
+
 export function formatName({
   firstname,
   lastname,
@@ -51,4 +63,45 @@ export function formatName({
  */
 export function identity<T>(x: T): T {
   return x;
+}
+
+export type WrappedActionResult<R> =
+  | { code: 'OK'; data: R }
+  | { code: 'NOT_OK'; data: readonly { code: string }[] };
+
+export function wrapAction<A extends unknown[], R>(
+  fn: (...args: A) => MaybePromise<R>
+): (...args: A) => Promise<WrappedActionResult<R>> {
+  return async (...args: A) => {
+    try {
+      return {
+        code: 'OK',
+        data: await fn(...args),
+      };
+    } catch (err) {
+      if (err instanceof AggregateClientError) {
+        return {
+          code: 'NOT_OK',
+          data: err.errors.map((e) => ({
+            code: e.code,
+            ...e.baggage,
+          })),
+        };
+      }
+
+      if (err instanceof ClientError) {
+        return {
+          code: 'NOT_OK',
+          data: [
+            {
+              code: err.code,
+              ...err.baggage,
+            },
+          ],
+        };
+      }
+
+      throw new Error('Internal Server Error');
+    }
+  };
 }

@@ -1,12 +1,12 @@
 import { AdministrationOverviewSection } from '#/administration/overview/section';
 import { administrationSections } from '#/administration/sections';
-import { useRequireLogin } from '#/auth';
+import { requireLogin } from '#/auth';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 
 export default async function Page() {
-  await useRequireLogin();
+  await requireLogin();
 
   return (
     <>
