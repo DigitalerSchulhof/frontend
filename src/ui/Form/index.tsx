@@ -1,7 +1,6 @@
-'use client';
-
 import { T } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import { useLog } from '#/log/client';
 import {
   NumberInput,
   NumberInputProps,
@@ -10,35 +9,136 @@ import {
 } from '#/ui/Input';
 import { Toggle, ToggleProps } from '#/ui/Input/toggle';
 import { Table } from '#/ui/Table';
+import { sleep } from '#/utils';
+import { AggregateServerActionError, ServerActionError } from '#/utils/client';
 import React, {
+  FormEventHandler,
   forwardRef,
   useCallback,
   useId,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 import { styled } from 'styled-components';
 
-export interface FormProps extends React.HTMLAttributes<HTMLFormElement> {}
+export enum FormState {
+  Idle,
+  Loading,
+  Error,
+  Success,
+}
 
-export const Form = forwardRef<HTMLFormElement, FormProps>(function Form(
-  { children, ...props },
-  ref
-) {
+export interface FormProps<R>
+  extends Omit<React.ComponentProps<'form'>, 'action'> {
+  action: () => Promise<R>;
+  makeLoading: (close: () => void) => JSX.Element;
+  makeError: (
+    close: () => void,
+    actionErrorCodes: readonly string[],
+    actionErrors: readonly ServerActionError[]
+  ) => JSX.Element;
+  makeSuccess: (close: () => void, data: R) => JSX.Element;
+}
+
+export const Form = <R,>({
+  children,
+  action,
+  makeLoading,
+  makeError,
+  makeSuccess,
+  ...props
+}: FormProps<R>) => {
+  const [formState, setFormState] = useState(FormState.Idle);
+  const [actionRes, setActionRes] = useState<R | null>(null);
+  const [actionErrors, setActionErrors] = useState<
+    readonly ServerActionError[]
+  >([]);
+
+  const setIdle = useCallback(
+    () => setFormState(FormState.Idle),
+    [setFormState]
+  );
+
+  const log = useLog();
+
+  const modal = useMemo(() => {
+    switch (formState) {
+      case FormState.Idle:
+        return null;
+      case FormState.Loading:
+        return makeLoading(setIdle);
+      case FormState.Error:
+        return makeError(
+          setIdle,
+          actionErrors.map((e) => e.code),
+          actionErrors
+        );
+      case FormState.Success:
+        return makeSuccess(setIdle, actionRes!);
+    }
+  }, [
+    formState,
+    setIdle,
+    actionErrors,
+    actionRes,
+    makeLoading,
+    makeError,
+    makeSuccess,
+  ]);
+
   return (
     <form
+      onSubmit={useCallback<FormEventHandler<HTMLFormElement>>(
+        (e) => {
+          e.preventDefault();
+
+          if (formState !== FormState.Idle) {
+            log.error('Form submitted while not idle');
+            return;
+          }
+
+          void (async () => {
+            setFormState(FormState.Loading);
+
+            const [res] = await Promise.allSettled([
+              action(),
+              // Avoid flashing the loading dialogue
+              sleep(500),
+            ]);
+
+            if (res.status === 'rejected') {
+              const err = res.reason;
+              setFormState(FormState.Error);
+
+              if (err instanceof ServerActionError) {
+                setActionErrors([err]);
+                return;
+              } else if (err instanceof AggregateServerActionError) {
+                setActionErrors(err.errors);
+                return;
+              }
+
+              setActionErrors([new ServerActionError('INTERNAL_ERROR')]);
+              log.error(err);
+
+              return;
+            }
+
+            setFormState(FormState.Success);
+            setActionRes(res.value);
+          })();
+        },
+        [formState, setFormState, setActionErrors, action, log]
+      )}
       {...props}
-      ref={ref}
-      onSubmit={(e) => {
-        e.preventDefault();
-        props.onSubmit?.(e);
-      }}
     >
+      {modal}
       {children}
     </form>
   );
-});
+};
 
 export const DisplayContentsForm = styled(Form)`
   display: contents;
