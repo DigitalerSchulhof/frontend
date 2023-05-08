@@ -1,17 +1,18 @@
 'use client';
 
-import { forgotPassword } from './action';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, TextFormRow } from '#/ui/Form';
-import { LoadingModal, Modal } from '#/ui/Modal';
+import { Modal } from '#/ui/Modal';
+import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
+import { forgotPassword } from './action';
 
 export const ForgotPasswordForm = () => {
   const usernameRef = useRef<{ value: string }>(null);
@@ -91,7 +92,7 @@ function useSubmit(
     ),
     useCallback(
       (close, errors) => {
-        const errorReasons = errors.flatMap((err) =>
+        const reasons = errors.flatMap((err) =>
           t(
             `schulhof.login.actions.forgot-password.modals.error.reasons.${mapError(
               err
@@ -100,24 +101,12 @@ function useSubmit(
         );
 
         return (
-          <Modal onClose={close}>
-            <Alert
-              variant={Variant.Error}
-              title='schulhof.login.actions.forgot-password.modals.error.title'
-            >
-              <p>
-                <T t='schulhof.login.actions.forgot-password.modals.error.description' />
-              </p>
-              <ul>
-                {errorReasons.map((s, i) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ul>
-            </Alert>
-            <ButtonGroup>
-              <Button onClick={close} t='generic.back' />
-            </ButtonGroup>
-          </Modal>
+          <ErrorModal
+            close={close}
+            title='schulhof.login.actions.forgot-password.modals.error.title'
+            description='schulhof.login.actions.forgot-password.modals.error.description'
+            reasons={reasons}
+          />
         );
       },
       [t]

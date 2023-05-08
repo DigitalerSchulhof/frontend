@@ -1,17 +1,13 @@
 'use client';
 
-import { useT } from '#/i18n/client';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledAlert } from '#/ui/Alert/client';
 import { ButtonGroup } from '#/ui/Button';
-import { Heading } from '#/ui/Heading';
-import { Loading } from '#/ui/Loading';
 import { createPortal } from 'react-dom';
 import { styled } from 'styled-components';
 
-export interface ModalProps {
+export type ModalProps = {
   onClose?: () => void;
-}
+};
 
 export const Modal = ({
   onClose,
@@ -22,27 +18,6 @@ export const Modal = ({
       {createPortal(<ModalOverlay onClick={onClose} />, document.body)}
       {createPortal(<ModalContainer {...props} />, document.body)}
     </>
-  );
-};
-
-export interface LoadingModalProps {
-  title: TranslationsWithStringTypeAndNoVariables;
-  description: TranslationsWithStringTypeAndNoVariables;
-}
-
-export const LoadingModal: React.FC<LoadingModalProps> = ({
-  title,
-  description,
-}) => {
-  const { t } = useT();
-
-  return (
-    <Modal>
-      <Heading size='1'>{t(title)}</Heading>
-      <p>{t('generic.wait')}</p>
-      <Loading />
-      <p>{t(description)}</p>
-    </Modal>
   );
 };
 
