@@ -1,8 +1,7 @@
 'use client';
 
-import { BreathingSpace } from '#/ui/BreathingSpace';
 import { StyledButton } from '#/ui/Button';
-import { useState } from 'react';
+import { useToggle } from '#/utils/client';
 import { css, styled } from 'styled-components';
 
 export const VisibilityToggle = ({
@@ -16,7 +15,7 @@ export const VisibilityToggle = ({
   content: React.ReactNode;
   defaultVisible?: boolean;
 }) => {
-  const [visible, setVisible] = useState(defaultVisible);
+  const [visible, setVisible, setInvisible] = useToggle(defaultVisible);
 
   return (
     <>
@@ -25,11 +24,11 @@ export const VisibilityToggle = ({
         // Force a key change to force a re-render of the button
         // Else the button will only sort of change its colors when the cursor is moved and stuff is.. updated.. due to the transition?
         // The re-render will force the new color to be applied instantly
-        <ToggleButton key='hide' onClick={() => setVisible(false)} mode='hide'>
+        <ToggleButton key='hide' onClick={setInvisible} mode='hide'>
           {hide}
         </ToggleButton>
       ) : (
-        <ToggleButton key='show' onClick={() => setVisible(true)} mode='show'>
+        <ToggleButton key='show' onClick={setVisible} mode='show'>
           {show}
         </ToggleButton>
       )}

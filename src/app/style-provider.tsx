@@ -16,18 +16,13 @@ export const StyleProvider = ({ children }: { children: React.ReactNode }) => {
   useServerInsertedHTML(() => {
     const styles = styledComponentsStyleSheet.getStyleElement();
     styledComponentsStyleSheet.instance.clearTag();
-    return styles;
+    return <>{styles}</>;
   });
 
   const theme = themes.dark;
 
   if (typeof window !== 'undefined') {
-    return (
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        {children}
-      </ThemeProvider>
-    );
+    return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
   }
 
   return (

@@ -1,10 +1,5 @@
 'use client';
 
-import {
-  SettingsInput,
-  SettingsOutputNotOk,
-  SettingsOutputOk,
-} from '#/app/api/schulhof/administration/persons/persons/settings/route';
 import { AccountSettings } from '#/backend/repositories/content/account';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
@@ -18,11 +13,14 @@ import {
   ToggleFormRow,
 } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
-import { LoadingModal, Modal } from '#/ui/Modal';
+import { Modal } from '#/ui/Modal';
+import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
-import { FormState, useSend } from '#/utils/form';
+import { unwrapAction } from '#/utils/client';
+import { useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef } from 'react';
+import { settings } from './action';
 
 export const SettingsForm = ({
   isOwnProfile,
@@ -240,11 +238,18 @@ function useRefs() {
   );
 }
 
-type FormError =
-  | 'internal-error'
-  | 'invalid-mailbox-delete-after'
-  | 'invalid-mailbox-delete-after-in-bin'
-  | 'invalid-session-timeout';
+function mapError(err: string) {
+  switch (err) {
+    case 'ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_IN_BIN_INVALID':
+      return 'invalid-mailbox-delete-after-in-bin';
+    case 'ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_INVALID':
+      return 'invalid-mailbox-delete-after';
+    case 'ACCOUNT_SETTINGS_PROFILE_SESSION_TIMEOUT_INVALID':
+      return 'invalid-session-timeout';
+    default:
+      return 'internal-error';
+  }
+}
 
 function useSubmit(
   isOwnProfile: boolean,
@@ -253,132 +258,103 @@ function useSubmit(
 ) {
   const { t } = useT();
 
-  return useSend<
-    SettingsInput,
-    SettingsOutputOk,
-    SettingsOutputNotOk,
-    FormError
-  >(
-    '/api/schulhof/administration/persons/persons/settings',
+  return useSend(
     useCallback(
-      () => ({
-        personId,
-        settings: {
-          emailOn: {
-            newMessage: refs.emailOnNewMessage.current!.value,
-            newSubstitution: refs.emailOnNewSubstitution.current!.value,
-            newNews: refs.emailOnNewNews.current!.value,
-          },
-          pushOn: {
-            newMessage: refs.pushOnNewMessage.current!.value,
-            newSubstitution: refs.pushOnNewSubstitution.current!.value,
-            newNews: refs.pushOnNewNews.current!.value,
-          },
-          considerNews: {
-            newEvent: refs.considerNewsNewEvent.current!.value,
-            newBlog: refs.considerNewsNewBlog.current!.value,
-            newGallery: refs.considerNewsNewGallery.current!.value,
-            fileChanged: refs.considerNewsFileChanged.current!.value,
-          },
-          mailbox: {
-            deleteAfter: refs.mailboxDeleteAfter.current!.value,
-            deleteAfterInBin: refs.mailboxDeleteAfterInBin.current!.value,
-          },
-          profile: {
-            sessionTimeout: refs.profileSessionTimeout.current!.value,
-          },
-        },
-      }),
+      () =>
+        unwrapAction(
+          settings(personId, {
+            emailOn: {
+              newMessage: refs.emailOnNewMessage.current!.value,
+              newSubstitution: refs.emailOnNewSubstitution.current!.value,
+              newNews: refs.emailOnNewNews.current!.value,
+            },
+            pushOn: {
+              newMessage: refs.pushOnNewMessage.current!.value,
+              newSubstitution: refs.pushOnNewSubstitution.current!.value,
+              newNews: refs.pushOnNewNews.current!.value,
+            },
+            considerNews: {
+              newEvent: refs.considerNewsNewEvent.current!.value,
+              newBlog: refs.considerNewsNewBlog.current!.value,
+              newGallery: refs.considerNewsNewGallery.current!.value,
+              fileChanged: refs.considerNewsFileChanged.current!.value,
+            },
+            mailbox: {
+              deleteAfter: refs.mailboxDeleteAfter.current!.value,
+              deleteAfterInBin: refs.mailboxDeleteAfterInBin.current!.value,
+            },
+            profile: {
+              sessionTimeout: refs.profileSessionTimeout.current!.value,
+            },
+          })
+        ),
       [personId, refs]
     ),
-    useMemo(
-      () => ({
-        ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_IN_BIN_INVALID:
-          'invalid-mailbox-delete-after-in-bin',
-        ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_INVALID:
-          'invalid-mailbox-delete-after',
-        ACCOUNT_SETTINGS_PROFILE_SESSION_TIMEOUT_INVALID:
-          'invalid-session-timeout',
-      }),
+    useCallback(
+      () => (
+        <LoadingModal
+          title='schulhof.administration.sections.persons.slices.persons.settings.modals.loading.title'
+          description='schulhof.administration.sections.persons.slices.persons.settings.modals.loading.description'
+        />
+      ),
       []
     ),
     useCallback(
-      (state, errors, close) => {
-        switch (state) {
-          case FormState.Loading:
-            return (
-              <LoadingModal
-                title='schulhof.administration.sections.persons.slices.persons.settings.modals.loading.title'
-                description='schulhof.administration.sections.persons.slices.persons.settings.modals.loading.description'
-              />
-            );
-          case FormState.Error: {
-            const errorReasons = errors.flatMap((err) =>
-              t(
-                `schulhof.administration.sections.persons.slices.persons.settings.modals.error.reasons.${err}`
-              )
-            );
+      (close, errors) => {
+        const reasons = errors.flatMap((err) =>
+          t(
+            `schulhof.administration.sections.persons.slices.persons.settings.modals.error.reasons.${mapError(
+              err
+            )}`
+          )
+        );
 
-            return (
-              <Modal onClose={close}>
-                <Alert
-                  variant={Variant.Error}
-                  title='schulhof.administration.sections.persons.slices.persons.settings.modals.error.title'
-                >
-                  <p>
-                    <T t='schulhof.administration.sections.persons.slices.persons.settings.modals.error.description' />
-                  </p>
-                  <ul>
-                    {errorReasons.map((s, i) => (
-                      <li key={i}>{s}</li>
-                    ))}
-                  </ul>
-                </Alert>
-                <ButtonGroup>
-                  <Button onClick={close} t='generic.back' />
-                </ButtonGroup>
-              </Modal>
-            );
-          }
-          case FormState.Success: {
-            const own = isOwnProfile ? 'own' : 'other';
-
-            return (
-              <Modal onClose={close}>
-                <Alert
-                  variant={Variant.Success}
-                  title='schulhof.administration.sections.persons.slices.persons.settings.modals.success.title'
-                >
-                  <p>
-                    <T t='schulhof.administration.sections.persons.slices.persons.settings.modals.success.description' />
-                  </p>
-                </Alert>
-                <ButtonGroup>
-                  <Button
-                    href={
-                      isOwnProfile
-                        ? [
-                            'paths.schulhof',
-                            'paths.schulhof.account',
-                            'paths.schulhof.account.profile',
-                          ]
-                        : [
-                            'paths.schulhof',
-                            'paths.schulhof.administration',
-                            'paths.schulhof.administration.persons',
-                            'paths.schulhof.administration.persons.persons',
-                            `{${personId}}`,
-                          ]
-                    }
-                    t={`schulhof.administration.sections.persons.slices.persons.settings.modals.success.button.${own}`}
-                  />
-                </ButtonGroup>
-              </Modal>
-            );
-          }
-        }
+        return (
+          <ErrorModal
+            close={close}
+            title='schulhof.administration.sections.persons.slices.persons.settings.modals.error.title'
+            description='schulhof.administration.sections.persons.slices.persons.settings.modals.error.description'
+            reasons={reasons}
+          />
+        );
       },
-      [t, isOwnProfile, personId]
-    )
+      [t]
+    ),
+    useCallback(() => {
+      const own = isOwnProfile ? 'own' : 'other';
+
+      return (
+        <Modal onClose={close}>
+          <Alert
+            variant={Variant.Success}
+            title='schulhof.administration.sections.persons.slices.persons.settings.modals.success.title'
+          >
+            <p>
+              <T t='schulhof.administration.sections.persons.slices.persons.settings.modals.success.description' />
+            </p>
+          </Alert>
+          <ButtonGroup>
+            <Button
+              href={
+                isOwnProfile
+                  ? [
+                      'paths.schulhof',
+                      'paths.schulhof.account',
+                      'paths.schulhof.account.profile',
+                    ]
+                  : [
+                      'paths.schulhof',
+                      'paths.schulhof.administration',
+                      'paths.schulhof.administration.persons',
+                      'paths.schulhof.administration.persons.persons',
+                      `{${personId}}`,
+                    ]
+              }
+              t={`schulhof.administration.sections.persons.slices.persons.settings.modals.success.button.${own}`}
+            />
+          </ButtonGroup>
+        </Modal>
+      );
+    }, [personId, isOwnProfile])
   );
 }

@@ -1,12 +1,12 @@
 'use client';
 
+import { PersonType } from '#/backend/repositories/content/person';
 import { T } from '#/i18n';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { Note } from '#/ui/Note';
 import { List } from '#/ui/List';
+import { Note } from '#/ui/Note';
 import { useCallback, useState } from 'react';
 import { PersonDetailsProps } from '..';
-import { PersonType } from '#/backend/repositories/content/person';
 
 export type PersonDetailsPersonalDataSectionTableProps = Pick<
   PersonDetailsProps,

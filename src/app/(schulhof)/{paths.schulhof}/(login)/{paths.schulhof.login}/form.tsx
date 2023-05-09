@@ -8,6 +8,7 @@ import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
+import { sleep } from '#/utils';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import Cookies from 'js-cookie';
@@ -93,9 +94,13 @@ function useSubmit(
 
   return useSend(
     useCallback(async () => {
-      const jwt = await unwrapAction(
-        login(usernameRef.current!.value, passwordRef.current!.value)
-      );
+      const [jwt] = await Promise.all([
+        unwrapAction(
+          login(usernameRef.current!.value, passwordRef.current!.value)
+        ),
+        // Because we don't show a dialogue on success, we intentionally put this delay here in order to not flash the login modal for a few milliseconds.
+        sleep(500),
+      ]);
 
       Cookies.set('jwt', jwt);
       router.push(

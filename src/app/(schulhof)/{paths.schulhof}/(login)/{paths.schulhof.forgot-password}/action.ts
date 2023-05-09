@@ -10,7 +10,8 @@ import {
 import { AndFilter } from '#/backend/repositories/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { ErrorWithPayload } from '#/utils';
-import { ClientError, wrapAction } from '#/utils/server';
+import { wrapAction } from '#/utils/action';
+import { ClientError } from '#/utils/server';
 
 export const forgotPassword = wrapAction(
   async (username: string, email: string) => {

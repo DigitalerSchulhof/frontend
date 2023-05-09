@@ -4,7 +4,7 @@ import React from 'react';
 
 export async function getLastLoginAndUpdateDidShow(
   context: LoggedInBackendContext
-): Promise<React.ReactNode> {
+): Promise<JSX.Element | null> {
   if (context.session.didShowLastLogin) return null;
   if (!context.account.secondLastLogin) return null;
 

@@ -1,7 +1,6 @@
 'use client';
 
 import { useLog } from '#/log/client';
-import { sleep } from '#/utils';
 import { AggregateServerActionError, ServerActionError } from '#/utils/client';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -34,14 +33,10 @@ export function useSend<R>(
     async function send() {
       setFormState(FormState.Loading);
 
-      const [res] = await Promise.allSettled([
-        action(),
-        // Avoid flashing the loading dialogue
-        sleep(500),
-      ]);
-
-      if (res.status === 'rejected') {
-        const err = res.reason;
+      let res;
+      try {
+        res = await action();
+      } catch (err) {
         setFormState(FormState.Error);
 
         if (err instanceof ServerActionError) {
@@ -59,7 +54,7 @@ export function useSend<R>(
       }
 
       setFormState(FormState.Success);
-      setActionRes(res.value);
+      setActionRes(res);
     },
     [setFormState, setActionErrors, action, log]
   );

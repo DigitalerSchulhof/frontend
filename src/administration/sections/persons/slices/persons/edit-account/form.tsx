@@ -1,20 +1,18 @@
 'use client';
 
-import {
-  EditAccountInput,
-  EditAccountOutputNotOk,
-  EditAccountOutputOk,
-} from '#/app/api/schulhof/administration/persons/persons/edit-account/route';
 import { T } from '#/i18n';
 import { useT } from '#/i18n/client';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, TextFormRow } from '#/ui/Form';
-import { LoadingModal, Modal } from '#/ui/Modal';
+import { Modal } from '#/ui/Modal';
+import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
 import { Variant } from '#/ui/variants';
-import { FormState, useSend } from '#/utils/form';
-import { useCallback, useMemo, useRef } from 'react';
+import { unwrapAction } from '#/utils/client';
+import { useSend } from '#/utils/form';
+import { useCallback, useRef } from 'react';
+import { editAccount } from './action';
 
 export const EditAccountForm = ({
   isOwnProfile,
@@ -85,7 +83,12 @@ export const EditAccountForm = ({
   );
 };
 
-type FormError = 'internal-error';
+function mapError(err: string) {
+  switch (err) {
+    default:
+      return 'internal-error' as const;
+  }
+}
 
 function useSubmit(
   isOwnProfile: boolean,
@@ -95,99 +98,83 @@ function useSubmit(
 ) {
   const { t } = useT();
 
-  return useSend<
-    EditAccountInput,
-    EditAccountOutputOk,
-    EditAccountOutputNotOk,
-    FormError
-  >(
-    '/api/schulhof/administration/persons/persons/edit-account',
+  return useSend(
     useCallback(
-      () => ({
-        personId,
-        username: usernameRef.current!.value,
-        email: emailRef.current!.value,
-      }),
+      () =>
+        unwrapAction(
+          editAccount(
+            personId,
+            usernameRef.current!.value,
+            emailRef.current!.value
+          )
+        ),
       [personId, usernameRef, emailRef]
     ),
-    useMemo(() => ({}), []),
     useCallback(
-      (state, errors, close) => {
-        switch (state) {
-          case FormState.Loading:
-            return (
-              <LoadingModal
-                title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.title'
-                description='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.description'
-              />
-            );
-          case FormState.Error: {
-            const errorReasons = errors.flatMap((err) =>
-              t(
-                `schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.reasons.${err}`
-              )
-            );
+      () => (
+        <LoadingModal
+          title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.title'
+          description='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.description'
+        />
+      ),
+      []
+    ),
+    useCallback(
+      (close, errors) => {
+        const reasons = errors.flatMap((err) =>
+          t(
+            `schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.reasons.${mapError(
+              err
+            )}`
+          )
+        );
 
-            return (
-              <Modal onClose={close}>
-                <Alert
-                  variant={Variant.Error}
-                  title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.title'
-                >
-                  <p>
-                    <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.description' />
-                  </p>
-                  <ul>
-                    {errorReasons.map((s, i) => (
-                      <li key={i}>{s}</li>
-                    ))}
-                  </ul>
-                </Alert>
-                <ButtonGroup>
-                  <Button onClick={close} t='generic.back' />
-                </ButtonGroup>
-              </Modal>
-            );
-          }
-          case FormState.Success: {
-            const own = isOwnProfile ? 'own' : 'other';
-
-            return (
-              <Modal onClose={close}>
-                <Alert
-                  variant={Variant.Success}
-                  title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.title'
-                >
-                  <p>
-                    <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.description' />
-                  </p>
-                </Alert>
-                <ButtonGroup>
-                  <Button
-                    href={
-                      isOwnProfile
-                        ? [
-                            'paths.schulhof',
-                            'paths.schulhof.account',
-                            'paths.schulhof.account.profile',
-                          ]
-                        : [
-                            'paths.schulhof',
-                            'paths.schulhof.administration',
-                            'paths.schulhof.administration.persons',
-                            'paths.schulhof.administration.persons.persons',
-                            `{${personId}}`,
-                          ]
-                    }
-                    t={`schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.button.${own}`}
-                  />
-                </ButtonGroup>
-              </Modal>
-            );
-          }
-        }
+        return (
+          <ErrorModal
+            close={close}
+            title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.title'
+            description='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.description'
+            reasons={reasons}
+          />
+        );
       },
-      [t, isOwnProfile, personId]
-    )
+      [t]
+    ),
+    useCallback(() => {
+      const own = isOwnProfile ? 'own' : 'other';
+
+      return (
+        <Modal onClose={close}>
+          <Alert
+            variant={Variant.Success}
+            title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.title'
+          >
+            <p>
+              <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.description' />
+            </p>
+          </Alert>
+          <ButtonGroup>
+            <Button
+              href={
+                isOwnProfile
+                  ? [
+                      'paths.schulhof',
+                      'paths.schulhof.account',
+                      'paths.schulhof.account.profile',
+                    ]
+                  : [
+                      'paths.schulhof',
+                      'paths.schulhof.administration',
+                      'paths.schulhof.administration.persons',
+                      'paths.schulhof.administration.persons.persons',
+                      `{${personId}}`,
+                    ]
+              }
+              t={`schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.button.${own}`}
+            />
+          </ButtonGroup>
+        </Modal>
+      );
+    }, [personId, isOwnProfile])
   );
 }

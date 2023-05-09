@@ -1,6 +1,6 @@
 'use client';
 
-import type { WrappedActionResult } from '#/utils/server';
+import type { WrappedActionResult } from '#/utils/action';
 import { useCallback, useState } from 'react';
 
 export class ServerActionError extends Error {

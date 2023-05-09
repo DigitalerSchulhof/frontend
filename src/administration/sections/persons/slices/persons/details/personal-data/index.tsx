@@ -45,7 +45,7 @@ function useGetWriteMessageButton(
   context: LoggedInBackendContext,
   person: { id: string; firstname: string; lastname: string },
   hasAccount: boolean
-): React.ReactNode {
+): JSX.Element | null {
   const { t } = useT();
 
   if (person.id === context.person.id) return null;
