@@ -4,8 +4,8 @@ actions:
     title: Anmeldung
     subtitle: Um den Schulhof zu betreten, ist eine Anmeldung nötig.
     form:
-      username: "Benutzername: "
-      password: "Passwort: "
+      username: "Benutzername:"
+      password: "Passwort:"
       buttons:
         login: Anmelden
         forgot-password: Passwort vergessen?
@@ -33,8 +33,8 @@ actions:
     title: Passwort vergessen
     subtitle: Um ein neues Passwort zu erhalten, müssen der Benutzername und die E-Mail-Adresse angegeben werden.
     form:
-      username: "Benutzername: "
-      email: "E-Mail-Adresse: "
+      username: "Benutzername:"
+      email: "E-Mail-Adresse:"
       buttons:
         send: Neues Passwort zuschicken
         login: Zur Anmeldung

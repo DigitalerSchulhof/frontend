@@ -1,7 +1,7 @@
 title: Benutzerkonto von {name} bearbeiten
 form:
-  username: "Benutzername: "
-  email: "E-Mail-Adresse: "
+  username: "Benutzername:"
+  email: "E-Mail-Adresse:"
   buttons:
     save: Änderungen speichern
     back:

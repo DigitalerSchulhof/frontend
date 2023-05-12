@@ -2,15 +2,15 @@ title: Detailansicht von {name}
 personal-data:
   title: Persönliche Daten
   table:
-    type: "Art: "
-    username: "Benutzername: "
-    firstname: "Vorname: "
-    lastname: "Nachname: "
-    gender: "Geschlecht: "
-    email: "E-Mail-Adresse: "
-    teacher-code: "Lehrerkürzel: "
-    last-login: "Letzte Anmeldung: "
-    second-last-login: "Vorletzte Anmeldung: "
+    type: "Art:"
+    username: "Benutzername:"
+    firstname: "Vorname:"
+    lastname: "Nachname:"
+    gender: "Geschlecht:"
+    email: "E-Mail-Adresse:"
+    teacher-code: "Lehrerkürzel:"
+    last-login: "Letzte Anmeldung:"
+    second-last-login: "Vorletzte Anmeldung:"
     no-login: Noch keine Anmeldung
   no-account: Einige Felder sind nicht verfügbar, da für diese Person kein Benutzerkonto existiert.
   actions:
