@@ -47,9 +47,16 @@ export abstract class Service<
   async update(
     id: string,
     patch: MakePatch<Base>,
-    ifRev?: string
+    options: {
+      ifRev?: string;
+      skipValidation?: boolean;
+    } = {}
   ): Promise<WithId<Base>> {
-    await this.validator.assertCanUpdate(id, patch);
+    const { ifRev, skipValidation = false } = options;
+
+    if (!skipValidation) {
+      await this.validator.assertCanUpdate(id, patch);
+    }
 
     const res = await this.repository.update(id, patch, ifRev);
 

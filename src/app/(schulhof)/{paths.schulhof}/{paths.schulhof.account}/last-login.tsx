@@ -8,9 +8,15 @@ export async function getLastLoginAndUpdateDidShow(
   if (context.session.didShowLastLogin) return null;
   if (!context.account.secondLastLogin) return null;
 
-  await context.services.session.update(context.session.id, {
-    didShowLastLogin: true,
-  });
+  await context.services.session.update(
+    context.session.id,
+    {
+      didShowLastLogin: true,
+    },
+    {
+      skipValidation: true,
+    }
+  );
 
   return (
     <T

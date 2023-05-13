@@ -3,12 +3,18 @@ import {
   AccountBase,
   AccountRepository,
 } from '#/backend/repositories/content/account';
-import { AccountFilter } from '#/backend/repositories/content/account/filters';
+import {
+  AccountEmailFilter,
+  AccountFilter,
+  AccountUsernameFilter,
+} from '#/backend/repositories/content/account/filters';
 import { SessionAccountIdFilter } from '#/backend/repositories/content/session/filters';
+import { AndFilter } from '#/backend/repositories/filters';
 import {
   EqFilterOperator,
   InFilterOperator,
 } from '#/backend/repositories/filters/operators';
+import { ErrorWithPayload } from '#/utils';
 import { Service } from '../base';
 
 export class AccountService extends Service<
@@ -43,15 +49,64 @@ export class AccountService extends Service<
     return res;
   }
 
-  async updateLastLogin(
-    accountId: string,
-    lastLogin = new Date()
-  ): Promise<void> {
-    const res = await this.repository.updateLastLogin(
-      accountId,
-      lastLogin.getTime()
+  async getByUsernameAndEmail(
+    username: string,
+    email: string
+  ): Promise<WithId<AccountBase> | null> {
+    const res = await this.repository.search({
+      filter: new AndFilter(
+        new AccountUsernameFilter(new EqFilterOperator(username)),
+        new AccountEmailFilter(new EqFilterOperator(email))
+      ),
+    });
+
+    if (!res.nodes.length) {
+      return null;
+    }
+
+    if (res.nodes.length > 1) {
+      throw new ErrorWithPayload(
+        'Multiple accounts found with username and email',
+        {
+          username,
+          email,
+        }
+      );
+    }
+
+    const account = res.nodes[0];
+
+    await this.cache.set(account.id, account);
+
+    return account;
+  }
+
+  async getByUsernameAndPassword(
+    username: string,
+    password: string
+  ): Promise<WithId<AccountBase> | null> {
+    const res = await this.repository.getByUsernameAndPassword(
+      username,
+      password
     );
 
-    await this.cache.set(res.id, res);
+    if (!res.nodes.length) {
+      return null;
+    }
+
+    if (res.nodes.length > 1) {
+      throw new ErrorWithPayload(
+        'Multiple accounts found with username and password',
+        {
+          username,
+        }
+      );
+    }
+
+    const account = res.nodes[0];
+
+    await this.cache.set(account.id, account);
+
+    return account;
   }
 }

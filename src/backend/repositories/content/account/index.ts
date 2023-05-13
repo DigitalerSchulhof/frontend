@@ -1,3 +1,10 @@
+import {
+  AccountPasswordFilter,
+  AccountUsernameFilter,
+} from '#/backend/repositories/content/account/filters';
+import { AndFilter } from '#/backend/repositories/filters';
+import { EqFilterOperator } from '#/backend/repositories/filters/operators';
+import { Paginated } from '#/backend/repositories/search';
 import { aql } from 'arangojs';
 import { ArangoRepository, WithId } from '../../arango';
 
@@ -51,27 +58,24 @@ export class AccountRepository extends ArangoRepository<
 > {
   protected readonly collectionName = 'accounts';
 
-  async updateLastLogin(
-    id: string,
-    lastLogin: number
-  ): Promise<WithId<AccountBase>> {
-    const res = await this.query<WithId<AccountBase>>(aql`
-      LET doc = DOCUMENT(${this.collectionNameLiteral}, ${id})
-
-      UPDATE doc WITH {
-        secondLastLogin: doc.lastLogin,
-        lastLogin: ${lastLogin}
-      } IN ${this.collectionNameLiteral}
-
-      RETURN MERGE(
-        UNSET(NEW, "_key", "_id", "_rev"),
-        {
-          id: NEW._key,
-          rev: NEW._rev
-        }
+  async getByUsernameAndPassword(
+    username: string,
+    password: string
+  ): Promise<Paginated<WithId<AccountBase>>> {
+    const filter = new AndFilter(
+      new AccountUsernameFilter(new EqFilterOperator(username)),
+      new AccountPasswordFilter(
+        (variableName) =>
+          new EqFilterOperator<string>(
+            aql`
+              SHA512(CONCAT(${password}, ${variableName}.salt))
+            `
+          )
       )
-    `);
+    );
 
-    return (await res.next())!;
+    const res = await this.search({ filter });
+
+    return res;
   }
 }
