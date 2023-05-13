@@ -1,14 +1,14 @@
 import ms from 'ms';
 import { CacheAdapter } from './adapters';
 
-const FIVE_HOURS_MS = ms('5h');
+const FIVE_MINUTES_MS = ms('5m');
 
 export class ObjectCache<T> {
   constructor(
     private readonly adapter: CacheAdapter,
     private readonly prefix: string,
     private readonly version: string = '1',
-    private readonly defaultTtlMs: number = FIVE_HOURS_MS
+    private readonly defaultTtlMs: number = FIVE_MINUTES_MS
   ) {}
 
   private getCacheKey(key: string): string {
