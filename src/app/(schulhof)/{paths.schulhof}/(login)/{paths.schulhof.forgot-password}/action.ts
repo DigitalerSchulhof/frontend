@@ -20,7 +20,11 @@ export const forgotPassword = wrapAction(
       throw new ClientError('INVALID_CREDENTIALS');
     }
 
-    await sendPasswordResetEmail(context, account);
+    const newPassword = await context.services.account.resetPassword(
+      account.id
+    );
+
+    await sendPasswordResetEmail(context, account, newPassword);
 
     return {
       formOfAddress: account.formOfAddress,
@@ -31,8 +35,11 @@ export const forgotPassword = wrapAction(
 
 async function sendPasswordResetEmail(
   _context: BackendContext,
-  account: WithId<AccountBase>
+  account: WithId<AccountBase>,
+  newPassword: string
 ): Promise<void> {
-  console.log(`Sent email to ${account.email}`);
+  console.log(
+    `Sent email to ${account.email} with new password ${newPassword}`
+  );
   // TODO: Send email
 }
