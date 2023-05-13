@@ -1,4 +1,5 @@
 import { requireLogin } from '#/auth/component';
+import { TemporaryPasswordWarning } from '#/components/temporary-password-warning';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Button, ButtonGroup } from '#/ui/Button';
@@ -11,6 +12,9 @@ export default async function Page() {
   const context = await requireLogin();
 
   const lastLogin = await getLastLoginAndUpdateDidShow(context);
+
+  const shouldShowTemporaryPasswordWarning =
+    context.account.passwordExpiresAt !== null;
 
   return (
     <>
@@ -26,6 +30,9 @@ export default async function Page() {
           />
         </Heading>
         {lastLogin ? <p>{lastLogin}</p> : null}
+        {shouldShowTemporaryPasswordWarning ? (
+          <TemporaryPasswordWarning />
+        ) : null}
       </Col>
       <Col w='4'>
         <Link href={['paths.schulhof', 'paths.schulhof.administration']}>

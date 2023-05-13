@@ -33,7 +33,7 @@ export const GlobalStyles = createGlobalStyle`
     text-decoration: none;
   }
 
-  p, ul, li, hr {
+  p, ul, li, hr, section {
     margin-top: 7px;
     margin-bottom: 7px;
 
