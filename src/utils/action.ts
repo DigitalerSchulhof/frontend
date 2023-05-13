@@ -6,8 +6,12 @@ export type WrappedActionResult<R> =
   | { code: 'OK'; data: R }
   | { code: 'NOT_OK'; data: readonly { code: string }[] };
 
-export function wrapAction<A extends unknown[], R>(
-  fn: (...args: A) => MaybePromise<R>
+export function wrapAction<A extends unknown[], R = void>(
+  fn: (
+    ...args: {
+      [K in keyof A]: unknown;
+    }
+  ) => MaybePromise<R>
 ): (...args: A) => Promise<WrappedActionResult<R>> {
   return async (...args: A) => {
     try {
@@ -51,4 +55,10 @@ export function wrapAction<A extends unknown[], R>(
       };
     }
   };
+}
+
+export class InvalidInputError extends ClientError {
+  public constructor() {
+    super('INVALID_INPUT');
+  }
 }
