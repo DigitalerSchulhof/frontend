@@ -2,7 +2,7 @@ import { Database } from 'arangojs';
 import * as aql from 'arangojs/aql';
 import { ArrayCursor } from 'arangojs/cursor';
 import { QueryOptions } from 'arangojs/database';
-import { ArangoError, isSystemError } from 'arangojs/error';
+import { ArangoError, isArangoError } from 'arangojs/error';
 import {
   ERROR_ARANGO_CONFLICT,
   ERROR_ARANGO_DOCUMENT_NOT_FOUND,
@@ -17,6 +17,7 @@ import {
   searchQueryToArangoQuery,
 } from './search';
 import { MakePatch, paginateCursor } from './utils';
+import { DocumentCollection } from 'arangojs/collection';
 
 export type Serializable =
   | string
@@ -38,10 +39,10 @@ export abstract class ArangoRepository<
 
   private static docLiteral = aql.literal('doc');
 
-  private _collectionNameLiteral: aql.AqlLiteral | undefined;
-  protected get collectionNameLiteral(): aql.AqlLiteral {
+  private _collectionNameLiteral: DocumentCollection | undefined;
+  protected get collectionNameLiteral(): DocumentCollection {
     if (this._collectionNameLiteral === undefined) {
-      this._collectionNameLiteral = aql.literal(this.collectionName);
+      this._collectionNameLiteral = this.db.collection(this.collectionName);
     }
 
     return this._collectionNameLiteral;
@@ -216,11 +217,9 @@ export abstract class ArangoRepository<
       }
     }
 
-    if (isSystemError(error)) {
-      // Remove the `request` property from the error object to avoid a forever long ClientRequest object in the console
-      throw new Error(error.message, {
-        cause: error.cause,
-      });
+    if (isArangoError(error)) {
+      // It spams the console
+      delete error.response;
     }
 
     throw error;

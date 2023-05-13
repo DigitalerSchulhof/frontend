@@ -1,6 +1,7 @@
 import { AccountRepository } from '#/backend/repositories/content/account';
 import { ClassRepository } from '#/backend/repositories/content/class';
 import { CourseRepository } from '#/backend/repositories/content/course';
+import { IdentityTheftRepository } from '#/backend/repositories/content/identity-theft';
 import { LevelRepository } from '#/backend/repositories/content/level';
 import { PersonRepository } from '#/backend/repositories/content/person';
 import { SchoolyearRepository } from '#/backend/repositories/content/schoolyear';
@@ -8,6 +9,7 @@ import { SessionRepository } from '#/backend/repositories/content/session';
 import { AccountService } from '#/backend/services/content/account';
 import { ClassService } from '#/backend/services/content/class';
 import { CourseService } from '#/backend/services/content/course';
+import { IdentityTheftService } from '#/backend/services/content/identity-theft';
 import { LevelService } from '#/backend/services/content/level';
 import { PersonService } from '#/backend/services/content/person';
 import { SchoolyearService } from '#/backend/services/content/schoolyear';
@@ -16,6 +18,7 @@ import { ContextCreatorContext } from '../setup';
 import { createAccountService } from './content/account';
 import { createClassService } from './content/class';
 import { createCourseService } from './content/course';
+import { createIdentityTheftService } from './content/identity-theft';
 import { createLevelService } from './content/level';
 import { createPersonService } from './content/person';
 import { createSchoolyearService } from './content/schoolyear';
@@ -29,6 +32,7 @@ export interface Repositories {
   person: PersonRepository;
   account: AccountRepository;
   session: SessionRepository;
+  identityTheft: IdentityTheftRepository;
 }
 
 export interface Services {
@@ -39,6 +43,7 @@ export interface Services {
   person: PersonService;
   account: AccountService;
   session: SessionService;
+  identityTheft: IdentityTheftService;
 }
 
 export interface BackendServicesContext {
@@ -94,6 +99,12 @@ export function createServicesContext(
       services,
       repositories
     ),
+    identityTheft: createIdentityTheftService(
+      context.db,
+      context.cacheAdapter,
+      services,
+      repositories
+    ),
   };
 
   Object.assign(repositories, {
@@ -104,6 +115,7 @@ export function createServicesContext(
     person: content.person[0],
     account: content.account[0],
     session: content.session[0],
+    identityTheft: content.identityTheft[0],
   } satisfies Repositories);
 
   Object.assign(services, {
@@ -114,6 +126,7 @@ export function createServicesContext(
     person: content.person[1],
     account: content.account[1],
     session: content.session[1],
+    identityTheft: content.identityTheft[1],
   } satisfies Services);
 
   return { services };
