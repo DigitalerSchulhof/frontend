@@ -5,9 +5,15 @@ import { InvalidInputError, wrapAction } from '#/utils/action';
 import { ClientError } from '#/utils/server';
 
 export const changePassword = wrapAction<
-  [oldPassword: string, newPassword: string, newPasswordAgain: string]
->(async (oldPassword, newPassword, newPasswordAgain) => {
+  [
+    ifRev: string,
+    oldPassword: string,
+    newPassword: string,
+    newPasswordAgain: string
+  ]
+>(async (ifRev, oldPassword, newPassword, newPasswordAgain) => {
   if (
+    typeof ifRev !== 'string' ||
     typeof oldPassword !== 'string' ||
     typeof newPassword !== 'string' ||
     typeof newPasswordAgain !== 'string'
@@ -33,6 +39,7 @@ export const changePassword = wrapAction<
   await context.services.account.changePassword(
     context.account.id,
     newPassword,
-    null
+    null,
+    ifRev
   );
 });

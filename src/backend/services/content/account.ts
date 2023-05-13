@@ -14,10 +14,9 @@ import {
   EqFilterOperator,
   InFilterOperator,
 } from '#/backend/repositories/filters/operators';
-import { ErrorWithPayload } from '#/utils';
 import crypto from 'crypto';
-import { Service } from '../base';
 import ms from 'ms';
+import { Service } from '../base';
 
 export class AccountService extends Service<
   'accounts',
@@ -120,7 +119,8 @@ export class AccountService extends Service<
   async changePassword(
     accountId: string,
     newPassword: string,
-    expiresAt: Date | null
+    expiresAt: Date | null,
+    ifRev?: string
   ): Promise<WithId<AccountBase>> {
     const salt = generateSalt();
 
@@ -133,6 +133,7 @@ export class AccountService extends Service<
       },
       {
         skipValidation: true,
+        ifRev,
       }
     );
 

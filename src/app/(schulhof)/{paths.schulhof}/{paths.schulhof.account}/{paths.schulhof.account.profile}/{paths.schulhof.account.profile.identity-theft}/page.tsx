@@ -1,4 +1,5 @@
 import { requireLogin } from '#/auth/component';
+import { useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -8,6 +9,7 @@ import { IdentityTheftForm } from './form';
 
 export default async function Page() {
   const context = await requireLogin();
+  const { t } = useT();
 
   return (
     <>
@@ -27,18 +29,13 @@ export default async function Page() {
           variant={Variant.Warning}
           title='schulhof.account.profile.identity-theft.disclaimer.title'
         >
-          {context
-            .t(
-              'schulhof.account.profile.identity-theft.disclaimer.description',
-              {
-                form_of_address: context.account.formOfAddress,
-              }
-            )
-            .map((e, i) => (
-              <p key={i}>{e}</p>
-            ))}
+          {t('schulhof.account.profile.identity-theft.disclaimer.description', {
+            form_of_address: context.account.formOfAddress,
+          }).map((e, i) => (
+            <p key={i}>{e}</p>
+          ))}
         </Alert>
-        <IdentityTheftForm />
+        <IdentityTheftForm accountRev={context.account.rev} />
       </Col>
     </>
   );

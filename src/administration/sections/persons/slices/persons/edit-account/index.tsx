@@ -5,6 +5,7 @@ export type EditAccountProps = {
   isOwnProfile?: boolean;
   person: {
     id: string;
+    rev: string;
   };
   account: {
     username: string;
@@ -22,6 +23,7 @@ export const EditAccount = async ({
       <EditAccountForm
         isOwnProfile={isOwnProfile}
         personId={person.id}
+        personRev={person.rev}
         username={account.username}
         email={account.email}
       />

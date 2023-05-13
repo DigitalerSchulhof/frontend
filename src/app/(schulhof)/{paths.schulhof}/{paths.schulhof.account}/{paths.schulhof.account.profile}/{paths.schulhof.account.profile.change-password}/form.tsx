@@ -13,12 +13,13 @@ import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
 import { changePassword } from './action';
 
-export const ChangePasswordForm = () => {
+export const ChangePasswordForm = ({ accountRev }: { accountRev: string }) => {
   const oldPasswordRef = useRef<{ value: string }>(null);
   const newPasswordRef = useRef<{ value: string }>(null);
   const newPasswordAgainRef = useRef<{ value: string }>(null);
 
   const [sendChangePassword, modal] = useSubmit(
+    accountRev,
     oldPasswordRef,
     newPasswordRef,
     newPasswordAgainRef
@@ -78,6 +79,7 @@ function mapError(err: string) {
 }
 
 function useSubmit(
+  accountRev: string,
   oldPasswordRef: React.RefObject<{ value: string }>,
   newPasswordRef: React.RefObject<{ value: string }>,
   newPasswordAgainRef: React.RefObject<{ value: string }>
@@ -89,12 +91,13 @@ function useSubmit(
       () =>
         unwrapAction(
           changePassword(
+            accountRev,
             oldPasswordRef.current!.value,
             newPasswordRef.current!.value,
             newPasswordAgainRef.current!.value
           )
         ),
-      [oldPasswordRef, newPasswordRef, newPasswordAgainRef]
+      [accountRev, oldPasswordRef, newPasswordRef, newPasswordAgainRef]
     ),
     useCallback(
       () => (

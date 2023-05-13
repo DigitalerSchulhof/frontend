@@ -16,11 +16,13 @@ import { editAccount } from './action';
 export const EditAccountForm = ({
   isOwnProfile,
   personId,
+  personRev,
   username,
   email,
 }: {
   isOwnProfile: boolean;
   personId: string;
+  personRev: string;
   username: string;
   email: string;
 }) => {
@@ -32,6 +34,7 @@ export const EditAccountForm = ({
   const [sendEditAccount, modal] = useSubmit(
     isOwnProfile,
     personId,
+    personRev,
     usernameRef,
     emailRef
   );
@@ -92,6 +95,7 @@ function mapError(err: string) {
 function useSubmit(
   isOwnProfile: boolean,
   personId: string,
+  personRev: string,
   usernameRef: React.RefObject<{ value: string }>,
   emailRef: React.RefObject<{ value: string }>
 ) {
@@ -103,11 +107,12 @@ function useSubmit(
         unwrapAction(
           editAccount(
             personId,
+            personRev,
             usernameRef.current!.value,
             emailRef.current!.value
           )
         ),
-      [personId, usernameRef, emailRef]
+      [personId, personRev, usernameRef, emailRef]
     ),
     useCallback(
       () => (

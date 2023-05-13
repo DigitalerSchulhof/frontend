@@ -13,12 +13,13 @@ import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
 import { identityTheft } from './action';
 
-export const IdentityTheftForm = () => {
+export const IdentityTheftForm = ({ accountRev }: { accountRev: string }) => {
   const oldPasswordRef = useRef<{ value: string }>(null);
   const newPasswordRef = useRef<{ value: string }>(null);
   const newPasswordAgainRef = useRef<{ value: string }>(null);
 
   const [sendIdentityTheft, modal] = useSubmit(
+    accountRev,
     oldPasswordRef,
     newPasswordRef,
     newPasswordAgainRef
@@ -87,6 +88,7 @@ function mapError(err: string) {
 }
 
 function useSubmit(
+  accountRev: string,
   oldPasswordRef: React.RefObject<{ value: string }>,
   newPasswordRef: React.RefObject<{ value: string }>,
   newPasswordAgainRef: React.RefObject<{ value: string }>
@@ -98,12 +100,13 @@ function useSubmit(
       () =>
         unwrapAction(
           identityTheft(
+            accountRev,
             oldPasswordRef.current!.value,
             newPasswordRef.current!.value,
             newPasswordAgainRef.current!.value
           )
         ),
-      [oldPasswordRef, newPasswordRef, newPasswordAgainRef]
+      [accountRev, oldPasswordRef, newPasswordRef, newPasswordAgainRef]
     ),
     useCallback(
       () => (

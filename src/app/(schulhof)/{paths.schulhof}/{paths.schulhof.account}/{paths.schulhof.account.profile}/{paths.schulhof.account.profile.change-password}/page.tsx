@@ -5,7 +5,7 @@ import { Heading } from '#/ui/Heading';
 import { ChangePasswordForm } from './form';
 
 export default async function Page() {
-  await requireLogin();
+  const context = await requireLogin();
 
   return (
     <>
@@ -21,7 +21,7 @@ export default async function Page() {
         <Heading size='1' t='schulhof.account.profile.change-password.title' />
       </Col>
       <Col w='12'>
-        <ChangePasswordForm />
+        <ChangePasswordForm accountRev={context.account.rev} />
       </Col>
     </>
   );
