@@ -86,4 +86,8 @@ export abstract class Service<
   async search(query: MakeSearchQuery<Name>): Promise<Paginated<WithId<Base>>> {
     return this.repository.search(query);
   }
+
+  async searchOne(query: MakeSearchQuery<Name>): Promise<WithId<Base> | null> {
+    return this.repository.searchOne(query);
+  }
 }

@@ -88,7 +88,7 @@ export class LevelValidator extends Validator<'levels', LevelBase> {
     name: string,
     exceptId?: string
   ): Promise<void | never> {
-    const level = await this.repositories.level.search({
+    const level = await this.repositories.level.searchOne({
       filter: new AndFilter(
         new LevelNameFilter(new EqFilterOperator(name)),
         new LevelSchoolyearIdFilter(new EqFilterOperator(schoolyearId)),
@@ -99,7 +99,7 @@ export class LevelValidator extends Validator<'levels', LevelBase> {
       limit: 1,
     });
 
-    if (level.nodes.length) {
+    if (level) {
       throw new InputValidationError(LEVEL_NAME_EXISTS);
     }
   }

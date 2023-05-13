@@ -74,7 +74,7 @@ export class SchoolyearValidator extends Validator<
     name: string,
     exceptId?: string
   ): Promise<void | never> {
-    const schoolyears = await this.repositories.schoolyear.search({
+    const schoolyears = await this.repositories.schoolyear.searchOne({
       filter: new AndFilter(
         new SchoolyearNameFilter(new EqFilterOperator(name)),
         exceptId === undefined
@@ -84,7 +84,7 @@ export class SchoolyearValidator extends Validator<
       limit: 1,
     });
 
-    if (schoolyears.nodes.length) {
+    if (schoolyears) {
       throw new InputValidationError(SCHOOLYEAR_NAME_EXISTS);
     }
   }

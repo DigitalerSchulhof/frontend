@@ -73,7 +73,7 @@ export class CourseValidator extends Validator<'courses', CourseBase> {
     name: string,
     exceptId?: string
   ): Promise<void | never> {
-    const course = await this.repositories.course.search({
+    const course = await this.repositories.course.searchOne({
       filter: new AndFilter(
         new CourseNameFilter(new EqFilterOperator(name)),
         new CourseClassIdFilter(new EqFilterOperator(classId)),
@@ -84,7 +84,7 @@ export class CourseValidator extends Validator<'courses', CourseBase> {
       limit: 1,
     });
 
-    if (course.nodes.length) {
+    if (course) {
       throw new InputValidationError(COURSE_NAME_EXISTS);
     }
   }

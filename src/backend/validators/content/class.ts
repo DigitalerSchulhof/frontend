@@ -73,7 +73,7 @@ export class ClassValidator extends Validator<'classes', ClassBase> {
     name: string,
     exceptId?: string
   ): Promise<void | never> {
-    const clazz = await this.repositories.class.search({
+    const clazz = await this.repositories.class.searchOne({
       filter: new AndFilter(
         new ClassNameFilter(new EqFilterOperator(name)),
         new ClassLevelIdFilter(new EqFilterOperator(levelId)),
@@ -84,7 +84,7 @@ export class ClassValidator extends Validator<'classes', ClassBase> {
       limit: 1,
     });
 
-    if (clazz.nodes.length) {
+    if (clazz) {
       throw new InputValidationError(CLASS_NAME_EXISTS);
     }
   }

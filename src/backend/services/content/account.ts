@@ -55,63 +55,41 @@ export class AccountService extends Service<
     username: string,
     email: string
   ): Promise<WithId<AccountBase> | null> {
-    const res = await this.repository.search({
+    const res = await this.repository.searchOne({
       filter: new AndFilter(
         new AccountUsernameFilter(new EqFilterOperator(username)),
         new AccountEmailFilter(new EqFilterOperator(email))
       ),
     });
 
-    if (!res.nodes.length) {
+    if (!res) {
       return null;
     }
 
-    if (res.nodes.length > 1) {
-      throw new ErrorWithPayload(
-        'Multiple accounts found with username and email',
-        {
-          username,
-          email,
-        }
-      );
-    }
+    await this.cache.set(res.id, res);
 
-    const account = res.nodes[0];
-
-    await this.cache.set(account.id, account);
-
-    return account;
+    return res;
   }
 
   async getByUsernameAndPassword(
     username: string,
     password: string
   ): Promise<WithId<AccountBase> | null> {
-    const res = await this.repository.search({
+    const res = await this.repository.searchOne({
       filter: new AccountUsernameFilter(new EqFilterOperator(username)),
     });
 
-    if (!res.nodes.length) {
+    if (!res) {
       return null;
     }
 
-    if (res.nodes.length > 1) {
-      throw new ErrorWithPayload('Multiple accounts found with username', {
-        username,
-      });
-    }
-
-    const account = res.nodes[0];
-
-    if (
-      !doPasswordsMatch(account.password, hashPassword(password, account.salt))
-    ) {
+    if (!doPasswordsMatch(res.password, hashPassword(password, res.salt))) {
       return null;
     }
 
-    await this.cache.set(account.id, account);
+    await this.cache.set(res.id, res);
 
-    return account;
+    return res;
   }
 
   async isPasswordValid(accountId: string, password: string): Promise<boolean> {

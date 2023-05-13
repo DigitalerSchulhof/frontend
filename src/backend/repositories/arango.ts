@@ -196,6 +196,16 @@ export abstract class ArangoRepository<
     return paginateCursor(res);
   }
 
+  async searchOne(query: MakeSearchQuery<Name>): Promise<WithId<Base> | null> {
+    const res = await this.search(query);
+
+    if (res.nodes.length > 1) {
+      throw new Error('Expected one result, got more');
+    }
+
+    return res.nodes[0] ?? null;
+  }
+
   async query<T>(
     query: aql.GeneratedAqlQuery,
     options?: QueryOptions
