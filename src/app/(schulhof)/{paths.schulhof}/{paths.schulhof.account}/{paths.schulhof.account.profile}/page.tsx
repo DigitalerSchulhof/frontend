@@ -1,11 +1,11 @@
 import { PersonDetails } from '#/administration/sections/persons/slices/persons/details';
-import { requireLogin } from '#/auth';
+import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 
 export default async function Page() {
-  const { context } = await requireLogin();
+  const context = await requireLogin();
 
   return (
     <>

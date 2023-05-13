@@ -1,4 +1,4 @@
-import { requireNoLogin } from '#/auth';
+import { requireNoLogin } from '#/auth/component';
 import { ForgotPasswordForm } from './form';
 
 export default async function Page() {

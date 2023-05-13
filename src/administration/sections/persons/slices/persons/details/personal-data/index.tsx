@@ -1,5 +1,4 @@
-import { LoggedInBackendContext } from '#/backend/context';
-import { useT } from '#/i18n';
+import { LoggedInBackendContext } from '#/context';
 import { Button } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { formatName } from '#/utils';
@@ -46,8 +45,6 @@ function useGetWriteMessageButton(
   person: { id: string; firstname: string; lastname: string },
   hasAccount: boolean
 ): JSX.Element | null {
-  const { t } = useT();
-
   if (person.id === context.person.id) return null;
 
   if (!mayMessagePerson(context, person)) {
@@ -62,6 +59,8 @@ function useGetWriteMessageButton(
   if (!hasAccount) {
     <NoAccountButton personName={formatName(person)} />;
   }
+
+  const { t } = context;
 
   return (
     <Button

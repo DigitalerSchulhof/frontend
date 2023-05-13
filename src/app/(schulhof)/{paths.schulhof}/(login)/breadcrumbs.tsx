@@ -1,6 +1,6 @@
 'use client';
 
-import { useT } from '#/i18n/client';
+import { useT } from '#/i18n';
 import { useLog } from '#/log/client';
 import { BreadcrumbItem, Breadcrumbs } from '#/ui/Breadcrumbs';
 import { useSelectedLayoutSegment } from 'next/navigation';

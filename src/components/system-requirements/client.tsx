@@ -1,6 +1,6 @@
 'use client';
 
-import { useT } from '#/i18n/client';
+import { useT } from '#/i18n';
 import { LargeIconError, LargeIconTick, LargeIconWarning } from '#/ui/Icon';
 import { useEffect, useState } from 'react';
 import { css, styled } from 'styled-components';

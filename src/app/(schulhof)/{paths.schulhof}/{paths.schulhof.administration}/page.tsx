@@ -1,6 +1,6 @@
 import { AdministrationOverviewSection } from '#/administration/overview/section';
 import { administrationSections } from '#/administration/sections';
-import { requireLogin } from '#/auth';
+import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';

@@ -1,4 +1,4 @@
-import { useT } from '#/i18n';
+import { getContext } from '#/auth/component';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import {
   StyledBreadcrumbItem,
@@ -82,7 +82,7 @@ type BreadcrumbItemWithFullPath = {
 
 // eslint-disable-next-line react/display-name
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
-  const { t, translations } = useT();
+  const { t } = getContext();
 
   function translateItem(item: BreadcrumbItem): TranslatedBreadcrumbItem {
     if (typeof item === 'string') {
@@ -92,12 +92,16 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
       };
     }
 
+    let title;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      title = t(`${item.title}.title` as any);
+    } catch {
+      title = t(item.title);
+    }
+
     return {
-      title:
-        `${item.title}.title` in translations
-          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            t(`${item.title}.title` as any)
-          : t(item.title),
+      title,
       segment: t(item.segment),
       hrefOverride: item.hrefOverride,
     };

@@ -1,5 +1,6 @@
 import { Changelog } from '#/components/changelog';
 import { SystemRequirements } from '#/components/system-requirements';
+import { requireNoLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { getSettings } from '#/settings/server';
 import { Col } from '#/ui/Col';
@@ -11,6 +12,7 @@ export default async function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
+  await requireNoLogin();
   const settings = await getSettings();
 
   return (

@@ -1,8 +1,8 @@
-import { LoggedInBackendContext } from '#/backend/context';
 import {
   PersonGender,
   PersonType,
 } from '#/backend/repositories/content/person';
+import { LoggedInBackendContext } from '#/context';
 import { PersonDetailsChangePersonalDataSection } from './change-personal-data';
 import { PersonDetailsPersonalDataSection } from './personal-data';
 

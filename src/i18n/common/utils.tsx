@@ -1,11 +1,9 @@
-import { ClientTranslations } from '#/i18n/client';
 import { TFunction } from '#/i18n/common/function';
 import { Link, LinkProps } from '#/ui/Link';
 import { FormatXMLElementFn } from 'intl-messageformat';
 
 export type TContext = {
   t: TFunction;
-  translations: ClientTranslations;
 };
 
 export function makeLink(

@@ -1,8 +1,7 @@
 'use client';
 
 import { AccountSettings } from '#/backend/repositories/content/account';
-import { T } from '#/i18n';
-import { useT } from '#/i18n/client';
+import { T, useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';

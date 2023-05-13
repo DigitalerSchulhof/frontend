@@ -12,7 +12,7 @@ import { LevelService } from '#/backend/services/content/level';
 import { PersonService } from '#/backend/services/content/person';
 import { SchoolyearService } from '#/backend/services/content/schoolyear';
 import { SessionService } from '#/backend/services/content/session';
-import { ContextCreatorContext } from '..';
+import { ContextCreatorContext } from '../setup';
 import { createAccountService } from './content/account';
 import { createClassService } from './content/class';
 import { createCourseService } from './content/course';
@@ -116,7 +116,5 @@ export function createServicesContext(
     session: content.session[1],
   } satisfies Services);
 
-  return {
-    services,
-  };
+  return services;
 }

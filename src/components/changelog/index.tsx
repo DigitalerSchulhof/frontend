@@ -1,11 +1,11 @@
+import { getContext } from '#/auth/component';
 import { VisibilityToggle } from '#/components/visibility-toggle';
-import { useT } from '#/i18n';
 import { Heading } from '#/ui/Heading';
 import { ChangelogEntry } from './entry';
 import { changelogService } from './service';
 
 export const Changelog = () => {
-  const { t } = useT();
+  const { t } = getContext();
 
   const [mostRecentEntry, ...oldEntries] =
     changelogService.getChangelogEntries();

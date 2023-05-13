@@ -1,7 +1,6 @@
 'use client';
 
-import { T } from '#/i18n';
-import { useT } from '#/i18n/client';
+import { T, useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, TextFormRow } from '#/ui/Form';

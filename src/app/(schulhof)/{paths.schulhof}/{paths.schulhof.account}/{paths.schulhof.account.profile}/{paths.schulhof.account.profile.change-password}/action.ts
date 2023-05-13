@@ -8,6 +8,6 @@ export const changePassword = wrapAction(
     newPassword: string,
     newPasswordAgain: string
   ) => {
-    console.log('HU');
+    const context = requireActionLogin();
   }
 );

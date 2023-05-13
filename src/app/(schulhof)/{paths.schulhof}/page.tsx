@@ -1,25 +1,15 @@
-import { getCurrentSession } from '#/auth';
-import { NotLoggedInError } from '#/auth';
-import { getContext } from '#/backend/context';
-import { useT } from '#/i18n';
+import { componentContextCreator } from '#/auth/component';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
-  const context = getContext();
-  const { t } = useT();
+  const { t } = componentContextCreator.getContext();
+  const session = await componentContextCreator.getSession();
 
-  try {
-    await getCurrentSession(context);
+  if (session) {
     redirect(
       `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
     );
-  } catch (err) {
-    if (err instanceof NotLoggedInError) {
-      redirect(
-        `/${[t('paths.schulhof'), t('paths.schulhof.login')].join('/')}`
-      );
-    }
-
-    throw err;
   }
+
+  redirect(`/${[t('paths.schulhof'), t('paths.schulhof.login')].join('/')}`);
 }

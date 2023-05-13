@@ -1,6 +1,6 @@
 'use client';
 
-import { useT } from '#/i18n/client';
+import { useT } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import React from 'react';

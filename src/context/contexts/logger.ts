@@ -1,12 +1,12 @@
 import { Logger } from '#/log/server';
-import { UserContextCreatorContext } from '..';
+import { ContextCreatorContext } from '../setup';
 
 export interface BackendLoggerContext {
   logger: Logger;
 }
 
 export function createLoggerContext(
-  userContextCreatorContext: UserContextCreatorContext
+  contextCreatorContext: ContextCreatorContext
 ): BackendLoggerContext {
   const logger = new Logger();
 

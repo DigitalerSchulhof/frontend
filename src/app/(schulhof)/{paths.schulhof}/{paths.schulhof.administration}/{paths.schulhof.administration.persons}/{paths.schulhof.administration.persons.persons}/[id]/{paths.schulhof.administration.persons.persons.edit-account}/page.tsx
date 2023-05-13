@@ -1,5 +1,5 @@
 import { EditAccount } from '#/administration/sections/persons/slices/persons/edit-account';
-import { requireLogin } from '#/auth';
+import { requireLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -14,7 +14,7 @@ export default async function Page({
     id: string;
   };
 }) {
-  const { context } = await requireLogin();
+  const context = await requireLogin();
 
   const person = await context.services.person.getById(params.id);
 

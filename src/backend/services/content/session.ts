@@ -7,10 +7,15 @@ import * as jwt from 'jsonwebtoken';
 import { Service } from '../base';
 
 export type JwtPayload = {
+  ver: '1';
   iat: number;
   sessionId: string;
-  accountId: string;
-  hasSeenLastLogin: boolean;
+  exp: number;
+  iss: 'dsh';
+  /**
+   * accountId
+   */
+  sub: string;
 };
 
 export class SessionService extends Service<
@@ -28,38 +33,28 @@ export class SessionService extends Service<
       didShowLastLogin: false,
     });
 
-    return this.signJwt({
-      iat,
-      sessionId: session.id,
-      accountId,
-      hasSeenLastLogin: false,
-    });
+    return this.signJwt(iat, session.id, accountId);
   }
 
-  signJwt({ accountId, ...payload }: JwtPayload): string {
-    return jwt.sign({ accountId, ...payload, version: '1' }, config.jwtSecret, {
-      expiresIn: '1d',
-      issuer: 'dsh',
-      subject: accountId,
-    });
+  signJwt(iat: number, sessionId: string, accountId: string): string {
+    return jwt.sign(
+      { ver: '1', iat, sessionId } satisfies Omit<
+        JwtPayload,
+        'exp' | 'iss' | 'sub'
+      >,
+      config.jwtSecret,
+      {
+        expiresIn: '1d',
+        issuer: 'dsh',
+        subject: accountId,
+      }
+    );
   }
 
-  verifyJwt(token: string):
-    | (JwtPayload & {
-        version: '1';
-        iat: number;
-        exp: number;
-        iss: 'dsh';
-      })
-    | null {
+  verifyJwt(token: string): JwtPayload | null {
     try {
       // Only valid tokens can have our signature.
-      return jwt.verify(token, config.jwtSecret) as JwtPayload & {
-        version: '1';
-        iat: number;
-        exp: number;
-        iss: 'dsh';
-      };
+      return jwt.verify(token, config.jwtSecret) as JwtPayload;
     } catch (err) {
       if (err instanceof jwt.JsonWebTokenError) {
         return null;

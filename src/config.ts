@@ -22,7 +22,7 @@ const configSchema = {
 
 export type Config = Parse<typeof configSchema>;
 
-export function loadConfig(): Config {
+function loadConfig(): Config {
   const validatedConfig = loadEnv(configSchema);
 
   if (!validatedConfig.valid) {
