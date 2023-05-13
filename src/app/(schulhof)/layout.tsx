@@ -1,7 +1,7 @@
 import { NoScript } from '#/app/noscript';
-import { Body } from '#/shell/body';
-import { Footer } from '#/shell/footer';
-import { Header } from '#/shell/header';
+import { Body } from '#/components/body';
+import { Footer } from '#/components/footer';
+import { Header } from '#/components/header';
 
 export default function SchulhofLayout({
   children,

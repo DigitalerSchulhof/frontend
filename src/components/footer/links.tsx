@@ -1,4 +1,4 @@
-import { FooterButton, FooterButtonGroup } from '#/shell/footer/button';
+import { FooterButton, FooterButtonGroup } from './button';
 
 export const Links = () => {
   return (
