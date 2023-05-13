@@ -30,7 +30,7 @@ function createBackendContext(config: Config): BackendContext {
 
   const servicesContext = createServicesContext(creatorContext);
   const loggerContext = createLoggerContext(creatorContext);
-  const i18nContext = createI18nContext(creatorContext);
+  const i18nContext = createI18nContext();
 
   return {
     ...servicesContext,

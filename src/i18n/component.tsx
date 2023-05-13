@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks -- Component works as both Client and Server Component. We don't memo if on the server. */
 import { useMemo } from 'react';
 import { useT } from './hook';
-import { Translations } from '../translations';
+import { Translations } from './translations';
 
 export type TProps<K extends keyof Translations> = {
   t: K;
@@ -15,17 +16,14 @@ export const T = <const K extends keyof Translations>({
   args,
 }: TProps<K>): JSX.Element => {
   if (typeof window === 'undefined') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks -- This is for this component to work both on the server and the client
     const { t: tFunc } = useT();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return <>{tFunc(t, args as any)}</>;
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- This is for this component to work both on the server and the client
   const { t: tFunc } = useT();
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- This is for this component to work both on the server and the client
   return useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return <>{tFunc(t, args as any)}</>;

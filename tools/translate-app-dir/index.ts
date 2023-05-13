@@ -1,4 +1,4 @@
-import { TranslationService } from '#/i18n/server/service';
+import { TranslationService } from '#/context/contexts/i18n/service';
 import { DEFAULT_LOCALE } from '#/utils';
 import { isWatchMode } from '../utils';
 import {

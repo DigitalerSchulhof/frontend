@@ -1,4 +1,6 @@
-import { getContext } from '#/auth/component';
+// Both Server and Client Component
+
+import { useT } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledAlert } from '#/ui/Alert/client';
 import { Heading } from '#/ui/Heading';
@@ -11,7 +13,7 @@ export interface AlertProps {
 }
 
 export const Alert = ({ title, children, variant }: AlertProps) => {
-  const { t } = getContext();
+  const { t } = useT();
 
   const titleElement = title ? <Heading size='4'>{t(title)}</Heading> : null;
 

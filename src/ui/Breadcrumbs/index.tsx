@@ -1,4 +1,6 @@
-import { getContext } from '#/auth/component';
+// Both Server and Client Component
+
+import { useT } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import {
   StyledBreadcrumbItem,
@@ -82,7 +84,7 @@ type BreadcrumbItemWithFullPath = {
 
 // eslint-disable-next-line react/display-name
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
-  const { t } = getContext();
+  const { t } = useT();
 
   function translateItem(item: BreadcrumbItem): TranslatedBreadcrumbItem {
     if (typeof item === 'string') {

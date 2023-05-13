@@ -1,19 +1,7 @@
 'use client';
 
-import { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
+import { ClientTranslations } from '#/context/contexts/i18n/client-translations';
 import { createContext } from 'react';
-
-export type ClientTranslations = Record<
-  string,
-  | {
-      type: 'string';
-      ast: MessageFormatElement[];
-    }
-  | {
-      type: 'array';
-      asts: MessageFormatElement[][];
-    }
->;
 
 export const translationsContext = createContext<ClientTranslations>({});
 

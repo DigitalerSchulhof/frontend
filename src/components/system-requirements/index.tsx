@@ -1,5 +1,5 @@
-import { getContext } from '#/auth/component';
 import { changelogService } from '#/components/changelog/service';
+import { useT } from '#/i18n';
 import {
   LargeIconCookies,
   LargeIconGroupError,
@@ -12,7 +12,7 @@ import {
 } from './client';
 
 export const SystemRequirements = () => {
-  const { t } = getContext();
+  const { t } = useT();
   const version = changelogService.getVersion();
 
   return (

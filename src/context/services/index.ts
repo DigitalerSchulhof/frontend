@@ -116,5 +116,5 @@ export function createServicesContext(
     session: content.session[1],
   } satisfies Services);
 
-  return services;
+  return { services };
 }

@@ -1,5 +1,6 @@
 'use server';
 
+import { requireLogin } from '#/auth/action';
 import { wrapAction } from '#/utils/action';
 
 export const changePassword = wrapAction(
@@ -8,6 +9,6 @@ export const changePassword = wrapAction(
     newPassword: string,
     newPasswordAgain: string
   ) => {
-    const context = requireActionLogin();
+    const context = requireLogin();
   }
 );

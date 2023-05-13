@@ -1,5 +1,4 @@
 import { ObjectCache } from '#/backend/caches/object-cache';
-import { Services } from '#/backend/context/services';
 import {
   ArangoRepository,
   Serializable,
@@ -13,6 +12,7 @@ import {
   getByIdsCachedOrLoad,
 } from '#/backend/services/utils';
 import { Validator } from '#/backend/validators/base';
+import { Services } from '#/context/services';
 
 export abstract class Service<
   Name extends string,

@@ -1,5 +1,7 @@
-import { getContext } from '#/auth/component';
+// Client Component
+
 import { T } from '#/i18n';
+import { useT } from '#/i18n/hook';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
@@ -15,7 +17,7 @@ export type LoadingModalProps = {
 };
 
 export const LoadingModal = ({ title, description }: LoadingModalProps) => {
-  const { t } = getContext();
+  const { t } = useT();
 
   return (
     <Modal>

@@ -1,6 +1,5 @@
-import { getOrMakeClientTranslations } from '#/i18n/server';
+import { getContext } from '#/auth/component';
 import { getSettings } from '#/settings/server';
-import { DEFAULT_LOCALE } from '#/utils';
 import { Providers } from './providers';
 
 export default async function RootLayout({
@@ -8,8 +7,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const clientTranslations = getOrMakeClientTranslations(DEFAULT_LOCALE);
-
+  const { clientTranslations } = getContext();
   const appSettings = await getSettings();
 
   return (

@@ -1,3 +1,3 @@
-export { T } from './common/component';
-export { useT } from './common/hook';
-export { makeLink } from './common/utils';
+export { T } from './component';
+export { useT } from './hook';
+export { makeLink } from './utils';
