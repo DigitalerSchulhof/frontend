@@ -6,8 +6,8 @@ import {
   StyledBreadcrumbItem,
   StyledBreadcrumbs,
 } from '#/ui/Breadcrumbs/client';
-import { LinkProps } from 'next/link';
-import React, { Fragment } from 'react';
+import { LinkProps } from '#/ui/Link';
+import { Fragment } from 'react';
 
 /**
  * For a segment `S`, the title of the breadcrumb is, if available, the translation `S.title`, otherwise the translation `S`.
@@ -52,7 +52,7 @@ export type BreadcrumbItem =
       /**
        * The title of the breadcrumb item
        */
-      title: TranslationsWithStringTypeAndNoVariables;
+      title?: TranslationsWithStringTypeAndNoVariables;
       /**
        * The value to be used for the current item in constructing the href of the succeeding items
        */
@@ -60,7 +60,7 @@ export type BreadcrumbItem =
       /**
        * Override the href of the breadcrumb item (direct click)
        */
-      hrefOverride?: LinkProps['href'];
+      href?: LinkProps['href'];
     };
 
 export interface BreadcrumbsProps {
@@ -94,14 +94,16 @@ export const Breadcrumbs = ({ path }: BreadcrumbsProps) => {
       };
     }
 
+    const title = item.title ?? item.segment;
+
     return {
       title:
-        `${item.title}.title` in translations
+        `${title}.title` in translations
           ? // eslint-disable-next-line @typescript-eslint/no-explicit-any -- We just have to pray here that no one puts a component in a route title
-            t(`${item.title}.title` as any)
-          : t(item.title),
+            t(`${title}.title` as any)
+          : t(title),
       segment: t(item.segment),
-      hrefOverride: item.hrefOverride,
+      hrefOverride: item.href,
     };
   }
 
