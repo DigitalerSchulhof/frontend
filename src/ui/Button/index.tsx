@@ -86,7 +86,7 @@ export interface IconButtonProps
   icon: React.ReactNode;
 }
 
-const UnstyledIconButton: React.FC<IconButtonProps> = ({ icon, ...props }) => {
+const UnstyledIconButton = ({ icon, ...props }: IconButtonProps) => {
   return <Button {...props}>{icon}</Button>;
 };
 

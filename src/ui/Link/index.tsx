@@ -15,7 +15,7 @@ export interface LinkProps extends Omit<NextLinkProps, 'href'> {
   href: NextLinkProps['href'] | TranslationsWithStringTypeAndNoVariables[];
 }
 
-const UnstyledLink: React.FC<LinkProps> = ({ href, external, ...props }) => {
+const UnstyledLink = ({ href, external, ...props }: LinkProps) => {
   const { t } = useT();
 
   const hrefString = Array.isArray(href) ? `/${href.map(t).join('/')}` : href;

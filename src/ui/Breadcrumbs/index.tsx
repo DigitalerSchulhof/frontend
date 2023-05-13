@@ -7,7 +7,7 @@ import {
   StyledBreadcrumbs,
 } from '#/ui/Breadcrumbs/client';
 import { LinkProps } from 'next/link';
-import React, { Fragment, memo } from 'react';
+import React, { Fragment } from 'react';
 
 /**
  * For a segment `S`, the title of the breadcrumb is, if available, the translation `S.title`, otherwise the translation `S`.
@@ -83,8 +83,8 @@ type BreadcrumbItemWithFullPath = {
 };
 
 // eslint-disable-next-line react/display-name
-export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
-  const { t } = useT();
+export const Breadcrumbs = ({ path }: BreadcrumbsProps) => {
+  const { t, translations } = useT();
 
   function translateItem(item: BreadcrumbItem): TranslatedBreadcrumbItem {
     if (typeof item === 'string') {
@@ -94,16 +94,12 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
       };
     }
 
-    let title;
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      title = t(`${item.title}.title` as any);
-    } catch {
-      title = t(item.title);
-    }
-
     return {
-      title,
+      title:
+        `${item.title}.title` in translations
+          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any -- We just have to pray here that no one puts a component in a route title
+            t(`${item.title}.title` as any)
+          : t(item.title),
       segment: t(item.segment),
       hrefOverride: item.hrefOverride,
     };
@@ -148,4 +144,4 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ path }) => {
       })}
     </StyledBreadcrumbs>
   );
-});
+};

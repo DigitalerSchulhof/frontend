@@ -5,8 +5,9 @@ import {
   LoggedInBackendContext,
   createLoggedInBackendContext,
 } from '#/context';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+// eslint-disable-next-line @typescript-eslint/no-var-requires -- See https://github.com/vercel/next.js/issues/49752#issuecomment-1546687003
+const { cookies } = require('next/headers');
 
 abstract class ContextCreator {
   constructor(protected context: BackendContext) {}
