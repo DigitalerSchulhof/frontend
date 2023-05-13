@@ -1,4 +1,7 @@
-import { TranslationEntry, TranslationService } from '#/i18n/server/service';
+import {
+  TranslationEntry,
+  TranslationService,
+} from '#/context/contexts/i18n/service';
 import { DEFAULT_LOCALE } from '#/utils';
 import { __src } from '#/utils/paths';
 import * as mfp from '@formatjs/icu-messageformat-parser';
