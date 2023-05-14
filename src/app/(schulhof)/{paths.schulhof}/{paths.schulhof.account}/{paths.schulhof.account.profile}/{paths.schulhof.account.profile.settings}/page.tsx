@@ -1,4 +1,4 @@
-import { Settings } from '#/administration/sections/persons/settings';
+import { EditAccountSettings } from '#/administration/sections/persons/settings';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -21,7 +21,7 @@ export default async function Page() {
         <Heading size='1' t='schulhof.account.profile.settings.title' />
       </Col>
       {/* @ts-expect-error -- Server Component */}
-      <Settings
+      <EditAccountSettings
         isOwnProfile
         person={context.person}
         account={context.account}

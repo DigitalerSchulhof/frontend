@@ -21,7 +21,7 @@ import { useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef } from 'react';
 import { settings } from './action';
 
-export const SettingsForm = ({
+export const EditAccountSettingsForm = ({
   isOwnProfile,
   personId,
   settings,
@@ -36,7 +36,12 @@ export const SettingsForm = ({
 
   const refs = useRefs();
 
-  const [sendSettings, modal] = useSubmit(isOwnProfile, personId, refs);
+  const [sendSettings, modal] = useSubmit(
+    isOwnProfile,
+    personId,
+    maxSessionTimeout,
+    refs
+  );
 
   return (
     <DisplayContentsForm onSubmit={sendSettings}>
@@ -122,16 +127,16 @@ export const SettingsForm = ({
             numberLabel='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfter.title.number'
             unit='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfterInBin.unit'
             defaultValue={settings.mailbox.deleteAfter}
+            numberDefaultValue={100}
             ref={refs.mailboxDeleteAfter}
-            min={0}
           />
           <NumberOrNullFormRow
             whetherLabel='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfterInBin.title.whether'
             numberLabel='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfterInBin.title.number'
             unit='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfterInBin.unit'
             defaultValue={settings.mailbox.deleteAfterInBin}
+            numberDefaultValue={100}
             ref={refs.mailboxDeleteAfterInBin}
-            min={0}
           />
         </Table>
         <Heading
@@ -144,8 +149,6 @@ export const SettingsForm = ({
             unit='schulhof.administration.sections.persons.settings.form.profile.sessionTimeout.unit'
             defaultValue={settings.profile.sessionTimeout}
             ref={refs.profileSessionTimeout}
-            min={0}
-            max={maxSessionTimeout}
           />
         </Table>
       </Col>
@@ -252,6 +255,7 @@ function mapError(err: string) {
 function useSubmit(
   isOwnProfile: boolean,
   personId: string,
+  maxSessionTimeout: number,
   refs: ReturnType<typeof useRefs>
 ) {
   const { t } = useT();
@@ -303,7 +307,10 @@ function useSubmit(
           t(
             `schulhof.administration.sections.persons.settings.modals.error.reasons.${mapError(
               err
-            )}`
+            )}`,
+            {
+              max_session_timeout: maxSessionTimeout,
+            }
           )
         );
 
@@ -316,7 +323,7 @@ function useSubmit(
           />
         );
       },
-      [t]
+      [t, maxSessionTimeout]
     ),
     useCallback(() => {
       const own = isOwnProfile ? 'own' : 'other';

@@ -1,6 +1,6 @@
 import { AccountSettings } from '#/backend/repositories/content/account';
 import { MAX_SESSION_TIMEOUT } from '#/backend/validators/content/account';
-import { SettingsForm } from './form';
+import { EditAccountSettingsForm } from './form';
 
 export type SettingsProps = {
   isOwnProfile?: boolean;
@@ -12,13 +12,13 @@ export type SettingsProps = {
   };
 };
 
-export const Settings = async ({
+export const EditAccountSettings = async ({
   isOwnProfile = false,
   person,
   account,
 }: SettingsProps) => {
   return (
-    <SettingsForm
+    <EditAccountSettingsForm
       isOwnProfile={isOwnProfile}
       personId={person.id}
       settings={account.settings}

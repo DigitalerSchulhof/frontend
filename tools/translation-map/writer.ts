@@ -456,7 +456,10 @@ export class TranslationMapWriter {
   ): ts.TypeNode | null {
     switch (astElement.type) {
       case mfp.TYPE.argument:
-        return ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword);
+        return ts.factory.createUnionTypeNode([
+          ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+          ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
+        ]);
       case mfp.TYPE.number:
         return ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword);
       case mfp.TYPE.date:

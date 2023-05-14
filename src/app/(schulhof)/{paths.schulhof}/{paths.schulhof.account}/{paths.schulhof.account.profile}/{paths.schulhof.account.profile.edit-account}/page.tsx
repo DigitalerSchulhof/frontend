@@ -20,14 +20,12 @@ export default async function Page() {
         />
         <Heading size='1' t='schulhof.account.profile.edit-account.title' />
       </Col>
-      <Col w='6'>
-        {/* @ts-expect-error -- Server Component */}
-        <EditAccount
-          isOwnProfile
-          person={context.person}
-          account={context.account}
-        />
-      </Col>
+      {/* @ts-expect-error -- Server Component */}
+      <EditAccount
+        isOwnProfile
+        person={context.person}
+        account={context.account}
+      />
     </>
   );
 }

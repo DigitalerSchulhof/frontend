@@ -1,4 +1,4 @@
-title: Benutzerkonto von {name} bearbeiten
+title: Einstellungen von {name} bearbeiten
 form:
   emailOn:
     title: "Per E-Mail benachrichtigen, wenn:"
@@ -54,11 +54,11 @@ modals:
       internal-error:
         - es ist ein interner Fehler aufgetreten.
       invalid-mailbox-delete-after:
-        - ungültige Einstellung für »Nachrichten automatisch löschen«.
+        - ungültige Einstellung für »Nachrichten automatisch löschen«. Die Eingabe muss mindestens 1 sein.
       invalid-mailbox-delete-after-in-bin:
-        - ungültige Einstellung für »Nachrichten im Papierkorb automatisch löschen«.
+        - ungültige Einstellung für »Nachrichten im Papierkorb automatisch löschen«. Die Eingabe muss mindestens 1 sein.
       invalid-session-timeout:
-        - ungültige Einstellung für »Automatisch abmelden nach«.
+        - ungültige Einstellung für »Automatisch abmelden nach«. Die Eingabe muss zwischen 1 und {max_session_timeout} sein.
   success:
     title: Einstellungen geändert
     description: Die Einstellungen wurden erfolgreich geändert.

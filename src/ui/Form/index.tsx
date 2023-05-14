@@ -77,9 +77,11 @@ export const TextFormRow = forwardRef<{ value: string }, TextFormRowProps>(
   }
 );
 
-export type NumberFormRowProps = NumberInputProps &
+export type NumberFormRowProps = Omit<NumberInputProps, 'min' | 'max'> &
   Omit<FormRowProps, 'children'> & {
     unit?: TranslationsWithStringTypeAndNoVariables;
+    min?: number;
+    max?: number;
   };
 
 export const NumberFormRow = forwardRef<{ value: number }, NumberFormRowProps>(
@@ -120,13 +122,21 @@ export type NumberOrNullFormRowProps = Omit<
   whetherLabel: TranslationsWithStringTypeAndNoVariables;
   numberLabel: TranslationsWithStringTypeAndNoVariables;
   defaultValue?: number | null;
+  numberDefaultValue?: number;
 };
 
 export const NumberOrNullFormRow = forwardRef<
   { value: number | null },
   NumberOrNullFormRowProps
 >(function NumberOrNullFormRow(
-  { whetherLabel, numberLabel, defaultValue, unit, ...props },
+  {
+    whetherLabel,
+    numberLabel,
+    defaultValue,
+    unit,
+    numberDefaultValue,
+    ...props
+  },
   ref
 ) {
   const inputRef = useRef<{ value: number }>(null);
@@ -156,7 +166,7 @@ export const NumberOrNullFormRow = forwardRef<
       {isEnabled ? (
         <NumberFormRow
           label={numberLabel}
-          defaultValue={defaultValue ?? 0}
+          defaultValue={defaultValue ?? numberDefaultValue ?? props.min ?? 0}
           unit={unit}
           {...props}
           ref={inputRef}
