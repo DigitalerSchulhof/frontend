@@ -1,4 +1,5 @@
 import { LoggedInBackendContext } from '#/context';
+import { useT } from '#/i18n';
 import { Button } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { formatName } from '#/utils';
@@ -29,7 +30,7 @@ export const PersonDetailsPersonalDataSection = ({
     <>
       <Heading
         size='2'
-        t='schulhof.administration.sections.persons.slices.persons.details.personal-data.title'
+        t='schulhof.administration.sections.persons.details.personal-data.title'
       />
       <PersonDetailsPersonalDataSectionTable
         person={person}
@@ -45,6 +46,8 @@ function useGetWriteMessageButton(
   person: { id: string; firstname: string; lastname: string },
   hasAccount: boolean
 ): JSX.Element | null {
+  const { t } = useT();
+
   if (person.id === context.person.id) return null;
 
   if (!mayMessagePerson(context, person)) {
@@ -60,8 +63,6 @@ function useGetWriteMessageButton(
     <NoAccountButton personName={formatName(person)} />;
   }
 
-  const { t } = context;
-
   return (
     <Button
       href={`/${[
@@ -73,7 +74,7 @@ function useGetWriteMessageButton(
         person.id
       }`}
       t={
-        'schulhof.administration.sections.persons.slices.persons.details.personal-data.actions.write-message.button'
+        'schulhof.administration.sections.persons.details.personal-data.actions.write-message.button'
       }
     />
   );

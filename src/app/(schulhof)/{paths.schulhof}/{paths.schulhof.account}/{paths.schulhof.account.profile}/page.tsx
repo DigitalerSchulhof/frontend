@@ -1,4 +1,4 @@
-import { PersonDetails } from '#/administration/sections/persons/slices/persons/details';
+import { PersonDetails } from '#/administration/sections/persons/details';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';

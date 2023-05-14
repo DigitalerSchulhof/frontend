@@ -44,13 +44,13 @@ export const EditAccountForm = ({
       {modal}
       <Table>
         <TextFormRow
-          label='schulhof.administration.sections.persons.slices.persons.edit-account.form.username'
+          label='schulhof.administration.sections.persons.edit-account.form.username'
           autoComplete='username'
           defaultValue={username}
           ref={usernameRef}
         />
         <TextFormRow
-          label='schulhof.administration.sections.persons.slices.persons.edit-account.form.email'
+          label='schulhof.administration.sections.persons.edit-account.form.email'
           autoComplete='email'
           defaultValue={email}
           ref={emailRef}
@@ -60,7 +60,7 @@ export const EditAccountForm = ({
         <Button
           type='submit'
           variant={Variant.Success}
-          t='schulhof.administration.sections.persons.slices.persons.edit-account.form.buttons.save'
+          t='schulhof.administration.sections.persons.edit-account.form.buttons.save'
         />
         <Button
           href={
@@ -74,11 +74,10 @@ export const EditAccountForm = ({
                   'paths.schulhof',
                   'paths.schulhof.administration',
                   'paths.schulhof.administration.persons',
-                  'paths.schulhof.administration.persons.persons',
                   `{${personId}}`,
                 ]
           }
-          t={`schulhof.administration.sections.persons.slices.persons.edit-account.form.buttons.back.${own}`}
+          t={`schulhof.administration.sections.persons.edit-account.form.buttons.back.${own}`}
         />
       </ButtonGroup>
     </Form>
@@ -117,8 +116,8 @@ function useSubmit(
     useCallback(
       () => (
         <LoadingModal
-          title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.title'
-          description='schulhof.administration.sections.persons.slices.persons.edit-account.modals.loading.description'
+          title='schulhof.administration.sections.persons.edit-account.modals.loading.title'
+          description='schulhof.administration.sections.persons.edit-account.modals.loading.description'
         />
       ),
       []
@@ -127,7 +126,7 @@ function useSubmit(
       (close, errors) => {
         const reasons = errors.flatMap((err) =>
           t(
-            `schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.reasons.${mapError(
+            `schulhof.administration.sections.persons.edit-account.modals.error.reasons.${mapError(
               err
             )}`
           )
@@ -136,8 +135,8 @@ function useSubmit(
         return (
           <ErrorModal
             close={close}
-            title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.title'
-            description='schulhof.administration.sections.persons.slices.persons.edit-account.modals.error.description'
+            title='schulhof.administration.sections.persons.edit-account.modals.error.title'
+            description='schulhof.administration.sections.persons.edit-account.modals.error.description'
             reasons={reasons}
           />
         );
@@ -151,10 +150,10 @@ function useSubmit(
         <Modal onClose={close}>
           <Alert
             variant={Variant.Success}
-            title='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.title'
+            title='schulhof.administration.sections.persons.edit-account.modals.success.title'
           >
             <p>
-              <T t='schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.description' />
+              <T t='schulhof.administration.sections.persons.edit-account.modals.success.description' />
             </p>
           </Alert>
           <ButtonGroup>
@@ -170,11 +169,10 @@ function useSubmit(
                       'paths.schulhof',
                       'paths.schulhof.administration',
                       'paths.schulhof.administration.persons',
-                      'paths.schulhof.administration.persons.persons',
                       `{${personId}}`,
                     ]
               }
-              t={`schulhof.administration.sections.persons.slices.persons.edit-account.modals.success.button.${own}`}
+              t={`schulhof.administration.sections.persons.edit-account.modals.success.button.${own}`}
             />
           </ButtonGroup>
         </Modal>

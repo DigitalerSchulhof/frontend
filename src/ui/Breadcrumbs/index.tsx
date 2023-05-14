@@ -1,5 +1,6 @@
 // Both Server and Client Component
 
+import { MaybeArray } from '#/backend/utils';
 import { useT } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import {
@@ -23,28 +24,6 @@ import { Fragment } from 'react';
  * // Schulhof   -> /Schulhof
  * // Verwaltung -> /Schulhof/Verwaltung
  * ```
- *
- * @example
- * ```ts
- * const breadcrumbs = [
- *   'paths.schulhof',
- *   'paths.schulhof.administration',
- *   {
- *     segment: 'paths.schulhof.administration.persons',
- *     href: [
- *       'paths.schulhof',
- *       'paths.schulhof.administration',
- *     ],
- *   },
- *   'paths.schulhof.administration.persons.persons',
- * ];
- *
- * // Yields the following breadcrumbs:
- * // Schulhof             -> /Schulhof
- * // Verwaltung           -> /Schulhof/Verwaltung
- * // Personen und Gruppen -> /Schulhof/Verwaltung
- * // Personen             -> /Schulhof/Verwaltung/Personen_und_Gruppen/Personen
- * ```
  */
 export type BreadcrumbItem =
   | Exclude<TranslationsWithStringTypeAndNoVariables, `{${string}}`>
@@ -56,7 +35,7 @@ export type BreadcrumbItem =
       /**
        * The value to be used for the current item in constructing the href of the succeeding items
        */
-      segment: TranslationsWithStringTypeAndNoVariables;
+      segment: MaybeArray<TranslationsWithStringTypeAndNoVariables>;
       /**
        * Override the href of the breadcrumb item (direct click)
        */
@@ -69,7 +48,7 @@ export interface BreadcrumbsProps {
 
 type TranslatedBreadcrumbItem = {
   title: string;
-  segment: string;
+  segment: string[];
   /**
    * Override the href of the breadcrumb item (direct click)
    */
@@ -94,7 +73,10 @@ export const Breadcrumbs = ({ path }: BreadcrumbsProps) => {
       };
     }
 
-    const title = item.title ?? item.segment;
+    const segment =
+      typeof item.segment === 'string' ? [item.segment] : item.segment;
+
+    const title = item.title ?? segment[0];
 
     return {
       title:
@@ -102,7 +84,7 @@ export const Breadcrumbs = ({ path }: BreadcrumbsProps) => {
           ? // eslint-disable-next-line @typescript-eslint/no-explicit-any -- We just have to pray here that no one puts a component in a route title
             t(`${title}.title` as any)
           : t(title),
-      segment: t(item.segment),
+      segment: segment.map(t),
       hrefOverride: item.href,
     };
   }
@@ -117,13 +99,13 @@ export const Breadcrumbs = ({ path }: BreadcrumbsProps) => {
     if (lastItem) {
       acc.push({
         title,
-        href: `${lastItem.href}/${segment}`,
+        href: `${lastItem.href}/${segment.join('/')}`,
         hrefOverride: hrefOverride,
       });
     } else {
       acc.push({
         title,
-        href: `/${segment}`,
+        href: `/${segment.join('/')}`,
         hrefOverride: hrefOverride,
       });
     }

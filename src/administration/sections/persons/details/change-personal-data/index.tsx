@@ -29,7 +29,7 @@ export const PersonDetailsChangePersonalDataSection = ({
     <>
       <Heading
         size='2'
-        t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.title'
+        t='schulhof.administration.sections.persons.details.change-personal-data.title'
       />
       <ButtonGroup>
         <UserButtons
@@ -47,7 +47,7 @@ export const PersonDetailsChangePersonalDataSection = ({
         />
       </ButtonGroup>
       {!isOwnProfile ? (
-        <Note t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.change-password.note' />
+        <Note t='schulhof.administration.sections.persons.details.change-personal-data.actions.change-password.note' />
       ) : null}
     </>
   );
@@ -70,7 +70,7 @@ const UserButtons = ({
         account && (
           <Button
             key='edit-account'
-            t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.edit-account'
+            t='schulhof.administration.sections.persons.details.change-personal-data.actions.edit-account'
             href={
               isOwnProfile
                 ? [
@@ -83,9 +83,8 @@ const UserButtons = ({
                     'paths.schulhof',
                     'paths.schulhof.administration',
                     'paths.schulhof.administration.persons',
-                    'paths.schulhof.administration.persons.persons',
                     `{${person.id}}`,
-                    'paths.schulhof.administration.persons.persons.edit-account',
+                    'paths.schulhof.administration.persons.edit-account',
                   ]
             }
           />
@@ -93,7 +92,7 @@ const UserButtons = ({
         isOwnProfile && (
           <Button
             key='change-password'
-            t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.change-password.button'
+            t='schulhof.administration.sections.persons.details.change-personal-data.actions.change-password.button'
             href={[
               'paths.schulhof',
               'paths.schulhof.account',
@@ -104,7 +103,7 @@ const UserButtons = ({
         ),
         <Button
           key='settings'
-          t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.settings'
+          t='schulhof.administration.sections.persons.details.change-personal-data.actions.settings'
           href={
             isOwnProfile
               ? [
@@ -117,16 +116,15 @@ const UserButtons = ({
                   'paths.schulhof',
                   'paths.schulhof.administration',
                   'paths.schulhof.administration.persons',
-                  'paths.schulhof.administration.persons.persons',
                   `{${person.id}}`,
-                  'paths.schulhof.administration.persons.persons.settings',
+                  'paths.schulhof.administration.persons.settings',
                 ]
           }
         />,
         isOwnProfile && (
           <Button
             key='identity-theft'
-            t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.identity-theft'
+            t='schulhof.administration.sections.persons.details.change-personal-data.actions.identity-theft'
             variant={Variant.Warning}
             href={[
               'paths.schulhof',
@@ -165,54 +163,50 @@ const AdminButtons = ({
         [
           <Button
             key='edit-person'
-            t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.edit-person'
+            t='schulhof.administration.sections.persons.details.change-personal-data.actions.edit-person'
             href={[
               'paths.schulhof',
               'paths.schulhof.administration',
               'paths.schulhof.administration.persons',
-              'paths.schulhof.administration.persons.persons',
               `{${person.id}}`,
-              'paths.schulhof.administration.persons.persons.edit',
+              'paths.schulhof.administration.persons.edit',
             ]}
           />,
           person.type === PersonType.Teacher && (
             <Button
               key='change-teacher-code'
-              t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.change-teacher-code'
+              t='schulhof.administration.sections.persons.details.change-personal-data.actions.change-teacher-code'
               href={[
                 'paths.schulhof',
                 'paths.schulhof.administration',
                 'paths.schulhof.administration.persons',
-                'paths.schulhof.administration.persons.persons',
                 `{${person.id}}`,
-                'paths.schulhof.administration.persons.persons.change-teacher-code',
+                'paths.schulhof.administration.persons.change-teacher-code',
               ]}
             />
           ),
           <Button
             key='permissions-and-roles'
-            t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.permissions-and-roles'
+            t='schulhof.administration.sections.persons.details.change-personal-data.actions.permissions-and-roles'
             href={[
               'paths.schulhof',
               'paths.schulhof.administration',
               'paths.schulhof.administration.persons',
-              'paths.schulhof.administration.persons.persons',
               `{${person.id}}`,
-              'paths.schulhof.administration.persons.persons.permissions-and-roles',
+              'paths.schulhof.administration.persons.permissions-and-roles',
             ]}
           />,
           !account && (
             <Button
               key='create-account'
               variant={Variant.Success}
-              t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.create-account'
+              t='schulhof.administration.sections.persons.details.change-personal-data.actions.create-account'
               href={[
                 'paths.schulhof',
                 'paths.schulhof.administration',
                 'paths.schulhof.administration.persons',
-                'paths.schulhof.administration.persons.persons',
                 `{${person.id}}`,
-                'paths.schulhof.administration.persons.persons.create-account',
+                'paths.schulhof.administration.persons.create-account',
               ]}
             />
           ),

@@ -1,5 +1,6 @@
 'use client';
 
+import { FormOfAddress } from '#/backend/repositories/content/account';
 import { T } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
@@ -8,7 +9,13 @@ import { Modal } from '#/ui/Modal';
 import { Variant } from '#/ui/variants';
 import { useToggle } from '#/utils/client';
 
-export const NoAccountButton = ({ personName }: { personName: string }) => {
+export const MayNotMessagePersonButton = ({
+  formOfAddress,
+  personName,
+}: {
+  formOfAddress: FormOfAddress;
+  personName: string;
+}) => {
   const [isOpen, setIsOpenTrue, setIsOpenFalse] = useToggle();
 
   return (
@@ -16,14 +23,14 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
       <Button
         onClick={setIsOpenTrue}
         disabled
-        t='schulhof.administration.sections.persons.slices.persons.details.personal-data.actions.write-message.button'
+        t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.button'
       />
       {isOpen ? (
         <Modal onClose={setIsOpenFalse}>
           <Alert variant={Variant.Error}>
             <Heading size='4'>
               <T
-                t='schulhof.administration.sections.persons.slices.persons.details.personal-data.actions.write-message.title'
+                t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.title'
                 args={{
                   name: personName,
                 }}
@@ -31,8 +38,9 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
             </Heading>
             <p>
               <T
-                t='schulhof.administration.sections.persons.slices.persons.details.personal-data.actions.write-message.errors.no-account'
+                t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.errors.no-permission'
                 args={{
+                  form_of_address: formOfAddress,
                   name: personName,
                 }}
               />

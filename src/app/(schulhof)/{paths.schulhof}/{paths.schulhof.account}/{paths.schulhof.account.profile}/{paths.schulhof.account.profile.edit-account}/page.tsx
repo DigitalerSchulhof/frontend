@@ -1,4 +1,4 @@
-import { EditAccount } from '#/administration/sections/persons/slices/persons/edit-account';
+import { EditAccount } from '#/administration/sections/persons/edit-account';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -20,12 +20,14 @@ export default async function Page() {
         />
         <Heading size='1' t='schulhof.account.profile.edit-account.title' />
       </Col>
-      {/* @ts-expect-error -- Server Component */}
-      <EditAccount
-        isOwnProfile
-        person={context.person}
-        account={context.account}
-      />
+      <Col w='6'>
+        {/* @ts-expect-error -- Server Component */}
+        <EditAccount
+          isOwnProfile
+          person={context.person}
+          account={context.account}
+        />
+      </Col>
     </>
   );
 }

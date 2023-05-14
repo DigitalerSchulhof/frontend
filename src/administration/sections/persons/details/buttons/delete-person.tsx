@@ -31,7 +31,7 @@ export const DeletePersonButton = ({
     <>
       <Button
         variant={Variant.Error}
-        t='schulhof.administration.sections.persons.slices.persons.details.change-personal-data.actions.delete-person'
+        t='schulhof.administration.sections.persons.details.change-personal-data.actions.delete-person'
         onClick={setIsOpenTrue}
       />
       {isOpen ? (
@@ -39,10 +39,10 @@ export const DeletePersonButton = ({
           <Alert variant={Variant.Warning}>
             <Heading
               size='4'
-              t={`schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.person.${only}.title`}
+              t={`schulhof.administration.sections.persons.page.table.actions.delete.person.${only}.title`}
             />
             {t(
-              `schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.person.${only}.description`,
+              `schulhof.administration.sections.persons.page.table.actions.delete.person.${only}.description`,
               {
                 form_of_address: formOfAddress,
                 person_name: personName,
@@ -56,7 +56,7 @@ export const DeletePersonButton = ({
             <Button
               onClick={sendDelete}
               variant={Variant.Error}
-              t={`schulhof.administration.sections.persons.slices.persons.page.table.actions.delete.person.${only}.action`}
+              t={`schulhof.administration.sections.persons.page.table.actions.delete.person.${only}.action`}
             />
           </ButtonGroup>
         </Modal>

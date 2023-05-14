@@ -1,4 +1,4 @@
-import { Settings } from '#/administration/sections/persons/slices/persons/settings';
+import { Settings } from '#/administration/sections/persons/settings';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';

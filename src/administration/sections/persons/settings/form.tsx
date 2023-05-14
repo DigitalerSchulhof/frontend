@@ -44,68 +44,68 @@ export const SettingsForm = ({
       <Col w='6'>
         <Heading
           size='2'
-          t='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.title'
+          t='schulhof.administration.sections.persons.settings.form.emailOn.title'
         />
         <Table columns='1fr auto'>
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.title'
+            label='schulhof.administration.sections.persons.settings.form.emailOn.title'
             defaultValue={settings.emailOn.newMessage}
             ref={refs.emailOnNewMessage}
           />
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newSubstitution'
+            label='schulhof.administration.sections.persons.settings.form.emailOn.newSubstitution'
             defaultValue={settings.emailOn.newSubstitution}
             ref={refs.emailOnNewSubstitution}
           />
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.emailOn.newNews'
+            label='schulhof.administration.sections.persons.settings.form.emailOn.newNews'
             defaultValue={settings.emailOn.newNews}
             ref={refs.emailOnNewNews}
           />
         </Table>
         <Heading
           size='2'
-          t='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.title'
+          t='schulhof.administration.sections.persons.settings.form.pushOn.title'
         />
         <Table columns='1fr auto'>
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newMessage'
+            label='schulhof.administration.sections.persons.settings.form.pushOn.newMessage'
             defaultValue={settings.pushOn.newMessage}
             ref={refs.pushOnNewMessage}
           />
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newSubstitution'
+            label='schulhof.administration.sections.persons.settings.form.pushOn.newSubstitution'
             defaultValue={settings.pushOn.newSubstitution}
             ref={refs.pushOnNewSubstitution}
           />
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.pushOn.newNews'
+            label='schulhof.administration.sections.persons.settings.form.pushOn.newNews'
             defaultValue={settings.pushOn.newNews}
             ref={refs.pushOnNewNews}
           />
         </Table>
         <Heading
           size='2'
-          t='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.title'
+          t='schulhof.administration.sections.persons.settings.form.considerNews.title'
         />
         <Table columns='1fr auto'>
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newEvent'
+            label='schulhof.administration.sections.persons.settings.form.considerNews.newEvent'
             defaultValue={settings.considerNews.newEvent}
             ref={refs.considerNewsNewEvent}
           />
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newBlog'
+            label='schulhof.administration.sections.persons.settings.form.considerNews.newBlog'
             defaultValue={settings.considerNews.newBlog}
             ref={refs.considerNewsNewBlog}
           />
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.newGallery'
+            label='schulhof.administration.sections.persons.settings.form.considerNews.newGallery'
             defaultValue={settings.considerNews.newGallery}
             ref={refs.considerNewsNewGallery}
           />
           <ToggleFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.considerNews.fileChanged'
+            label='schulhof.administration.sections.persons.settings.form.considerNews.fileChanged'
             defaultValue={settings.considerNews.fileChanged}
             ref={refs.considerNewsFileChanged}
           />
@@ -114,21 +114,21 @@ export const SettingsForm = ({
       <Col w='6'>
         <Heading
           size='2'
-          t='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.title'
+          t='schulhof.administration.sections.persons.settings.form.mailbox.title'
         />
         <Table columns='1fr 150px'>
           <NumberOrNullFormRow
-            whetherLabel='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfter.title.whether'
-            numberLabel='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfter.title.number'
-            unit='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.unit'
+            whetherLabel='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfter.title.whether'
+            numberLabel='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfter.title.number'
+            unit='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfterInBin.unit'
             defaultValue={settings.mailbox.deleteAfter}
             ref={refs.mailboxDeleteAfter}
             min={0}
           />
           <NumberOrNullFormRow
-            whetherLabel='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.title.whether'
-            numberLabel='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.title.number'
-            unit='schulhof.administration.sections.persons.slices.persons.settings.form.mailbox.deleteAfterInBin.unit'
+            whetherLabel='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfterInBin.title.whether'
+            numberLabel='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfterInBin.title.number'
+            unit='schulhof.administration.sections.persons.settings.form.mailbox.deleteAfterInBin.unit'
             defaultValue={settings.mailbox.deleteAfterInBin}
             ref={refs.mailboxDeleteAfterInBin}
             min={0}
@@ -136,12 +136,12 @@ export const SettingsForm = ({
         </Table>
         <Heading
           size='2'
-          t='schulhof.administration.sections.persons.slices.persons.settings.form.profile.title'
+          t='schulhof.administration.sections.persons.settings.form.profile.title'
         />
         <Table columns='1fr 150px'>
           <NumberFormRow
-            label='schulhof.administration.sections.persons.slices.persons.settings.form.profile.sessionTimeout.title'
-            unit='schulhof.administration.sections.persons.slices.persons.settings.form.profile.sessionTimeout.unit'
+            label='schulhof.administration.sections.persons.settings.form.profile.sessionTimeout.title'
+            unit='schulhof.administration.sections.persons.settings.form.profile.sessionTimeout.unit'
             defaultValue={settings.profile.sessionTimeout}
             ref={refs.profileSessionTimeout}
             min={0}
@@ -152,17 +152,17 @@ export const SettingsForm = ({
       <Col w='12'>
         <Alert
           variant={Variant.Information}
-          title='schulhof.administration.sections.persons.slices.persons.settings.disclaimer.title'
+          title='schulhof.administration.sections.persons.settings.disclaimer.title'
         >
           <p>
-            <T t='schulhof.administration.sections.persons.slices.persons.settings.disclaimer.description' />
+            <T t='schulhof.administration.sections.persons.settings.disclaimer.description' />
           </p>
         </Alert>
         <ButtonGroup>
           <Button
             type='submit'
             variant={Variant.Success}
-            t='schulhof.administration.sections.persons.slices.persons.settings.form.buttons.save'
+            t='schulhof.administration.sections.persons.settings.form.buttons.save'
           />
           <Button
             href={
@@ -176,11 +176,10 @@ export const SettingsForm = ({
                     'paths.schulhof',
                     'paths.schulhof.administration',
                     'paths.schulhof.administration.persons',
-                    'paths.schulhof.administration.persons.persons',
                     `{${personId}}`,
                   ]
             }
-            t={`schulhof.administration.sections.persons.slices.persons.settings.form.buttons.back.${own}`}
+            t={`schulhof.administration.sections.persons.settings.form.buttons.back.${own}`}
           />
         </ButtonGroup>
       </Col>
@@ -292,8 +291,8 @@ function useSubmit(
     useCallback(
       () => (
         <LoadingModal
-          title='schulhof.administration.sections.persons.slices.persons.settings.modals.loading.title'
-          description='schulhof.administration.sections.persons.slices.persons.settings.modals.loading.description'
+          title='schulhof.administration.sections.persons.settings.modals.loading.title'
+          description='schulhof.administration.sections.persons.settings.modals.loading.description'
         />
       ),
       []
@@ -302,7 +301,7 @@ function useSubmit(
       (close, errors) => {
         const reasons = errors.flatMap((err) =>
           t(
-            `schulhof.administration.sections.persons.slices.persons.settings.modals.error.reasons.${mapError(
+            `schulhof.administration.sections.persons.settings.modals.error.reasons.${mapError(
               err
             )}`
           )
@@ -311,8 +310,8 @@ function useSubmit(
         return (
           <ErrorModal
             close={close}
-            title='schulhof.administration.sections.persons.slices.persons.settings.modals.error.title'
-            description='schulhof.administration.sections.persons.slices.persons.settings.modals.error.description'
+            title='schulhof.administration.sections.persons.settings.modals.error.title'
+            description='schulhof.administration.sections.persons.settings.modals.error.description'
             reasons={reasons}
           />
         );
@@ -326,10 +325,10 @@ function useSubmit(
         <Modal onClose={close}>
           <Alert
             variant={Variant.Success}
-            title='schulhof.administration.sections.persons.slices.persons.settings.modals.success.title'
+            title='schulhof.administration.sections.persons.settings.modals.success.title'
           >
             <p>
-              <T t='schulhof.administration.sections.persons.slices.persons.settings.modals.success.description' />
+              <T t='schulhof.administration.sections.persons.settings.modals.success.description' />
             </p>
           </Alert>
           <ButtonGroup>
@@ -345,11 +344,10 @@ function useSubmit(
                       'paths.schulhof',
                       'paths.schulhof.administration',
                       'paths.schulhof.administration.persons',
-                      'paths.schulhof.administration.persons.persons',
                       `{${personId}}`,
                     ]
               }
-              t={`schulhof.administration.sections.persons.slices.persons.settings.modals.success.button.${own}`}
+              t={`schulhof.administration.sections.persons.settings.modals.success.button.${own}`}
             />
           </ButtonGroup>
         </Modal>

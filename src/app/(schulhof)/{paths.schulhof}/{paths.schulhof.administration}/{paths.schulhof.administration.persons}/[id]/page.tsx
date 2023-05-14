@@ -1,4 +1,4 @@
-import { EditAccount } from '#/administration/sections/persons/slices/persons/edit-account';
+import { PersonDetails } from '#/administration/sections/persons/details';
 import { requireLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -33,17 +33,15 @@ export default async function Page({
             'paths.schulhof',
             'paths.schulhof.administration',
             'paths.schulhof.administration.persons',
-            'paths.schulhof.administration.persons.persons',
             {
               title: `{${formatName(person)}}`,
               segment: `{${person.id}}`,
             },
-            'paths.schulhof.administration.persons.persons.edit-account',
           ]}
         />
         <Heading size='1'>
           <T
-            t='schulhof.administration.sections.persons.slices.persons.edit-account.title'
+            t='schulhof.administration.sections.persons.details.title'
             args={{
               name: formatName(person),
             }}
@@ -52,7 +50,7 @@ export default async function Page({
       </Col>
       <Col w='6'>
         {/* @ts-expect-error -- Server Component */}
-        <EditAccount person={person} account={account} />
+        <PersonDetails context={context} person={person} account={account} />
       </Col>
     </>
   );

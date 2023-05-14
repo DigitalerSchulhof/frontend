@@ -1,8 +1,9 @@
-import { AdministrationSection } from '#/administration/sections/types';
-import { personsPersonsSlice } from './slices/persons';
-import { personsRolesSlice } from './slices/roles';
+import { AdministrationSectionSlice } from '#/administration/sections/types';
 
-export const personsSection = {
+export const personsPersonsSlice: AdministrationSectionSlice = {
   id: 'persons',
-  slices: [personsPersonsSlice, personsRolesSlice],
-} satisfies AdministrationSection;
+  card: {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    icon: require(`../../../../../../icons/32/users_5.png`).default,
+  },
+};

@@ -32,7 +32,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
         <List.Body>
           <List.Row>
             <List.Header>
-              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.type' />
+              <T t='schulhof.administration.sections.persons.details.personal-data.table.type' />
             </List.Header>
             <List.Cell>
               <T t={`generic.person-types.${person.type}`} />
@@ -41,26 +41,26 @@ export const PersonDetailsPersonalDataSectionTable = ({
           {account ? (
             <List.Row>
               <List.Header>
-                <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.username' />
+                <T t='schulhof.administration.sections.persons.details.personal-data.table.username' />
               </List.Header>
               <List.Cell>{account.username}</List.Cell>
             </List.Row>
           ) : null}
           <List.Row>
             <List.Header>
-              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.firstname' />
+              <T t='schulhof.administration.sections.persons.details.personal-data.table.firstname' />
             </List.Header>
             <List.Cell>{person.firstname}</List.Cell>
           </List.Row>
           <List.Row>
             <List.Header>
-              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.lastname' />
+              <T t='schulhof.administration.sections.persons.details.personal-data.table.lastname' />
             </List.Header>
             <List.Cell>{person.lastname}</List.Cell>
           </List.Row>
           <List.Row>
             <List.Header>
-              <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.gender' />
+              <T t='schulhof.administration.sections.persons.details.personal-data.table.gender' />
             </List.Header>
             <List.Cell>
               <T t={`generic.genders.${person.gender}`} />
@@ -69,7 +69,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
           {account ? (
             <List.Row>
               <List.Header>
-                <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.email' />
+                <T t='schulhof.administration.sections.persons.details.personal-data.table.email' />
               </List.Header>
               <List.Cell>{account.email}</List.Cell>
             </List.Row>
@@ -77,7 +77,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
           {person.type === PersonType.Teacher ? (
             <List.Row>
               <List.Header>
-                <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.teacher-code' />
+                <T t='schulhof.administration.sections.persons.details.personal-data.table.teacher-code' />
               </List.Header>
               <List.Cell>{person.teacherCode}</List.Cell>
             </List.Row>
@@ -88,7 +88,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
                 <>
                   <List.Row>
                     <List.Header>
-                      <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.last-login' />
+                      <T t='schulhof.administration.sections.persons.details.personal-data.table.last-login' />
                     </List.Header>
                     <List.Cell>
                       {account.lastLogin ? (
@@ -97,13 +97,13 @@ export const PersonDetailsPersonalDataSectionTable = ({
                           args={{ date: new Date(account.lastLogin) }}
                         />
                       ) : (
-                        <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.no-login' />
+                        <T t='schulhof.administration.sections.persons.details.personal-data.table.no-login' />
                       )}
                     </List.Cell>
                   </List.Row>
                   <List.Row>
                     <List.Header>
-                      <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.second-last-login' />
+                      <T t='schulhof.administration.sections.persons.details.personal-data.table.second-last-login' />
                     </List.Header>
                     <List.Cell>
                       {account.secondLastLogin ? (
@@ -112,7 +112,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
                           args={{ date: new Date(account.secondLastLogin) }}
                         />
                       ) : (
-                        <T t='schulhof.administration.sections.persons.slices.persons.details.personal-data.table.no-login' />
+                        <T t='schulhof.administration.sections.persons.details.personal-data.table.no-login' />
                       )}
                     </List.Cell>
                   </List.Row>
@@ -123,7 +123,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
         </List.Body>
       </List>
       {!account ? (
-        <Note t='schulhof.administration.sections.persons.slices.persons.details.personal-data.no-account' />
+        <Note t='schulhof.administration.sections.persons.details.personal-data.no-account' />
       ) : null}
       {account && (
         <ButtonGroup>

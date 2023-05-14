@@ -13,10 +13,7 @@ export default async function Page() {
           path={[
             'paths.schulhof',
             'paths.schulhof.administration',
-            {
-              segment: 'paths.schulhof.administration.persons',
-              href: ['paths.schulhof', 'paths.schulhof.administration'],
-            },
+            'paths.schulhof.administration.persons',
           ]}
         />
         <Heading size='1' t='schulhof.administration.title' />
