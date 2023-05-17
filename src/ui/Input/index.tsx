@@ -2,19 +2,22 @@
 
 import {
   ClassAttributes,
+  FormEventHandler,
   InputHTMLAttributes,
   forwardRef,
+  useCallback,
   useImperativeHandle,
   useRef,
 } from 'react';
 import { styled } from 'styled-components';
 
 export { Toggle } from './toggle';
+export { ToggleButton } from './toggle-button';
 
 export type InputProps = ClassAttributes<HTMLInputElement> &
   Omit<
     InputHTMLAttributes<HTMLInputElement>,
-    'type' | 'defaultValue' | 'defaultChecked'
+    'type' | 'defaultValue' | 'defaultChecked' | 'onInput'
   >;
 
 export type TextInputProps = InputProps & {
@@ -23,10 +26,11 @@ export type TextInputProps = InputProps & {
    * @default 'text'
    */
   type?: 'text' | 'password';
+  onInput?: (value: string) => void;
 };
 
 export const TextInput = forwardRef<{ value: string }, TextInputProps>(
-  function TextInput({ type = 'text', ...props }, ref) {
+  function TextInput({ type = 'text', onInput, ...props }, ref) {
     const inputRef = useRef<HTMLInputElement>(null);
 
     useImperativeHandle(ref, () => ({
@@ -35,16 +39,31 @@ export const TextInput = forwardRef<{ value: string }, TextInputProps>(
       },
     }));
 
-    return <StyledInput ref={inputRef} type={type} {...props} />;
+    const onInputHandler = useCallback<FormEventHandler<HTMLInputElement>>(
+      (e) => {
+        onInput?.(e.currentTarget.value);
+      },
+      [onInput]
+    );
+
+    return (
+      <StyledInput
+        ref={inputRef}
+        type={type}
+        onInput={onInputHandler}
+        {...props}
+      />
+    );
   }
 );
 
 export type NumberInputProps = InputProps & {
   defaultValue?: number;
+  onInput?: (value: number) => void;
 };
 
 export const NumberInput = forwardRef<{ value: number }, NumberInputProps>(
-  function NumberInput({ ...props }, ref) {
+  function NumberInput({ onInput, ...props }, ref) {
     const inputRef = useRef<HTMLInputElement>(null);
 
     useImperativeHandle(ref, () => ({
@@ -53,7 +72,21 @@ export const NumberInput = forwardRef<{ value: number }, NumberInputProps>(
       },
     }));
 
-    return <StyledInput ref={inputRef} type='number' {...props} />;
+    const onInputHandler = useCallback<FormEventHandler<HTMLInputElement>>(
+      (e) => {
+        onInput?.(e.currentTarget.valueAsNumber);
+      },
+      [onInput]
+    );
+
+    return (
+      <StyledInput
+        ref={inputRef}
+        type='number'
+        onInput={onInputHandler}
+        {...props}
+      />
+    );
   }
 );
 

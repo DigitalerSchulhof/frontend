@@ -26,4 +26,8 @@ const BodyWrapperInner = styled.main`
 
   display: grid;
   grid-template-columns: repeat(12, 1fr);
+
+  & > section {
+    margin: 0;
+  }
 `;

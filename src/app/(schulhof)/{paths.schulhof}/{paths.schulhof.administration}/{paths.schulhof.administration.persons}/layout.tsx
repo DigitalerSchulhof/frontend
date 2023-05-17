@@ -3,7 +3,7 @@ import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 
-export default async function Page() {
+export default async function Page({ filter }) {
   await requireLogin();
 
   return (
@@ -16,7 +16,17 @@ export default async function Page() {
             'paths.schulhof.administration.persons',
           ]}
         />
-        <Heading size='1' t='schulhof.administration.title' />
+        <Heading
+          size='1'
+          t='schulhof.administration.sections.persons.page.title'
+        />
+      </Col>
+      <Col w='12'>
+        <Heading
+          size='2'
+          t='schulhof.administration.sections.persons.page.filter.title'
+        />
+        {filter}
       </Col>
     </>
   );

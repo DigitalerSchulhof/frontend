@@ -1,6 +1,9 @@
 'use client';
 
+import { T } from '#/i18n';
+import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledToggle } from '#/ui/Input/toggle';
+import React from 'react';
 import { styled } from 'styled-components';
 import { css } from 'styled-components';
 
@@ -57,7 +60,7 @@ export const Table = ({
   );
 };
 
-Table.Row = styled.div`
+export const TableRow = styled.div`
   display: contents;
 `;
 
@@ -70,12 +73,27 @@ const cellStyles = css`
   gap: 5px;
 `;
 
-Table.Header = styled.div`
+export type TableHeaderProps = React.ComponentProps<
+  typeof StyledTableHeader
+> & {
+  children?: React.ReactNode;
+  t?: TranslationsWithStringTypeAndNoVariables;
+};
+
+export const TableHeader = ({ children, t, ...props }: TableHeaderProps) => {
+  if (t) {
+    children = <T t={t} />;
+  }
+
+  return <StyledTableHeader {...props}>{children}</StyledTableHeader>;
+};
+
+export const StyledTableHeader = styled.div`
   ${cellStyles}
   font-weight: bold;
 `;
 
-Table.Cell = styled.div`
+export const TableCell = styled.div`
   ${cellStyles}
 
   & > ${StyledToggle}:first-child:last-child {

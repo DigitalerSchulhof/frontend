@@ -52,3 +52,24 @@ export function formatName({
 export function identity<T>(x: T): T {
   return x;
 }
+
+export function throttle<T extends (...args: any[]) => any>(
+  fn: T,
+  ms: number
+): T {
+  let lastCall = 0;
+  let lastResult: any;
+
+  return function (...args) {
+    const now = Date.now();
+
+    if (now - lastCall < ms) {
+      return lastResult;
+    }
+
+    lastCall = now;
+    lastResult = fn(...args);
+
+    return lastResult;
+  } as T;
+}

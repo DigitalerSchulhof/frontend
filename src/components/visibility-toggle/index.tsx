@@ -24,11 +24,11 @@ export const VisibilityToggle = ({
         // Force a key change to force a re-render of the button
         // Else the button will only sort of change its colors when the cursor is moved and stuff is.. updated.. due to the transition?
         // The re-render will force the new color to be applied instantly
-        <ToggleButton key='hide' onClick={setInvisible} mode='hide'>
+        <ToggleButton key='hide' onClick={setInvisible} $mode='hide'>
           {hide}
         </ToggleButton>
       ) : (
-        <ToggleButton key='show' onClick={setVisible} mode='show'>
+        <ToggleButton key='show' onClick={setVisible} $mode='show'>
           {show}
         </ToggleButton>
       )}
@@ -36,12 +36,8 @@ export const VisibilityToggle = ({
   );
 };
 
-const noForwardProps = new Set(['mode']);
-
-const ToggleButton = styled(StyledButton).withConfig({
-  shouldForwardProp: (prop) => !noForwardProps.has(prop),
-})<{ mode: 'show' | 'hide' }>(
-  ({ mode: $mode, theme }) => css`
+const ToggleButton = styled(StyledButton)<{ $mode: 'show' | 'hide' }>(
+  ({ $mode, theme }) => css`
     display: block;
     margin: 7px 0;
 

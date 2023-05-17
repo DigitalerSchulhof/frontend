@@ -17,7 +17,7 @@ export type BaseButtonProps = {
   variant?: Variant;
 };
 
-const ButtonStyles = ({
+export const ButtonStyles = ({
   theme,
   variant = Variant.Default,
 }: BaseButtonProps & ExecutionContext) => css`

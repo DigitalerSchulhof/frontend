@@ -9,7 +9,7 @@ import {
   TextInputProps,
 } from '#/ui/Input';
 import { Toggle, ToggleProps } from '#/ui/Input/toggle';
-import { Table } from '#/ui/Table';
+import { TableCell, TableHeader, TableRow } from '#/ui/Table';
 import React, {
   forwardRef,
   useCallback,
@@ -52,14 +52,12 @@ export type FormRowProps = {
 
 export const FormRow = ({ label, id, children }: FormRowProps) => {
   return (
-    <Table.Row>
-      <Table.Header>
-        <Label htmlFor={id}>
-          <T t={label} />
-        </Label>
-      </Table.Header>
-      <Table.Cell>{children}</Table.Cell>
-    </Table.Row>
+    <TableRow>
+      <TableHeader>
+        <Label htmlFor={id} t={label} />
+      </TableHeader>
+      <TableCell>{children}</TableCell>
+    </TableRow>
   );
 };
 
@@ -71,7 +69,7 @@ export const TextFormRow = forwardRef<{ value: string }, TextFormRowProps>(
 
     return (
       <FormRow id={id} label={label}>
-        <TextInput id={id} {...props} ref={ref} />
+        <TextInput {...props} id={id} ref={ref} />
       </FormRow>
     );
   }
@@ -90,12 +88,8 @@ export const NumberFormRow = forwardRef<{ value: number }, NumberFormRowProps>(
 
     return (
       <FormRow id={id} label={label}>
-        <NumberInput id={id} {...props} ref={ref} />
-        {unit ? (
-          <Label htmlFor={id}>
-            <T t={unit} />
-          </Label>
-        ) : null}
+        <NumberInput {...props} id={id} ref={ref} />
+        {unit ? <Label htmlFor={id} t={unit} /> : null}
       </FormRow>
     );
   }
@@ -109,7 +103,7 @@ export const ToggleFormRow = forwardRef<{ value: boolean }, ToggleFormRowProps>(
 
     return (
       <FormRow id={id} label={label}>
-        <Toggle id={id} {...props} ref={ref} />
+        <Toggle {...props} id={id} ref={ref} />
       </FormRow>
     );
   }
@@ -176,6 +170,21 @@ export const NumberOrNullFormRow = forwardRef<
   );
 });
 
-export const Label = styled.label`
+export type LabelProps = Omit<
+  React.ComponentProps<typeof StyledLabel>,
+  'children'
+> & {
+  t: TranslationsWithStringTypeAndNoVariables;
+};
+
+export const Label = ({ t, ...props }: LabelProps) => {
+  return (
+    <StyledLabel {...props}>
+      <T t={t} />
+    </StyledLabel>
+  );
+};
+
+export const StyledLabel = styled.label`
   line-height: inherit;
 `;
