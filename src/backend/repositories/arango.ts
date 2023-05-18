@@ -1,8 +1,8 @@
-import { Database } from 'arangojs';
+import arangojs, { Database } from 'arangojs';
 import * as aql from 'arangojs/aql';
 import { ArrayCursor } from 'arangojs/cursor';
 import { QueryOptions } from 'arangojs/database';
-import { ArangoError, isArangoError } from 'arangojs/error';
+import { ArangoError, isArangoError, isSystemError } from 'arangojs/error';
 import {
   ERROR_ARANGO_CONFLICT,
   ERROR_ARANGO_DOCUMENT_NOT_FOUND,
@@ -227,9 +227,16 @@ export abstract class ArangoRepository<
       }
     }
 
-    if (isArangoError(error)) {
+    if (typeof error === 'object' && error !== null) {
       // It spams the console
-      delete error.response;
+
+      if ('request' in error) {
+        delete error.request;
+      }
+
+      if ('response' in error) {
+        delete error.response;
+      }
     }
 
     throw error;

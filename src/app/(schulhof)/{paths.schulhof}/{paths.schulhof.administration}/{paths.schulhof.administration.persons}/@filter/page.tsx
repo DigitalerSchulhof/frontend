@@ -1,12 +1,13 @@
 'use client';
 
-import { ButtonGroup } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Label } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
 import { TextInput, ToggleButton } from '#/ui/Input';
 import { Table, TableCell, TableHeader, TableRow } from '#/ui/Table';
 import { Suspense, useEffect, useId, useMemo, useState } from 'react';
 import { Person, loadPersons } from './action';
+import { List, ListHeader, ListRow } from '#/ui/List';
 
 export default function FilterTable() {
   const [lastname, setLastname] = useState('');
@@ -158,7 +159,7 @@ function ContentTable({
       });
 
       if (unmounted) return;
-      setLoading(false);
+      // setLoading(false);
       setPersons(newPersons);
     })();
 
@@ -182,15 +183,19 @@ function ContentTable({
         size='2'
         t='schulhof.administration.sections.persons.page.table.title'
       />
-      <Table columns={4}>
-        <TableRow>
-          <TableHeader
-            style={{ gridColumnStart: 2 }}
-            t='schulhof.administration.sections.persons.page.table.columns.firstname'
-          />
-          <TableHeader t='schulhof.administration.sections.persons.page.table.columns.lastname' />
-        </TableRow>
-      </Table>
+      <List
+        columns={'16px 1fr 1fr 64px'}
+        isLoading={loading && persons !== null}
+        rows={0}
+      >
+        <ListRow>
+          <ListHeader />
+          <ListHeader t='schulhof.administration.sections.persons.page.table.columns.firstname' />
+          <ListHeader t='schulhof.administration.sections.persons.page.table.columns.lastname' />
+          <ListHeader />
+        </ListRow>
+      </List>
+      <Button onClick={() => setLoading((l) => !l)}>Toggle loading</Button>
     </>
   );
 }
