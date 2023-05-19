@@ -76,7 +76,7 @@ export const List = ({
   );
 };
 
-const loadingBarAnimationA = keyframes`
+const loadingBarAnimation = keyframes`
   0%   { left: 0;    width: 0;   }
   10%  { left: 0;    width: 20%; }
   20%  { left: 20%;  width: 20%; }
@@ -86,24 +86,13 @@ const loadingBarAnimationA = keyframes`
   60%  { left: 100%; width: 0;   }
 `;
 
-const loadingBarAnimationB = keyframes`
-  0%   { left: 80%;  width: 20%; }
-  10%  { left: 100%; width: 0;   }
-  50%  { left: 0;    width: 0;   }
-  60%  { left: 0;    width: 20%; }
-  70%  { left: 20%;  width: 20%; }
-  80%  { left: 40%;  width: 20%; }
-  90%  { left: 60%;  width: 20%; }
-  100% { left: 80%;  width: 20%; }
-`;
-
 const LoadingBar = styled.div<{ $isLoading?: boolean }>(
   ({ $isLoading, theme }) => css`
     grid-column: 1 / -1;
     grid-row: 1 / -1;
     visibility: ${$isLoading ? '' : 'hidden'};
     position: relative;
-    &::before {
+    &::before, &::after {
       content: '';
       display: block;
       height: 2px;
@@ -111,19 +100,12 @@ const LoadingBar = styled.div<{ $isLoading?: boolean }>(
       position: absolute;
       ${$isLoading &&
       css`
-        animation: ${loadingBarAnimationA} 1s infinite linear;
+        animation: ${loadingBarAnimation} 1s infinite linear;
       `}
     }
+
     &::after {
-      content: '';
-      display: block;
-      height: 2px;
-      background-color: ${theme.accents.success.regular.background};
-      position: absolute;
-      ${$isLoading &&
-      css`
-        animation: ${loadingBarAnimationB} 1s infinite linear;
-      `}
+      animation-delay: 0.5s;
     }
   `
 );
