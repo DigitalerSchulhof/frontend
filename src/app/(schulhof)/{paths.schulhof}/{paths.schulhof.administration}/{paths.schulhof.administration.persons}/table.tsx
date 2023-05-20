@@ -4,12 +4,21 @@ import { Button, ButtonGroup } from '#/ui/Button';
 import { Label } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
 import { TextInput, ToggleButton } from '#/ui/Input';
+import {
+  FullWidthListCell,
+  List,
+  ListCell,
+  ListHeader,
+  ListRow,
+} from '#/ui/List';
+import { Loading } from '#/ui/Loading';
+import { Note } from '#/ui/Note';
 import { Table, TableCell, TableHeader, TableRow } from '#/ui/Table';
 import { Suspense, useEffect, useId, useMemo, useState } from 'react';
 import { Person, loadPersons } from './action';
-import { List, ListHeader, ListRow } from '#/ui/List';
+import { T } from '#/i18n';
 
-export default function FilterTable() {
+export const PersonsTable = () => {
   const [lastname, setLastname] = useState('');
   const [firstname, setFirstname] = useState('');
   const [clazz, setClass] = useState('');
@@ -62,23 +71,23 @@ export default function FilterTable() {
           <TableCell>
             <ButtonGroup>
               <ToggleButton
-                t={'generic.person-types.student'}
+                t={'generic.person-types.student.plural'}
                 onChange={setTypeStudent}
               />
               <ToggleButton
-                t={'generic.person-types.teacher'}
+                t={'generic.person-types.teacher.plural'}
                 onChange={setTypeTeacher}
               />
               <ToggleButton
-                t={'generic.person-types.parent'}
+                t={'generic.person-types.parent.plural'}
                 onChange={setTypeParent}
               />
               <ToggleButton
-                t={'generic.person-types.admin'}
+                t={'generic.person-types.admin.plural'}
                 onChange={setTypeAdmin}
               />
               <ToggleButton
-                t={'generic.person-types.other'}
+                t={'generic.person-types.other.plural'}
                 onChange={setTypeOther}
               />
             </ButtonGroup>
@@ -118,9 +127,9 @@ export default function FilterTable() {
       </Suspense>
     </>
   );
-}
+};
 
-function ContentTable({
+const ContentTable = ({
   lastname,
   firstname,
   clazz,
@@ -138,15 +147,15 @@ function ContentTable({
   typeParent: boolean;
   typeAdmin: boolean;
   typeOther: boolean;
-}) {
-  const [loading, setLoading] = useState(true);
+}) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [persons, setPersons] = useState<Person[] | null>(null);
 
   useEffect(() => {
     let unmounted = false as boolean;
 
     void (async () => {
-      setLoading(true);
+      setIsLoading(true);
       const newPersons = await loadPersons({
         lastname,
         firstname,
@@ -159,8 +168,8 @@ function ContentTable({
       });
 
       if (unmounted) return;
-      // setLoading(false);
       setPersons(newPersons);
+      setIsLoading(false);
     })();
 
     return () => {
@@ -183,19 +192,31 @@ function ContentTable({
         size='2'
         t='schulhof.administration.sections.persons.page.table.title'
       />
-      <List
-        columns={'16px 1fr 1fr 64px'}
-        isLoading={loading && persons !== null}
-        rows={0}
-      >
+      <List columns={'16px 1fr 1fr 64px'} isLoading={isLoading}>
         <ListRow>
           <ListHeader />
           <ListHeader t='schulhof.administration.sections.persons.page.table.columns.firstname' />
           <ListHeader t='schulhof.administration.sections.persons.page.table.columns.lastname' />
           <ListHeader />
         </ListRow>
+        {isLoading && persons === null ? (
+          <ListRow>
+            <FullWidthListCell>
+              <Note>
+                <T t='schulhof.administration.sections.persons.page.table.loading' />
+              </Note>
+            </FullWidthListCell>
+          </ListRow>
+        ) : null}
+        {persons?.map((person) => (
+          <ListRow key={person.id}>
+            <ListCell />
+            <ListCell>{person.firstname}</ListCell>
+            <ListCell>{person.lastname}</ListCell>
+            <ListCell />
+          </ListRow>
+        ))}
       </List>
-      <Button onClick={() => setLoading((l) => !l)}>Toggle loading</Button>
     </>
   );
-}
+};

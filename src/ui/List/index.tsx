@@ -2,9 +2,9 @@
 
 import { T } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import { StyledNote } from '#/ui/Note';
 import React from 'react';
-import { keyframes, styled } from 'styled-components';
-import { css } from 'styled-components';
+import { css, keyframes, styled } from 'styled-components';
 
 const StyledList = styled.div<{ $h?: number | string; $w?: number | string }>(
   ({ $h, $w }) => {
@@ -43,9 +43,6 @@ export type ListProps = {
    */
   columns?: number | string;
   children: React.ReactNode;
-  /**
-   * Note that if a loading bar is present, rows must be a number.
-   */
   isLoading?: boolean;
 };
 
@@ -57,22 +54,13 @@ export const List = ({
 }: ListProps) => {
   const renderLoadingBar = isLoading !== undefined;
 
-  let loadingBarHOrH;
-  if (renderLoadingBar) {
-    if (typeof h !== 'number') {
-      throw new Error('If a loading bar is present, rows must be specified.');
-    }
-
-    loadingBarHOrH = `3px repeat(${h}, 1fr)`;
-  } else {
-    loadingBarHOrH = h;
-  }
-
   return (
-    <StyledList $h={loadingBarHOrH} $w={w}>
+    <>
       {renderLoadingBar ? <LoadingBar $isLoading={isLoading} /> : null}
-      {children}
-    </StyledList>
+      <StyledList $h={h} $w={w}>
+        {children}
+      </StyledList>
+    </>
   );
 };
 
@@ -88,11 +76,11 @@ const loadingBarAnimation = keyframes`
 
 const LoadingBar = styled.div<{ $isLoading?: boolean }>(
   ({ $isLoading, theme }) => css`
-    grid-column: 1 / -1;
-    grid-row: 1 / -1;
     visibility: ${$isLoading ? '' : 'hidden'};
+
     position: relative;
-    &::before, &::after {
+    &::before,
+    &::after {
       content: '';
       display: block;
       height: 2px;
@@ -100,12 +88,12 @@ const LoadingBar = styled.div<{ $isLoading?: boolean }>(
       position: absolute;
       ${$isLoading &&
       css`
-        animation: ${loadingBarAnimation} 1s infinite linear;
+        animation: ${loadingBarAnimation} 2s infinite linear;
       `}
     }
 
     &::after {
-      animation-delay: 0.5s;
+      animation-delay: 1s;
     }
   `
 );
@@ -119,6 +107,10 @@ const cellStyles = css`
   gap: 5px;
   border: 1px solid #424242;
   border-width: 1px 0 0 0;
+
+  ${StyledNote} {
+    margin: 0;
+  }
 `;
 
 export const StyledListHeader = styled.div`
@@ -128,6 +120,13 @@ export const StyledListHeader = styled.div`
 
 export const ListCell = styled.div`
   ${cellStyles}
+`;
+
+export const FullWidthListCell = styled(ListCell)`
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const ListRow = styled.div`

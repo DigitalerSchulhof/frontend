@@ -14,11 +14,21 @@ noscript:
   message: Der Digitale Schulhof benötigt JavaScript. Bitte aktivieren Sie JavaScript in Ihrem Browser und laden Sie die Seite erneut. Wie Sie das machen, erfahren Sie <EnableLink>hier</EnableLink>.
   link: https://www.enable-javascript.com/de/
 person-types:
-  student: Schüler
-  teacher: Lehrer
-  parent: Elternteil
-  admin: Verwaltungsangestellter
-  other: Andere
+  student:
+    singular: Schüler
+    plural: Schüler
+  teacher:
+    singular: Lehrer
+    plural: Lehrer
+  parent:
+    singular: Elternteil
+    plural: Eltern
+  admin:
+    singular: Verwaltungsangestellter
+    plural: Verwaltungsangestellte
+  other:
+    singular: Andere
+    plural: Andere
 genders:
   male: Männlich
   female: Weiblich

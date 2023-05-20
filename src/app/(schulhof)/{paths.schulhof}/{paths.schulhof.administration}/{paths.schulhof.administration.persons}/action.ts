@@ -12,12 +12,21 @@ export type LoadPersonsFilter = {
 };
 
 export type Person = {
-  name: string;
+  id: string;
+  firstname: string;
+  lastname: string;
 };
 
 export async function loadPersons(
   filter: LoadPersonsFilter
 ): Promise<Person[]> {
-  console.log('F', filter);
-  return [];
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
+  return [
+    {
+      id: '1',
+      firstname: 'Jesper',
+      lastname: 'Engberg',
+    },
+  ];
 }

@@ -18,7 +18,6 @@ const LoadingContainer = styled.div`
   position: relative;
   width: ${3 * 11 + 2 * 9}px;
   height: 11px;
-  margin: 4px 0;
 `;
 
 const LoadingBlob = styled.div`

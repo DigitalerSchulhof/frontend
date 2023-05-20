@@ -2,9 +2,10 @@ import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
+import { PersonsTable } from './table';
 
-export default async function Page({ filter }) {
-  await requireLogin();
+export default async function Page() {
+  // await requireLogin();
 
   return (
     <>
@@ -26,7 +27,7 @@ export default async function Page({ filter }) {
           size='2'
           t='schulhof.administration.sections.persons.page.filter.title'
         />
-        {filter}
+        <PersonsTable />
       </Col>
     </>
   );

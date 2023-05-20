@@ -34,7 +34,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
             <T t='schulhof.administration.sections.persons.details.personal-data.table.type' />
           </ListHeader>
           <ListCell>
-            <T t={`generic.person-types.${person.type}`} />
+            <T t={`generic.person-types.${person.type}.singular`} />
           </ListCell>
         </ListRow>
         {account ? (
