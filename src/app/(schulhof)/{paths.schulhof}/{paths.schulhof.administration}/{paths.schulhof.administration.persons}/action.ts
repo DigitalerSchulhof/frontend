@@ -13,6 +13,8 @@ export type LoadPersonsFilter = {
 
 export type Person = {
   id: string;
+  type: 'student' | 'teacher' | 'parent' | 'admin' | 'other';
+  gender: 'male' | 'female' | 'other';
   firstname: string;
   lastname: string;
 };
@@ -20,13 +22,41 @@ export type Person = {
 export async function loadPersons(
   filter: LoadPersonsFilter
 ): Promise<Person[]> {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
   return [
     {
       id: '1',
-      firstname: 'Jesper',
-      lastname: 'Engberg',
+      type: 'student',
+      firstname: 'Test',
+      lastname: 'Schüler',
+      gender: 'male',
+    },
+    {
+      id: '2',
+      type: 'teacher',
+      firstname: 'Test',
+      lastname: 'Lehrer',
+      gender: 'female',
+    },
+    {
+      id: '3',
+      type: 'parent',
+      firstname: 'Test',
+      lastname: 'Elter',
+      gender: 'other',
+    },
+    {
+      id: '4',
+      type: 'admin',
+      firstname: 'Test',
+      lastname: 'Verwaltungsangestellter',
+      gender: 'male',
+    },
+    {
+      id: '5',
+      type: 'other',
+      firstname: 'Test',
+      lastname: 'Externer',
+      gender: 'female',
     },
   ];
 }

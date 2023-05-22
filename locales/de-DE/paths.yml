@@ -40,17 +40,17 @@ schulhof:
       edit-account:
         index: Nutzerkonto_bearbeiten
         title: Nutzerkonto bearbeiten
-      create:
+      create-person:
         index: Neue_Person
         title: Neue Person
-      edit:
+      edit-person:
         index: Person_bearbeiten
         title: Person bearbeiten
       settings: Einstellungen
       change-teacher-code:
         index: Lehrerkürzel_aendern
         title: Lehrerkürzel ändern
-      permissions-and-roles:
+      permissions:
         index: Rollen_und_Rechte
         title: Rollen und Rechte vergeben
     roles: Rollen

@@ -6,7 +6,6 @@ import { Heading } from '#/ui/Heading';
 import { Note } from '#/ui/Note';
 import { Variant } from '#/ui/variants';
 import { formatName } from '#/utils';
-import React from 'react';
 import { PersonDetailsProps } from '..';
 import { DeleteAccountButton } from '../buttons/delete-account';
 import { DeletePersonButton } from '../buttons/delete-person';
@@ -159,66 +158,64 @@ const AdminButtons = ({
 }: PersonButtonsProps) => {
   return (
     <>
-      {React.Children.toArray(
-        [
+      {[
+        <Button
+          key='edit-person'
+          t='schulhof.administration.sections.persons.details.change-personal-data.actions.edit-person'
+          href={[
+            'paths.schulhof',
+            'paths.schulhof.administration',
+            'paths.schulhof.administration.persons',
+            `{${person.id}}`,
+            'paths.schulhof.administration.persons.edit-person',
+          ]}
+        />,
+        person.type === PersonType.Teacher && (
           <Button
-            key='edit-person'
-            t='schulhof.administration.sections.persons.details.change-personal-data.actions.edit-person'
+            key='change-teacher-code'
+            t='schulhof.administration.sections.persons.details.change-personal-data.actions.change-teacher-code'
             href={[
               'paths.schulhof',
               'paths.schulhof.administration',
               'paths.schulhof.administration.persons',
               `{${person.id}}`,
-              'paths.schulhof.administration.persons.edit',
+              'paths.schulhof.administration.persons.change-teacher-code',
             ]}
-          />,
-          person.type === PersonType.Teacher && (
-            <Button
-              key='change-teacher-code'
-              t='schulhof.administration.sections.persons.details.change-personal-data.actions.change-teacher-code'
-              href={[
-                'paths.schulhof',
-                'paths.schulhof.administration',
-                'paths.schulhof.administration.persons',
-                `{${person.id}}`,
-                'paths.schulhof.administration.persons.change-teacher-code',
-              ]}
-            />
-          ),
+          />
+        ),
+        <Button
+          key='permissions-and-roles'
+          t='schulhof.administration.sections.persons.details.change-personal-data.actions.permissions-and-roles'
+          href={[
+            'paths.schulhof',
+            'paths.schulhof.administration',
+            'paths.schulhof.administration.persons',
+            `{${person.id}}`,
+            'paths.schulhof.administration.persons.permissions-and-roles',
+          ]}
+        />,
+        !account && (
           <Button
-            key='permissions-and-roles'
-            t='schulhof.administration.sections.persons.details.change-personal-data.actions.permissions-and-roles'
+            key='create-account'
+            variant={Variant.Success}
+            t='schulhof.administration.sections.persons.details.change-personal-data.actions.create-account'
             href={[
               'paths.schulhof',
               'paths.schulhof.administration',
               'paths.schulhof.administration.persons',
               `{${person.id}}`,
-              'paths.schulhof.administration.persons.permissions-and-roles',
+              'paths.schulhof.administration.persons.create-account',
             ]}
-          />,
-          !account && (
-            <Button
-              key='create-account'
-              variant={Variant.Success}
-              t='schulhof.administration.sections.persons.details.change-personal-data.actions.create-account'
-              href={[
-                'paths.schulhof',
-                'paths.schulhof.administration',
-                'paths.schulhof.administration.persons',
-                `{${person.id}}`,
-                'paths.schulhof.administration.persons.create-account',
-              ]}
-            />
-          ),
-          <DeletePersonButton
-            key='delete-person'
-            formOfAddress={formOfAddress}
-            personId={person.id}
-            personName={formatName(person)}
-            hasAccount={!!account}
-          />,
-        ].filter(Boolean)
-      )}
+          />
+        ),
+        <DeletePersonButton
+          key='delete-person'
+          formOfAddress={formOfAddress}
+          personId={person.id}
+          personName={formatName(person)}
+          hasAccount={!!account}
+        />,
+      ].filter(Boolean)}
     </>
   );
 };

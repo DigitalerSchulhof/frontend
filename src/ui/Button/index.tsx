@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from '../Icon';
-import React, { HTMLAttributes } from 'react';
+import React from 'react';
 import { Link } from '#/ui/Link';
 import {
   ExecutionContext,
@@ -80,22 +80,19 @@ export const Button = ({
   );
 };
 
-export interface IconButtonProps
-  extends BaseButtonProps,
-    HTMLAttributes<HTMLButtonElement> {
+export type IconButtonProps = React.ComponentProps<typeof Button> & {
   icon: React.ReactNode;
-}
+};
 
 const UnstyledIconButton = ({ icon, ...props }: IconButtonProps) => {
   return <Button {...props}>{icon}</Button>;
 };
 
 export const IconButton = styled(UnstyledIconButton)`
-  padding: 0;
-  margin: 2px;
+  padding: 1px;
 
   & > ${Icon} {
-    margin: 1px;
+    margin: 0;
   }
 `;
 

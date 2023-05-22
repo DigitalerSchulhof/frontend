@@ -27,8 +27,8 @@ person-types:
     singular: Verwaltungsangestellter
     plural: Verwaltungsangestellte
   other:
-    singular: Andere
-    plural: Andere
+    singular: Externer
+    plural: Externe
 genders:
   male: Männlich
   female: Weiblich
