@@ -32,7 +32,7 @@ const FullSupportIcon = ({
     case HasFullSupport.Yes:
       return (
         <>
-          <LargeIconTick />
+          <LargeIconTick alt='{}' />
           <br />
           {t('schulhof.login.system-requirements.check.yes')}
         </>
@@ -40,7 +40,7 @@ const FullSupportIcon = ({
     case HasFullSupport.Maybe:
       return (
         <>
-          <LargeIconWarning />
+          <LargeIconWarning alt='{}' />
           <br />
           <b>{t('schulhof.login.system-requirements.check.maybe')}</b>
         </>
@@ -48,7 +48,7 @@ const FullSupportIcon = ({
     case HasFullSupport.No:
       return (
         <>
-          <LargeIconError />
+          <LargeIconError alt='{}' />
           <br />
           <b>{t('schulhof.login.system-requirements.check.no')}</b>
         </>

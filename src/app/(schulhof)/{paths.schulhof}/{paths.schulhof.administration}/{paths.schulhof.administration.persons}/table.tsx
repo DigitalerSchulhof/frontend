@@ -22,7 +22,6 @@ import {
   IconGenderOther,
   IconPersonActionDetails,
   IconPersonActionMail,
-  IconPersonActionPermissions,
   IconPersonAdministrator,
   IconPersonOther,
   IconPersonParent,
@@ -279,26 +278,27 @@ const PersonActionIcons = ({ person }: { person: Person }) => {
   const { t } = useT();
   const icons = [];
 
-  icons.push(
-    <IconButton
-      key='mail'
-      icon={
-        <IconPersonActionMail alt='schulhof.administration.sections.persons.page.table.actions.mail' />
-      }
-      href={`/${[
-        t('paths.schulhof'),
-        t('paths.schulhof.account'),
-        t('paths.schulhof.account.mailbox'),
-        t('paths.schulhof.account.mailbox.compose'),
-      ].join('/')}?${t('paths.schulhof.account.mailbox.compose.query.to')}=${
-        person.id
-      }`}
-    />
-  );
+  // icons.push(
+  //   <IconButton
+  //     key='mail'
+  //     icon={
+  //       <IconPersonActionMail alt='schulhof.administration.sections.persons.page.table.actions.mail' />
+  //     }
+  //     href={`/${[
+  //       t('paths.schulhof'),
+  //       t('paths.schulhof.account'),
+  //       t('paths.schulhof.account.mailbox'),
+  //       t('paths.schulhof.account.mailbox.compose'),
+  //     ].join('/')}?${t('paths.schulhof.account.mailbox.compose.query.to')}=${
+  //       person.id
+  //     }`}
+  //   />
+  // );
 
   icons.push(
     <IconButton
       key='details'
+      title='schulhof.administration.sections.persons.page.table.actions.details'
       icon={
         <IconPersonActionDetails alt='schulhof.administration.sections.persons.page.table.actions.details' />
       }

@@ -14,16 +14,25 @@ table:
     firstname: Vorname
     lastname: Nachname
   actions:
+    details: Personendetails anzeigen
     edit:
       account: Nutzerkonto bearbeiten
       person: Person bearbeiten
     delete:
       account:
-        title: Nutzerkonto löschen
-        description:
-          - "<b>Achtung!</b> {form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, das Nutzerkonto von <b>{person_name}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
-          - "Alle Daten, die mit diesem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht! Die Person wird über die Löschung benachrichtigt."
-        action: Nutzerkonto löschen
+        own:
+          title: Nutzerkonto löschen
+          description:
+            - "<b>Achtung!</b> {form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, {form_of_address, select, informal {dein} formal {Ihr} other {~}} Nutzerkonto zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
+            - "Alle Daten, die mit diesem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht!"
+            - "{form_of_address, select, informal {Du wirst} formal {Sie werden} other {~}} ein neues Konto beantragen müssen, um {form_of_address, select, informal {dich} formal {sich} other {~}} wieder im Schulhof anmelden zu können."
+          action: Mein Nutzerkonto löschen
+        other:
+          title: Nutzerkonto löschen
+          description:
+            - "<b>Achtung!</b> {form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, das Nutzerkonto von <b>{person_name}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
+            - "Alle Daten, die mit diesem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht! Die Person wird über die Löschung benachrichtigt."
+          action: Nutzerkonto löschen
       person:
         only:
           title: Person löschen

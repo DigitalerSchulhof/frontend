@@ -2,7 +2,7 @@
 'use client';
 
 import { useT } from '#/i18n';
-import { TranslationsWithStringType } from '#/i18n/translations';
+import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import Image, { StaticImageData } from 'next/image';
 import { styled } from 'styled-components';
 
@@ -112,7 +112,7 @@ export const LargeIconError = makeIcon(
 );
 
 export type IconProps = {
-  alt: TranslationsWithStringType;
+  alt: TranslationsWithStringTypeAndNoVariables;
 };
 
 function makeIcon(src: StaticImageData, size: number) {

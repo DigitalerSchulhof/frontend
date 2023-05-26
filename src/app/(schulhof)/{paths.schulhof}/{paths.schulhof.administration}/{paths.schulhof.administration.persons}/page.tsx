@@ -5,7 +5,7 @@ import { Heading } from '#/ui/Heading';
 import { PersonsTable } from './table';
 
 export default async function Page() {
-  // await requireLogin();
+  await requireLogin();
 
   return (
     <>

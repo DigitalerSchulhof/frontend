@@ -38,9 +38,6 @@ export class TranslationMapWriter {
     const typeDeclaration =
       this.getTranslationMapTypeAliasDeclaration(translations);
 
-    const stringKeysTypeDeclaration =
-      this.getStringKeysTypeDeclaration(translations);
-
     const noVarsKeysTypeDeclaration =
       this.getNoVariablesKeysTypeDeclaration(translations);
 
@@ -51,7 +48,6 @@ export class TranslationMapWriter {
       [
         ...prelude,
         typeDeclaration,
-        stringKeysTypeDeclaration,
         noVarsKeysTypeDeclaration,
         stringNoVarsKeysTypeDeclaration,
       ],
@@ -107,38 +103,6 @@ export class TranslationMapWriter {
         propertySignaturesTypeLiteral,
         curlyMappedTypeNode,
       ])
-    );
-  }
-
-  /**
-   * ```ts
-   * export type TranslationsWithStringType = 'key1' | 'key2' | ...
-   * ```
-   */
-  private getStringKeysTypeDeclaration(
-    translations: TranslationEntry[]
-  ): ts.TypeAliasDeclaration {
-    const stringLiteralTypes = translations
-      .filter((entry) => {
-        const astElements = this.flattenAstElements(entry);
-
-        const hasTagElement = astElements.some(
-          (astElement) => astElement.type === mfp.TYPE.tag
-        );
-
-        return entry.type === 'string' && !hasTagElement;
-      })
-      .map((entry) =>
-        ts.factory.createLiteralTypeNode(
-          ts.factory.createStringLiteral(entry.key)
-        )
-      );
-
-    return ts.factory.createTypeAliasDeclaration(
-      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-      ts.factory.createIdentifier('TranslationsWithStringType'),
-      undefined,
-      ts.factory.createUnionTypeNode(stringLiteralTypes)
     );
   }
 

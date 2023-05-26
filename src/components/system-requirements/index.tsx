@@ -18,19 +18,19 @@ export const SystemRequirements = () => {
   return (
     <SystemRequirementsWrapper>
       <SystemRequirementsItem>
-        <LargeIconVersion />
+        <LargeIconVersion alt='{}' />
         <br />
         {t('schulhof.login.system-requirements.version', {
           version,
         })}
       </SystemRequirementsItem>
       <SystemRequirementsItem>
-        <LargeIconCookies />
+        <LargeIconCookies alt='{}' />
         <br />
         {t('schulhof.login.system-requirements.cookies')}
       </SystemRequirementsItem>
       <SystemRequirementsItem>
-        <LargeIconGroupError />
+        <LargeIconGroupError alt='{}' />
         <br />
         {t('schulhof.login.system-requirements.one-user')}
       </SystemRequirementsItem>

@@ -1,25 +1,20 @@
 'use client';
 
-import { Icon } from '../Icon';
+import { StyledIcon } from '../Icon';
 import React from 'react';
 import { Link } from '#/ui/Link';
-import {
-  ExecutionContext,
-  IStyledComponent,
-  css,
-  styled,
-} from 'styled-components';
+import { ExecutionContext, css, styled } from 'styled-components';
 import { Variant } from '../variants';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
-import { T } from '#/i18n';
+import { T, useT } from '#/i18n';
 
 export type BaseButtonProps = {
-  variant?: Variant;
+  $variant?: Variant;
 };
 
 export const ButtonStyles = ({
   theme,
-  variant = Variant.Default,
+  $variant = Variant.Default,
 }: BaseButtonProps & ExecutionContext) => css`
   border: 1px solid transparent;
   border-radius: ${theme.borderRadius.medium};
@@ -29,12 +24,12 @@ export const ButtonStyles = ({
   cursor: pointer;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
-  background-color: ${theme.accents[variant].regular.background};
-  color: ${theme.accents[variant].regular.text};
+  background-color: ${theme.accents[$variant].regular.background};
+  color: ${theme.accents[$variant].regular.text};
 
   &:hover {
-    background-color: ${theme.accents[variant].hover.background};
-    color: ${theme.accents[variant].hover.text};
+    background-color: ${theme.accents[$variant].hover.background};
+    color: ${theme.accents[$variant].hover.text};
   }
 
   &:first-child {
@@ -46,52 +41,63 @@ export const ButtonStyles = ({
   }
 `;
 
-const noForwardProps = new Set(['variant']);
+export const StyledButton = styled.button<BaseButtonProps>(ButtonStyles);
 
-export const StyledButton = styled.button.withConfig({
-  shouldForwardProp: (prop) => !noForwardProps.has(prop),
-})<BaseButtonProps>(ButtonStyles);
-
-export const StyledLink = styled(Link).withConfig({
-  shouldForwardProp: (prop) => !noForwardProps.has(prop),
-})<BaseButtonProps>`
+export const StyledLink = styled(Link)<BaseButtonProps>`
   ${(props) => ButtonStyles(props)}
 
   display: inline-block;
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PropsFrom<T> = T extends IStyledComponent<any, any, infer P> ? P : never;
-
 export const Button = ({
   t,
+  variant,
   ...props
-}: (PropsFrom<typeof StyledButton> | PropsFrom<typeof StyledLink>) & {
+}: {
+  variant?: Variant;
+
+  href?: React.ComponentProps<typeof Link>['href'];
+  onClick?: () => void;
   t?: TranslationsWithStringTypeAndNoVariables;
+  children?: React.ReactNode;
+  type?: React.ComponentProps<typeof StyledButton>['type'];
 }) => {
   if (t) {
     props.children = <T t={t} />;
   }
 
-  return 'href' in props ? (
-    <StyledLink {...props} />
+  const { href } = props;
+
+  return href ? (
+    <StyledLink $variant={variant} {...props} href={href} />
   ) : (
-    <StyledButton {...props} />
+    <StyledButton $variant={variant} {...props} />
   );
 };
 
-export type IconButtonProps = React.ComponentProps<typeof Button> & {
+export type IconButtonProps = Omit<
+  React.ComponentProps<typeof Button>,
+  'title' | 'children'
+> & {
+  title: TranslationsWithStringTypeAndNoVariables;
   icon: React.ReactNode;
 };
 
-const UnstyledIconButton = ({ icon, ...props }: IconButtonProps) => {
-  return <Button {...props}>{icon}</Button>;
+const UnstyledIconButton = ({ icon, title, ...props }: IconButtonProps) => {
+  const { t } = useT();
+  const translatedTitle = t(title);
+
+  return (
+    <Button title={translatedTitle} {...(props as any)}>
+      {icon}
+    </Button>
+  );
 };
 
 export const IconButton = styled(UnstyledIconButton)`
   padding: 1px;
 
-  & > ${Icon} {
+  & > ${StyledIcon} {
     margin: 0;
   }
 `;
