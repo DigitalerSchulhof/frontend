@@ -53,14 +53,10 @@ export const Button = ({
   t,
   variant,
   ...props
-}: {
-  variant?: Variant;
-
-  href?: React.ComponentProps<typeof Link>['href'];
-  onClick?: () => void;
+}: Omit<React.ComponentProps<typeof StyledButton>, 'variant'> & {
   t?: TranslationsWithStringTypeAndNoVariables;
-  children?: React.ReactNode;
-  type?: React.ComponentProps<typeof StyledButton>['type'];
+  href?: React.ComponentProps<typeof Link>['href'];
+  variant?: Variant;
 }) => {
   if (t) {
     props.children = <T t={t} />;
@@ -69,6 +65,7 @@ export const Button = ({
   const { href } = props;
 
   return href ? (
+    // @ts-expect-error -- No way we can type this correctly
     <StyledLink $variant={variant} {...props} href={href} />
   ) : (
     <StyledButton $variant={variant} {...props} />
@@ -88,7 +85,7 @@ const UnstyledIconButton = ({ icon, title, ...props }: IconButtonProps) => {
   const translatedTitle = t(title);
 
   return (
-    <Button title={translatedTitle} {...(props as any)}>
+    <Button title={translatedTitle} {...props}>
       {icon}
     </Button>
   );
