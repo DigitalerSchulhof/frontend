@@ -4,8 +4,8 @@ import { Button } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { formatName } from '#/utils';
 import { PersonDetailsProps } from '..';
-import { NoAccountButton } from '../buttons/no-account';
-import { MayNotMessagePersonButton } from '../buttons/no-permission';
+import { NoAccountButton } from './buttons/no-account';
+import { MayNotMessagePersonButton } from './buttons/no-permission';
 import { PersonDetailsPersonalDataSectionTable } from './table';
 
 export type PersonDetailsPersonalDataSectionProps = Pick<
