@@ -1,18 +1,8 @@
 import { ArangoRepository } from '../../arango';
 
-export enum PersonType {
-  Student = 'student',
-  Teacher = 'teacher',
-  Parent = 'parent',
-  Admin = 'admin',
-  Other = 'other',
-}
+export type PersonType = 'student' | 'teacher' | 'parent' | 'admin' | 'other';
 
-export enum PersonGender {
-  Male = 'male',
-  Female = 'female',
-  Other = 'other',
-}
+export type PersonGender = 'male' | 'female' | 'other';
 
 export type PersonBase = {
   firstname: string;

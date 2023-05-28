@@ -1,9 +1,6 @@
 import { ArangoRepository } from '../../arango';
 
-export enum FormOfAddress {
-  Formal = 'formal',
-  Informal = 'informal',
-}
+export type FormOfAddress = 'formal' | 'informal';
 
 export type AccountBase = {
   personId: string;

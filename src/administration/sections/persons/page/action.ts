@@ -11,7 +11,7 @@ export type LoadPersonsFilter = {
   typeOther: boolean;
 };
 
-export type Person = {
+export type LoadedPerson = {
   id: string;
   type: 'student' | 'teacher' | 'parent' | 'admin' | 'other';
   gender: 'male' | 'female' | 'other';
@@ -21,7 +21,7 @@ export type Person = {
 
 export async function loadPersons(
   filter: LoadPersonsFilter
-): Promise<Person[]> {
+): Promise<LoadedPerson[]> {
   return [
     {
       id: '1',

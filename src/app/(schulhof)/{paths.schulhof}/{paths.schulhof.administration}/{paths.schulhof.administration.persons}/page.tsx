@@ -1,8 +1,8 @@
+import { PersonsTable } from '#/administration/sections/persons/page/table';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
-import { PersonsTable } from './table';
 
 export default async function Page() {
   const context = await requireLogin();

@@ -1,6 +1,5 @@
 'use client';
 
-import { PersonType } from '#/backend/repositories/content/person';
 import { T } from '#/i18n';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { List, ListCell, ListHeader, ListRow } from '#/ui/List';
@@ -73,7 +72,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
             <ListCell>{account.email}</ListCell>
           </ListRow>
         ) : null}
-        {person.type === PersonType.Teacher ? (
+        {person.type === 'teacher' ? (
           <ListRow>
             <ListHeader>
               <T t='schulhof.administration.sections.persons.details.personal-data.table.teacher-code' />
