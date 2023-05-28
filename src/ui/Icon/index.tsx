@@ -71,13 +71,28 @@ export const IconPersonActionDeleteAccount = makeIcon(
   16
 );
 
-export const IconPersonActionDeletePersonOnly = makeIcon(
+export const IconPersonActionCreateAccount = makeIcon(
+  require('../../../icons/16/vcard_add.png'),
+  16
+);
+
+export const IconPersonActionDeletePerson = makeIcon(
   require('../../../icons/16/user_delete.png'),
   16
 );
 
-export const IconPersonActionDeletePersonWith = makeIcon(
-  require('../../../icons/16/user_delete.png'),
+export const IconPersonActionSettings = makeIcon(
+  require('../../../icons/16/account_functions.png'),
+  16
+);
+
+export const IconPersonActionEditPerson = makeIcon(
+  require('../../../icons/16/user_edit.png'),
+  16
+);
+
+export const IconPersonActionEditAccount = makeIcon(
+  require('../../../icons/16/vcard_edit.png'),
   16
 );
 

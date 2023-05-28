@@ -23,7 +23,6 @@ personal-data:
 change-personal-data:
   title: Daten ändern
   actions:
-    change-teacher-code: Lehrerkürzel ändern
     identity-theft: Identitätsdiebstahl melden
     create-account: Benutzerkonto anlegen
     edit-account: Benutzerkonto bearbeiten
@@ -31,7 +30,7 @@ change-personal-data:
       own: Mein Benutzerkonto löschen
       other: Benutzerkonto löschen
     settings: Einstellungen
-    permissions-and-roles: Rollen und Rechte vergeben
+    permissions: Rollen und Rechte vergeben
     edit-person: Persönliche Daten bearbeiten
     delete-person: Person löschen
     change-password:

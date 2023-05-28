@@ -15,6 +15,9 @@ table:
     lastname: Nachname
   actions:
     details: Personendetails anzeigen
+    settings: Einstellungen bearbeiten
+    create-account: Benutzerkonto anlegen
+    permissions: Rollen und Rechte vergeben
     edit:
       account: Nutzerkonto bearbeiten
       person: Person bearbeiten

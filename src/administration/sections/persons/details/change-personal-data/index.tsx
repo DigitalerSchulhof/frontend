@@ -1,5 +1,4 @@
 import { FormOfAddress } from '#/backend/repositories/content/account';
-import { PersonType } from '#/backend/repositories/content/person';
 import { LoggedInBackendContext } from '#/context';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
@@ -170,28 +169,15 @@ const AdminButtons = ({
             'paths.schulhof.administration.persons.edit-person',
           ]}
         />,
-        person.type === PersonType.Teacher && (
-          <Button
-            key='change-teacher-code'
-            t='schulhof.administration.sections.persons.details.change-personal-data.actions.change-teacher-code'
-            href={[
-              'paths.schulhof',
-              'paths.schulhof.administration',
-              'paths.schulhof.administration.persons',
-              `{${person.id}}`,
-              'paths.schulhof.administration.persons.change-teacher-code',
-            ]}
-          />
-        ),
         <Button
-          key='permissions-and-roles'
-          t='schulhof.administration.sections.persons.details.change-personal-data.actions.permissions-and-roles'
+          key='permissions'
+          t='schulhof.administration.sections.persons.details.change-personal-data.actions.permissions'
           href={[
             'paths.schulhof',
             'paths.schulhof.administration',
             'paths.schulhof.administration.persons',
             `{${person.id}}`,
-            'paths.schulhof.administration.persons.permissions-and-roles',
+            'paths.schulhof.administration.persons.permissions',
           ]}
         />,
         !account && (

@@ -1,8 +1,23 @@
 'use client';
 
-import { ButtonGroup, IconButton } from '#/ui/Button';
+import { T, useT } from '#/i18n';
+import { Button, ButtonGroup, IconButton } from '#/ui/Button';
 import { Label } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
+import {
+  IconPersonActionCreateAccount,
+  IconPersonActionDeleteAccount,
+  IconPersonActionDeletePerson,
+  IconPersonActionDetails,
+  IconPersonActionEditAccount,
+  IconPersonActionEditPerson,
+  IconPersonActionPermissions,
+  IconPersonAdministrator,
+  IconPersonOther,
+  IconPersonParent,
+  IconPersonStudent,
+  IconPersonTeacher,
+} from '#/ui/Icon';
 import { TextInput, ToggleButton } from '#/ui/Input';
 import {
   FullWidthListCell,
@@ -11,25 +26,29 @@ import {
   ListHeader,
   ListRow,
 } from '#/ui/List';
-import { Table, TableCell, TableHeader, TableRow } from '#/ui/Table';
-import { Suspense, useEffect, useId, useMemo, useState } from 'react';
-import { Person, loadPersons } from './action';
-import { T, useT } from '#/i18n';
 import { Note } from '#/ui/Note';
+import { Table, TableCell, TableHeader, TableRow } from '#/ui/Table';
+import { Variant } from '#/ui/variants';
 import {
-  IconGenderFemale,
-  IconGenderMale,
-  IconGenderOther,
-  IconPersonActionDetails,
-  IconPersonActionMail,
-  IconPersonAdministrator,
-  IconPersonOther,
-  IconPersonParent,
-  IconPersonStudent,
-  IconPersonTeacher,
-} from '#/ui/Icon';
+  Suspense,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from 'react';
+import { Person, loadPersons } from './action';
+import { useToggle } from '#/utils/client';
+import { Alert } from '#/ui/Alert';
+import { Modal } from '#/ui/Modal';
+import { FormOfAddress } from '#/backend/repositories/content/account';
+import { formatName } from '#/utils';
 
-export const PersonsTable = () => {
+export const PersonsTable = ({
+  formOfAddress,
+}: {
+  formOfAddress: FormOfAddress;
+}) => {
   const [lastname, setLastname] = useState('');
   const [firstname, setFirstname] = useState('');
   const [clazz, setClass] = useState('');
@@ -126,6 +145,7 @@ export const PersonsTable = () => {
       {filterPart}
       <Suspense fallback='LÄDT'>
         <ContentTable
+          formOfAddress={formOfAddress}
           lastname={lastname}
           firstname={firstname}
           clazz={clazz}
@@ -141,6 +161,7 @@ export const PersonsTable = () => {
 };
 
 const ContentTable = ({
+  formOfAddress,
   lastname,
   firstname,
   clazz,
@@ -150,6 +171,7 @@ const ContentTable = ({
   typeAdmin,
   typeOther,
 }: {
+  formOfAddress: FormOfAddress;
   lastname: string;
   firstname: string;
   clazz: string;
@@ -203,12 +225,11 @@ const ContentTable = ({
         size='2'
         t='schulhof.administration.sections.persons.page.table.title'
       />
-      <List columns={'30px 1fr 1fr 30px 34px'} isLoading={isLoading}>
+      <List columns={`auto 1fr 1fr auto`} isLoading={isLoading}>
         <ListRow>
           <ListHeader />
           <ListHeader t='schulhof.administration.sections.persons.page.table.columns.firstname' />
           <ListHeader t='schulhof.administration.sections.persons.page.table.columns.lastname' />
-          <ListHeader />
           <ListHeader />
         </ListRow>
         {isLoading && persons === null ? (
@@ -221,14 +242,24 @@ const ContentTable = ({
           </ListRow>
         ) : null}
         {persons?.map((person) => (
-          <PersonListRow key={person.id} person={person} />
+          <PersonListRow
+            key={person.id}
+            person={person}
+            formOfAddress={formOfAddress}
+          />
         ))}
       </List>
     </>
   );
 };
 
-const PersonListRow = ({ person }: { person: Person }) => {
+const PersonListRow = ({
+  person,
+  formOfAddress,
+}: {
+  person: Person;
+  formOfAddress: FormOfAddress;
+}) => {
   return (
     <ListRow key={person.id}>
       <ListCell>
@@ -237,10 +268,7 @@ const PersonListRow = ({ person }: { person: Person }) => {
       <ListCell>{person.firstname}</ListCell>
       <ListCell>{person.lastname}</ListCell>
       <ListCell>
-        <PersonGenderIcon gender={person.gender} />
-      </ListCell>
-      <ListCell>
-        <PersonActionIcons person={person} />
+        <PersonActionIcons person={person} formOfAddress={formOfAddress} />
       </ListCell>
     </ListRow>
   );
@@ -263,20 +291,16 @@ const PersonTypeIcon = ({ type }: { type: Person['type'] }) => {
   }
 };
 
-const PersonGenderIcon = ({ gender }: { gender: Person['gender'] }) => {
-  switch (gender) {
-    case 'male':
-      return <IconGenderMale alt='generic.genders.male' />;
-    case 'female':
-      return <IconGenderFemale alt='generic.genders.female' />;
-    case 'other':
-      return <IconGenderOther alt='generic.genders.other' />;
-  }
-};
-
-const PersonActionIcons = ({ person }: { person: Person }) => {
-  const { t } = useT();
+const PersonActionIcons = ({
+  person,
+  formOfAddress,
+}: {
+  person: Person;
+  formOfAddress: FormOfAddress;
+}) => {
   const icons = [];
+
+  const personName = formatName(person);
 
   // icons.push(
   //   <IconButton
@@ -311,5 +335,150 @@ const PersonActionIcons = ({ person }: { person: Person }) => {
     />
   );
 
+  icons.push(
+    <IconButton
+      key='permissions'
+      title='schulhof.administration.sections.persons.page.table.actions.permissions'
+      icon={
+        <IconPersonActionPermissions alt='schulhof.administration.sections.persons.page.table.actions.permissions' />
+      }
+      href={[
+        'paths.schulhof',
+        'paths.schulhof.administration',
+        'paths.schulhof.administration.persons',
+        `{${person.id}}`,
+        'paths.schulhof.administration.persons.permissions',
+      ]}
+    />
+  );
+
+  icons.push(
+    <IconButton
+      key='edit-person'
+      title='schulhof.administration.sections.persons.page.table.actions.edit.person'
+      icon={
+        <IconPersonActionEditPerson alt='schulhof.administration.sections.persons.page.table.actions.edit.person' />
+      }
+      href={[
+        'paths.schulhof',
+        'paths.schulhof.administration',
+        'paths.schulhof.administration.persons',
+        `{${person.id}}`,
+        'paths.schulhof.administration.persons.edit-person',
+      ]}
+    />
+  );
+
+  icons.push(
+    <IconButton
+      key='edit-account'
+      title='schulhof.administration.sections.persons.page.table.actions.edit.account'
+      icon={
+        <IconPersonActionEditAccount alt='schulhof.administration.sections.persons.page.table.actions.edit.account' />
+      }
+      href={[
+        'paths.schulhof',
+        'paths.schulhof.administration',
+        'paths.schulhof.administration.persons',
+        `{${person.id}}`,
+        'paths.schulhof.administration.persons.edit-account',
+      ]}
+    />
+  );
+
+  icons.push(
+    <DeleteAccountButton
+      key='delete-account'
+      personId={person.id}
+      formOfAddress={formOfAddress}
+      personName={personName}
+    />
+  );
+
+  icons.push(
+    <IconButton
+      key='create-account'
+      title='schulhof.administration.sections.persons.page.table.actions.create-account'
+      variant={Variant.Success}
+      icon={
+        <IconPersonActionCreateAccount alt='schulhof.administration.sections.persons.page.table.actions.create-account' />
+      }
+    />
+  );
+
+  icons.push(
+    <IconButton
+      key='delete-person'
+      title='schulhof.administration.sections.persons.page.table.actions.delete.person.with.action'
+      variant={Variant.Error}
+      icon={
+        <IconPersonActionDeletePerson alt='schulhof.administration.sections.persons.page.table.actions.delete.person.with.action' />
+      }
+    />
+  );
+
   return <ButtonGroup>{icons}</ButtonGroup>;
 };
+
+const DeleteAccountButton = ({
+  personId,
+  formOfAddress,
+  personName,
+}: {
+  personId: string;
+  formOfAddress: FormOfAddress;
+  personName: string;
+}) => {
+  const [isOpen, setIsOpenTrue, setIsOpenFalse] = useToggle();
+  const { t } = useT();
+  const sendDelete = useSendDeleteAccount(personId);
+
+  return (
+    <>
+      <IconButton
+        title='schulhof.administration.sections.persons.page.table.actions.delete.account.other.action'
+        variant={Variant.Error}
+        icon={
+          <IconPersonActionDeleteAccount alt='schulhof.administration.sections.persons.page.table.actions.delete.account.other.action' />
+        }
+        onClick={setIsOpenTrue}
+      />
+      {isOpen ? (
+        <Modal onClose={setIsOpenFalse}>
+          <Alert variant={Variant.Warning}>
+            <Heading
+              size='4'
+              t={`schulhof.administration.sections.persons.page.table.actions.delete.account.other.title`}
+            />
+            {t(
+              `schulhof.administration.sections.persons.page.table.actions.delete.account.other.description`,
+              {
+                form_of_address: formOfAddress,
+                person_name: personName,
+              }
+            ).map((s, i) => (
+              <p key={i}>{s}</p>
+            ))}
+          </Alert>
+          <ButtonGroup>
+            <Button onClick={setIsOpenFalse} t='generic.back' />
+            <Button
+              onClick={sendDelete}
+              variant={Variant.Error}
+              t={`schulhof.administration.sections.persons.page.table.actions.delete.account.other.action`}
+            />
+          </ButtonGroup>
+        </Modal>
+      ) : null}
+    </>
+  );
+};
+
+function useSendDeleteAccount(personId: string) {
+  return useCallback(
+    async function sendDelete() {
+      alert(personId);
+    },
+    [personId]
+  );
+}

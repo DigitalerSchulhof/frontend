@@ -5,7 +5,7 @@ import { Heading } from '#/ui/Heading';
 import { PersonsTable } from './table';
 
 export default async function Page() {
-  await requireLogin();
+  const context = await requireLogin();
 
   return (
     <>
@@ -27,7 +27,7 @@ export default async function Page() {
           size='2'
           t='schulhof.administration.sections.persons.page.filter.title'
         />
-        <PersonsTable />
+        <PersonsTable formOfAddress={context.account.formOfAddress} />
       </Col>
     </>
   );

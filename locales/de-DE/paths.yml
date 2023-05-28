@@ -47,9 +47,6 @@ schulhof:
         index: Person_bearbeiten
         title: Person bearbeiten
       settings: Einstellungen
-      change-teacher-code:
-        index: Lehrerkürzel_aendern
-        title: Lehrerkürzel ändern
       permissions:
         index: Rollen_und_Rechte
         title: Rollen und Rechte vergeben

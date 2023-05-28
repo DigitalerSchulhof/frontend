@@ -58,5 +58,12 @@ export async function loadPersons(
       lastname: 'Externer',
       gender: 'female',
     },
+    {
+      id: '2052',
+      type: 'teacher',
+      firstname: 'Jesper',
+      lastname: 'Engberg',
+      gender: 'male',
+    },
   ];
 }
