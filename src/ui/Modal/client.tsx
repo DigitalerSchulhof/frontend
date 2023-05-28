@@ -8,7 +8,6 @@ import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Loading } from '#/ui/Loading';
 import { Modal } from '#/ui/Modal';
-import { Variant } from '#/ui/variants';
 import { ReactNode } from 'react';
 
 export type LoadingModalProps = {
@@ -44,7 +43,7 @@ export const ErrorModal = ({
 }: ErrorModalProps) => {
   return (
     <Modal onClose={close}>
-      <Alert variant={Variant.Error} title={title}>
+      <Alert variant='error' title={title}>
         <p>
           <T t={description} />
         </p>

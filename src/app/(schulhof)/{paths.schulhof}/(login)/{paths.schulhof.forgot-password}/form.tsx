@@ -7,7 +7,6 @@ import { Form, TextFormRow } from '#/ui/Form';
 import { Modal } from '#/ui/Modal';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
-import { Variant } from '#/ui/variants';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
@@ -35,7 +34,7 @@ export const ForgotPasswordForm = () => {
         />
       </Table>
       <Alert
-        variant={Variant.Information}
+        variant='information'
         title='schulhof.login.actions.forgot-password.info.title'
       >
         <p>
@@ -45,7 +44,7 @@ export const ForgotPasswordForm = () => {
       <ButtonGroup>
         <Button
           type='submit'
-          variant={Variant.Success}
+          variant='success'
           t='schulhof.login.actions.forgot-password.form.buttons.send'
         />
         <Button
@@ -114,7 +113,7 @@ function useSubmit(
       (close, { email, formOfAddress }) => (
         <Modal onClose={close}>
           <Alert
-            variant={Variant.Success}
+            variant='success'
             title='schulhof.login.actions.forgot-password.modals.success.title'
           >
             <p>

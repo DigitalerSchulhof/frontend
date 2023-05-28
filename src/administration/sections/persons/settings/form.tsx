@@ -15,7 +15,6 @@ import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
-import { Variant } from '#/ui/variants';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef } from 'react';
@@ -154,7 +153,7 @@ export const EditAccountSettingsForm = ({
       </Col>
       <Col w='12'>
         <Alert
-          variant={Variant.Information}
+          variant='information'
           title='schulhof.administration.sections.persons.settings.disclaimer.title'
         >
           <p>
@@ -164,7 +163,7 @@ export const EditAccountSettingsForm = ({
         <ButtonGroup>
           <Button
             type='submit'
-            variant={Variant.Success}
+            variant='success'
             t='schulhof.administration.sections.persons.settings.form.buttons.save'
           />
           <Button
@@ -331,7 +330,7 @@ function useSubmit(
       return (
         <Modal onClose={close}>
           <Alert
-            variant={Variant.Success}
+            variant='success'
             title='schulhof.administration.sections.persons.settings.modals.success.title'
           >
             <p>

@@ -6,7 +6,7 @@ import { Variant } from '../variants';
 export const StyledAlert = styled.div<{
   $variant: Variant;
 }>(
-  ({ theme, $variant = Variant.Default }) => css`
+  ({ theme, $variant = 'default' }) => css`
     margin: 10px 0;
     text-align: left;
     padding: ${theme.padding.medium};

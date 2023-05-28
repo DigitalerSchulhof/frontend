@@ -7,7 +7,6 @@ import { Form, TextFormRow } from '#/ui/Form';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Note } from '#/ui/Note';
 import { Table } from '#/ui/Table';
-import { Variant } from '#/ui/variants';
 import { sleep } from '#/utils';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
@@ -48,7 +47,7 @@ export const LoginForm = () => {
       <ButtonGroup>
         <Button
           type='submit'
-          variant={Variant.Success}
+          variant='success'
           t='schulhof.login.actions.login.form.buttons.login'
         />
         <Button

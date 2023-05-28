@@ -6,7 +6,6 @@ import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
-import { Variant } from '#/ui/variants';
 import { useToggle } from '#/utils/client';
 import { useCallback } from 'react';
 
@@ -30,13 +29,13 @@ export const DeleteAccountButton = ({
   return (
     <>
       <Button
-        variant={Variant.Error}
+        variant='error'
         t={`schulhof.administration.sections.persons.details.change-personal-data.actions.delete-account.${own}`}
         onClick={setIsOpenTrue}
       />
       {isOpen ? (
         <Modal onClose={setIsOpenFalse}>
-          <Alert variant={Variant.Warning}>
+          <Alert variant='warning'>
             <Heading
               size='4'
               t={`schulhof.administration.sections.persons.page.table.actions.delete.account.${own}.title`}
@@ -55,7 +54,7 @@ export const DeleteAccountButton = ({
             <Button onClick={setIsOpenFalse} t='generic.back' />
             <Button
               onClick={sendDelete}
-              variant={Variant.Error}
+              variant='error'
               t={`schulhof.administration.sections.persons.page.table.actions.delete.account.${own}.action`}
             />
           </ButtonGroup>

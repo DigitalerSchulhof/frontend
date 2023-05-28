@@ -11,7 +11,7 @@ export interface NoteProps {
   children?: React.ReactNode;
 }
 
-export const Note = ({ variant = Variant.Default, t, ...props }: NoteProps) => {
+export const Note = ({ variant = 'default', t, ...props }: NoteProps) => {
   if (t) {
     props.children = <T t={t} />;
   }

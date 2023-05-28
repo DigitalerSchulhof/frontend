@@ -5,7 +5,6 @@ import { Button, ButtonGroup, IconButton } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { IconPersonActionDeleteAccount } from '#/ui/Icon';
 import { Modal } from '#/ui/Modal';
-import { Variant } from '#/ui/variants';
 import { useToggle } from '#/utils/client';
 import { useCallback } from 'react';
 
@@ -27,7 +26,7 @@ export const DeleteAccountButton = ({
     <>
       <IconButton
         title='schulhof.administration.sections.persons.page.table.actions.delete.account.other.action'
-        variant={Variant.Error}
+        variant='error'
         icon={
           <IconPersonActionDeleteAccount alt='schulhof.administration.sections.persons.page.table.actions.delete.account.other.action' />
         }
@@ -35,7 +34,7 @@ export const DeleteAccountButton = ({
       />
       {isOpen ? (
         <Modal onClose={setIsOpenFalse}>
-          <Alert variant={Variant.Warning}>
+          <Alert variant='warning'>
             <Heading
               size='4'
               t={`schulhof.administration.sections.persons.page.table.actions.delete.account.other.title`}
@@ -54,7 +53,7 @@ export const DeleteAccountButton = ({
             <Button onClick={setIsOpenFalse} t='generic.back' />
             <Button
               onClick={sendDelete}
-              variant={Variant.Error}
+              variant='error'
               t={`schulhof.administration.sections.persons.page.table.actions.delete.account.other.action`}
             />
           </ButtonGroup>

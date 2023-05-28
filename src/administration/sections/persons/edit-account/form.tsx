@@ -7,7 +7,6 @@ import { Form, TextFormRow } from '#/ui/Form';
 import { Modal } from '#/ui/Modal';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
-import { Variant } from '#/ui/variants';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
@@ -59,7 +58,7 @@ export const EditAccountForm = ({
       <ButtonGroup>
         <Button
           type='submit'
-          variant={Variant.Success}
+          variant='success'
           t='schulhof.administration.sections.persons.edit-account.form.buttons.save'
         />
         <Button
@@ -149,7 +148,7 @@ function useSubmit(
       return (
         <Modal onClose={close}>
           <Alert
-            variant={Variant.Success}
+            variant='success'
             title='schulhof.administration.sections.persons.edit-account.modals.success.title'
           >
             <p>

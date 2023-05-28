@@ -2,13 +2,12 @@ import { T } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
-import { Variant } from '#/ui/variants';
 
 export const TemporaryPasswordWarning = () => {
   const formOfAddress = 'informal';
 
   return (
-    <Alert variant={Variant.Information}>
+    <Alert variant='information'>
       <Heading size='4'>
         <T
           t='schulhof.account.temporary-password-warning.title'
@@ -27,7 +26,6 @@ export const TemporaryPasswordWarning = () => {
       </p>
       <ButtonGroup>
         <Button
-          variant={Variant.Default}
           t='schulhof.account.temporary-password-warning.button'
           href={[
             'paths.schulhof',

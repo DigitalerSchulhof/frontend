@@ -1,7 +1,6 @@
-export enum Variant {
-  Success = 'success',
-  Warning = 'warning',
-  Error = 'error',
-  Information = 'information',
-  Default = 'default',
-}
+export type Variant =
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'information'
+  | 'default';

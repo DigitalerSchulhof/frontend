@@ -7,7 +7,6 @@ import { Form, TextFormRow } from '#/ui/Form';
 import { Modal } from '#/ui/Modal';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
-import { Variant } from '#/ui/variants';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
@@ -51,7 +50,7 @@ export const IdentityTheftForm = ({ accountRev }: { accountRev: string }) => {
       <ButtonGroup>
         <Button
           type='submit'
-          variant={Variant.Warning}
+          variant='warning'
           t='schulhof.account.profile.identity-theft.form.buttons.submit'
         />
         <Button
@@ -142,7 +141,7 @@ function useSubmit(
       () => (
         <Modal onClose={close}>
           <Alert
-            variant={Variant.Success}
+            variant='success'
             title='schulhof.account.profile.identity-theft.modals.success.title'
           >
             <p>

@@ -7,7 +7,6 @@ import { Form, TextFormRow } from '#/ui/Form';
 import { Modal } from '#/ui/Modal';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
-import { Variant } from '#/ui/variants';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
@@ -51,7 +50,7 @@ export const ChangePasswordForm = ({ accountRev }: { accountRev: string }) => {
       <ButtonGroup>
         <Button
           type='submit'
-          variant={Variant.Success}
+          variant='success'
           t='schulhof.account.profile.change-password.form.buttons.submit'
         />
         <Button
@@ -133,7 +132,7 @@ function useSubmit(
       () => (
         <Modal onClose={close}>
           <Alert
-            variant={Variant.Success}
+            variant='success'
             title='schulhof.account.profile.change-password.modals.success.title'
           >
             <p>

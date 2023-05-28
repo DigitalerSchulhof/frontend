@@ -14,7 +14,7 @@ export type BaseButtonProps = {
 
 export const ButtonStyles = ({
   theme,
-  $variant = Variant.Default,
+  $variant = 'default',
 }: BaseButtonProps & ExecutionContext) => css`
   border: 1px solid transparent;
   border-radius: ${theme.borderRadius.medium};

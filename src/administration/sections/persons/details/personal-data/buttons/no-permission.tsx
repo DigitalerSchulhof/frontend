@@ -6,7 +6,6 @@ import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
-import { Variant } from '#/ui/variants';
 import { useToggle } from '#/utils/client';
 
 export const MayNotMessagePersonButton = ({
@@ -26,7 +25,7 @@ export const MayNotMessagePersonButton = ({
       />
       {isOpen ? (
         <Modal onClose={setIsOpenFalse}>
-          <Alert variant={Variant.Information}>
+          <Alert variant='information'>
             <Heading size='4'>
               <T
                 t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.title'

@@ -5,7 +5,6 @@ import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
-import { Variant } from '#/ui/variants';
 
 export default async function Page() {
   const settings = await getSettings();
@@ -25,7 +24,7 @@ export default async function Page() {
         </Heading>
       </Col>
       <Col w='12'>
-        <Alert variant={Variant.Warning} title='schulhof.register.note.title'>
+        <Alert variant='warning' title='schulhof.register.note.title'>
           <p>
             <T t='schulhof.register.note.description' />
           </p>
