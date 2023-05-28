@@ -31,15 +31,17 @@ export interface Theme extends Shared {
     textMuted: string;
   };
   accents: Record<
-    Variant,
+    Variant | 'disabled',
     {
       regular: {
         background: string;
         text: string;
+        border?: string;
       };
       hover: {
         background: string;
         text: string;
+        border?: string;
       };
     }
   >;
@@ -121,6 +123,18 @@ export const themes = {
           text: 'rgb(255, 255, 255)',
         },
       },
+      disabled: {
+        regular: {
+          background: 'rgb(255, 255, 255)',
+          text: 'rgb(221, 221, 221)',
+          border: 'rgb(221, 221, 221)',
+        },
+        hover: {
+          background: 'rgb(255, 255, 255)',
+          text: 'rgb(221, 221, 221)',
+          border: 'rgb(221, 221, 221)',
+        },
+      },
     },
   },
   dark: {
@@ -182,6 +196,18 @@ export const themes = {
         hover: {
           background: 'rgb(85, 85, 85)',
           text: 'rgb(252, 248, 227)',
+        },
+      },
+      disabled: {
+        regular: {
+          background: 'rgb(33, 33, 33)',
+          text: 'rgb(66, 66, 66)',
+          border: 'rgb(66, 66, 66)',
+        },
+        hover: {
+          background: 'rgb(33, 33, 33)',
+          text: 'rgb(66, 66, 66)',
+          border: 'rgb(66, 66, 66)',
         },
       },
     },

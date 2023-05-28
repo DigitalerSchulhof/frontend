@@ -3,7 +3,6 @@
 import { T } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
 import { useToggle } from '#/utils/client';
 
@@ -14,19 +13,15 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
     <>
       <Button
         onClick={setIsOpenTrue}
+        variant='disabled'
         t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.button'
       />
       {isOpen ? (
         <Modal onClose={setIsOpenFalse}>
-          <Alert variant='information'>
-            <Heading size='4'>
-              <T
-                t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.title'
-                args={{
-                  name: personName,
-                }}
-              />
-            </Heading>
+          <Alert
+            variant='information'
+            title='schulhof.administration.sections.persons.details.personal-data.actions.write-message.title'
+          >
             <p>
               <T
                 t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.errors.no-account'

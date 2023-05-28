@@ -9,7 +9,7 @@ import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { T, useT } from '#/i18n';
 
 export type BaseButtonProps = {
-  $variant?: Variant;
+  $variant?: Variant | 'disabled';
 };
 
 export const ButtonStyles = ({
@@ -26,10 +26,18 @@ export const ButtonStyles = ({
 
   background-color: ${theme.accents[$variant].regular.background};
   color: ${theme.accents[$variant].regular.text};
+  ${theme.accents[$variant].regular.border &&
+  css`
+    border: 1px solid ${theme.accents[$variant].regular.border};
+  `}
 
   &:hover {
     background-color: ${theme.accents[$variant].hover.background};
     color: ${theme.accents[$variant].hover.text};
+    ${theme.accents[$variant].hover.border &&
+    css`
+      border: 1px solid ${theme.accents[$variant].hover.border};
+    `}
   }
 
   &:first-child {
@@ -39,6 +47,11 @@ export const ButtonStyles = ({
   &:last-child {
     margin-right: 0px;
   }
+
+  ${$variant === 'disabled' &&
+  css`
+    cursor: default;
+  `}
 `;
 
 export const StyledButton = styled.button<BaseButtonProps>(ButtonStyles);
@@ -53,10 +66,10 @@ export const Button = ({
   t,
   variant,
   ...props
-}: Omit<React.ComponentProps<typeof StyledButton>, 'variant'> & {
+}: Omit<React.ComponentProps<typeof StyledButton>, '$variant'> & {
   t?: TranslationsWithStringTypeAndNoVariables;
   href?: React.ComponentProps<typeof Link>['href'];
-  variant?: Variant;
+  variant?: React.ComponentProps<typeof StyledButton>['$variant'];
 }) => {
   if (t) {
     props.children = <T t={t} />;
@@ -66,9 +79,18 @@ export const Button = ({
 
   return href ? (
     // @ts-expect-error -- No way we can type this correctly
-    <StyledLink $variant={variant} {...props} href={href} />
+    <StyledLink
+      $variant={variant}
+      aria-disabled={variant === 'disabled'}
+      {...props}
+      href={href}
+    />
   ) : (
-    <StyledButton $variant={variant} {...props} />
+    <StyledButton
+      $variant={variant}
+      aria-disabled={variant === 'disabled'}
+      {...props}
+    />
   );
 };
 

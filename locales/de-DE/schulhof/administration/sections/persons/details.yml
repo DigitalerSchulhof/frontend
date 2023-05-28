@@ -16,9 +16,9 @@ personal-data:
   actions:
     write-message:
       button: Nachricht schreiben
-      title: Nachricht an {name} schreiben
+      title: Nachricht an schreiben
       errors:
-        no-permission: "{form_of_address, select, informal {Du hast} formal {Sie haben} other {~}} keine Berechtigung, eine Nachricht an {name} zu schreiben."
+        no-permission: "{form_of_address, select, informal {Du darfst} formal {Sie dürfen} other {~}} {name} nicht schreiben."
         no-account: Für {name} existiert kein Benutzerkonto.
 change-personal-data:
   title: Daten ändern
