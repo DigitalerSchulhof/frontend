@@ -15,12 +15,11 @@ export const NoAccountButton = ({ personName }: { personName: string }) => {
     <>
       <Button
         onClick={setIsOpenTrue}
-        disabled
         t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.button'
       />
       {isOpen ? (
         <Modal onClose={setIsOpenFalse}>
-          <Alert variant={Variant.Error}>
+          <Alert variant={Variant.Information}>
             <Heading size='4'>
               <T
                 t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.title'

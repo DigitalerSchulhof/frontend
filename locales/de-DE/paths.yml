@@ -29,7 +29,7 @@ schulhof:
         index: Neue_Nachricht
         title: Neue Nachricht
         query:
-          to: empfaenger
+          to: Empfaenger
   administration:
     index: Verwaltung
     persons:

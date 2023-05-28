@@ -48,7 +48,7 @@ function useGetWriteMessageButton(
 ): JSX.Element | null {
   const { t } = useT();
 
-  if (person.id === context.person.id) return null;
+  // if (person.id === context.person.id) return null;
 
   if (!mayMessagePerson(context, person)) {
     return (
@@ -59,8 +59,8 @@ function useGetWriteMessageButton(
     );
   }
 
-  if (!hasAccount) {
-    <NoAccountButton personName={formatName(person)} />;
+  if (hasAccount) {
+    return <NoAccountButton personName={formatName(person)} />;
   }
 
   return (
