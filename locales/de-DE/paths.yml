@@ -45,7 +45,7 @@ schulhof:
         title: Neue Person
       edit-person:
         index: Person_bearbeiten
-        title: Person bearbeiten
+        title: Bearbeiten
       settings: Einstellungen
       permissions:
         index: Rollen_und_Rechte

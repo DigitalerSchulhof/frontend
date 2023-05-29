@@ -5,7 +5,10 @@ import {
   PersonBase,
   PersonRepository,
 } from '#/backend/repositories/content/person';
-import { PersonFilter } from '#/backend/repositories/content/person/filters';
+import {
+  PersonFilter,
+  PersonTeacherCodeFilter,
+} from '#/backend/repositories/content/person/filters';
 import {
   EqFilterOperator,
   InFilterOperator,
@@ -52,5 +55,29 @@ export class PersonService extends Service<
     ]);
 
     return res;
+  }
+
+  /**
+   * Generate a unique recommendation for the teacher's code of a person
+   */
+  async generateDefaultTeacherCode(
+    person: WithId<PersonBase>
+  ): Promise<string> {
+    let attempt = 1;
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition -- We return when we find a code that's not taken
+    while (true) {
+      const attemptNr = attempt === 0 ? '' : attempt.toString();
+
+      const code = person.lastname.substring(0, 3).toUpperCase() + attemptNr;
+
+      const existing = await this.searchOne({
+        filter: new PersonTeacherCodeFilter(new EqFilterOperator(code)),
+      });
+
+      if (!existing) return code;
+
+      attempt++;
+    }
   }
 }

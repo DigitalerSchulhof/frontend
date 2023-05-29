@@ -18,12 +18,10 @@ export type ToggleProps = Omit<
   defaultValue?: boolean;
 };
 
-export const Toggle = forwardRef<
-  {
-    value: boolean;
-  },
-  ToggleProps
->(function Toggle({ onChange, defaultValue, ...props }, ref) {
+export const Toggle = forwardRef(function Toggle(
+  { onChange, defaultValue, ...props }: ToggleProps,
+  ref: React.Ref<{ value: boolean }>
+) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useImperativeHandle(

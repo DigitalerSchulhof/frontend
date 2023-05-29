@@ -1,0 +1,28 @@
+title: Konto von {name} bearbeiten
+form:
+  type: "Art:"
+  firstname: "Vorname:"
+  lastname: "Nachname:"
+  gender: "Geschlecht:"
+  teacher-code: "Lehrerkürzel:"
+  buttons:
+    save: Änderungen speichern
+    back: Zurück zur Benutzeransicht
+modals:
+  loading:
+    title: Person bearbeiten
+    description: Die eingegebenen Daten werden überprüft und die Person wird geändert.
+  error:
+    title: Person Bearbeiten fehlgeschlagen
+    description: Die Person wurde nicht geändert, denn ...
+    reasons:
+      firstname-invalid:
+        - der Vorname ist ungültig.
+      lastname-invalid:
+        - der Nachname ist ungültig.
+      internal-error:
+        - es ist ein interner Fehler aufgetreten.
+  success:
+    title: Person bearbeiten
+    description: Die Person wurde erfolgreich geändert.
+    button: Zurück zur Benutzeransicht

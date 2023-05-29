@@ -10,7 +10,6 @@ import { InputValidationError, aggregateValidationErrors } from '../utils';
 export const MAX_SESSION_TIMEOUT = 300;
 
 export const PERSON_DOES_NOT_EXIST = 'PERSON_DOES_NOT_EXIST';
-export const CANNOT_CHANGE_PERSON_ID = 'CANNOT_CHANGE_PERSON_ID';
 
 export const ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_INVALID =
   'ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_INVALID';
@@ -37,9 +36,6 @@ export class AccountValidator extends Validator<'accounts', AccountBase> {
     }
 
     await aggregateValidationErrors([
-      patch.personId === undefined || patch.personId === base.personId
-        ? null
-        : this.throwValidationError(CANNOT_CHANGE_PERSON_ID),
       patch.settings === undefined
         ? null
         : this.assertSettingsValid(patch.settings),
@@ -47,9 +43,9 @@ export class AccountValidator extends Validator<'accounts', AccountBase> {
   }
 
   private async assertPersonExists(personId: string): Promise<void | never> {
-    const [schoolyear] = await this.repositories.person.getByIds([personId]);
+    const [person] = await this.repositories.person.getByIds([personId]);
 
-    if (!schoolyear) {
+    if (!person) {
       throw new InputValidationError(PERSON_DOES_NOT_EXIST);
     }
   }

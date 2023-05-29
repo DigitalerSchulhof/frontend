@@ -17,10 +17,21 @@ export const editAccount = wrapAction<
 
   const context = await requireLogin();
 
+  const person = await context.services.person.getById(personId);
+
+  if (!person) {
+    throw new InvalidInputError();
+  }
+
+  const accountId = person.accountId;
+
+  if (!accountId) {
+    throw new InvalidInputError();
+  }
+
   await context.services.account.update(
-    context.account.id,
+    accountId,
     {
-      personId,
       username,
       email,
     },

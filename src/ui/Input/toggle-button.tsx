@@ -16,12 +16,10 @@ export type ToggleButtonProps = Omit<
   t: TranslationsWithStringTypeAndNoVariables;
 };
 
-export const ToggleButton = forwardRef<
-  {
-    value: boolean;
-  },
-  ToggleButtonProps
->(function ToggleButton({ onChange, defaultValue, t, ...props }, ref) {
+export const ToggleButton = forwardRef(function ToggleButton(
+  { onChange, defaultValue, t, ...props }: ToggleButtonProps,
+  ref: React.Ref<{ value: boolean }>
+) {
   const [enabled, , , toggle] = useToggle(defaultValue);
 
   useImperativeHandle(

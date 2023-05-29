@@ -5,6 +5,8 @@ import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import {
   NumberInput,
   NumberInputProps,
+  SelectInput,
+  SelectInputProps,
   TextInput,
   TextInputProps,
 } from '#/ui/Input';
@@ -22,9 +24,9 @@ import { styled } from 'styled-components';
 
 export interface FormProps extends React.HTMLAttributes<HTMLFormElement> {}
 
-export const Form = forwardRef<HTMLFormElement, FormProps>(function Form(
-  { children, ...props },
-  ref
+export const Form = forwardRef(function Form(
+  { children, ...props }: FormProps,
+  ref: React.ForwardedRef<HTMLFormElement>
 ) {
   return (
     <form
@@ -63,17 +65,18 @@ export const FormRow = ({ label, id, children }: FormRowProps) => {
 
 export type TextFormRowProps = TextInputProps & Omit<FormRowProps, 'children'>;
 
-export const TextFormRow = forwardRef<{ value: string }, TextFormRowProps>(
-  function TextFormRow({ label, ...props }, ref) {
-    const id = useId();
+export const TextFormRow = forwardRef(function TextFormRow(
+  { label, ...props }: TextFormRowProps,
+  ref: React.ForwardedRef<{ value: string }>
+) {
+  const id = useId();
 
-    return (
-      <FormRow id={id} label={label}>
-        <TextInput {...props} id={id} ref={ref} />
-      </FormRow>
-    );
-  }
-);
+  return (
+    <FormRow id={id} label={label}>
+      <TextInput {...props} id={id} ref={ref} />
+    </FormRow>
+  );
+});
 
 export type NumberFormRowProps = Omit<NumberInputProps, 'min' | 'max'> &
   Omit<FormRowProps, 'children'> & {
@@ -82,32 +85,52 @@ export type NumberFormRowProps = Omit<NumberInputProps, 'min' | 'max'> &
     max?: number;
   };
 
-export const NumberFormRow = forwardRef<{ value: number }, NumberFormRowProps>(
-  function NumberFormRow({ label, unit, ...props }, ref) {
-    const id = useId();
+export const NumberFormRow = forwardRef(function NumberFormRow(
+  { label, unit, ...props }: NumberFormRowProps,
+  ref: React.ForwardedRef<{ value: number }>
+) {
+  const id = useId();
 
-    return (
-      <FormRow id={id} label={label}>
-        <NumberInput {...props} id={id} ref={ref} />
-        {unit ? <Label htmlFor={id} t={unit} /> : null}
-      </FormRow>
-    );
-  }
-);
+  return (
+    <FormRow id={id} label={label}>
+      <NumberInput {...props} id={id} ref={ref} />
+      {unit ? <Label htmlFor={id} t={unit} /> : null}
+    </FormRow>
+  );
+});
 
 export type ToggleFormRowProps = ToggleProps & Omit<FormRowProps, 'children'>;
 
-export const ToggleFormRow = forwardRef<{ value: boolean }, ToggleFormRowProps>(
-  function ToggleFormRow({ label, ...props }, ref) {
-    const id = useId();
+export const ToggleFormRow = forwardRef(function ToggleFormRow(
+  { label, ...props }: ToggleFormRowProps,
+  ref: React.ForwardedRef<{ value: boolean }>
+) {
+  const id = useId();
 
-    return (
-      <FormRow id={id} label={label}>
-        <Toggle {...props} id={id} ref={ref} />
-      </FormRow>
-    );
-  }
-);
+  return (
+    <FormRow id={id} label={label}>
+      <Toggle {...props} id={id} ref={ref} />
+    </FormRow>
+  );
+});
+
+export type SelectFormRowProps<Value extends string> = SelectInputProps<Value> &
+  Omit<FormRowProps, 'children'>;
+
+export const SelectFormRow = forwardRef(function SelectFormRow<
+  Value extends string
+>(
+  { label, ...props }: SelectFormRowProps<Value>,
+  ref: React.ForwardedRef<{ value: Value }>
+) {
+  const id = useId();
+
+  return (
+    <FormRow id={id} label={label}>
+      <SelectInput {...props} id={id} ref={ref} />
+    </FormRow>
+  );
+});
 
 export type NumberOrNullFormRowProps = Omit<
   NumberFormRowProps,
@@ -119,10 +142,7 @@ export type NumberOrNullFormRowProps = Omit<
   numberDefaultValue?: number;
 };
 
-export const NumberOrNullFormRow = forwardRef<
-  { value: number | null },
-  NumberOrNullFormRowProps
->(function NumberOrNullFormRow(
+export const NumberOrNullFormRow = forwardRef(function NumberOrNullFormRow(
   {
     whetherLabel,
     numberLabel,
@@ -130,8 +150,8 @@ export const NumberOrNullFormRow = forwardRef<
     unit,
     numberDefaultValue,
     ...props
-  },
-  ref
+  }: NumberOrNullFormRowProps,
+  ref: React.ForwardedRef<{ value: number | null }>
 ) {
   const inputRef = useRef<{ value: number }>(null);
   const checkboxRef = useRef<{ value: boolean }>(null);
