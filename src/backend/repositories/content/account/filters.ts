@@ -74,10 +74,6 @@ export class AccountSecondLastLoginFilter extends ScalarPersonFilter<NullableNum
   protected readonly propertyName = 'secondLastLogin';
 }
 
-export class AccountFormOfAddressFilter extends ScalarAccountFilter<FormOfAddressFilterOperator> {
-  protected readonly propertyName = 'formOfAddress';
-}
-
 export class AccountSettingsEmailOnNewMessageFilter extends ScalarAccountFilter<BooleanFilterOperator> {
   protected readonly propertyName = 'settings.emailOn.newMessage';
 }
@@ -116,4 +112,7 @@ export class AccountSettingsMailboxDeleteAfterInBinFilter extends ScalarAccountF
 }
 export class AccountSettingsProfileSessionTimeoutFilter extends ScalarAccountFilter<NumberFilterOperator> {
   protected readonly propertyName = 'settings.profile.sessionTimeout';
+}
+export class AccountSettingsProfileFormOfAddressFilter extends ScalarAccountFilter<FormOfAddressFilterOperator> {
+  protected readonly propertyName = 'settings.profile.formOfAddress';
 }

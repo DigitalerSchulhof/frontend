@@ -35,6 +35,11 @@ form:
     sessionTimeout:
       title: "Automatisch abmelden nach ..."
       unit: Minute(n)
+    formOfAddress:
+      title: Anrede
+      values:
+        informal: Du
+        formal: Sie
   buttons:
     save: Änderungen speichern
     back:

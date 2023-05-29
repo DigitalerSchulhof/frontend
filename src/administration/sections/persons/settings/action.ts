@@ -1,7 +1,10 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import { AccountSettings } from '#/backend/repositories/content/account';
+import {
+  AccountSettings,
+  FORMS_OF_ADDRESS,
+} from '#/backend/repositories/content/account';
 import { AccountPersonIdFilter } from '#/backend/repositories/content/account/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { InvalidInputError, wrapAction } from '#/utils/action';
@@ -30,10 +33,11 @@ const accountSettingsSchema = {
   },
   profile: {
     sessionTimeout: v.number,
+    formOfAddress: FORMS_OF_ADDRESS,
   },
 };
 
-export const settings = wrapAction<
+export const editSettings = wrapAction<
   [personId: string, settings: AccountSettings]
 >(async (personId, settings) => {
   if (typeof personId !== 'string') {
@@ -55,6 +59,8 @@ export const settings = wrapAction<
   if (!account) {
     throw new Error('ACCOUNT_NOT_FOUND');
   }
+
+  validatedSettings.data.profile.formOfAddress;
 
   await context.services.account.update(account.id, {
     settings: validatedSettings.data,

@@ -1,18 +1,16 @@
 import { ArangoRepository } from '../../arango';
 
-export const PERSON_TYPES = new Set([
+export const PERSON_TYPES = [
   'student',
   'teacher',
   'parent',
   'admin',
   'other',
-] as const);
-export type PersonType = typeof PERSON_TYPES extends Set<infer T> ? T : never;
+] as const;
+export type PersonType = (typeof PERSON_TYPES)[number];
 
-export const PERSON_GENDERS = new Set(['male', 'female', 'other'] as const);
-export type PersonGender = typeof PERSON_GENDERS extends Set<infer T>
-  ? T
-  : never;
+export const PERSON_GENDERS = ['male', 'female', 'other'] as const;
+export type PersonGender = (typeof PERSON_GENDERS)[number];
 
 export type PersonBase = {
   firstname: string;

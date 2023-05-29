@@ -37,7 +37,7 @@ export const forgotPassword = wrapAction<
   await sendPasswordResetEmail(context, account, newPassword);
 
   return {
-    formOfAddress: account.formOfAddress,
+    formOfAddress: account.settings.profile.formOfAddress,
     email: account.email,
   };
 });

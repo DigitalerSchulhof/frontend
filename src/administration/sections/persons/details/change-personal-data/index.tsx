@@ -38,13 +38,13 @@ export const PersonDetailsChangePersonalDataSection = ({
         t='schulhof.administration.sections.persons.details.change-personal-data.title'
       />
       <UserButtons
-        formOfAddress={context.account.formOfAddress}
+        formOfAddress={context.account.settings.profile.formOfAddress}
         isOwnProfile={isOwnProfile}
         person={person}
         account={account}
       />
       <AdminButtons
-        formOfAddress={context.account.formOfAddress}
+        formOfAddress={context.account.settings.profile.formOfAddress}
         person={person}
         account={account}
       />

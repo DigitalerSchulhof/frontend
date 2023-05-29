@@ -1,15 +1,13 @@
-import { AccountSettings } from '#/backend/repositories/content/account';
+import { WithId } from '#/backend/repositories/arango';
+import { AccountBase } from '#/backend/repositories/content/account';
+import { PersonBase } from '#/backend/repositories/content/person';
 import { MAX_SESSION_TIMEOUT } from '#/backend/validators/content/account';
 import { EditAccountSettingsForm } from './form';
 
 export type SettingsProps = {
   isOwnProfile?: boolean;
-  person: {
-    id: string;
-  };
-  account: {
-    settings: AccountSettings;
-  };
+  person: WithId<PersonBase>;
+  account: WithId<AccountBase>;
 };
 
 export const EditAccountSettings = async ({
@@ -21,7 +19,13 @@ export const EditAccountSettings = async ({
     <EditAccountSettingsForm
       isOwnProfile={isOwnProfile}
       personId={person.id}
-      settings={account.settings}
+      settings={{
+        ...account.settings,
+        profile: {
+          ...account.settings.profile,
+          formOfAddress: account.settings.profile.formOfAddress,
+        },
+      }}
       maxSessionTimeout={MAX_SESSION_TIMEOUT}
     />
   );

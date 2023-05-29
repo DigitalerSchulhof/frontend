@@ -26,7 +26,7 @@ export const login = wrapAction<[username: string, password: string], string>(
       account.passwordExpiresAt < new Date().getTime()
     ) {
       throw new ClientError('PASSWORD_EXPIRED', {
-        formOfAddress: account.formOfAddress,
+        formOfAddress: account.settings.profile.formOfAddress,
       });
     }
 

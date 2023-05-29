@@ -158,15 +158,13 @@ function useSubmit(
     useCallback(
       () =>
         unwrapAction(
-          editPerson(
-            personId,
-            personRev,
-            typeRef.current!.value,
-            firstnameRef.current!.value,
-            lastnameRef.current!.value,
-            genderRef.current!.value,
-            teacherCodeRef.current!.value
-          )
+          editPerson(personId, personRev, {
+            type: typeRef.current!.value,
+            firstname: firstnameRef.current!.value,
+            lastname: lastnameRef.current!.value,
+            gender: genderRef.current!.value,
+            teacherCode: teacherCodeRef.current!.value,
+          })
         ),
       [
         personId,

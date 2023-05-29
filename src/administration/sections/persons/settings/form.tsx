@@ -1,6 +1,9 @@
 'use client';
 
-import { AccountSettings } from '#/backend/repositories/content/account';
+import {
+  AccountSettings,
+  FormOfAddress,
+} from '#/backend/repositories/content/account';
 import { T, useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
@@ -9,6 +12,7 @@ import {
   DisplayContentsForm,
   NumberFormRow,
   NumberOrNullFormRow,
+  SelectFormRow,
   ToggleFormRow,
 } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
@@ -18,7 +22,7 @@ import { Table } from '#/ui/Table';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef } from 'react';
-import { settings } from './action';
+import { editSettings } from './action';
 
 export const EditAccountSettingsForm = ({
   isOwnProfile,
@@ -149,6 +153,17 @@ export const EditAccountSettingsForm = ({
             defaultValue={settings.profile.sessionTimeout}
             ref={refs.profileSessionTimeout}
           />
+          <SelectFormRow
+            label='schulhof.administration.sections.persons.settings.form.profile.formOfAddress.title'
+            defaultValue={settings.profile.formOfAddress}
+            ref={refs.profileFormOfAddress}
+            values={{
+              informal:
+                'schulhof.administration.sections.persons.settings.form.profile.formOfAddress.values.informal',
+              formal:
+                'schulhof.administration.sections.persons.settings.form.profile.formOfAddress.values.formal',
+            }}
+          />
         </Table>
       </Col>
       <Col w='12'>
@@ -203,6 +218,7 @@ function useRefs() {
   const mailboxDeleteAfter = useRef<{ value: number | null }>(null);
   const mailboxDeleteAfterInBin = useRef<{ value: number | null }>(null);
   const profileSessionTimeout = useRef<{ value: number }>(null);
+  const profileFormOfAddress = useRef<{ value: FormOfAddress }>(null);
 
   return useMemo(
     () => ({
@@ -219,6 +235,7 @@ function useRefs() {
       mailboxDeleteAfter,
       mailboxDeleteAfterInBin,
       profileSessionTimeout,
+      profileFormOfAddress,
     }),
     [
       emailOnNewMessage,
@@ -234,6 +251,7 @@ function useRefs() {
       mailboxDeleteAfter,
       mailboxDeleteAfterInBin,
       profileSessionTimeout,
+      profileFormOfAddress,
     ]
   );
 }
@@ -263,7 +281,7 @@ function useSubmit(
     useCallback(
       () =>
         unwrapAction(
-          settings(personId, {
+          editSettings(personId, {
             emailOn: {
               newMessage: refs.emailOnNewMessage.current!.value,
               newSubstitution: refs.emailOnNewSubstitution.current!.value,
@@ -286,6 +304,7 @@ function useSubmit(
             },
             profile: {
               sessionTimeout: refs.profileSessionTimeout.current!.value,
+              formOfAddress: refs.profileFormOfAddress.current!.value,
             },
           })
         ),

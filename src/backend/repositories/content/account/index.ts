@@ -1,6 +1,7 @@
 import { ArangoRepository } from '../../arango';
 
-export type FormOfAddress = 'formal' | 'informal';
+export const FORMS_OF_ADDRESS = ['formal', 'informal'] as const;
+export type FormOfAddress = (typeof FORMS_OF_ADDRESS)[number];
 
 export type AccountBase = {
   personId: string;
@@ -11,7 +12,6 @@ export type AccountBase = {
   passwordExpiresAt: number | null;
   lastLogin: number | null;
   secondLastLogin: number | null;
-  formOfAddress: FormOfAddress;
   settings: AccountSettings;
 };
 
@@ -38,6 +38,7 @@ export type AccountSettings = {
   };
   profile: {
     sessionTimeout: number;
+    formOfAddress: FormOfAddress;
   };
 };
 

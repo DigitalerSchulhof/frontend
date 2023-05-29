@@ -27,7 +27,9 @@ export default async function Page() {
           size='2'
           t='schulhof.administration.sections.persons.page.filter.title'
         />
-        <PersonsTable formOfAddress={context.account.formOfAddress} />
+        <PersonsTable
+          formOfAddress={context.account.settings.profile.formOfAddress}
+        />
       </Col>
     </>
   );

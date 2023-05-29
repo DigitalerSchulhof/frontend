@@ -38,10 +38,6 @@ export class AccountSecondLastLoginSort extends AccountSort {
   protected readonly propertyName = 'secondLastLogin';
 }
 
-export class AccountFormOfAddressSort extends AccountSort {
-  protected readonly propertyName = 'formOfAddress';
-}
-
 export class AccountSettingsEmailOnNewMessageSort extends AccountSort {
   protected readonly propertyName = 'settings.emailOn.newMessage';
 }
@@ -80,4 +76,7 @@ export class AccountSettingsMailboxDeleteAfterInBinSort extends AccountSort {
 }
 export class AccountSettingsProfileSessionTimeoutSort extends AccountSort {
   protected readonly propertyName = 'settings.profile.sessionTimeout';
+}
+export class AccountSettingsProfileFormOfAddressSort extends AccountSort {
+  protected readonly propertyName = 'settings.profile.formOfAddress';
 }
