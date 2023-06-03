@@ -158,11 +158,15 @@ export const NumberOrNullFormRow = forwardRef(function NumberOrNullFormRow(
 
   const [isEnabled, setIsEnabled] = useState(defaultValue !== null);
 
-  useImperativeHandle(ref, () => ({
-    get value() {
-      return isEnabled ? inputRef.current!.value : null;
-    },
-  }));
+  useImperativeHandle(
+    ref,
+    () => ({
+      get value() {
+        return isEnabled ? inputRef.current!.value : null;
+      },
+    }),
+    [isEnabled, inputRef]
+  );
 
   return (
     <>

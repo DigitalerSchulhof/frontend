@@ -1,3 +1,4 @@
+import { PersonForm } from '#/administration/sections/persons/person-form';
 import { requireLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -5,7 +6,7 @@ import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 import { formatName } from '#/utils';
 import { notFound } from 'next/navigation';
-import { EditPersonForm } from './form';
+import { useMemo } from 'react';
 
 export default async function Page({
   params,
@@ -20,8 +21,18 @@ export default async function Page({
 
   if (!person) notFound();
 
-  const teacherCodeSuggestion =
-    await context.services.person.generateDefaultTeacherCode(person);
+  const formPerson =
+    person === null
+      ? null
+      : {
+          id: person.id,
+          rev: person.rev,
+          type: person.type,
+          firstname: person.firstname,
+          lastname: person.lastname,
+          gender: person.gender,
+          teacherCode: person.teacherCode,
+        };
 
   return (
     <>
@@ -48,16 +59,7 @@ export default async function Page({
         </Heading>
       </Col>
       <Col w='12'>
-        <EditPersonForm
-          personId={person.id}
-          personRev={person.rev}
-          type={person.type}
-          firstname={person.firstname}
-          lastname={person.lastname}
-          gender={person.gender}
-          teacherCode={person.teacherCode}
-          teacherCodeSuggestion={teacherCodeSuggestion}
-        />
+        <PersonForm person={formPerson} />
       </Col>
     </>
   );

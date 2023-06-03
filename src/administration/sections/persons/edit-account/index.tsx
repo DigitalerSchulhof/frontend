@@ -1,16 +1,13 @@
+import { WithId } from '#/backend/repositories/arango';
+import { AccountBase } from '#/backend/repositories/content/account';
+import { PersonBase } from '#/backend/repositories/content/person';
 import { Col } from '#/ui/Col';
 import { EditAccountForm } from './form';
 
 export type EditAccountProps = {
   isOwnProfile?: boolean;
-  person: {
-    id: string;
-    rev: string;
-  };
-  account: {
-    username: string;
-    email: string;
-  };
+  person: WithId<PersonBase>
+  account: WithId<AccountBase>
 };
 
 export const EditAccount = async ({

@@ -61,7 +61,6 @@ type BreadcrumbItemWithFullPath = {
   hrefOverride?: LinkProps['href'];
 };
 
-// eslint-disable-next-line react/display-name
 export const Breadcrumbs = ({ path }: BreadcrumbsProps) => {
   const { t, translations } = useT();
 

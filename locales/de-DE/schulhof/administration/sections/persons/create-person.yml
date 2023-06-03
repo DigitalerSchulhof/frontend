@@ -1,0 +1,28 @@
+title: Neue Person anlegen
+form:
+  type: "Art:"
+  firstname: "Vorname:"
+  lastname: "Nachname:"
+  gender: "Geschlecht:"
+  teacher-code: "Lehrerkürzel:"
+  buttons:
+    save: Person anlegen
+    back: Zurück zur Personenübersicht
+modals:
+  loading:
+    title: Person anlegen
+    description: Die eingegebenen Daten werden überprüft und die Person wird angelegt.
+  error:
+    title: Person Anlegen fehlgeschlagen
+    description: Die Person wurde nicht angelegt, denn ...
+    reasons:
+      firstname-invalid:
+        - der Vorname ist ungültig.
+      lastname-invalid:
+        - der Nachname ist ungültig.
+      internal-error:
+        - es ist ein interner Fehler aufgetreten.
+  success:
+    title: Person anlegen
+    description: Die Person wurde erfolgreich angelegt.
+    button: Zurück zur Personenübersicht

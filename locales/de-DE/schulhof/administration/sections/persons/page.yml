@@ -5,6 +5,8 @@ filter:
   firstname: Vorname
   class: Klasse
   type: Art der Person
+buttons:
+  create-person: + Neue Person anlegen
 table:
   title: Personen
   loading: Personen werden geladen...

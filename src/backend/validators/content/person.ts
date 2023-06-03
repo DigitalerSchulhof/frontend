@@ -12,6 +12,7 @@ export const PERSON_FIRSTNAME_INVALID = 'PERSON_FIRSTNAME_INVALID';
 export const PERSON_LASTNAME_INVALID = 'PERSON_LASTNAME_INVALID';
 export const PERSON_TYPE_TEACHER_CODE_MISMATCH =
   'PERSON_TYPE_TEACHER_CODE_MISMATCH';
+export const PERSON_TEACHER_CODE_INVALID = 'PERSON_TEACHER_CODE_INVALID';
 export const PERSON_TEACHER_CODE_EXISTS = 'PERSON_TEACHER_CODE_EXISTS';
 
 export class PersonValidator extends Validator<'persons', PersonBase> {
@@ -79,6 +80,10 @@ export class PersonValidator extends Validator<'persons', PersonBase> {
   ): Promise<void | never> {
     if ((type === 'teacher') !== (teacherCode !== null)) {
       throw new InputValidationError(PERSON_TYPE_TEACHER_CODE_MISMATCH);
+    }
+
+    if (teacherCode !== null && teacherCode === '') {
+      throw new InputValidationError(PERSON_TEACHER_CODE_INVALID);
     }
 
     if (teacherCode !== null) {

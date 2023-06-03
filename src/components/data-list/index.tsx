@@ -3,9 +3,9 @@
 import { List } from '#/ui/List';
 import { WrappedActionResult } from '#/utils/action';
 import { unwrapAction } from '#/utils/client';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
-export type Paginateable = { items: unknown[]; total: number };
+export type Paginateable = { items: { id: string }[]; total: number };
 
 export type DataListProps<T extends Paginateable> = Omit<
   React.ComponentProps<typeof List>,
@@ -72,7 +72,11 @@ export const DataList = <T extends Paginateable>({
       {/* !hasError and !data is only true on the first run. After that (unless we return null from fetch), either must always be defined. */}
       {isLoading && !hasError && !data ? loadingRow : null}
       {data && !data.items.length ? emptyRow : null}
-      {data ? data.items.map(dataRow) : null}
+      {data
+        ? data.items.map((row) => (
+            <Fragment key={row.id}>{dataRow(row)}</Fragment>
+          ))
+        : null}
       {hasError ? errorRow : null}
       {/* TODO: Pagination */}
     </List>

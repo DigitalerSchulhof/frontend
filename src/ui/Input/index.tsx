@@ -39,11 +39,15 @@ export const TextInput = forwardRef(function TextInput(
 ) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useImperativeHandle(ref, () => ({
-    get value() {
-      return inputRef.current!.value;
-    },
-  }));
+  useImperativeHandle(
+    ref,
+    () => ({
+      get value() {
+        return inputRef.current!.value;
+      },
+    }),
+    [inputRef]
+  );
 
   const onInputHandler = useCallback<FormEventHandler<HTMLInputElement>>(
     (e) => {
@@ -73,11 +77,15 @@ export const NumberInput = forwardRef(function NumberInput(
 ) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useImperativeHandle(ref, () => ({
-    get value() {
-      return inputRef.current!.valueAsNumber;
-    },
-  }));
+  useImperativeHandle(
+    ref,
+    () => ({
+      get value() {
+        return inputRef.current!.valueAsNumber;
+      },
+    }),
+    [inputRef]
+  );
 
   const onInputHandler = useCallback<FormEventHandler<HTMLInputElement>>(
     (e) => {
@@ -110,11 +118,15 @@ export const SelectInput = forwardRef(function SelectInput<
 ) {
   const inputRef = useRef<HTMLSelectElement>(null);
 
-  useImperativeHandle(ref, () => ({
-    get value() {
-      return inputRef.current!.value as Value;
-    },
-  }));
+  useImperativeHandle(
+    ref,
+    () => ({
+      get value() {
+        return inputRef.current!.value as Value;
+      },
+    }),
+    [inputRef]
+  );
 
   const onInputHandler = useCallback<FormEventHandler<HTMLSelectElement>>(
     (e) => {
