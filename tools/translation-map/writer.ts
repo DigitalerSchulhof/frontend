@@ -407,8 +407,12 @@ export class TranslationMapWriter {
         case mfp.TYPE.date:
         case mfp.TYPE.time:
         case mfp.TYPE.argument:
-        case mfp.TYPE.literal:
+        case mfp.TYPE.literal:/
           break;
+        default:
+          throw new Error(
+            'Invariant: Unhandled astElement.type: ' + (astElement as any).type
+          );
       }
     }
 
