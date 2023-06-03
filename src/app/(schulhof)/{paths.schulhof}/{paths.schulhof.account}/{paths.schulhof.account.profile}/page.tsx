@@ -20,7 +20,6 @@ export default async function Page() {
         <Heading size='1' t='schulhof.account.profile.title' />
       </Col>
       <Col w='6'>
-        {/* @ts-expect-error -- Server Component */}
         <PersonDetails
           context={context}
           isOwnProfile

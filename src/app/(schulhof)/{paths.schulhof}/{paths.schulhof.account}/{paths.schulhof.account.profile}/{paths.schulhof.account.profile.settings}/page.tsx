@@ -20,7 +20,6 @@ export default async function Page() {
         />
         <Heading size='1' t='schulhof.account.profile.settings.title' />
       </Col>
-      {/* @ts-expect-error -- Server Component */}
       <EditAccountSettings
         isOwnProfile
         person={context.person}

@@ -46,7 +46,6 @@ export default async function Page({
           />
         </Heading>
       </Col>
-      {/* @ts-expect-error -- Server Component */}
       <EditAccountSettings person={person} account={account} />
     </>
   );
