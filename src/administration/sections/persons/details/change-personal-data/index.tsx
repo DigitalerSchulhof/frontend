@@ -70,8 +70,6 @@ const UserButtons = ({
 
   const buttons = [];
 
-  // Since these are the user's buttons, all of these must in some way or another depend on `isOwnProfile`.
-
   if (account) {
     buttons.push(
       <EditAccountButton

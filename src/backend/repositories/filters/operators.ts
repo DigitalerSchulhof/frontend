@@ -7,10 +7,22 @@ export abstract class FilterOperator<
 > {
   protected abstract readonly operator: string;
 
-  constructor(private readonly value: Value | AqlExpression) {}
+  constructor(protected readonly value: Value | AqlExpression) {}
 
   apply(): aql.GeneratedAqlQuery {
     return aql.aql`${aql.literal(this.operator)} ${this.value}`;
+    // Unscrew syntax highlighting ``);
+  }
+}
+
+export abstract class LikeBaseFilterOperator<
+  Value extends string
+> extends FilterOperator<Value> {
+  override apply(): aql.GeneratedAqlQuery {
+    return aql.aql`${aql.literal(this.operator)} CONCAT("%", ${
+      this.value
+    }, "%")`;
+    // Unscrew syntax highlighting ``);
   }
 }
 
@@ -62,6 +74,24 @@ export class NinFilterOperator<
   protected readonly operator = 'NOT IN';
 }
 
+/**
+ * Note that unlike the traditional AQL LIKE operator, this matches `%${value}%`.
+ */
+export class LikeFilterOperator<
+  Value extends string
+> extends LikeBaseFilterOperator<Value> {
+  protected readonly operator = 'LIKE';
+}
+
+/**
+ * Note that unlike the traditional AQL LIKE operator, this matches `%${value}%`.
+ */
+export class NLikeFilterOperator<
+  Value extends string
+> extends LikeBaseFilterOperator<Value> {
+  protected readonly operator = 'NOT LIKE';
+}
+
 export type IDFilterOperator =
   | EqFilterOperator<string>
   | NeqFilterOperator<string>
@@ -78,7 +108,9 @@ export type StringFilterOperator =
   | EqFilterOperator<string>
   | NeqFilterOperator<string>
   | InFilterOperator<string>
-  | NinFilterOperator<string>;
+  | NinFilterOperator<string>
+  | LikeFilterOperator<string>
+  | NLikeFilterOperator<string>;
 
 export type NullableStringFilterOperator =
   | EqFilterOperator<string | null>

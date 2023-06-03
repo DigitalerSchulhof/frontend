@@ -64,6 +64,7 @@ export abstract class ArangoRepository<
         )
       `
     );
+    // Unscrew syntax highlighting ``);
 
     return res.next() as Promise<WithId<Base> | null>;
   }
@@ -83,6 +84,7 @@ export abstract class ArangoRepository<
           )
       `
     );
+    // Unscrew syntax highlighting ``);
 
     return res.all();
   }
@@ -101,6 +103,7 @@ export abstract class ArangoRepository<
         )
       `
     );
+    // Unscrew syntax highlighting ``);
 
     return (await res.next())!;
   }
@@ -128,6 +131,7 @@ export abstract class ArangoRepository<
         )
       `
     );
+    // Unscrew syntax highlighting ``);
 
     return (await res.next())!;
   }
@@ -151,6 +155,7 @@ export abstract class ArangoRepository<
         )
       `
     );
+    // Unscrew syntax highlighting ``);
 
     return (await res.next())!;
   }
@@ -172,6 +177,7 @@ export abstract class ArangoRepository<
           )
       `
     );
+    // Unscrew syntax highlighting ``);
 
     return res.all();
   }
@@ -192,6 +198,7 @@ export abstract class ArangoRepository<
       `,
       { fullCount: true }
     );
+    // Unscrew syntax highlighting ``);
 
     return paginateCursor(res);
   }
@@ -213,6 +220,8 @@ export abstract class ArangoRepository<
     try {
       return await this.db.query(query, options);
     } catch (error) {
+      // TODO: Handle error handling (attach to error) better
+      console.log(query);
       this.handleError(error);
     }
   }

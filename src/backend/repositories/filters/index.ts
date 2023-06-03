@@ -102,9 +102,9 @@ export class AndFilter<BaseWithId> extends Filter<BaseWithId> {
     freeVariableNameCounter = 0
   ): aql.GeneratedAqlQuery {
     return aql.aql`(${aql.join(
-      this.filters.map((filter) =>
-        filter?.apply(variableName, freeVariableNameCounter)
-      ),
+      this.filters
+        .filter(Boolean)
+        .map((filter) => filter.apply(variableName, freeVariableNameCounter)),
       ' AND '
     )})`;
   }

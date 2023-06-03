@@ -1,5 +1,6 @@
 import { DetailsButton } from '#/administration/sections/persons/page/table/content/buttons/details';
 import { FormOfAddress } from '#/backend/repositories/content/account';
+import { DataList } from '#/components/data-list';
 import { T } from '#/i18n';
 import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
@@ -12,15 +13,19 @@ import {
 } from '#/ui/Icon';
 import {
   FullWidthListCell,
-  List,
   ListCell,
   ListHeader,
   ListRow,
+  calculateIconButtonGroupWidth,
 } from '#/ui/List';
 import { Note } from '#/ui/Note';
 import { formatName } from '#/utils';
-import { useEffect, useState } from 'react';
-import { LoadPersonsFilter, LoadedPerson, loadPersons } from '../../action';
+import { useCallback } from 'react';
+import {
+  LoadPersonsFilter,
+  LoadPersonsPerson,
+  loadPersons,
+} from '../../action';
 import {
   CreateAccountButton,
   DeleteAccountButton,
@@ -37,25 +42,7 @@ export const PersonsTableContent = ({
   formOfAddress: FormOfAddress;
   filter: LoadPersonsFilter;
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [persons, setPersons] = useState<LoadedPerson[] | null>(null);
-
-  useEffect(() => {
-    let unmounted = false as boolean;
-
-    void (async () => {
-      setIsLoading(true);
-      const newPersons = await loadPersons(filter);
-
-      if (unmounted) return;
-      setPersons(newPersons);
-      setIsLoading(false);
-    })();
-
-    return () => {
-      unmounted = true;
-    };
-  }, [filter]);
+  const maxActionIcons = 6;
 
   return (
     <>
@@ -63,14 +50,23 @@ export const PersonsTableContent = ({
         size='2'
         t='schulhof.administration.sections.persons.page.table.title'
       />
-      <List columns={`auto 1fr 1fr auto`} isLoading={isLoading}>
-        <ListRow>
-          <ListHeader />
-          <ListHeader t='schulhof.administration.sections.persons.page.table.columns.firstname' />
-          <ListHeader t='schulhof.administration.sections.persons.page.table.columns.lastname' />
-          <ListHeader />
-        </ListRow>
-        {isLoading && persons === null ? (
+      <DataList
+        columns={`30px 1fr 1fr ${calculateIconButtonGroupWidth(
+          maxActionIcons
+        )}`}
+        fetch={useCallback(
+          (offset, limit) => loadPersons(filter, offset, limit),
+          [filter]
+        )}
+        headerRow={
+          <ListRow>
+            <ListHeader />
+            <ListHeader t='schulhof.administration.sections.persons.page.table.columns.firstname' />
+            <ListHeader t='schulhof.administration.sections.persons.page.table.columns.lastname' />
+            <ListHeader />
+          </ListRow>
+        }
+        loadingRow={
           <ListRow>
             <FullWidthListCell>
               <Note>
@@ -78,41 +74,51 @@ export const PersonsTableContent = ({
               </Note>
             </FullWidthListCell>
           </ListRow>
-        ) : null}
-        {persons?.map((person) => (
-          <PersonListRow
-            key={person.id}
-            person={person}
-            formOfAddress={formOfAddress}
-          />
-        ))}
-      </List>
+        }
+        errorRow={
+          <ListRow>
+            <FullWidthListCell>
+              <Note>
+                <T t='schulhof.administration.sections.persons.page.table.error' />
+              </Note>
+            </FullWidthListCell>
+          </ListRow>
+        }
+        emptyRow={
+          <ListRow>
+            <FullWidthListCell>
+              <Note>
+                <T t='schulhof.administration.sections.persons.page.table.empty' />
+              </Note>
+            </FullWidthListCell>
+          </ListRow>
+        }
+        dataRow={useCallback(
+          (person: LoadPersonsPerson) => (
+            <>
+              <ListRow key={person.id}>
+                <ListCell>
+                  <PersonTypeIcon type={person.type} />
+                </ListCell>
+                <ListCell>{person.firstname}</ListCell>
+                <ListCell>{person.lastname}</ListCell>
+                <ListCell>
+                  <PersonActionIcons
+                    person={person}
+                    formOfAddress={formOfAddress}
+                  />
+                </ListCell>
+              </ListRow>
+            </>
+          ),
+          [formOfAddress]
+        )}
+      />
     </>
   );
 };
 
-const PersonListRow = ({
-  person,
-  formOfAddress,
-}: {
-  person: LoadedPerson;
-  formOfAddress: FormOfAddress;
-}) => {
-  return (
-    <ListRow key={person.id}>
-      <ListCell>
-        <PersonTypeIcon type={person.type} />
-      </ListCell>
-      <ListCell>{person.firstname}</ListCell>
-      <ListCell>{person.lastname}</ListCell>
-      <ListCell>
-        <PersonActionIcons person={person} formOfAddress={formOfAddress} />
-      </ListCell>
-    </ListRow>
-  );
-};
-
-const PersonTypeIcon = ({ type }: { type: LoadedPerson['type'] }) => {
+const PersonTypeIcon = ({ type }: { type: LoadPersonsPerson['type'] }) => {
   switch (type) {
     case 'student':
       return <IconPersonStudent alt='generic.person-types.student.singular' />;
@@ -133,12 +139,12 @@ const PersonActionIcons = ({
   person,
   formOfAddress,
 }: {
-  person: LoadedPerson;
+  person: LoadPersonsPerson;
   formOfAddress: FormOfAddress;
 }) => {
   const icons = [];
 
-  const hasAccount = Math.random() > 0.5;
+  const hasAccount = person.hasAccount;
 
   const personName = formatName(person);
 

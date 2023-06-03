@@ -72,6 +72,8 @@ function useSendDelete(personId: string) {
   return useCallback(
     async function sendDelete() {
       alert(personId);
+
+      // TODO: Log out if own person
     },
     [personId]
   );

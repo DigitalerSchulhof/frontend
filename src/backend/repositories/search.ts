@@ -8,7 +8,7 @@ export interface Paginated<T> {
 }
 
 export interface MakeSearchQuery<Name> {
-  filter?: Filter<Name>;
+  filter?: Filter<Name> | null;
   sort?: readonly Sort<Name>[];
   limit?: number;
   offset?: number;
@@ -36,7 +36,7 @@ export function searchQueryToArangoQuery(
 
 export function filterToArangoQuery(
   documentNameLiteral: aql.AqlLiteral,
-  filter?: Filter<string>
+  filter?: Filter<string> | null
 ): aql.GeneratedAqlQuery | undefined {
   if (!filter) return undefined;
 

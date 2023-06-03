@@ -80,17 +80,12 @@ export const Button = ({
   return href ? (
     // @ts-expect-error -- No way we can type this correctly
     <StyledLink
-      $variant={variant}
-      aria-disabled={variant === 'disabled'}
+      $variant={props.disabled ? 'disabled' : variant}
       {...props}
       href={href}
     />
   ) : (
-    <StyledButton
-      $variant={variant}
-      aria-disabled={variant === 'disabled'}
-      {...props}
-    />
+    <StyledButton $variant={props.disabled ? 'disabled' : variant} {...props} />
   );
 };
 

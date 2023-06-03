@@ -154,3 +154,8 @@ export const ListHeader = ({ children, t, ...props }: ListHeaderProps) => {
 
   return <StyledListHeader {...props}>{children}</StyledListHeader>;
 };
+
+export function calculateIconButtonGroupWidth(count: number) {
+  // 2 * (horizontal padding) + (count) * (icon button width) + (count - 1) * (gap between icons)
+  return `${2 * 7 + count * 20 + (count - 1) * 5}px`;
+}

@@ -20,7 +20,7 @@ export const MayNotMessagePersonButton = ({
     <>
       <Button
         onClick={setIsOpenTrue}
-        variant='disabled'
+        disabled
         t='schulhof.administration.sections.persons.details.personal-data.actions.write-message.button'
       />
       {isOpen ? (

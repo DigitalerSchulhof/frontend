@@ -67,6 +67,8 @@ function useSendDeleteAccount(personId: string) {
   return useCallback(
     async function sendDelete() {
       alert(personId);
+
+      // TODO: Log out if own account
     },
     [personId]
   );

@@ -96,6 +96,16 @@ export const IconPersonActionEditAccount = makeIcon(
   16
 );
 
+export const IconArrowLeft = makeIcon(
+  require('../../../icons/16/arrow_left.png'),
+  16
+);
+
+export const IconArrowRight = makeIcon(
+  require('../../../icons/16/arrow_right.png'),
+  16
+);
+
 export const LargeIconVersion = makeIcon(
   require('../../../icons/32/server_components.png'),
   32

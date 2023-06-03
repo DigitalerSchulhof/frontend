@@ -7,8 +7,8 @@ filter:
   type: Art der Person
 table:
   title: Personen
-  loading: Personen werden geladen... Je nach Anzahl der Personen kann dies einige Sekunden dauern.
-  error: Personen konnten nicht geladen werden.
+  loading: Personen werden geladen...
+  error: "- Beim Laden der Personen ist ein unbekannter Fehler aufgetreten. -"
   empty: "- Es wurden noch keine Personen angelegt. -"
   columns:
     firstname: Vorname
