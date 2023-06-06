@@ -79,6 +79,9 @@
         "globby",
         "@types/node"
       ]
+    },
+    "patchedDependencies": {
+      "@formatjs/icu-messageformat-parser@2.5.0": "patches/@formatjs__icu-messageformat-parser@2.5.0.patch"
     }
   }
 }

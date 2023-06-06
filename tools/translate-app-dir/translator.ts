@@ -1,5 +1,6 @@
-import { TranslationService } from '#/i18n/server/service';
+import { getTranslations } from '#/context/contexts/i18n/service';
 import { __app, __nextApp } from '#/utils/paths';
+import { TYPE } from '@formatjs/icu-messageformat-parser';
 import * as chokidar from 'chokidar';
 import * as fs from 'fs';
 import * as globby from 'globby';
@@ -145,10 +146,7 @@ export class AppDirTranslatorWatcher {
 }
 
 export class AppDirTranslatorTranslationService {
-  constructor(
-    private readonly translationService: TranslationService,
-    private readonly locale: string
-  ) {}
+  constructor(private readonly locale: string) {}
 
   getNextAppDirFile(appDirFile: string): string {
     const appDirFileParts = appDirFile.split('/');
@@ -170,17 +168,29 @@ export class AppDirTranslatorTranslationService {
       appDirFilePart.length - 1
     );
 
-    const translation = this.translationService.translate(
-      this.locale,
-      translationKey
-    );
+    const translations = getTranslations(this.locale);
 
-    if (typeof translation !== 'string') {
+    const translation = translations.get(translationKey);
+
+    if (!translation) {
+      throw new Error(`Translation for key '${translationKey}' not found`);
+    }
+
+    if (translation.type !== 'string') {
       throw new Error(
         `Translation for key '${translationKey}' is not a string`
       );
     }
 
-    return translation;
+    if (
+      translation.ast.length !== 1 ||
+      translation.ast[0].type !== TYPE.literal
+    ) {
+      throw new Error(
+        `Translation for key '${translationKey}' is not a simple string`
+      );
+    }
+
+    return translation.ast[0].value;
   }
 }

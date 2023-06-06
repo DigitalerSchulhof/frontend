@@ -1,0 +1,94 @@
+diff --git a/parser.js b/parser.js
+index c50ac756acd6630ab19bcb7a3c2a33742afd7913..4320886a7b97ce4d68353e11d83adb6cf31da6b5 100644
+--- a/parser.js
++++ b/parser.js
+@@ -77,7 +77,7 @@ var fromCodePoint = hasNativeFromCodePoint
+             }
+             return elements;
+         };
+-var fromEntries = 
++var fromEntries =
+ // native
+ hasNativeFromEntries
+     ? Object.fromEntries
+@@ -137,7 +137,7 @@ function RE(s, flag) {
+ var matchIdentifierAtIndex;
+ if (REGEX_SUPPORTS_U_AND_Y) {
+     // Native
+-    var IDENTIFIER_PREFIX_RE_1 = RE('([^\\p{White_Space}\\p{Pattern_Syntax}]*)', 'yu');
++    var IDENTIFIER_PREFIX_RE_1 = RE('((?:[^\\p{White_Space}\\p{Pattern_Syntax}]|\\.)*)', 'yu');
+     matchIdentifierAtIndex = function matchIdentifierAtIndex(s, index) {
+         var _a;
+         IDENTIFIER_PREFIX_RE_1.lastIndex = index;
+@@ -649,6 +649,22 @@ var Parser = /** @class */ (function () {
+                     };
+                 }
+             }
++            case 'tpl': {
++              var argCloseResult = this.tryParseArgumentClose(openingBracePosition);
++              if (argCloseResult.err) {
++                  return argCloseResult;
++              }
++              var location_1 = createLocation(openingBracePosition, this.clonePosition());
++
++              return {
++                val: {
++                    type: types_1.TYPE.template,
++                    value: value,
++                    location: location_1,
++                },
++                err: null,
++              };
++            }
+             default:
+                 return this.error(error_1.ErrorKind.INVALID_ARGUMENT_TYPE, createLocation(typeStartPosition, typeEndPosition));
+         }
+diff --git a/types.d.ts b/types.d.ts
+index f7e4cb84dfba2c4c1871e7518ed7f47db0761be3..6b02991c3562656602d983d28715b81f5b4a4e5d 100644
+--- a/types.d.ts
++++ b/types.d.ts
+@@ -40,7 +40,11 @@ export declare enum TYPE {
+     /**
+      * XML-like tag
+      */
+-    tag = 8
++    tag = 8,
++    /**
++     * Include another i18n entry given by its key
++     */
++    template = 9
+ }
+ export declare enum SKELETON_TYPE {
+     number = 0,
+@@ -74,6 +78,7 @@ export interface SimpleFormatElement<T extends TYPE, S extends Skeleton> extends
+ export type NumberElement = SimpleFormatElement<TYPE.number, NumberSkeleton>;
+ export type DateElement = SimpleFormatElement<TYPE.date, DateTimeSkeleton>;
+ export type TimeElement = SimpleFormatElement<TYPE.time, DateTimeSkeleton>;
++export type TemplateElement = BaseElement<TYPE.template>;
+ export type ValidPluralRule = 'zero' | 'one' | 'two' | 'few' | 'many' | 'other' | string;
+ export interface PluralOrSelectOption {
+     value: MessageFormatElement[];
+@@ -91,7 +96,7 @@ export interface PoundElement {
+     type: TYPE.pound;
+     location?: Location;
+ }
+-export type MessageFormatElement = ArgumentElement | DateElement | LiteralElement | NumberElement | PluralElement | PoundElement | SelectElement | TagElement | TimeElement;
++export type MessageFormatElement = ArgumentElement | DateElement | LiteralElement | NumberElement | PluralElement | PoundElement | SelectElement | TagElement | TimeElement | TemplateElement;
+ export interface NumberSkeleton {
+     type: SKELETON_TYPE.number;
+     tokens: NumberSkeletonToken[];
+diff --git a/types.js b/types.js
+index e638e6ee7c147735fab127755300d6c03742efb0..60ff03930d22473f217e74a3e4d1fd4f7aee7583 100644
+--- a/types.js
++++ b/types.js
+@@ -40,6 +40,10 @@ var TYPE;
+      * XML-like tag
+      */
+     TYPE[TYPE["tag"] = 8] = "tag";
++    /**
++     * Include another i18n entry given by its key
++     */
++    TYPE[TYPE["template"] = 9] = "template";
+ })(TYPE = exports.TYPE || (exports.TYPE = {}));
+ var SKELETON_TYPE;
+ (function (SKELETON_TYPE) {

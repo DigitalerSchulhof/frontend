@@ -1,509 +1,412 @@
 import {
-  TranslationEntry,
-  TranslationService,
+  ExpandedTranslationEntry,
+  expandTranslations,
+  getTranslations,
 } from '#/context/contexts/i18n/service';
 import { DEFAULT_LOCALE } from '#/utils';
 import { __src } from '#/utils/paths';
-import * as mfp from '@formatjs/icu-messageformat-parser';
+import {
+  ArgumentElement,
+  DateElement,
+  MessageFormatElement,
+  NumberElement,
+  PluralElement,
+  SelectElement,
+  TYPE,
+  TagElement,
+  TimeElement,
+} from '@formatjs/icu-messageformat-parser';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 
-export class TranslationMapWriter {
-  private watcher: TranslationMapWriterWatcher | null = null;
+export function writeTranslationsMap() {
+  const translations = getTranslations(DEFAULT_LOCALE);
+  const expandedTranslations = expandTranslations(translations);
 
-  constructor(private translateService: TranslationService) {}
+  const translationsMap = createTranslationsMapSourceFile(expandedTranslations);
 
-  writeTranslationMap(): void {
-    const translations =
-      this.translateService.getOrLoadTranslations(DEFAULT_LOCALE);
+  const printer = ts.createPrinter();
 
-    const translationMapSourceFile = this.getTranslationMapSourceFile([
-      ...translations.values(),
-    ]);
+  fs.writeFileSync(
+    path.join(__src, 'i18n', 'translations.d.ts'),
+    `/* eslint-disable */\n${printer.printFile(translationsMap)}`
+  );
+}
 
-    const printer = ts.createPrinter();
+function createTranslationsMapSourceFile(
+  translations: ReadonlyMap<string, ExpandedTranslationEntry>
+): ts.SourceFile {
+  return ts.factory.createSourceFile(
+    [
+      ...createHeader(),
+      createTranslationsMapAndCurly(translations),
+      createStringTypeNoVariablesKeysUnion(translations),
+    ],
+    ts.factory.createToken(ts.SyntaxKind.EndOfFileToken),
+    ts.NodeFlags.None
+  );
+}
 
-    fs.writeFileSync(
-      path.join(__src, 'i18n', 'translations.d.ts'),
-      `/* eslint-disable */\n${printer.printFile(translationMapSourceFile)}`
-    );
-  }
-
-  private getTranslationMapSourceFile(
-    translations: TranslationEntry[]
-  ): ts.SourceFile {
-    const prelude = this.getPreludeStatements();
-
-    const typeDeclaration =
-      this.getTranslationMapTypeAliasDeclaration(translations);
-
-    const noVarsKeysTypeDeclaration =
-      this.getNoVariablesKeysTypeDeclaration(translations);
-
-    const stringNoVarsKeysTypeDeclaration =
-      this.getStringNoVariablesKeysTypeDeclaration(translations);
-
-    return ts.factory.createSourceFile(
-      [
-        ...prelude,
-        typeDeclaration,
-        noVarsKeysTypeDeclaration,
-        stringNoVarsKeysTypeDeclaration,
-      ],
-      ts.factory.createToken(ts.SyntaxKind.EndOfFileToken),
-      ts.NodeFlags.None
-    );
-  }
-
-  private getPreludeStatements() {
-    return [
-      ts.factory.createImportDeclaration(
+/**
+ * ```ts
+ * import { FormatXMLElementFn } from 'intl-messageformat';
+ * ```
+ */
+function createHeader(): ts.Statement[] {
+  return [
+    ts.factory.createImportDeclaration(
+      undefined,
+      ts.factory.createImportClause(
+        true,
         undefined,
-        ts.factory.createImportClause(
-          true,
-          undefined,
-          ts.factory.createNamedImports([
-            ts.factory.createImportSpecifier(
-              false,
-              undefined,
-              ts.factory.createIdentifier('FormatXMLElementFn')
-            ),
-          ])
-        ),
-        ts.factory.createStringLiteral('intl-messageformat'),
-        undefined
+        ts.factory.createNamedImports([
+          ts.factory.createImportSpecifier(
+            false,
+            undefined,
+            ts.factory.createIdentifier('FormatXMLElementFn')
+          ),
+        ])
       ),
-    ];
-  }
+      ts.factory.createStringLiteral('intl-messageformat'),
+      undefined
+    ),
+  ];
+}
 
-  /**
-   * ```ts
-   * type Translations = {
-   *   ...
-   * } & ...
-   * ```
-   */
-  private getTranslationMapTypeAliasDeclaration(
-    translations: TranslationEntry[]
-  ): ts.TypeAliasDeclaration {
-    const propertySignaturesTypeLiteral = ts.factory.createTypeLiteralNode(
-      translations.map((entry) =>
-        this.getTranslationEntryPropertySignature(entry)
-      )
-    );
+/**
+ * ```ts
+ * export type Translations = {
+ *   // Translations map
+ * } & {
+ *   // Curly mapped type
+ * }
+ * ```
+ */
+function createTranslationsMapAndCurly(
+  translations: ReadonlyMap<string, ExpandedTranslationEntry>
+): ts.Statement {
+  return ts.factory.createTypeAliasDeclaration(
+    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    ts.factory.createIdentifier('Translations'),
+    undefined,
+    ts.factory.createIntersectionTypeNode([
+      createTranslationsMap(translations),
+      createCurlyMapped(),
+    ])
+  );
+}
 
-    const curlyMappedTypeNode = this.getCurlyMappedTypeNode();
+/**
+ * ```ts
+ * {
+ *   // Translations map
+ * }
+ * ```
+ */
+function createTranslationsMap(
+  translations: ReadonlyMap<string, ExpandedTranslationEntry>
+): ts.TypeNode {
+  return ts.factory.createTypeLiteralNode(
+    [...translations.values()].map(createTranslationEntryPropertySignature)
+  );
+}
 
-    return ts.factory.createTypeAliasDeclaration(
-      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-      ts.factory.createIdentifier('Translations'),
-      undefined,
-      ts.factory.createIntersectionTypeNode([
-        propertySignaturesTypeLiteral,
-        curlyMappedTypeNode,
-      ])
-    );
-  }
+/**
+ * ```ts
+ *   "schulhof.xy": {
+ *     variables: [ ... ],
+ *     type: ...
+ *   },
+ * ```
+ */
+function createTranslationEntryPropertySignature(
+  translation: ExpandedTranslationEntry
+): ts.PropertySignature {
+  const variablePropertySignatures =
+    createTranslationEntryVariablesPropertySignatures(translation);
 
-  /**
-   * ```ts
-   * export type TranslationsWithNoVariables = `{${string}}` | 'key1' | 'key2' | ...
-   * ```
-   */
-  private getNoVariablesKeysTypeDeclaration(
-    translations: TranslationEntry[]
-  ): ts.TypeAliasDeclaration {
-    const noVarTypes = translations
-      .filter((entry) => {
-        const astElements = this.flattenAstElements(entry);
+  const entryTypeNode = createTranslationTypeNode(translation);
 
-        const hasVarElement = astElements.some(
-          (astElement) =>
-            astElement.type !== mfp.TYPE.pound &&
-            astElement.type !== mfp.TYPE.literal
-        );
-
-        return !hasVarElement;
-      })
-      .map((entry) =>
-        ts.factory.createLiteralTypeNode(
-          ts.factory.createStringLiteral(entry.key)
+  return ts.factory.createPropertySignature(
+    undefined,
+    ts.factory.createStringLiteral(translation.key),
+    undefined,
+    ts.factory.createTypeLiteralNode([
+      ts.factory.createPropertySignature(
+        undefined,
+        ts.factory.createIdentifier('variables'),
+        undefined,
+        ts.factory.createTupleTypeNode(
+          variablePropertySignatures.length
+            ? [ts.factory.createTypeLiteralNode(variablePropertySignatures)]
+            : []
         )
-      );
+      ),
+      ts.factory.createPropertySignature(
+        undefined,
+        ts.factory.createIdentifier('type'),
+        undefined,
+        entryTypeNode
+      ),
+    ])
+  );
+}
 
-    return ts.factory.createTypeAliasDeclaration(
-      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-      ts.factory.createIdentifier('TranslationsWithNoVariables'),
-      undefined,
-      ts.factory.createUnionTypeNode([
-        ts.factory.createTemplateLiteralType(
-          ts.factory.createTemplateHead('{', '{'),
-          [
-            ts.factory.createTemplateLiteralTypeSpan(
-              ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-              ts.factory.createTemplateTail('}', '}')
-            ),
-          ]
-        ),
-        ...noVarTypes,
-      ])
-    );
-  }
+/**
+ * ```ts
+ *  "schulhof.xy": {
+ *     variables: [{
+ *       x: string
+ * //    ^^^^^^^^^
+ *     }]
+ *   },
+ * ```
+ */
+function createTranslationEntryVariablesPropertySignatures(
+  translation: ExpandedTranslationEntry
+): ts.PropertySignature[] {
+  const propertySignatures: ts.PropertySignature[] = [];
 
-  /**
-   * ```ts
-   * export type TranslationsWithStringTypeAndNoVariables = `{${string}}` | 'key1' | 'key2' | ...
-   * ```
-   */
-  private getStringNoVariablesKeysTypeDeclaration(
-    translations: TranslationEntry[]
-  ): ts.TypeAliasDeclaration {
-    const noVarTypes = translations
-      .filter((entry) => {
-        const astElements = this.flattenAstElements(entry);
+  // <i> and <b> are in-built
+  const seenVariables = new Set(['i', 'b', 'u']);
 
-        const hasTagElement = astElements.some(
-          (astElement) => astElement.type === mfp.TYPE.tag
-        );
+  for (const astElement of translation.ast) {
+    const typeNode = convertAstTypeToTsTypeNode(astElement);
 
-        const hasVarElement = astElements.some(
-          (astElement) =>
-            astElement.type !== mfp.TYPE.pound &&
-            astElement.type !== mfp.TYPE.literal
-        );
+    if (typeNode) {
+      const variableName = (
+        astElement as
+          | ArgumentElement
+          | NumberElement
+          | DateElement
+          | TimeElement
+          | SelectElement
+          | PluralElement
+          | TagElement
+      ).value;
 
-        return entry.type === 'string' && !hasTagElement && !hasVarElement;
-      })
-      .map((entry) =>
-        ts.factory.createLiteralTypeNode(
-          ts.factory.createStringLiteral(entry.key)
-        )
-      );
+      if (seenVariables.has(variableName)) {
+        // TODO: If the variable is used multiple times,
+        // we have to combine the types
+        continue;
+      }
+      seenVariables.add(variableName);
 
-    return ts.factory.createTypeAliasDeclaration(
-      [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
-      ts.factory.createIdentifier('TranslationsWithStringTypeAndNoVariables'),
-      undefined,
-      ts.factory.createUnionTypeNode([
-        ts.factory.createTemplateLiteralType(
-          ts.factory.createTemplateHead('{', '{'),
-          [
-            ts.factory.createTemplateLiteralTypeSpan(
-              ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-              ts.factory.createTemplateTail('}', '}')
-            ),
-          ]
-        ),
-        ...noVarTypes,
-      ])
-    );
-  }
-
-  /**
-   * ```ts
-   *   "schulhof.xy": {
-   *     variables: [ ... ],
-   *     type: ...
-   *   },
-   * ```
-   */
-  private getTranslationEntryPropertySignature(
-    entry: TranslationEntry
-  ): ts.PropertySignature {
-    const variablePropertySignatures =
-      this.getTranslationEntryVariablesPropertySignatures(entry);
-
-    const entryTypeNode = this.getTranslationEntryTypeNode(entry);
-
-    return ts.factory.createPropertySignature(
-      undefined,
-      ts.factory.createStringLiteral(entry.key),
-      undefined,
-      ts.factory.createTypeLiteralNode([
+      propertySignatures.push(
         ts.factory.createPropertySignature(
           undefined,
-          ts.factory.createIdentifier('variables'),
+          ts.factory.createStringLiteral(variableName),
           undefined,
-          ts.factory.createTupleTypeNode(
-            variablePropertySignatures.length
-              ? [ts.factory.createTypeLiteralNode(variablePropertySignatures)]
-              : []
+          typeNode
+        )
+      );
+    }
+  }
+
+  return propertySignatures;
+}
+
+function convertAstTypeToTsTypeNode(
+  astElement: MessageFormatElement
+): ts.TypeNode | null {
+  switch (astElement.type) {
+    case TYPE.argument:
+      return ts.factory.createUnionTypeNode([
+        ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+        ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
+      ]);
+    case TYPE.number:
+      return ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword);
+    case TYPE.date:
+      return ts.factory.createTypeReferenceNode(
+        ts.factory.createIdentifier('Date')
+      );
+    case TYPE.time:
+      return ts.factory.createTypeReferenceNode(
+        ts.factory.createIdentifier('Date')
+      );
+    case TYPE.select:
+      return ts.factory.createUnionTypeNode(
+        Object.keys(astElement.options)
+          .filter((key) => key !== 'other')
+          .map((key) =>
+            ts.factory.createLiteralTypeNode(
+              ts.factory.createStringLiteral(key)
+            )
           )
-        ),
-        ts.factory.createPropertySignature(
-          undefined,
-          ts.factory.createIdentifier('type'),
-          undefined,
-          entryTypeNode
-        ),
-      ])
-    );
-  }
-
-  /**
-   * ```ts
-   * {
-   *   [K in `{${string}}`]: {
-   *     variables: [];
-   *     type: string;
-   *   }
-   * }
-   * ```
-   */
-  private getCurlyMappedTypeNode(): ts.MappedTypeNode {
-    return ts.factory.createMappedTypeNode(
-      undefined,
-      ts.factory.createTypeParameterDeclaration(
-        undefined,
-        ts.factory.createIdentifier('K'),
-        ts.factory.createTemplateLiteralType(
-          ts.factory.createTemplateHead('{', '{'),
-          [
-            ts.factory.createTemplateLiteralTypeSpan(
-              ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-              ts.factory.createTemplateTail('}', '}')
+      );
+    case TYPE.plural:
+      return ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword);
+    case TYPE.tag:
+      return ts.factory.createTypeReferenceNode(
+        ts.factory.createIdentifier('FormatXMLElementFn'),
+        [
+          ts.factory.createUnionTypeNode([
+            ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+            ts.factory.createTypeReferenceNode(
+              ts.factory.createIdentifier('JSX.Element')
             ),
-          ]
-        ),
-        undefined
-      ),
-      undefined,
-      undefined,
-      ts.factory.createTypeLiteralNode([
-        ts.factory.createPropertySignature(
-          undefined,
-          ts.factory.createIdentifier('variables'),
-          undefined,
-          ts.factory.createTupleTypeNode([])
-        ),
-        ts.factory.createPropertySignature(
-          undefined,
-          ts.factory.createIdentifier('type'),
-          undefined,
-          ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
-        ),
-      ]),
-      ts.factory.createNodeArray([])
-    );
+          ]),
+          ts.factory.createUnionTypeNode([
+            ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+            ts.factory.createTypeReferenceNode(
+              ts.factory.createIdentifier('JSX.Element')
+            ),
+            ts.factory.createArrayTypeNode(
+              ts.factory.createUnionTypeNode([
+                ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+                ts.factory.createTypeReferenceNode(
+                  ts.factory.createIdentifier('JSX.Element')
+                ),
+              ])
+            ),
+          ]),
+        ]
+      );
+    case TYPE.template:
+      throw new Error(
+        "Expanded translation shouldn't contain template elements."
+      );
+    case TYPE.pound:
+    case TYPE.literal:
+      return null;
   }
+}
 
-  /**
-   * ```ts
-   *  "schulhof.xy": {
-   *     type: string | string[] | React.ReactNode | React.ReactNode[]
-   * //        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   *   },
-   * ```
-   */
-  private getTranslationEntryTypeNode(entry: TranslationEntry): ts.TypeNode {
-    const astElements = this.flattenAstElements(entry);
-    const hasTagElement = astElements.some(
-      (astElement) => astElement.type === mfp.TYPE.tag
-    );
+/**
+ * ```ts
+ *  "schulhof.xy": {
+ *     type: string | string[] | React.ReactNode | React.ReactNode[]
+ * //        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *   },
+ * ```
+ */
+function createTranslationTypeNode(
+  translation: ExpandedTranslationEntry
+): ts.TypeNode {
+  const hasTagElement = translation.ast.some(
+    (astElement) => astElement.type === TYPE.tag
+  );
 
-    if (entry.type === 'string') {
-      if (hasTagElement) {
-        return ts.factory.createTypeReferenceNode(
+  if (translation.type === 'string') {
+    if (hasTagElement) {
+      return ts.factory.createTypeReferenceNode(
+        ts.factory.createQualifiedName(
+          ts.factory.createIdentifier('React'),
+          ts.factory.createIdentifier('ReactNode')
+        )
+      );
+    } else {
+      return ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword);
+    }
+  } else {
+    if (hasTagElement) {
+      return ts.factory.createArrayTypeNode(
+        ts.factory.createTypeReferenceNode(
           ts.factory.createQualifiedName(
             ts.factory.createIdentifier('React'),
             ts.factory.createIdentifier('ReactNode')
           )
-        );
-      } else {
-        return ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword);
-      }
+        )
+      );
     } else {
-      if (hasTagElement) {
-        return ts.factory.createArrayTypeNode(
-          ts.factory.createTypeReferenceNode(
-            ts.factory.createQualifiedName(
-              ts.factory.createIdentifier('React'),
-              ts.factory.createIdentifier('ReactNode')
-            )
-          )
-        );
-      } else {
-        return ts.factory.createArrayTypeNode(
-          ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
-        );
-      }
+      return ts.factory.createArrayTypeNode(
+        ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
+      );
     }
-  }
-
-  /**
-   * ```ts
-   *  "schulhof.xy": {
-   *     variables: [{
-   *       x: string
-   * //    ^^^^^^^^^
-   *     }]
-   *   },
-   * ```
-   */
-  private getTranslationEntryVariablesPropertySignatures(
-    entry: TranslationEntry
-  ): ts.PropertySignature[] {
-    const astElements = this.flattenAstElements(entry);
-
-    const propertySignatures: ts.PropertySignature[] = [];
-
-    // <i> and <b> are in-built
-    const seenVariables = new Set(['i', 'b', 'u']);
-
-    for (const astElement of astElements) {
-      const typeNode = this.convertAstTypeToTsTypeNode(astElement);
-
-      if (typeNode) {
-        const variableName = (
-          astElement as
-            | mfp.ArgumentElement
-            | mfp.NumberElement
-            | mfp.DateElement
-            | mfp.TimeElement
-            | mfp.SelectElement
-            | mfp.PluralElement
-            | mfp.TagElement
-        ).value;
-
-        if (seenVariables.has(variableName)) {
-          continue;
-        }
-        seenVariables.add(variableName);
-
-        propertySignatures.push(
-          ts.factory.createPropertySignature(
-            undefined,
-            ts.factory.createStringLiteral(variableName),
-            undefined,
-            typeNode
-          )
-        );
-      }
-    }
-
-    return propertySignatures;
-  }
-
-  private flattenAstElements(
-    entry: TranslationEntry
-  ): mfp.MessageFormatElement[] {
-    const astElements: mfp.MessageFormatElement[] =
-      'ast' in entry ? entry.ast : entry.asts.flat();
-
-    for (const astElement of astElements) {
-      switch (astElement.type) {
-        case mfp.TYPE.plural:
-        case mfp.TYPE.select:
-          for (const option of Object.values(astElement.options)) {
-            astElements.push(...option.value);
-          }
-          break;
-        case mfp.TYPE.tag:
-          astElements.push(...astElement.children);
-          break;
-        case mfp.TYPE.pound:
-        case mfp.TYPE.number:
-        case mfp.TYPE.date:
-        case mfp.TYPE.time:
-        case mfp.TYPE.argument:
-        case mfp.TYPE.literal:
-          break;
-        default:
-          throw new Error(
-            'Invariant: Unhandled astElement.type: ' + (astElement as any).type
-          );
-      }
-    }
-
-    return astElements;
-  }
-
-  private convertAstTypeToTsTypeNode(
-    astElement: mfp.MessageFormatElement
-  ): ts.TypeNode | null {
-    switch (astElement.type) {
-      case mfp.TYPE.argument:
-        return ts.factory.createUnionTypeNode([
-          ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-          ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
-        ]);
-      case mfp.TYPE.number:
-        return ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword);
-      case mfp.TYPE.date:
-        return ts.factory.createTypeReferenceNode(
-          ts.factory.createIdentifier('Date')
-        );
-      case mfp.TYPE.time:
-        return ts.factory.createTypeReferenceNode(
-          ts.factory.createIdentifier('Date')
-        );
-      case mfp.TYPE.select:
-        return ts.factory.createUnionTypeNode(
-          Object.keys(astElement.options)
-            .filter((key) => key !== 'other')
-            .map((key) =>
-              ts.factory.createLiteralTypeNode(
-                ts.factory.createStringLiteral(key)
-              )
-            )
-        );
-      case mfp.TYPE.plural:
-        return ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword);
-      case mfp.TYPE.pound:
-        return null;
-      case mfp.TYPE.tag:
-        return ts.factory.createTypeReferenceNode(
-          ts.factory.createIdentifier('FormatXMLElementFn'),
-          [
-            ts.factory.createUnionTypeNode([
-              ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-              ts.factory.createTypeReferenceNode(
-                ts.factory.createIdentifier('JSX.Element')
-              ),
-            ]),
-            ts.factory.createUnionTypeNode([
-              ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-              ts.factory.createTypeReferenceNode(
-                ts.factory.createIdentifier('JSX.Element')
-              ),
-              ts.factory.createArrayTypeNode(
-                ts.factory.createUnionTypeNode([
-                  ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
-                  ts.factory.createTypeReferenceNode(
-                    ts.factory.createIdentifier('JSX.Element')
-                  ),
-                ])
-              ),
-            ]),
-          ]
-        );
-      case mfp.TYPE.literal:
-        return null;
-    }
-  }
-
-  watch(): void {
-    if (this.watcher) return;
-
-    this.watcher = new TranslationMapWriterWatcher(this);
-    this.watcher.watch();
-  }
-
-  async unwatch(): Promise<void> {
-    if (!this.watcher) return;
-
-    await this.watcher.unwatch();
-    this.watcher = null;
   }
 }
 
-class TranslationMapWriterWatcher {
-  constructor(private writer: TranslationMapWriter) {}
+/**
+ * ```ts
+ * {
+ *   [K in `{${string}}`]: {
+ *     variables: [];
+ *     type: string;
+ *   }
+ * }
+ * ```
+ */
+function createCurlyMapped(): ts.TypeNode {
+  return ts.factory.createMappedTypeNode(
+    undefined,
+    ts.factory.createTypeParameterDeclaration(
+      undefined,
+      ts.factory.createIdentifier('K'),
+      ts.factory.createTemplateLiteralType(
+        ts.factory.createTemplateHead('{', '{'),
+        [
+          ts.factory.createTemplateLiteralTypeSpan(
+            ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+            ts.factory.createTemplateTail('}', '}')
+          ),
+        ]
+      ),
+      undefined
+    ),
+    undefined,
+    undefined,
+    ts.factory.createTypeLiteralNode([
+      ts.factory.createPropertySignature(
+        undefined,
+        ts.factory.createIdentifier('variables'),
+        undefined,
+        ts.factory.createTupleTypeNode([])
+      ),
+      ts.factory.createPropertySignature(
+        undefined,
+        ts.factory.createIdentifier('type'),
+        undefined,
+        ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
+      ),
+    ]),
+    ts.factory.createNodeArray([])
+  );
+}
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function -- TODO: Add chokidar to translation service
-  watch(): void {}
+/**
+ * ```ts
+ * export type TranslationsWithStringTypeAndNoVariables = `{${string}}` | 'key1' | 'key2' | ...
+ * ```
+ */
+function createStringTypeNoVariablesKeysUnion(
+  translations: ReadonlyMap<string, ExpandedTranslationEntry>
+): ts.Statement {
+  const noVarTypes = [...translations.values()]
+    .filter((translation) => {
+      const hasTagElement = translation.ast.some(
+        (astElement) => astElement.type === TYPE.tag
+      );
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function -- TODO: Add chokidar to translation service
-  async unwatch(): Promise<void> {}
+      const hasVarElement = translation.ast.some(
+        (astElement) =>
+          astElement.type !== TYPE.pound && astElement.type !== TYPE.literal
+      );
+
+      return translation.type === 'string' && !hasTagElement && !hasVarElement;
+    })
+    .map((translation) =>
+      ts.factory.createLiteralTypeNode(
+        ts.factory.createStringLiteral(translation.key)
+      )
+    );
+
+  return ts.factory.createTypeAliasDeclaration(
+    [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
+    ts.factory.createIdentifier('TranslationsWithStringTypeAndNoVariables'),
+    undefined,
+    ts.factory.createUnionTypeNode([
+      ts.factory.createTemplateLiteralType(
+        ts.factory.createTemplateHead('{', '{'),
+        [
+          ts.factory.createTemplateLiteralTypeSpan(
+            ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+            ts.factory.createTemplateTail('}', '}')
+          ),
+        ]
+      ),
+      ...noVarTypes,
+    ])
+  );
 }

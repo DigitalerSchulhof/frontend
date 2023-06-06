@@ -21,7 +21,7 @@ modals:
       lastname-invalid:
         - der Nachname ist ungültig.
       internal-error:
-        - es ist ein interner Fehler aufgetreten.
+        - "{generic.reasons.error, tpl}"
   success:
     title: Person anlegen
     description: Die Person wurde erfolgreich angelegt.

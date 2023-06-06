@@ -1,4 +1,3 @@
-import { TranslationService } from '#/context/contexts/i18n/service';
 import { DEFAULT_LOCALE } from '#/utils';
 import { isWatchMode } from '../utils';
 import {
@@ -6,10 +5,8 @@ import {
   AppDirTranslatorTranslationService,
 } from './translator';
 
-const translationService = new TranslationService(DEFAULT_LOCALE);
-
 const appDirTranslatorTranslationService =
-  new AppDirTranslatorTranslationService(translationService, DEFAULT_LOCALE);
+  new AppDirTranslatorTranslationService(DEFAULT_LOCALE);
 
 const translator = new AppDirTranslator(appDirTranslatorTranslationService);
 

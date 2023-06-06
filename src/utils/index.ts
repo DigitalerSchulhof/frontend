@@ -4,7 +4,7 @@ export const DEFAULT_LOCALE = 'de-DE';
 
 export function flattenObject(obj: unknown, joiner = '_'): object {
   if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
-    return {};
+    throw new Error('Expected an object');
   }
 
   return Object.keys(obj).reduce<object>((acc, key) => {

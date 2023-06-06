@@ -4,10 +4,15 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@formatjs/icu-messageformat-parser@2.5.0':
+    hash: 7wmk5tnv65ya2bz3mcz6kbc6sy
+    path: patches/@formatjs__icu-messageformat-parser@2.5.0.patch
+
 dependencies:
   '@formatjs/icu-messageformat-parser':
     specifier: 2.5.0
-    version: 2.5.0
+    version: 2.5.0(patch_hash=7wmk5tnv65ya2bz3mcz6kbc6sy)
   '@isaacs/ttlcache':
     specifier: 1.4.0
     version: 1.4.0
@@ -1574,13 +1579,14 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@formatjs/icu-messageformat-parser@2.5.0:
+  /@formatjs/icu-messageformat-parser@2.5.0(patch_hash=7wmk5tnv65ya2bz3mcz6kbc6sy):
     resolution: {integrity: sha512-8AwKRkVIZzVlvZwio1TcLVvUbJw0up1joa8//JIxKVeflqKiZwfzCGAelZt/4hHCEQf9NECose//nODnmBEkNQ==}
     dependencies:
       '@formatjs/ecma402-abstract': 1.16.0
       '@formatjs/icu-skeleton-parser': 1.5.0
       tslib: 2.5.3
     dev: false
+    patched: true
 
   /@formatjs/icu-skeleton-parser@1.5.0:
     resolution: {integrity: sha512-R/wOg/hxh3JWNB4LHYfNtIe8PC39mkzplh6gtrqCY33EqYeUFEGOYTWJrkXNcoRXlZWQtfrH6REch5r57tAyMQ==}
@@ -4122,7 +4128,7 @@ packages:
     dependencies:
       '@formatjs/ecma402-abstract': 1.16.0
       '@formatjs/fast-memoize': 2.1.0
-      '@formatjs/icu-messageformat-parser': 2.5.0
+      '@formatjs/icu-messageformat-parser': 2.5.0(patch_hash=7wmk5tnv65ya2bz3mcz6kbc6sy)
       tslib: 2.5.3
     dev: false
 

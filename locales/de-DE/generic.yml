@@ -38,3 +38,5 @@ genders:
   other: Divers
 dates:
   full: "{date, date, medium} um {date, time, medium}"
+reasons:
+  error: es ist ein interner Fehler aufgetreten.
