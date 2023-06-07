@@ -78,7 +78,6 @@ export const Button = ({
   const { href } = props;
 
   return href ? (
-    // @ts-expect-error -- No way we can type this correctly
     <StyledLink
       $variant={props.disabled ? 'disabled' : variant}
       {...props}

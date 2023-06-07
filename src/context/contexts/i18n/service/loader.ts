@@ -3,7 +3,6 @@ import { __locales } from '#/utils/paths';
 import {
   MessageFormatElement,
   TYPE,
-  TemplateElement,
   parse,
 } from '@formatjs/icu-messageformat-parser';
 import * as fs from 'fs';
@@ -198,7 +197,9 @@ export function flattenAst(
   translation: TranslationEntry
 ): MessageFormatElement[] {
   const ast =
-    translation.type === 'string' ? translation.ast : translation.asts.flat();
+    translation.type === 'string'
+      ? [...translation.ast]
+      : translation.asts.flat();
 
   for (const astElement of ast) {
     switch (astElement.type) {
@@ -219,11 +220,6 @@ export function flattenAst(
       case TYPE.literal:
       case TYPE.template:
         break;
-      default:
-        throw new Error(
-          // @ts-expect-error -- Invariant
-          'Invariant: Unhandled astElement.type: ' + astElement.type
-        );
     }
   }
 

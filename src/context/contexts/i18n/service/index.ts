@@ -3,8 +3,8 @@ export type {
   BaseTranslationEntry,
   ExpandedTranslationEntry,
   StringTranslationEntry,
-  TranslationEntry
+  TranslationEntry,
 } from './loader';
 
 export { expandTranslations } from './loader';
-export { getTranslations, translate } from './service';
+export { getTranslations } from './service';

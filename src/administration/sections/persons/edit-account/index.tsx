@@ -6,8 +6,8 @@ import { EditAccountForm } from './form';
 
 export type EditAccountProps = {
   isOwnProfile?: boolean;
-  person: WithId<PersonBase>
-  account: WithId<AccountBase>
+  person: WithId<PersonBase>;
+  account: WithId<AccountBase>;
 };
 
 export const EditAccount = async ({

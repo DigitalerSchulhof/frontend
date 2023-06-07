@@ -1,5 +1,8 @@
-import { Link, LinkProps } from '#/ui/Link';
+import { Link } from '#/ui/Link';
 import { FormatXMLElementFn } from 'intl-messageformat';
+import React from 'react';
+
+type LinkProps = React.ComponentProps<typeof Link>;
 
 export function makeLink(
   href: LinkProps['href'],

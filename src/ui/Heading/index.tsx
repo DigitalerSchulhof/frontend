@@ -23,7 +23,6 @@ export const Heading = ({ size, t, ...props }: HeadingProps) => {
 
 export const StyledHeading = styled.h1.attrs<{
   $size: HeadingSize;
-  // @ts-expect-error -- Bug?
 }>(({ $size }) => ({
   as: `h${$size}`,
 }))<{

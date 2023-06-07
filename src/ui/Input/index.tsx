@@ -58,10 +58,10 @@ export const TextInput = forwardRef(function TextInput(
 
   return (
     <StyledInput
-      ref={inputRef}
       type={type}
       onInput={onInputHandler}
       {...props}
+      ref={inputRef}
     />
   );
 });
@@ -96,10 +96,10 @@ export const NumberInput = forwardRef(function NumberInput(
 
   return (
     <StyledInput
-      ref={inputRef}
       type='number'
       onInput={onInputHandler}
       {...props}
+      ref={inputRef}
     />
   );
 });
@@ -136,7 +136,7 @@ export const SelectInput = forwardRef(function SelectInput<
   );
 
   return (
-    <StyledSelect ref={inputRef} onInput={onInputHandler} {...props}>
+    <StyledSelect onInput={onInputHandler} {...props} ref={inputRef}>
       {Object.keys(values).map((value) => (
         <option key={value} value={value}>
           {/* @ts-expect-error -- Object access */}

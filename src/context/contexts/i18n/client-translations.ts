@@ -1,6 +1,5 @@
-import { DEFAULT_LOCALE } from '#/utils';
+import { getTranslations } from '#/context/contexts/i18n/service';
 import { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
-import { TranslationService } from './service';
 
 export type ClientTranslations = Record<
   string,
@@ -13,8 +12,6 @@ export type ClientTranslations = Record<
       asts: MessageFormatElement[][];
     }
 >;
-
-const translationService = new TranslationService(DEFAULT_LOCALE);
 
 const clientTranslationsMap = new Map<string, ClientTranslations>();
 
@@ -30,15 +27,11 @@ export function getClientTranslations(locale: string): ClientTranslations {
 }
 
 function createClientTranslations(locale: string): ClientTranslations {
-  const defaultTranslations =
-    translationService.getOrLoadTranslations(DEFAULT_LOCALE);
-  const translations = translationService.getOrLoadTranslations(locale);
+  const translations = getTranslations(locale);
 
   const clientTranslations: ClientTranslations = {};
 
-  for (const key of defaultTranslations.keys()) {
-    const translation = translations.get(key) ?? defaultTranslations.get(key)!;
-
+  for (const [key, translation] of translations) {
     clientTranslations[key] = {
       type: translation.type,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- If it's not set, it just falls back to 'undefined'

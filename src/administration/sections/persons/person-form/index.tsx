@@ -13,12 +13,7 @@ import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
-import {
-  useCallback,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useImperativeHandle, useRef, useState } from 'react';
 import action from './action';
 
 export type PersonFormPerson = {

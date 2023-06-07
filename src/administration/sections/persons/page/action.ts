@@ -10,7 +10,7 @@ import {
 import { AndFilter, Filter } from '#/backend/repositories/filters';
 import {
   InFilterOperator,
-  LikeFilterOperator
+  LikeFilterOperator,
 } from '#/backend/repositories/filters/operators';
 import { InvalidInputError, wrapAction } from '#/utils/action';
 import { v, validate } from 'vality';

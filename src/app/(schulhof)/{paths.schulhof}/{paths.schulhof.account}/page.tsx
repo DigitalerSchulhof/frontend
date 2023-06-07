@@ -29,7 +29,7 @@ export default async function Page() {
             }}
           />
         </Heading>
-        {lastLogin ? <p>{lastLogin}</p> : null}
+        {lastLogin}
         {shouldShowTemporaryPasswordWarning ? (
           <TemporaryPasswordWarning />
         ) : null}

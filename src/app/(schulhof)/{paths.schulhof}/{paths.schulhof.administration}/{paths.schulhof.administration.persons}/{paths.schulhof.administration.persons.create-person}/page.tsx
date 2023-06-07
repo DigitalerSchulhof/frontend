@@ -21,7 +21,7 @@ export default async function Page() {
         <Heading
           size='1'
           t='schulhof.administration.sections.persons.create-person.title'
-        ></Heading>
+        />
       </Col>
       <Col w='12'>
         <PersonForm person={null} />
