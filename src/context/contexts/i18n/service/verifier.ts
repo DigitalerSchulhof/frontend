@@ -1,6 +1,6 @@
 import { TYPE } from '@formatjs/icu-messageformat-parser';
 import { TranslationEntry } from '.';
-import { flattenAst } from './loader';
+import { flattenAst } from './utils';
 
 /**
  * @returns Whether all translations are valid.

@@ -35,7 +35,7 @@ index d72671a20b0002dcb0da03dcc50712a55c2572e0..358ae614be22b3dcbfce538dcedb2e5e
                  return this.error(ErrorKind.INVALID_ARGUMENT_TYPE, createLocation(typeStartPosition, typeEndPosition));
          }
 diff --git a/lib/types.d.ts b/lib/types.d.ts
-index f7e4cb84dfba2c4c1871e7518ed7f47db0761be3..6b02991c3562656602d983d28715b81f5b4a4e5d 100644
+index f7e4cb84dfba2c4c1871e7518ed7f47db0761be3..5bbb658521f6b33b4fbbac8cd896d92a4c0ffaad 100644
 --- a/lib/types.d.ts
 +++ b/lib/types.d.ts
 @@ -40,7 +40,11 @@ export declare enum TYPE {
@@ -68,8 +68,16 @@ index f7e4cb84dfba2c4c1871e7518ed7f47db0761be3..6b02991c3562656602d983d28715b81f
  export interface NumberSkeleton {
      type: SKELETON_TYPE.number;
      tokens: NumberSkeletonToken[];
+@@ -117,6 +122,7 @@ export declare function isSelectElement(el: MessageFormatElement): el is SelectE
+ export declare function isPluralElement(el: MessageFormatElement): el is PluralElement;
+ export declare function isPoundElement(el: MessageFormatElement): el is PoundElement;
+ export declare function isTagElement(el: MessageFormatElement): el is TagElement;
++export declare function isTemplateElement(el: MessageFormatElement): el is TemplateElement;
+ export declare function isNumberSkeleton(el: NumberElement['style'] | Skeleton): el is NumberSkeleton;
+ export declare function isDateTimeSkeleton(el?: DateElement['style'] | TimeElement['style'] | Skeleton): el is DateTimeSkeleton;
+ export declare function createLiteralElement(value: string): LiteralElement;
 diff --git a/lib/types.js b/lib/types.js
-index 302f1cccc809bd46d418d0673bf8c102241aa349..3093e551540fb87680d36404411748ccf27540c3 100644
+index 302f1cccc809bd46d418d0673bf8c102241aa349..90994d9c1d97daa620fb14162a3b0fd4e7dfa9ce 100644
 --- a/lib/types.js
 +++ b/lib/types.js
 @@ -37,6 +37,10 @@ export var TYPE;
@@ -83,6 +91,16 @@ index 302f1cccc809bd46d418d0673bf8c102241aa349..3093e551540fb87680d36404411748cc
  })(TYPE || (TYPE = {}));
  export var SKELETON_TYPE;
  (function (SKELETON_TYPE) {
+@@ -73,6 +77,9 @@ export function isPoundElement(el) {
+ export function isTagElement(el) {
+     return el.type === TYPE.tag;
+ }
++export function isTemplateElement(el) {
++    return el.type === TYPE.template;
++}
+ export function isNumberSkeleton(el) {
+     return !!(el && typeof el === 'object' && el.type === SKELETON_TYPE.number);
+ }
 diff --git a/parser.js b/parser.js
 index c50ac756acd6630ab19bcb7a3c2a33742afd7913..43af03834e324c649f9b256864b1a01074847438 100644
 --- a/parser.js
@@ -120,7 +138,7 @@ index c50ac756acd6630ab19bcb7a3c2a33742afd7913..43af03834e324c649f9b256864b1a010
                  return this.error(error_1.ErrorKind.INVALID_ARGUMENT_TYPE, createLocation(typeStartPosition, typeEndPosition));
          }
 diff --git a/types.d.ts b/types.d.ts
-index f7e4cb84dfba2c4c1871e7518ed7f47db0761be3..6b02991c3562656602d983d28715b81f5b4a4e5d 100644
+index f7e4cb84dfba2c4c1871e7518ed7f47db0761be3..5bbb658521f6b33b4fbbac8cd896d92a4c0ffaad 100644
 --- a/types.d.ts
 +++ b/types.d.ts
 @@ -40,7 +40,11 @@ export declare enum TYPE {
@@ -153,8 +171,16 @@ index f7e4cb84dfba2c4c1871e7518ed7f47db0761be3..6b02991c3562656602d983d28715b81f
  export interface NumberSkeleton {
      type: SKELETON_TYPE.number;
      tokens: NumberSkeletonToken[];
+@@ -117,6 +122,7 @@ export declare function isSelectElement(el: MessageFormatElement): el is SelectE
+ export declare function isPluralElement(el: MessageFormatElement): el is PluralElement;
+ export declare function isPoundElement(el: MessageFormatElement): el is PoundElement;
+ export declare function isTagElement(el: MessageFormatElement): el is TagElement;
++export declare function isTemplateElement(el: MessageFormatElement): el is TemplateElement;
+ export declare function isNumberSkeleton(el: NumberElement['style'] | Skeleton): el is NumberSkeleton;
+ export declare function isDateTimeSkeleton(el?: DateElement['style'] | TimeElement['style'] | Skeleton): el is DateTimeSkeleton;
+ export declare function createLiteralElement(value: string): LiteralElement;
 diff --git a/types.js b/types.js
-index e638e6ee7c147735fab127755300d6c03742efb0..60ff03930d22473f217e74a3e4d1fd4f7aee7583 100644
+index e638e6ee7c147735fab127755300d6c03742efb0..4441106e4fff884ff5230f6dad19104574531763 100644
 --- a/types.js
 +++ b/types.js
 @@ -40,6 +40,10 @@ var TYPE;
@@ -168,3 +194,14 @@ index e638e6ee7c147735fab127755300d6c03742efb0..60ff03930d22473f217e74a3e4d1fd4f
  })(TYPE = exports.TYPE || (exports.TYPE = {}));
  var SKELETON_TYPE;
  (function (SKELETON_TYPE) {
+@@ -85,6 +89,10 @@ function isTagElement(el) {
+     return el.type === TYPE.tag;
+ }
+ exports.isTagElement = isTagElement;
++function isTemplateElement(el) {
++    return el.type === TYPE.template;
++}
++exports.isTemplateElement = isTemplateElement;
+ function isNumberSkeleton(el) {
+     return !!(el && typeof el === 'object' && el.type === SKELETON_TYPE.number);
+ }

@@ -6,13 +6,13 @@ settings:
 
 patchedDependencies:
   '@formatjs/icu-messageformat-parser@2.5.0':
-    hash: ah7srhfillpuzezeojcv7vsswe
+    hash: oj77bcvagaxtwrijnmx4kaodyq
     path: patches/@formatjs__icu-messageformat-parser@2.5.0.patch
 
 dependencies:
   '@formatjs/icu-messageformat-parser':
     specifier: 2.5.0
-    version: 2.5.0(patch_hash=ah7srhfillpuzezeojcv7vsswe)
+    version: 2.5.0(patch_hash=oj77bcvagaxtwrijnmx4kaodyq)
   '@isaacs/ttlcache':
     specifier: 1.4.0
     version: 1.4.0
@@ -1579,7 +1579,7 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@formatjs/icu-messageformat-parser@2.5.0(patch_hash=ah7srhfillpuzezeojcv7vsswe):
+  /@formatjs/icu-messageformat-parser@2.5.0(patch_hash=oj77bcvagaxtwrijnmx4kaodyq):
     resolution: {integrity: sha512-8AwKRkVIZzVlvZwio1TcLVvUbJw0up1joa8//JIxKVeflqKiZwfzCGAelZt/4hHCEQf9NECose//nODnmBEkNQ==}
     dependencies:
       '@formatjs/ecma402-abstract': 1.16.0
@@ -4128,7 +4128,7 @@ packages:
     dependencies:
       '@formatjs/ecma402-abstract': 1.16.0
       '@formatjs/fast-memoize': 2.1.0
-      '@formatjs/icu-messageformat-parser': 2.5.0(patch_hash=ah7srhfillpuzezeojcv7vsswe)
+      '@formatjs/icu-messageformat-parser': 2.5.0(patch_hash=oj77bcvagaxtwrijnmx4kaodyq)
       tslib: 2.5.3
     dev: false
 

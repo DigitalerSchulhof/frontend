@@ -1,4 +1,7 @@
-import { getTranslations } from '#/context/contexts/i18n/service';
+import {
+  expandTranslations,
+  getTranslations,
+} from '#/context/contexts/i18n/service';
 import { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 
 export type ClientTranslations = Record<
@@ -28,10 +31,11 @@ export function getClientTranslations(locale: string): ClientTranslations {
 
 function createClientTranslations(locale: string): ClientTranslations {
   const translations = getTranslations(locale);
+  const expandedTranslations = expandTranslations(translations);
 
   const clientTranslations: ClientTranslations = {};
 
-  for (const [key, translation] of translations) {
+  for (const [key, translation] of expandedTranslations) {
     clientTranslations[key] = {
       type: translation.type,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- If it's not set, it just falls back to 'undefined'

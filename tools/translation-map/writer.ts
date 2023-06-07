@@ -1,6 +1,7 @@
 import {
-  ExpandedTranslationEntry,
+  TranslationEntry,
   expandTranslations,
+  flattenAst,
   getTranslations,
 } from '#/context/contexts/i18n/service';
 import { DEFAULT_LOCALE } from '#/utils';
@@ -20,7 +21,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 
-export function writeTranslationsMap() {
+export function writeTranslationsMap(): void {
   const translations = getTranslations(DEFAULT_LOCALE);
   const expandedTranslations = expandTranslations(translations);
 
@@ -35,7 +36,7 @@ export function writeTranslationsMap() {
 }
 
 function createTranslationsMapSourceFile(
-  translations: ReadonlyMap<string, ExpandedTranslationEntry>
+  translations: ReadonlyMap<string, TranslationEntry>
 ): ts.SourceFile {
   return ts.factory.createSourceFile(
     [
@@ -84,7 +85,7 @@ function createHeader(): ts.Statement[] {
  * ```
  */
 function createTranslationsMapAndCurly(
-  translations: ReadonlyMap<string, ExpandedTranslationEntry>
+  translations: ReadonlyMap<string, TranslationEntry>
 ): ts.Statement {
   return ts.factory.createTypeAliasDeclaration(
     [ts.factory.createModifier(ts.SyntaxKind.ExportKeyword)],
@@ -105,7 +106,7 @@ function createTranslationsMapAndCurly(
  * ```
  */
 function createTranslationsMap(
-  translations: ReadonlyMap<string, ExpandedTranslationEntry>
+  translations: ReadonlyMap<string, TranslationEntry>
 ): ts.TypeNode {
   return ts.factory.createTypeLiteralNode(
     [...translations.values()].map(createTranslationEntryPropertySignature)
@@ -121,7 +122,7 @@ function createTranslationsMap(
  * ```
  */
 function createTranslationEntryPropertySignature(
-  translation: ExpandedTranslationEntry
+  translation: TranslationEntry
 ): ts.PropertySignature {
   const variablePropertySignatures =
     createTranslationEntryVariablesPropertySignatures(translation);
@@ -164,14 +165,15 @@ function createTranslationEntryPropertySignature(
  * ```
  */
 function createTranslationEntryVariablesPropertySignatures(
-  translation: ExpandedTranslationEntry
+  translation: TranslationEntry
 ): ts.PropertySignature[] {
   const propertySignatures: ts.PropertySignature[] = [];
+  const ast = flattenAst(translation);
 
   // <i> and <b> are in-built
   const seenVariables = new Set(['i', 'b', 'u']);
 
-  for (const astElement of translation.ast) {
+  for (const astElement of ast) {
     const typeNode = convertAstTypeToTsTypeNode(astElement);
 
     if (typeNode) {
@@ -282,12 +284,10 @@ function convertAstTypeToTsTypeNode(
  *   },
  * ```
  */
-function createTranslationTypeNode(
-  translation: ExpandedTranslationEntry
-): ts.TypeNode {
-  const hasTagElement = translation.ast.some(
-    (astElement) => astElement.type === TYPE.tag
-  );
+function createTranslationTypeNode(translation: TranslationEntry): ts.TypeNode {
+  const ast = flattenAst(translation);
+
+  const hasTagElement = ast.some((astElement) => astElement.type === TYPE.tag);
 
   if (translation.type === 'string') {
     if (hasTagElement) {
@@ -371,15 +371,17 @@ function createCurlyMapped(): ts.TypeNode {
  * ```
  */
 function createStringTypeNoVariablesKeysUnion(
-  translations: ReadonlyMap<string, ExpandedTranslationEntry>
+  translations: ReadonlyMap<string, TranslationEntry>
 ): ts.Statement {
   const noVarTypes = [...translations.values()]
     .filter((translation) => {
-      const hasTagElement = translation.ast.some(
+      const ast = flattenAst(translation);
+
+      const hasTagElement = ast.some(
         (astElement) => astElement.type === TYPE.tag
       );
 
-      const hasVarElement = translation.ast.some(
+      const hasVarElement = ast.some(
         (astElement) =>
           astElement.type !== TYPE.pound && astElement.type !== TYPE.literal
       );

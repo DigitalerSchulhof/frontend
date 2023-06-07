@@ -11,8 +11,11 @@ import * as path from 'path';
 import * as yaml from 'yaml';
 
 export type BaseTranslationEntry = {
-  file: string;
   key: string;
+  /**
+   * Path relative to the locales directory.
+   */
+  file: string;
 };
 
 export type StringTranslationEntry = BaseTranslationEntry & {
@@ -26,13 +29,6 @@ export type ArrayTranslationEntry = BaseTranslationEntry & {
 };
 
 export type TranslationEntry = StringTranslationEntry | ArrayTranslationEntry;
-
-export type ExpandedTranslationEntry = {
-  key: string;
-  files: string[];
-  ast: MessageFormatElement[];
-  type: 'string' | 'array';
-};
 
 export function loadTranslations(
   locale: string
@@ -82,11 +78,11 @@ function loadTranslationsFile(
         .join('.');
 
       const baseTranslationEntry: BaseTranslationEntry = {
-        file: translationFilePath,
         key: translationKey,
+        file: translationFilePath,
       };
 
-      let translationEntry;
+      let translationEntry: TranslationEntry;
       if (typeof value === 'string') {
         translationEntry = {
           ...baseTranslationEntry,
@@ -108,8 +104,8 @@ function loadTranslationsFile(
 
 export function expandTranslations(
   translations: ReadonlyMap<string, TranslationEntry>
-): Map<string, ExpandedTranslationEntry> {
-  const expandedTranslations = new Map<string, ExpandedTranslationEntry>();
+): Map<string, TranslationEntry> {
+  const expandedTranslations = new Map<string, TranslationEntry>();
 
   for (const [key, translation] of translations) {
     expandedTranslations.set(
@@ -123,24 +119,49 @@ export function expandTranslations(
 
 const expandedTranslationsCache = new WeakMap<
   TranslationEntry,
-  ExpandedTranslationEntry
+  TranslationEntry
 >();
 
 function expandTranslation(
   key: string,
   translation: TranslationEntry,
-  translations: ReadonlyMap<string, TranslationEntry>,
-  visitedKeys = new Set<string>()
-): ExpandedTranslationEntry {
+  translations: ReadonlyMap<string, TranslationEntry>
+): TranslationEntry {
   const cachedExpandedTranslation = expandedTranslationsCache.get(translation);
   if (cachedExpandedTranslation) {
     return cachedExpandedTranslation;
   }
 
-  const ast = flattenAst(translation);
+  const expandedBase: BaseTranslationEntry = {
+    key,
+    file: translation.file,
+  };
 
-  const files = [translation.file];
+  let expandedTranslation: TranslationEntry;
+  if (translation.type === 'string') {
+    expandedTranslation = {
+      ...expandedBase,
+      type: 'string',
+      ast: expandAst(key, translation.ast, translations),
+    } satisfies StringTranslationEntry;
+  } else {
+    expandedTranslation = {
+      ...expandedBase,
+      type: 'array',
+      asts: translation.asts.map((ast) => expandAst(key, ast, translations)),
+    } satisfies ArrayTranslationEntry;
+  }
 
+  expandedTranslationsCache.set(translation, expandedTranslation);
+  return expandedTranslation;
+}
+
+function expandAst(
+  key: string,
+  ast: readonly MessageFormatElement[],
+  translations: ReadonlyMap<string, TranslationEntry>,
+  visitedKeys: Set<string> = new Set<string>()
+): MessageFormatElement[] {
   if (visitedKeys.has(key)) {
     throw new Error(
       `Circular dependency detected for translation "${key}". Stack: ${[
@@ -152,10 +173,11 @@ function expandTranslation(
 
   visitedKeys.add(key);
 
-  for (let i = 0; i < ast.length; i++) {
-    const astElement = ast[i];
+  const newAst: MessageFormatElement[] = [];
 
+  for (const astElement of ast) {
     if (astElement.type !== TYPE.template) {
+      newAst.push(astElement);
       continue;
     }
 
@@ -165,63 +187,27 @@ function expandTranslation(
     if (!referencedTranslation) {
       // Should never happen with verified translations
       throw new Error(
-        `Translation for key ${translation.key} references translation for unknown key ${referencedTranslationKey}.`
+        `Translation for key ${key} references translation for unknown key ${referencedTranslationKey}.`
       );
     }
 
-    const expandedReferencedTranslation = expandTranslation(
+    if (referencedTranslation.type === 'array') {
+      throw new Error(
+        `Translation for key ${key} references translation for array key ${referencedTranslationKey}.`
+      );
+    }
+
+    const expandedReferencedAst = expandAst(
       referencedTranslationKey,
-      referencedTranslation,
+      referencedTranslation.ast,
       translations,
       visitedKeys
     );
-    files.push(...expandedReferencedTranslation.files);
 
-    ast.splice(i, 1, ...expandedReferencedTranslation.ast);
+    newAst.push(...expandedReferencedAst);
   }
 
   visitedKeys.delete(key);
 
-  const expandedTranslation = {
-    key,
-    files,
-    ast,
-    type: translation.type,
-  };
-
-  expandedTranslationsCache.set(translation, expandedTranslation);
-  return expandedTranslation;
-}
-
-export function flattenAst(
-  translation: TranslationEntry
-): MessageFormatElement[] {
-  const ast =
-    translation.type === 'string'
-      ? [...translation.ast]
-      : translation.asts.flat();
-
-  for (const astElement of ast) {
-    switch (astElement.type) {
-      case TYPE.plural:
-      case TYPE.select:
-        for (const option of Object.values(astElement.options)) {
-          ast.push(...option.value);
-        }
-        break;
-      case TYPE.tag:
-        ast.push(...astElement.children);
-        break;
-      case TYPE.pound:
-      case TYPE.number:
-      case TYPE.date:
-      case TYPE.time:
-      case TYPE.argument:
-      case TYPE.literal:
-      case TYPE.template:
-        break;
-    }
-  }
-
-  return ast;
+  return newAst;
 }
