@@ -13,8 +13,14 @@ import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { Table } from '#/ui/Table';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
-import { useCallback, useImperativeHandle, useRef, useState } from 'react';
-import action from './action';
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
+import action, { generateTeacherCode } from './action';
 
 export type PersonFormPerson = {
   id: string;
@@ -29,11 +35,16 @@ export type PersonFormPerson = {
 export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
   const mode = person === null ? 'create' : 'edit';
 
-  const { teacherCode, lastname, firstname, type, gender } = person ?? {
-    type: 'student',
-  };
+  const {
+    teacherCode = null,
+    lastname = '',
+    firstname = '',
+    type = 'student',
+    gender = 'male',
+  } = person ?? {};
 
-  const [typeState, setTypeState] = useState<PersonType>(type);
+  const [typeState, setTypeState] = useState(type);
+  const [lastnameState, setLastnameState] = useState(lastname);
   const teacherCodeInputRef = useRef<{ value: string }>(null);
 
   const typeRef = useRef<{ value: PersonType }>(null);
@@ -54,10 +65,7 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
     [typeState]
   );
 
-  // TODO: Generate on demand
-  const [teacherCodeSuggestion, setTeacherCodeSuggestion] = useState<
-    string | null
-  >(null);
+  const teacherCodeSuggestion = useTeacherCodeSuggestion();
 
   // TODO: Warn on duplicate name
   const [sendEditAccount, modal] = useSubmit();
@@ -90,6 +98,7 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
           label={`schulhof.administration.sections.persons.${mode}-person.form.lastname`}
           defaultValue={lastname}
           ref={lastnameRef}
+          onInput={setLastnameState}
         />
         <SelectFormRow
           label={`schulhof.administration.sections.persons.${mode}-person.form.gender`}
@@ -104,7 +113,8 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
         {typeState === 'teacher' && (
           <TextFormRow
             label={`schulhof.administration.sections.persons.${mode}-person.form.teacher-code`}
-            defaultValue={teacherCode ?? teacherCodeSuggestion ?? ''}
+            defaultValue={teacherCode ?? ''}
+            placeholder={teacherCodeSuggestion ?? undefined}
             ref={teacherCodeInputRef}
           />
         )}
@@ -135,6 +145,35 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
       </ButtonGroup>
     </Form>
   );
+
+  function useTeacherCodeSuggestion() {
+    // TODO: Generate on demand
+    const [teacherCodeSuggestion, setTeacherCodeSuggestion] = useState<
+      string | null
+    >(null);
+
+    useEffect(() => {
+      let mounted = true as boolean;
+
+      if (typeState === 'teacher') {
+        void (async () => {
+          const teacherCode = await unwrapAction(
+            generateTeacherCode(lastnameState)
+          );
+
+          if (mounted) {
+            setTeacherCodeSuggestion(teacherCode);
+          }
+        })();
+      }
+
+      return () => {
+        mounted = false;
+      };
+    }, [typeState, lastnameState]);
+
+    return teacherCodeSuggestion;
+  }
 
   function mapError(err: string) {
     switch (err) {

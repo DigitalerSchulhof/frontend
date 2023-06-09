@@ -13,6 +13,7 @@ import {
   EqFilterOperator,
   InFilterOperator,
 } from '#/backend/repositories/filters/operators';
+import { TEACHER_CODE_REGEX } from '#/backend/validators/content/person';
 import { Service } from '../base';
 
 export class PersonService extends Service<
@@ -58,18 +59,27 @@ export class PersonService extends Service<
   }
 
   /**
-   * Generate a unique recommendation for the teacher's code of a person
+   * Generate a unique recommendation for the teacher's code of a person given their last name
+   *
+   * TODO: Make this more sophisticated
+   *
+   * @returns `null` if no recommendation can be generated
    */
-  async generateDefaultTeacherCode(
-    person: WithId<PersonBase>
-  ): Promise<string> {
+  async generateTeacherCodeSuggestion(
+    lastname: string
+  ): Promise<string | null> {
+    if (lastname.length < 3) return null;
+
+    const prefix = lastname.substring(0, 3).toUpperCase();
+    if (!prefix.match(TEACHER_CODE_REGEX)) return null;
+
     let attempt = 1;
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition -- We return when we find a code that's not taken
     while (true) {
       const attemptNr = attempt === 0 ? '' : attempt.toString();
 
-      const code = person.lastname.substring(0, 3).toUpperCase() + attemptNr;
+      const code = prefix + attemptNr;
 
       const existing = await this.searchOne({
         filter: new PersonTeacherCodeFilter(new EqFilterOperator(code)),

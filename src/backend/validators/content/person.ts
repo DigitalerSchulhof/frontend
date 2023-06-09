@@ -15,6 +15,8 @@ export const PERSON_TYPE_TEACHER_CODE_MISMATCH =
 export const PERSON_TEACHER_CODE_INVALID = 'PERSON_TEACHER_CODE_INVALID';
 export const PERSON_TEACHER_CODE_EXISTS = 'PERSON_TEACHER_CODE_EXISTS';
 
+export const TEACHER_CODE_REGEX = /^[A-Z0-9]{2,}$/;
+
 export class PersonValidator extends Validator<'persons', PersonBase> {
   override async assertCanCreate(post: PersonBase): Promise<void | never> {
     if (post.accountId !== null) {
@@ -82,7 +84,7 @@ export class PersonValidator extends Validator<'persons', PersonBase> {
       throw new InputValidationError(PERSON_TYPE_TEACHER_CODE_MISMATCH);
     }
 
-    if (teacherCode !== null && teacherCode === '') {
+    if (teacherCode !== null && TEACHER_CODE_REGEX.exec(teacherCode)) {
       throw new InputValidationError(PERSON_TEACHER_CODE_INVALID);
     }
 

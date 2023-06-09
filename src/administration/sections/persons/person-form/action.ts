@@ -79,3 +79,18 @@ async function editPerson(
     ifRev,
   });
 }
+
+export const generateTeacherCode = wrapAction<[lastname: string], string>(
+  async (lastname) => {
+    if (typeof lastname !== 'string') {
+      throw new InvalidInputError();
+    }
+
+    const context = await requireLogin();
+
+    return (
+      (await context.services.person.generateTeacherCodeSuggestion(lastname)) ??
+      ''
+    );
+  }
+);
