@@ -165,6 +165,8 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
             setTeacherCodeSuggestion(teacherCode);
           }
         })();
+      } else {
+        setTeacherCodeSuggestion(null);
       }
 
       return () => {
