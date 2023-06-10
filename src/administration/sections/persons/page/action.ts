@@ -12,24 +12,8 @@ import {
   InFilterOperator,
   LikeFilterOperator,
 } from '#/backend/repositories/filters/operators';
-import { InvalidInputError, wrapAction } from '#/utils/action';
-import { v, validate } from 'vality';
-
-export type LoadPersonsFilter = {
-  lastname: string;
-  firstname: string;
-  class: string;
-  typeStudent: boolean;
-  typeTeacher: boolean;
-  typeParent: boolean;
-  typeAdmin: boolean;
-  typeOther: boolean;
-};
-
-export type LoadPersonsResponse = {
-  items: LoadPersonsPerson[];
-  total: number;
-};
+import { wrapAction } from '#/utils/action';
+import { Parse, v } from 'vality';
 
 export type LoadPersonsPerson = {
   id: string;
@@ -51,40 +35,32 @@ const filterSchema = {
   typeOther: v.boolean,
 };
 
-export const loadPersons = wrapAction<
-  [filter: LoadPersonsFilter, offset: number, limit: number],
-  LoadPersonsResponse
->(async (filter, offset, limit) => {
-  if (typeof offset !== 'number' || typeof limit !== 'number') {
-    throw new InvalidInputError();
+export type LoadPersonsFilter = Parse<typeof filterSchema>;
+
+export default wrapAction(
+  [filterSchema, v.number, v.number],
+  async (filter, offset, limit) => {
+    const context = await requireLogin();
+
+    const persons = await context.services.person.search({
+      filter: createFiltersFromFilter(filter),
+      offset,
+      limit: limit !== -1 ? limit : undefined,
+    });
+
+    return {
+      items: persons.nodes.map((person) => ({
+        id: person.id,
+        type: person.type,
+        firstname: person.firstname,
+        lastname: person.lastname,
+        gender: person.gender,
+        hasAccount: person.accountId !== null,
+      })) satisfies LoadPersonsPerson[],
+      total: persons.total,
+    };
   }
-
-  const validatedFilters = validate(filterSchema, filter);
-
-  if (!validatedFilters.valid) {
-    throw new InvalidInputError();
-  }
-
-  const context = await requireLogin();
-
-  const persons = await context.services.person.search({
-    filter: createFiltersFromFilter(validatedFilters.data),
-    offset,
-    limit: limit !== -1 ? limit : undefined,
-  });
-
-  return {
-    items: persons.nodes.map((person) => ({
-      id: person.id,
-      type: person.type,
-      firstname: person.firstname,
-      lastname: person.lastname,
-      gender: person.gender,
-      hasAccount: person.accountId !== null,
-    })),
-    total: persons.total,
-  };
-});
+);
 
 function createFiltersFromFilter(
   filter: LoadPersonsFilter

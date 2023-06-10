@@ -22,7 +22,7 @@ import { Table } from '#/ui/Table';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useMemo, useRef } from 'react';
-import { editSettings } from './action';
+import action from './action';
 
 export const EditAccountSettingsForm = ({
   isOwnProfile,
@@ -281,7 +281,7 @@ function useSubmit(
     useCallback(
       () =>
         unwrapAction(
-          editSettings(personId, {
+          action(personId, {
             emailOn: {
               newMessage: refs.emailOnNewMessage.current!.value,
               newSubstitution: refs.emailOnNewSubstitution.current!.value,

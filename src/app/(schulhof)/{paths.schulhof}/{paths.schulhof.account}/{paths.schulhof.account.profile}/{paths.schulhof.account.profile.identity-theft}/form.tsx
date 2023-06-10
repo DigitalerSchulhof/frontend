@@ -10,7 +10,7 @@ import { Table } from '#/ui/Table';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
-import { identityTheft } from './action';
+import action from './action';
 
 export const IdentityTheftForm = ({ accountRev }: { accountRev: string }) => {
   const oldPasswordRef = useRef<{ value: string }>(null);
@@ -76,7 +76,7 @@ export const IdentityTheftForm = ({ accountRev }: { accountRev: string }) => {
       useCallback(
         () =>
           unwrapAction(
-            identityTheft(
+            action(
               accountRev,
               oldPasswordRef.current!.value,
               newPasswordRef.current!.value,

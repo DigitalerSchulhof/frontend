@@ -10,7 +10,7 @@ import { Table } from '#/ui/Table';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
-import { changePassword } from './action';
+import action from './action';
 
 export const ChangePasswordForm = ({ accountRev }: { accountRev: string }) => {
   const oldPasswordRef = useRef<{ value: string }>(null);
@@ -67,7 +67,7 @@ export const ChangePasswordForm = ({ accountRev }: { accountRev: string }) => {
       useCallback(
         () =>
           unwrapAction(
-            changePassword(
+            action(
               accountRev,
               oldPasswordRef.current!.value,
               newPasswordRef.current!.value,

@@ -50,11 +50,11 @@ dependencies:
     specifier: 6.0.0-rc.3
     version: 6.0.0-rc.3(react-dom@18.2.0)(react@18.2.0)
   vality:
-    specifier: 6.3.2
-    version: 6.3.2(typescript@5.1.3)
+    specifier: 6.3.3
+    version: 6.3.3(typescript@5.1.3)
   vality-env:
     specifier: 1.0.0
-    version: 1.0.0(vality@6.3.2)
+    version: 1.0.0(vality@6.3.3)
 
 devDependencies:
   '@swc/core':
@@ -85,8 +85,8 @@ devDependencies:
     specifier: 18.16.3
     version: 18.16.3
   '@types/react':
-    specifier: 18.2.10
-    version: 18.2.10
+    specifier: 18.2.11
+    version: 18.2.11
   '@types/react-dom':
     specifier: 18.2.4
     version: 18.2.4
@@ -2318,11 +2318,11 @@ packages:
   /@types/react-dom@18.2.4:
     resolution: {integrity: sha512-G2mHoTMTL4yoydITgOGwWdWMVd8sNgyEP85xVmMKAPUBwQWm9wBPQUmvbeF4V3WBY1P7mmL4BkjQ0SqUpf1snw==}
     dependencies:
-      '@types/react': 18.2.10
+      '@types/react': 18.2.11
     dev: true
 
-  /@types/react@18.2.10:
-    resolution: {integrity: sha512-5UTpmDa5L+PgTLXhLPNolv7/Qh+1YQuy4fsh/IahJbvtaLz2g9qX0CKsE0rBQCvn9ymt9NpvZENZwclbLKc3EQ==}
+  /@types/react@18.2.11:
+    resolution: {integrity: sha512-+hsJr9hmwyDecSMQAmX7drgbDpyE+EgSF6t7+5QEBAn1tQK7kl1vWZ4iRf6SjQ8lk7dyEULxUmZOIpN0W5baZA==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
@@ -2825,7 +2825,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001494
+      caniuse-lite: 1.0.30001498
       electron-to-chromium: 1.4.419
       node-releases: 2.0.12
       update-browserslist-db: 1.0.11(browserslist@4.21.7)
@@ -2891,8 +2891,8 @@ packages:
     resolution: {integrity: sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==}
     dev: false
 
-  /caniuse-lite@1.0.30001494:
-    resolution: {integrity: sha512-sY2B5Qyl46ZzfYDegrl8GBCzdawSLT4ThM9b9F+aDYUrAG2zCOyMbd2Tq34mS1g4ZKBfjRlzOohQMxx28x6wJg==}
+  /caniuse-lite@1.0.30001498:
+    resolution: {integrity: sha512-LFInN2zAwx3ANrGCDZ5AKKJroHqNKyjXitdV5zRIVIaQlXKj3GmxUKagoKsjqUfckpAObPCEWnk5EeMlyMWcgw==}
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -5161,7 +5161,7 @@ packages:
       '@next/env': 13.4.5-canary.9
       '@swc/helpers': 0.5.1
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001494
+      caniuse-lite: 1.0.30001498
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -6424,16 +6424,16 @@ packages:
       convert-source-map: 1.9.0
     dev: true
 
-  /vality-env@1.0.0(vality@6.3.2):
+  /vality-env@1.0.0(vality@6.3.3):
     resolution: {integrity: sha512-p+Kxye6lFjx2xHzkx+Qg0LHJYlc9D0reDdpIQ3AoI7qKELns3CB/oEdr8r2tR/TEDfbTPKSB0SuVcKkHrp+9sw==}
     peerDependencies:
       vality: '>=6.3.1'
     dependencies:
-      vality: 6.3.2(typescript@5.1.3)
+      vality: 6.3.3(typescript@5.1.3)
     dev: false
 
-  /vality@6.3.2(typescript@5.1.3):
-    resolution: {integrity: sha512-18Ywh4w5Alxcd07/qViNGI7UlUXoREByNd9KrB2mGAhqyGVf25bBNJesP/Sl8lcWWdpXiiSs6DFH/Z/Vf2Vf3A==}
+  /vality@6.3.3(typescript@5.1.3):
+    resolution: {integrity: sha512-CE8aTk15KMDanqD+xu7p89uh1KUL0KomKWSHdSUKagibdrDhAGdqmHwurPRmCNhrLbAm8dtue2/z65+tfN0WpQ==}
     peerDependencies:
       typescript: '>=4.2.2'
     dependencies:

@@ -3,13 +3,10 @@
 import { requireLogin } from '#/auth/action';
 import { AccountPersonIdFilter } from '#/backend/repositories/content/account/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
-import { InvalidInputError, wrapAction } from '#/utils/action';
+import { wrapAction } from '#/utils/action';
+import { v } from 'vality';
 
-export default wrapAction<[personId: string]>(async (personId) => {
-  if (typeof personId !== 'string') {
-    throw new InvalidInputError();
-  }
-
+export default wrapAction([v.string], async (personId) => {
   const context = await requireLogin();
 
   await context.services.account.filterDelete(

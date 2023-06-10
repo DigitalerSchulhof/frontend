@@ -13,7 +13,7 @@ import { useSend } from '#/utils/form';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useCallback, useRef } from 'react';
-import { login } from './action';
+import action from './action';
 
 export const LoginForm = () => {
   const { t } = useT();
@@ -95,7 +95,7 @@ function useSubmit(
     useCallback(async () => {
       const [jwt] = await Promise.all([
         unwrapAction(
-          login(usernameRef.current!.value, passwordRef.current!.value)
+          action(usernameRef.current!.value, passwordRef.current!.value)
         ),
         // Because we don't show a dialogue on success, we intentionally put this delay here in order to not flash the login modal for a few milliseconds.
         sleep(500),

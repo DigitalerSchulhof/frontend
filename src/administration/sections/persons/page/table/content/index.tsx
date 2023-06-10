@@ -21,11 +21,7 @@ import {
 import { Note } from '#/ui/Note';
 import { formatName } from '#/utils';
 import { useCallback } from 'react';
-import {
-  LoadPersonsFilter,
-  LoadPersonsPerson,
-  loadPersons,
-} from '../../action';
+import action, { LoadPersonsFilter, LoadPersonsPerson } from '../../action';
 import {
   CreateAccountButton,
   DeleteAccountButton,
@@ -55,7 +51,7 @@ export const PersonsTableContent = ({
           maxActionIcons
         )}`}
         fetch={useCallback(
-          (offset, limit) => loadPersons(filter, offset, limit),
+          (offset, limit) => action(filter, offset, limit),
           [filter]
         )}
         headerRow={

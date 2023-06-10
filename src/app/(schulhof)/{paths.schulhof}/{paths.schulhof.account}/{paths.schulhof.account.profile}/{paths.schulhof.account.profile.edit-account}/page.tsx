@@ -1,4 +1,4 @@
-import { EditAccount } from '#/administration/sections/persons/edit-account';
+import { AccountForm } from '#/administration/sections/persons/account-form';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
@@ -20,11 +20,20 @@ export default async function Page() {
         />
         <Heading size='1' t='schulhof.account.profile.edit-account.title' />
       </Col>
-      <EditAccount
-        isOwnProfile
-        person={context.person}
-        account={context.account}
-      />
+      <Col w='12'>
+        <AccountForm
+          isOwnProfile
+          person={{
+            id: context.person.id,
+            rev: context.person.rev,
+          }}
+          account={{
+            rev: context.account.rev,
+            username: context.account.username,
+            email: context.account.email,
+          }}
+        />
+      </Col>
     </>
   );
 }

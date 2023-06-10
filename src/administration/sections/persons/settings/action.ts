@@ -1,14 +1,11 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import {
-  AccountSettings,
-  FORMS_OF_ADDRESS,
-} from '#/backend/repositories/content/account';
+import { FORMS_OF_ADDRESS } from '#/backend/repositories/content/account';
 import { AccountPersonIdFilter } from '#/backend/repositories/content/account/filters';
 import { EqFilterOperator } from '#/backend/repositories/filters/operators';
 import { InvalidInputError, wrapAction } from '#/utils/action';
-import { v, validate } from 'vality';
+import { v } from 'vality';
 
 const accountSettingsSchema = {
   emailOn: {
@@ -37,32 +34,21 @@ const accountSettingsSchema = {
   },
 };
 
-export const editSettings = wrapAction<
-  [personId: string, settings: AccountSettings]
->(async (personId, settings) => {
-  if (typeof personId !== 'string') {
-    throw new InvalidInputError();
+export default wrapAction(
+  [v.string, accountSettingsSchema],
+  async (personId, settings) => {
+    const context = await requireLogin();
+
+    const account = await context.services.account.searchOne({
+      filter: new AccountPersonIdFilter(new EqFilterOperator(personId)),
+    });
+
+    if (!account) {
+      throw new InvalidInputError();
+    }
+
+    await context.services.account.update(account.id, {
+      settings,
+    });
   }
-
-  const validatedSettings = validate(accountSettingsSchema, settings);
-
-  if (!validatedSettings.valid) {
-    throw new InvalidInputError();
-  }
-
-  const context = await requireLogin();
-
-  const account = await context.services.account.searchOne({
-    filter: new AccountPersonIdFilter(new EqFilterOperator(personId)),
-  });
-
-  if (!account) {
-    throw new Error('ACCOUNT_NOT_FOUND');
-  }
-
-  validatedSettings.data.profile.formOfAddress;
-
-  await context.services.account.update(account.id, {
-    settings: validatedSettings.data,
-  });
-});
+);

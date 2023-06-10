@@ -4,7 +4,7 @@ import { requireLogin } from '#/auth/action';
 import { LoggedInBackendContext } from '#/context';
 import { InvalidInputError, wrapAction } from '#/utils/action';
 import ms from 'ms';
-import { Parse, v, validate } from 'vality';
+import { Parse, v } from 'vality';
 
 const accountSchema = {
   username: v.string,
@@ -13,36 +13,18 @@ const accountSchema = {
 
 export type AccountInput = Parse<typeof accountSchema>;
 
-export default wrapAction<
-  [
-    personId: string,
-    personRev: string,
-    accountRev: string | null,
-    data: AccountInput
-  ]
->(async (personId, personRev, accountRev, data) => {
-  if (
-    typeof personId !== 'string' ||
-    typeof personRev !== 'string' ||
-    (typeof accountRev !== 'string' && accountRev !== null)
-  ) {
-    throw new InvalidInputError();
+export default wrapAction(
+  [v.string, v.string, [v.string, null], accountSchema],
+  async (personId, personRev, accountRev, data) => {
+    const context = await requireLogin();
+
+    if (accountRev === null) {
+      return createAccount(context, personId, personRev, data);
+    } else {
+      return editAccount(context, personId, accountRev, data);
+    }
   }
-
-  const validatedData = validate(accountSchema, data);
-
-  if (!validatedData.valid) {
-    throw new InvalidInputError();
-  }
-
-  const context = await requireLogin();
-
-  if (accountRev === null) {
-    return createAccount(context, personId, personRev, validatedData.data);
-  } else {
-    return editAccount(context, personId, accountRev, validatedData.data);
-  }
-});
+);
 
 async function createAccount(
   context: LoggedInBackendContext,

@@ -7,7 +7,7 @@ import {
 } from '#/backend/repositories/content/person';
 import { LoggedInBackendContext } from '#/context';
 import { InvalidInputError, wrapAction } from '#/utils/action';
-import { Parse, v, validate } from 'vality';
+import { Parse, v } from 'vality';
 
 const personSchema = {
   type: PERSON_TYPES,
@@ -19,31 +19,22 @@ const personSchema = {
 
 export type PersonInput = Parse<typeof personSchema>;
 
-export default wrapAction<
-  [personId: string | null, ifRev: string | null, data: PersonInput]
->(async (personId, _ifRev, data) => {
-  if (
-    (typeof personId !== 'string' && personId !== null) ||
-    typeof personId !== typeof _ifRev
-  ) {
-    throw new InvalidInputError();
+export default wrapAction(
+  [[v.string, null], [v.string, null], personSchema],
+  async (personId, ifRev, data) => {
+    if (typeof personId !== typeof ifRev) {
+      throw new InvalidInputError();
+    }
+
+    const context = await requireLogin();
+
+    if (personId === null) {
+      return createPerson(context, data);
+    } else {
+      return editPerson(context, personId, ifRev!, data);
+    }
   }
-  const ifRev = _ifRev as string | null;
-
-  const validatedData = validate(personSchema, data);
-
-  if (!validatedData.valid) {
-    throw new InvalidInputError();
-  }
-
-  const context = await requireLogin();
-
-  if (personId === null) {
-    return createPerson(context, validatedData.data);
-  } else {
-    return editPerson(context, personId, ifRev!, validatedData.data);
-  }
-});
+);
 
 async function createPerson(
   context: LoggedInBackendContext,
@@ -72,16 +63,10 @@ async function editPerson(
   });
 }
 
-export const generateTeacherCode = wrapAction<[base: string], string>(
-  async (base) => {
-    if (typeof base !== 'string') {
-      throw new InvalidInputError();
-    }
+export const generateTeacherCode = wrapAction([v.string], async (base) => {
+  const context = await requireLogin();
 
-    const context = await requireLogin();
-
-    return (
-      (await context.services.person.generateTeacherCodeSuggestion(base)) ?? ''
-    );
-  }
-);
+  return (
+    (await context.services.person.generateTeacherCodeSuggestion(base)) ?? ''
+  );
+});

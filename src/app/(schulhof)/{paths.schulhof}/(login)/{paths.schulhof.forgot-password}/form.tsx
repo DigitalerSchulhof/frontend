@@ -10,7 +10,7 @@ import { Table } from '#/ui/Table';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import { useCallback, useRef } from 'react';
-import { forgotPassword } from './action';
+import action from './action';
 
 export const ForgotPasswordForm = () => {
   const usernameRef = useRef<{ value: string }>(null);
@@ -62,7 +62,7 @@ export const ForgotPasswordForm = () => {
       useCallback(
         () =>
           unwrapAction(
-            forgotPassword(usernameRef.current!.value, emailRef.current!.value)
+            action(usernameRef.current!.value, emailRef.current!.value)
           ),
         []
       ),
