@@ -165,7 +165,7 @@ export const NumberOrNullFormRow = forwardRef(function NumberOrNullFormRow(
         return isEnabled ? inputRef.current!.value : null;
       },
     }),
-    [isEnabled, inputRef]
+    [isEnabled]
   );
 
   return (

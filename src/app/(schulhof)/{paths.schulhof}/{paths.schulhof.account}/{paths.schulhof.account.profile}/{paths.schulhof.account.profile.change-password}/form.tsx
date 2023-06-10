@@ -17,12 +17,7 @@ export const ChangePasswordForm = ({ accountRev }: { accountRev: string }) => {
   const newPasswordRef = useRef<{ value: string }>(null);
   const newPasswordAgainRef = useRef<{ value: string }>(null);
 
-  const [sendChangePassword, modal] = useSubmit(
-    accountRev,
-    oldPasswordRef,
-    newPasswordRef,
-    newPasswordAgainRef
-  );
+  const [sendChangePassword, modal] = useSubmit();
 
   return (
     <Form onSubmit={sendChangePassword}>
@@ -64,6 +59,80 @@ export const ChangePasswordForm = ({ accountRev }: { accountRev: string }) => {
       </ButtonGroup>
     </Form>
   );
+
+  function useSubmit() {
+    const { t } = useT();
+
+    return useSend(
+      useCallback(
+        () =>
+          unwrapAction(
+            changePassword(
+              accountRev,
+              oldPasswordRef.current!.value,
+              newPasswordRef.current!.value,
+              newPasswordAgainRef.current!.value
+            )
+          ),
+        [accountRev]
+      ),
+      useCallback(
+        () => (
+          <LoadingModal
+            title='schulhof.account.profile.change-password.modals.loading.title'
+            description='schulhof.account.profile.change-password.modals.loading.description'
+          />
+        ),
+        []
+      ),
+      useCallback(
+        (close, errors) => {
+          const reasons = errors.flatMap((err) =>
+            t(
+              `schulhof.account.profile.change-password.modals.error.reasons.${mapError(
+                err
+              )}`
+            )
+          );
+
+          return (
+            <ErrorModal
+              close={close}
+              title='schulhof.account.profile.change-password.modals.error.title'
+              description='schulhof.account.profile.change-password.modals.error.description'
+              reasons={reasons}
+            />
+          );
+        },
+        [t]
+      ),
+      useCallback(
+        () => (
+          <Modal onClose={close}>
+            <Alert
+              variant='success'
+              title='schulhof.account.profile.change-password.modals.success.title'
+            >
+              <p>
+                <T t='schulhof.account.profile.change-password.modals.success.description' />
+              </p>
+            </Alert>
+            <ButtonGroup>
+              <Button
+                href={[
+                  'paths.schulhof',
+                  'paths.schulhof.account',
+                  'paths.schulhof.account.profile',
+                ]}
+                t='schulhof.account.profile.change-password.modals.success.button'
+              />
+            </ButtonGroup>
+          </Modal>
+        ),
+        []
+      )
+    );
+  }
 };
 
 function mapError(err: string) {
@@ -75,83 +144,4 @@ function mapError(err: string) {
     default:
       return 'internal-error';
   }
-}
-
-function useSubmit(
-  accountRev: string,
-  oldPasswordRef: React.RefObject<{ value: string }>,
-  newPasswordRef: React.RefObject<{ value: string }>,
-  newPasswordAgainRef: React.RefObject<{ value: string }>
-) {
-  const { t } = useT();
-
-  return useSend(
-    useCallback(
-      () =>
-        unwrapAction(
-          changePassword(
-            accountRev,
-            oldPasswordRef.current!.value,
-            newPasswordRef.current!.value,
-            newPasswordAgainRef.current!.value
-          )
-        ),
-      [accountRev, oldPasswordRef, newPasswordRef, newPasswordAgainRef]
-    ),
-    useCallback(
-      () => (
-        <LoadingModal
-          title='schulhof.account.profile.change-password.modals.loading.title'
-          description='schulhof.account.profile.change-password.modals.loading.description'
-        />
-      ),
-      []
-    ),
-    useCallback(
-      (close, errors) => {
-        const reasons = errors.flatMap((err) =>
-          t(
-            `schulhof.account.profile.change-password.modals.error.reasons.${mapError(
-              err
-            )}`
-          )
-        );
-
-        return (
-          <ErrorModal
-            close={close}
-            title='schulhof.account.profile.change-password.modals.error.title'
-            description='schulhof.account.profile.change-password.modals.error.description'
-            reasons={reasons}
-          />
-        );
-      },
-      [t]
-    ),
-    useCallback(
-      () => (
-        <Modal onClose={close}>
-          <Alert
-            variant='success'
-            title='schulhof.account.profile.change-password.modals.success.title'
-          >
-            <p>
-              <T t='schulhof.account.profile.change-password.modals.success.description' />
-            </p>
-          </Alert>
-          <ButtonGroup>
-            <Button
-              href={[
-                'paths.schulhof',
-                'paths.schulhof.account',
-                'paths.schulhof.account.profile',
-              ]}
-              t='schulhof.account.profile.change-password.modals.success.button'
-            />
-          </ButtonGroup>
-        </Modal>
-      ),
-      []
-    )
-  );
 }

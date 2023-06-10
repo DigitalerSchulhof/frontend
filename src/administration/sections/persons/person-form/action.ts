@@ -4,12 +4,10 @@ import { requireLogin } from '#/auth/action';
 import {
   PERSON_GENDERS,
   PERSON_TYPES,
-  PersonGender,
-  PersonType,
 } from '#/backend/repositories/content/person';
 import { LoggedInBackendContext } from '#/context';
 import { InvalidInputError, wrapAction } from '#/utils/action';
-import { v, validate } from 'vality';
+import { Parse, v, validate } from 'vality';
 
 const personSchema = {
   type: PERSON_TYPES,
@@ -19,13 +17,7 @@ const personSchema = {
   teacherCode: [v.string, null],
 };
 
-export type PersonInput = {
-  type: PersonType;
-  firstname: string;
-  lastname: string;
-  gender: PersonGender;
-  teacherCode: string | null;
-};
+export type PersonInput = Parse<typeof personSchema>;
 
 export default wrapAction<
   [personId: string | null, ifRev: string | null, data: PersonInput]
@@ -80,17 +72,16 @@ async function editPerson(
   });
 }
 
-export const generateTeacherCode = wrapAction<[lastname: string], string>(
-  async (lastname) => {
-    if (typeof lastname !== 'string') {
+export const generateTeacherCode = wrapAction<[base: string], string>(
+  async (base) => {
+    if (typeof base !== 'string') {
       throw new InvalidInputError();
     }
 
     const context = await requireLogin();
 
     return (
-      (await context.services.person.generateTeacherCodeSuggestion(lastname)) ??
-      ''
+      (await context.services.person.generateTeacherCodeSuggestion(base)) ?? ''
     );
   }
 );

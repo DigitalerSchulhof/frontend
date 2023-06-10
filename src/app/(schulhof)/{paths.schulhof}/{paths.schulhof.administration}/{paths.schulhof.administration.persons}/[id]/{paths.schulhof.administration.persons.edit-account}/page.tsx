@@ -1,4 +1,4 @@
-import { EditAccount } from '#/administration/sections/persons/edit-account';
+import { AccountForm } from '#/administration/sections/persons/account-form';
 import { requireLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -46,7 +46,19 @@ export default async function Page({
           />
         </Heading>
       </Col>
-      <EditAccount person={person} account={account} />
+      <Col w='12'>
+        <AccountForm
+          person={{
+            id: person.id,
+            rev: person.rev,
+          }}
+          account={{
+            rev: account.rev,
+            username: account.username,
+            email: account.email,
+          }}
+        />
+      </Col>
     </>
   );
 }

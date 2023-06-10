@@ -68,10 +68,10 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
   const teacherCodeSuggestion = useTeacherCodeSuggestion();
 
   // TODO: Warn on duplicate name
-  const [sendEditAccount, modal] = useSubmit();
+  const [send, modal] = useSubmit();
 
   return (
-    <Form onSubmit={sendEditAccount}>
+    <Form onSubmit={send}>
       {modal}
       <Table>
         <SelectFormRow
@@ -147,10 +147,11 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
   );
 
   function useTeacherCodeSuggestion() {
-    // TODO: Generate on demand
     const [teacherCodeSuggestion, setTeacherCodeSuggestion] = useState<
       string | null
     >(null);
+
+    const lastnameFirstThree = lastnameState.substring(0, 3).toUpperCase();
 
     useEffect(() => {
       let mounted = true as boolean;
@@ -158,7 +159,7 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
       if (typeState === 'teacher') {
         void (async () => {
           const teacherCode = await unwrapAction(
-            generateTeacherCode(lastnameState)
+            generateTeacherCode(lastnameFirstThree)
           );
 
           if (mounted) {
@@ -172,20 +173,9 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
       return () => {
         mounted = false;
       };
-    }, [typeState, lastnameState]);
+    }, [typeState, lastnameFirstThree]);
 
     return teacherCodeSuggestion;
-  }
-
-  function mapError(err: string) {
-    switch (err) {
-      case 'PERSON_FIRSTNAME_INVALID':
-        return 'firstname-invalid';
-      case 'PERSON_LASTNAME_INVALID':
-        return 'lastname-invalid';
-      default:
-        return 'internal-error' as const;
-    }
   }
 
   function useSubmit() {
@@ -200,10 +190,13 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
               firstname: firstnameRef.current!.value,
               lastname: lastnameRef.current!.value,
               gender: genderRef.current!.value,
-              teacherCode: teacherCodeRef.current!.value,
+              teacherCode:
+                teacherCodeRef.current!.value === ''
+                  ? teacherCodeSuggestion
+                  : teacherCodeRef.current!.value,
             })
           ),
-        [person, typeRef, firstnameRef, lastnameRef, genderRef, teacherCodeRef]
+        [person]
       ),
       useCallback(
         () => (
@@ -273,3 +266,14 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
     );
   }
 };
+
+function mapError(err: string) {
+  switch (err) {
+    case 'PERSON_FIRSTNAME_INVALID':
+      return 'firstname-invalid';
+    case 'PERSON_LASTNAME_INVALID':
+      return 'lastname-invalid';
+    default:
+      return 'internal-error';
+  }
+}

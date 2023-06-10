@@ -23,6 +23,37 @@ export class AccountService extends Service<
   AccountBase,
   AccountRepository
 > {
+  async createForPerson(
+    personId: string,
+    personRev: string,
+    postWithoutPassword: Omit<AccountBase, 'password' | 'salt'>
+  ): Promise<WithId<AccountBase>> {
+    const password = generatePassword();
+    const salt = generateSalt();
+
+    const post = {
+      ...postWithoutPassword,
+      password: hashPassword(password, salt),
+      salt,
+    };
+
+    await this.validator.assertCanCreate(post);
+
+    const res = await this.repository.createForPerson(
+      personId,
+      post,
+      personRev
+    );
+
+    await this.cache.set(res.id, res);
+
+    return {
+      ...res,
+      password,
+      salt,
+    };
+  }
+
   override async delete(
     id: string,
     ifRev?: string | undefined
@@ -107,11 +138,7 @@ export class AccountService extends Service<
   async resetPassword(accountId: string): Promise<string> {
     const newPassword = generatePassword();
 
-    await this.changePassword(
-      accountId,
-      newPassword,
-      new Date(Date.now() + ms('1h'))
-    );
+    await this.changePassword(accountId, newPassword, Date.now() + ms('1h'));
 
     return newPassword;
   }
@@ -119,7 +146,7 @@ export class AccountService extends Service<
   async changePassword(
     accountId: string,
     newPassword: string,
-    expiresAt: Date | null,
+    expiresAt: number | null,
     ifRev?: string
   ): Promise<WithId<AccountBase>> {
     const salt = generateSalt();
@@ -129,7 +156,7 @@ export class AccountService extends Service<
       {
         password: hashPassword(newPassword, salt),
         salt,
-        passwordExpiresAt: expiresAt ? expiresAt.getTime() : null,
+        passwordExpiresAt: expiresAt,
       },
       {
         skipValidation: true,

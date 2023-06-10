@@ -65,13 +65,10 @@ export class PersonService extends Service<
    *
    * @returns `null` if no recommendation can be generated
    */
-  async generateTeacherCodeSuggestion(
-    lastname: string
-  ): Promise<string | null> {
-    if (lastname.length < 3) return null;
+  async generateTeacherCodeSuggestion(base: string): Promise<string | null> {
+    if (base.length < 3) return null;
 
-    const prefix = lastname.substring(0, 3).toUpperCase();
-    if (!prefix.match(TEACHER_CODE_REGEX)) return null;
+    if (!base.match(TEACHER_CODE_REGEX)) return null;
 
     let attempt = 1;
 
@@ -79,7 +76,7 @@ export class PersonService extends Service<
     while (true) {
       const attemptNr = attempt === 0 ? '' : attempt.toString();
 
-      const code = prefix + attemptNr;
+      const code = base + attemptNr;
 
       const existing = await this.searchOne({
         filter: new PersonTeacherCodeFilter(new EqFilterOperator(code)),

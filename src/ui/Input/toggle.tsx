@@ -31,7 +31,7 @@ export const Toggle = forwardRef(function Toggle(
         return inputRef.current!.checked;
       },
     }),
-    [inputRef]
+    []
   );
 
   return (

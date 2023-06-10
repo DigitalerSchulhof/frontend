@@ -1,4 +1,5 @@
-import { ArangoRepository } from '../../arango';
+import { aql } from 'arangojs';
+import { ArangoRepository, WithId } from '../../arango';
 
 export const FORMS_OF_ADDRESS = ['formal', 'informal'] as const;
 export type FormOfAddress = (typeof FORMS_OF_ADDRESS)[number];
@@ -47,4 +48,34 @@ export class AccountRepository extends ArangoRepository<
   AccountBase
 > {
   protected readonly collectionName = 'accounts';
+
+  async createForPerson(
+    personId: string,
+    post: Omit<AccountBase, 'personId'>,
+    ifPersonRev?: string
+  ): Promise<WithId<AccountBase>> {
+    const res = await this.query<WithId<AccountBase>>(
+      aql`
+        INSERT ${post} INTO ${this.collectionNameLiteral}
+        LET account = NEW
+
+        UPDATE {
+          _key: ${personId},
+          _rev: ${ifPersonRev ?? ''},
+        } WITH {
+          accountId: account._key,
+        } IN persons OPTIONS { ignoreRevs: ${ifPersonRev === undefined} }
+
+        RETURN MERGE(
+          UNSET(account, "_key", "_id", "_rev"),
+          {
+            id: account._key,
+            rev: account._rev
+          }
+        )
+      `
+    );
+
+    return (await res.next())!;
+  }
 }

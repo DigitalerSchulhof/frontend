@@ -19,13 +19,7 @@ export const EditAccountSettings = async ({
     <EditAccountSettingsForm
       isOwnProfile={isOwnProfile}
       personId={person.id}
-      settings={{
-        ...account.settings,
-        profile: {
-          ...account.settings.profile,
-          formOfAddress: account.settings.profile.formOfAddress,
-        },
-      }}
+      settings={account.settings}
       maxSessionTimeout={MAX_SESSION_TIMEOUT}
     />
   );

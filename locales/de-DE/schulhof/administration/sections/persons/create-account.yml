@@ -1,0 +1,25 @@
+title: Benutzerkonto von {name} erstellen
+form:
+  username: "Benutzername:"
+  email: "E-Mail-Adresse:"
+  buttons:
+    save: Benutzerkonto erstellen
+    back:
+      own: Zurück zur Profilansicht
+      other: Zurück zur Benutzeransicht
+modals:
+  loading:
+    title: Benutzerkonto erstellen
+    description: Die eingegebenen Daten werden überprüft und das Benutzerkonto wird erstellt.
+  error:
+    title: Benutzerkonto Erstellen fehlgeschlagen
+    description: Das Benutzerkonto wurde nicht erstellt, denn ...
+    reasons:
+      internal-error:
+        - es ist ein interner Fehler aufgetreten.
+  success:
+    title: Benutzerkonto erstellen
+    description: Das Benutzerkonto wurde erfolgreich erstellt.
+    button:
+      own: Zurück zur Profilansicht
+      other: Zurück zur Benutzeransicht

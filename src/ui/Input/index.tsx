@@ -46,7 +46,7 @@ export const TextInput = forwardRef(function TextInput(
         return inputRef.current!.value;
       },
     }),
-    [inputRef]
+    []
   );
 
   const onInputHandler = useCallback<FormEventHandler<HTMLInputElement>>(
@@ -84,7 +84,7 @@ export const NumberInput = forwardRef(function NumberInput(
         return inputRef.current!.valueAsNumber;
       },
     }),
-    [inputRef]
+    []
   );
 
   const onInputHandler = useCallback<FormEventHandler<HTMLInputElement>>(
@@ -125,7 +125,7 @@ export const SelectInput = forwardRef(function SelectInput<
         return inputRef.current!.value as Value;
       },
     }),
-    [inputRef]
+    []
   );
 
   const onInputHandler = useCallback<FormEventHandler<HTMLSelectElement>>(

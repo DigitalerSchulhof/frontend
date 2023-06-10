@@ -1,4 +1,4 @@
-import { PersonForm } from '#/administration/sections/persons/person-form';
+import { AccountForm } from '#/administration/sections/persons/account-form';
 import { requireLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -18,7 +18,7 @@ export default async function Page({
 
   const person = await context.services.person.getById(params.id);
 
-  if (!person) notFound();
+  if (!person || person.accountId !== null) notFound();
 
   return (
     <>
@@ -32,12 +32,12 @@ export default async function Page({
               title: `{${formatName(person)}}`,
               segment: `{${person.id}}`,
             },
-            'paths.schulhof.administration.persons.edit-person',
+            'paths.schulhof.administration.persons.create-account',
           ]}
         />
         <Heading size='1'>
           <T
-            t='schulhof.administration.sections.persons.edit-person.title'
+            t='schulhof.administration.sections.persons.create-account.title'
             args={{
               name: formatName(person),
             }}
@@ -45,16 +45,12 @@ export default async function Page({
         </Heading>
       </Col>
       <Col w='12'>
-        <PersonForm
+        <AccountForm
           person={{
             id: person.id,
             rev: person.rev,
-            firstname: person.firstname,
-            lastname: person.lastname,
-            gender: person.gender,
-            teacherCode: person.teacherCode,
-            type: person.type,
           }}
+          account={null}
         />
       </Col>
     </>

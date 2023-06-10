@@ -17,12 +17,7 @@ export const IdentityTheftForm = ({ accountRev }: { accountRev: string }) => {
   const newPasswordRef = useRef<{ value: string }>(null);
   const newPasswordAgainRef = useRef<{ value: string }>(null);
 
-  const [sendIdentityTheft, modal] = useSubmit(
-    accountRev,
-    oldPasswordRef,
-    newPasswordRef,
-    newPasswordAgainRef
-  );
+  const [sendIdentityTheft, modal] = useSubmit();
 
   return (
     <Form onSubmit={sendIdentityTheft}>
@@ -73,6 +68,80 @@ export const IdentityTheftForm = ({ accountRev }: { accountRev: string }) => {
       </ButtonGroup>
     </Form>
   );
+
+  function useSubmit() {
+    const { t } = useT();
+
+    return useSend(
+      useCallback(
+        () =>
+          unwrapAction(
+            identityTheft(
+              accountRev,
+              oldPasswordRef.current!.value,
+              newPasswordRef.current!.value,
+              newPasswordAgainRef.current!.value
+            )
+          ),
+        [accountRev]
+      ),
+      useCallback(
+        () => (
+          <LoadingModal
+            title='schulhof.account.profile.identity-theft.modals.loading.title'
+            description='schulhof.account.profile.identity-theft.modals.loading.description'
+          />
+        ),
+        []
+      ),
+      useCallback(
+        (close, errors) => {
+          const reasons = errors.flatMap((err) =>
+            t(
+              `schulhof.account.profile.identity-theft.modals.error.reasons.${mapError(
+                err
+              )}`
+            )
+          );
+
+          return (
+            <ErrorModal
+              close={close}
+              title='schulhof.account.profile.identity-theft.modals.error.title'
+              description='schulhof.account.profile.identity-theft.modals.error.description'
+              reasons={reasons}
+            />
+          );
+        },
+        [t]
+      ),
+      useCallback(
+        () => (
+          <Modal onClose={close}>
+            <Alert
+              variant='success'
+              title='schulhof.account.profile.identity-theft.modals.success.title'
+            >
+              <p>
+                <T t='schulhof.account.profile.identity-theft.modals.success.description' />
+              </p>
+            </Alert>
+            <ButtonGroup>
+              <Button
+                href={[
+                  'paths.schulhof',
+                  'paths.schulhof.account',
+                  'paths.schulhof.account.profile',
+                ]}
+                t='schulhof.account.profile.identity-theft.modals.success.button'
+              />
+            </ButtonGroup>
+          </Modal>
+        ),
+        []
+      )
+    );
+  }
 };
 
 function mapError(err: string) {
@@ -84,83 +153,4 @@ function mapError(err: string) {
     default:
       return 'internal-error';
   }
-}
-
-function useSubmit(
-  accountRev: string,
-  oldPasswordRef: React.RefObject<{ value: string }>,
-  newPasswordRef: React.RefObject<{ value: string }>,
-  newPasswordAgainRef: React.RefObject<{ value: string }>
-) {
-  const { t } = useT();
-
-  return useSend(
-    useCallback(
-      () =>
-        unwrapAction(
-          identityTheft(
-            accountRev,
-            oldPasswordRef.current!.value,
-            newPasswordRef.current!.value,
-            newPasswordAgainRef.current!.value
-          )
-        ),
-      [accountRev, oldPasswordRef, newPasswordRef, newPasswordAgainRef]
-    ),
-    useCallback(
-      () => (
-        <LoadingModal
-          title='schulhof.account.profile.identity-theft.modals.loading.title'
-          description='schulhof.account.profile.identity-theft.modals.loading.description'
-        />
-      ),
-      []
-    ),
-    useCallback(
-      (close, errors) => {
-        const reasons = errors.flatMap((err) =>
-          t(
-            `schulhof.account.profile.identity-theft.modals.error.reasons.${mapError(
-              err
-            )}`
-          )
-        );
-
-        return (
-          <ErrorModal
-            close={close}
-            title='schulhof.account.profile.identity-theft.modals.error.title'
-            description='schulhof.account.profile.identity-theft.modals.error.description'
-            reasons={reasons}
-          />
-        );
-      },
-      [t]
-    ),
-    useCallback(
-      () => (
-        <Modal onClose={close}>
-          <Alert
-            variant='success'
-            title='schulhof.account.profile.identity-theft.modals.success.title'
-          >
-            <p>
-              <T t='schulhof.account.profile.identity-theft.modals.success.description' />
-            </p>
-          </Alert>
-          <ButtonGroup>
-            <Button
-              href={[
-                'paths.schulhof',
-                'paths.schulhof.account',
-                'paths.schulhof.account.profile',
-              ]}
-              t='schulhof.account.profile.identity-theft.modals.success.button'
-            />
-          </ButtonGroup>
-        </Modal>
-      ),
-      []
-    )
-  );
 }
