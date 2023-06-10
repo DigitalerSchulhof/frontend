@@ -190,7 +190,7 @@ function createTranslationEntryVariablesPropertySignatures(
 
       if (seenVariables.has(variableName)) {
         // TODO: If the variable is used multiple times,
-        // we have to combine the types
+        // we have to intersect the types
         continue;
       }
       seenVariables.add(variableName);

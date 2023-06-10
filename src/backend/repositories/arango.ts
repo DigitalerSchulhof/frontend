@@ -1,8 +1,9 @@
-import arangojs, { Database } from 'arangojs';
+import { Database } from 'arangojs';
 import * as aql from 'arangojs/aql';
+import { DocumentCollection } from 'arangojs/collection';
 import { ArrayCursor } from 'arangojs/cursor';
 import { QueryOptions } from 'arangojs/database';
-import { ArangoError, isArangoError, isSystemError } from 'arangojs/error';
+import { ArangoError } from 'arangojs/error';
 import {
   ERROR_ARANGO_CONFLICT,
   ERROR_ARANGO_DOCUMENT_NOT_FOUND,
@@ -11,13 +12,12 @@ import {
 } from './errors';
 import { Filter } from './filters';
 import {
-  filterToArangoQuery,
   MakeSearchQuery,
   Paginated,
+  filterToArangoQuery,
   searchQueryToArangoQuery,
 } from './search';
 import { MakePatch, paginateCursor } from './utils';
-import { DocumentCollection } from 'arangojs/collection';
 
 export type Serializable =
   | string

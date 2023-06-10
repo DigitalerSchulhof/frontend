@@ -1,6 +1,6 @@
 import { Button } from '#/ui/Button';
 
-export const SettingsButton = ({
+export const EditAccountButton = ({
   isOwnProfile,
   personId,
 }: {
@@ -9,21 +9,21 @@ export const SettingsButton = ({
 }) => {
   return (
     <Button
-      t='schulhof.administration.sections.persons.details.change-personal-data.actions.settings'
+      t='schulhof.administration.sections.persons.details.buttons.actions.edit-account'
       href={
         isOwnProfile
           ? [
               'paths.schulhof',
               'paths.schulhof.account',
               'paths.schulhof.account.profile',
-              'paths.schulhof.account.profile.settings',
+              'paths.schulhof.account.profile.edit-account',
             ]
           : [
               'paths.schulhof',
               'paths.schulhof.administration',
               'paths.schulhof.administration.persons',
               `{${personId}}`,
-              'paths.schulhof.administration.persons.settings',
+              'paths.schulhof.administration.persons.edit-account',
             ]
       }
     />

@@ -20,7 +20,7 @@ personal-data:
       errors:
         no-permission: "{form_of_address, select, informal {Du darfst} formal {Sie dürfen} other {~}} {name} nicht schreiben."
         no-account: Für {name} existiert kein Benutzerkonto.
-change-personal-data:
+buttons:
   title: Daten ändern
   actions:
     identity-theft: Identitätsdiebstahl melden

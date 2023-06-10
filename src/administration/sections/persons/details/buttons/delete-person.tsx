@@ -30,7 +30,7 @@ export const DeletePersonButton = ({
     <>
       <Button
         variant='error'
-        t='schulhof.administration.sections.persons.details.change-personal-data.actions.delete-person'
+        t='schulhof.administration.sections.persons.details.buttons.actions.delete-person'
         onClick={setIsOpenTrue}
       />
       {isOpen ? (

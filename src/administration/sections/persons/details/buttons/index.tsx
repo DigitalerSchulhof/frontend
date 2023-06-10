@@ -5,17 +5,15 @@ import { Heading } from '#/ui/Heading';
 import { Note } from '#/ui/Note';
 import { formatName } from '#/utils';
 import { PersonDetailsProps } from '..';
-import {
-  ChangePasswordButton,
-  CreateAccountButton,
-  DeleteAccountButton,
-  DeletePersonButton,
-  EditAccountButton,
-  EditPersonButton,
-  IdentityTheftButton,
-  PermissionsButton,
-  SettingsButton,
-} from './buttons';
+import { ChangePasswordButton } from './change-password';
+import { CreateAccountButton } from './create-account';
+import { DeleteAccountButton } from './delete-account';
+import { DeletePersonButton } from './delete-person';
+import { EditAccountButton } from './edit-account';
+import { EditPersonButton } from './edit-person';
+import { IdentityTheftButton } from './identity-theft';
+import { PermissionsButton } from './permissions';
+import { SettingsButton } from './settings';
 
 export type PersonDetailsChangePersonalDataSectionProps = Pick<
   PersonDetailsProps,
@@ -35,7 +33,7 @@ export const PersonDetailsChangePersonalDataSection = ({
     <>
       <Heading
         size='2'
-        t='schulhof.administration.sections.persons.details.change-personal-data.title'
+        t='schulhof.administration.sections.persons.details.buttons.title'
       />
       <UserButtons
         formOfAddress={context.account.settings.profile.formOfAddress}
@@ -49,7 +47,7 @@ export const PersonDetailsChangePersonalDataSection = ({
         account={account}
       />
       {!isOwnProfile ? (
-        <Note t='schulhof.administration.sections.persons.details.change-personal-data.actions.change-password.note' />
+        <Note t='schulhof.administration.sections.persons.details.buttons.actions.change-password.note' />
       ) : null}
     </>
   );

@@ -1,15 +1,15 @@
 import { Button } from '#/ui/Button';
 
-export const PermissionsButton = ({ personId }: { personId: string }) => {
+export const EditPersonButton = ({ personId }: { personId: string }) => {
   return (
     <Button
-      t='schulhof.administration.sections.persons.details.change-personal-data.actions.permissions'
+      t='schulhof.administration.sections.persons.details.buttons.actions.edit-person'
       href={[
         'paths.schulhof',
         'paths.schulhof.administration',
         'paths.schulhof.administration.persons',
         `{${personId}}`,
-        'paths.schulhof.administration.persons.permissions',
+        'paths.schulhof.administration.persons.edit-person',
       ]}
     />
   );

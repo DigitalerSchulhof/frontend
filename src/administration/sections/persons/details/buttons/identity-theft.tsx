@@ -3,7 +3,7 @@ import { Button } from '#/ui/Button';
 export const IdentityTheftButton = () => {
   return (
     <Button
-      t='schulhof.administration.sections.persons.details.change-personal-data.actions.identity-theft'
+      t='schulhof.administration.sections.persons.details.buttons.actions.identity-theft'
       variant='warning'
       href={[
         'paths.schulhof',

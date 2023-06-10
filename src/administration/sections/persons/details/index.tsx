@@ -3,7 +3,7 @@ import {
   PersonType,
 } from '#/backend/repositories/content/person';
 import { LoggedInBackendContext } from '#/context';
-import { PersonDetailsChangePersonalDataSection } from './change-personal-data';
+import { PersonDetailsChangePersonalDataSection } from './buttons';
 import { PersonDetailsPersonalDataSection } from './personal-data';
 
 export type PersonDetailsProps = {

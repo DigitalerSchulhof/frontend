@@ -31,7 +31,7 @@ export const DeleteAccountButton = ({
     <>
       <Button
         variant='error'
-        t={`schulhof.administration.sections.persons.details.change-personal-data.actions.delete-account.${own}`}
+        t={`schulhof.administration.sections.persons.details.buttons.actions.delete-account.${own}`}
         onClick={setIsOpenTrue}
       />
       {isOpen ? (
