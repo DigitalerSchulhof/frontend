@@ -23,7 +23,7 @@ export type PersonDetailsChangePersonalDataSectionProps = Pick<
   isOwnProfile: boolean;
 };
 
-export const PersonDetailsChangePersonalDataSection = ({
+export const PersonDetailsButtonSection = ({
   context,
   isOwnProfile,
   person,

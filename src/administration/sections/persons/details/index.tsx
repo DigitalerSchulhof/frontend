@@ -3,7 +3,7 @@ import {
   PersonType,
 } from '#/backend/repositories/content/person';
 import { LoggedInBackendContext } from '#/context';
-import { PersonDetailsChangePersonalDataSection } from './buttons';
+import { PersonDetailsButtonSection } from './buttons';
 import { PersonDetailsPersonalDataSection } from './personal-data';
 
 export type PersonDetailsProps = {
@@ -38,7 +38,7 @@ export const PersonDetails = async ({
         person={person}
         account={account}
       />
-      <PersonDetailsChangePersonalDataSection
+      <PersonDetailsButtonSection
         context={context}
         isOwnProfile={isOwnProfile}
         person={person}
