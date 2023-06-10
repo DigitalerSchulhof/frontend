@@ -268,3 +268,115 @@ function mapError(err: string) {
       return 'internal-error';
   }
 }
+
+function useSubmit(
+  isOwnProfile: boolean,
+  personId: string,
+  maxSessionTimeout: number,
+  refs: ReturnType<typeof useRefs>
+) {
+  const { t } = useT();
+
+  return useSend(
+    useCallback(
+      () =>
+        unwrapAction(
+          editSettings(personId, {
+            emailOn: {
+              newMessage: refs.emailOnNewMessage.current!.value,
+              newSubstitution: refs.emailOnNewSubstitution.current!.value,
+              newNews: refs.emailOnNewNews.current!.value,
+            },
+            pushOn: {
+              newMessage: refs.pushOnNewMessage.current!.value,
+              newSubstitution: refs.pushOnNewSubstitution.current!.value,
+              newNews: refs.pushOnNewNews.current!.value,
+            },
+            considerNews: {
+              newEvent: refs.considerNewsNewEvent.current!.value,
+              newBlog: refs.considerNewsNewBlog.current!.value,
+              newGallery: refs.considerNewsNewGallery.current!.value,
+              fileChanged: refs.considerNewsFileChanged.current!.value,
+            },
+            mailbox: {
+              deleteAfter: refs.mailboxDeleteAfter.current!.value,
+              deleteAfterInBin: refs.mailboxDeleteAfterInBin.current!.value,
+            },
+            profile: {
+              sessionTimeout: refs.profileSessionTimeout.current!.value,
+              formOfAddress: refs.profileFormOfAddress.current!.value,
+            },
+          })
+        ),
+      [personId, refs]
+    ),
+    useCallback(
+      () => (
+        <LoadingModal
+          title='schulhof.administration.sections.persons.settings.modals.loading.title'
+          description='schulhof.administration.sections.persons.settings.modals.loading.description'
+        />
+      ),
+      []
+    ),
+    useCallback(
+      (close, errors) => {
+        const reasons = errors.flatMap((err) =>
+          t(
+            `schulhof.administration.sections.persons.settings.modals.error.reasons.${mapError(
+              err
+            )}`,
+            {
+              max_session_timeout: maxSessionTimeout,
+            }
+          )
+        );
+
+        return (
+          <ErrorModal
+            close={close}
+            title='schulhof.administration.sections.persons.settings.modals.error.title'
+            description='schulhof.administration.sections.persons.settings.modals.error.description'
+            reasons={reasons}
+          />
+        );
+      },
+      [t, maxSessionTimeout]
+    ),
+    useCallback(() => {
+      const own = isOwnProfile ? 'own' : 'other';
+
+      return (
+        <Modal onClose={close}>
+          <Alert
+            variant='success'
+            title='schulhof.administration.sections.persons.settings.modals.success.title'
+          >
+            <p>
+              <T t='schulhof.administration.sections.persons.settings.modals.success.description' />
+            </p>
+          </Alert>
+          <ButtonGroup>
+            <Button
+              href={
+                isOwnProfile
+                  ? [
+                      'paths.schulhof',
+                      'paths.schulhof.account',
+                      'paths.schulhof.account.profile',
+                    ]
+                  : [
+                      'paths.schulhof',
+                      'paths.schulhof.administration',
+                      'paths.schulhof.administration.persons',
+                      `{${personId}}`,
+                    ]
+              }
+              t={`schulhof.administration.sections.persons.settings.modals.success.button.${own}`}
+            />
+          </ButtonGroup>
+        </Modal>
+      );
+    }, [personId, isOwnProfile])
+  );
+}
