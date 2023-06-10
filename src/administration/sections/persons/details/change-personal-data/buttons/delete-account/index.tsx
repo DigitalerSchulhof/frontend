@@ -8,6 +8,7 @@ import { Heading } from '#/ui/Heading';
 import { Modal } from '#/ui/Modal';
 import { useToggle } from '#/utils/client';
 import { useCallback } from 'react';
+import action from './action';
 
 export const DeleteAccountButton = ({
   formOfAddress,
@@ -67,9 +68,10 @@ export const DeleteAccountButton = ({
 function useSendDelete(personId: string) {
   return useCallback(
     async function sendDelete() {
-      alert(personId);
+      await action(personId);
 
-      // TODO: Log out
+      // TODO: Open modal
+      // TODO: Log out if own account
     },
     [personId]
   );

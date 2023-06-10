@@ -17,6 +17,7 @@ import {
 import crypto from 'crypto';
 import ms from 'ms';
 import { Service } from '../base';
+import { PersonIdFilter } from '#/backend/repositories/content/person/filters';
 
 export class AccountService extends Service<
   'accounts',
@@ -60,9 +61,14 @@ export class AccountService extends Service<
   ): Promise<WithId<AccountBase>> {
     const res = await super.delete(id, ifRev);
 
-    await this.services.session.filterDelete(
-      new SessionAccountIdFilter(new EqFilterOperator(id))
-    );
+    await Promise.all([
+      this.services.person.update(res.personId, {
+        accountId: null,
+      }),
+      this.services.session.filterDelete(
+        new SessionAccountIdFilter(new EqFilterOperator(id))
+      ),
+    ]);
 
     return res;
   }
@@ -73,10 +79,24 @@ export class AccountService extends Service<
     const res = await super.filterDelete(filter);
 
     const accountIds = res.map((r) => r.id);
+    const personIds = res.map((r) => r.personId);
 
-    await this.services.session.filterDelete(
-      new SessionAccountIdFilter(new InFilterOperator(accountIds))
-    );
+    await Promise.all([
+      ...personIds.map((personId) =>
+        this.services.person.update(
+          personId,
+          {
+            accountId: null,
+          },
+          {
+            skipValidation: true,
+          }
+        )
+      ),
+      this.services.session.filterDelete(
+        new SessionAccountIdFilter(new InFilterOperator(accountIds))
+      ),
+    ]);
 
     return res;
   }
