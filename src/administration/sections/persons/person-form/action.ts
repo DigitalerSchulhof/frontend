@@ -4,29 +4,53 @@ import { requireLogin } from '#/auth/action';
 import {
   PERSON_GENDERS,
   PERSON_TYPES,
+  PersonGender,
+  PersonType,
 } from '#/backend/repositories/content/person';
 import { LoggedInBackendContext } from '#/context';
-import { InvalidInputError, wrapAction } from '#/utils/action';
-import { Parse, v } from 'vality';
+import { InvalidInputError, wrapAction, wrapFormAction } from '#/utils/action';
+import { v } from 'vality';
 
-const personSchema = {
-  type: PERSON_TYPES,
-  firstname: v.string,
-  lastname: v.string,
-  gender: PERSON_GENDERS,
-  teacherCode: [v.string, null],
+export type PersonInput = {
+  type: PersonType;
+  firstname: string;
+  lastname: string;
+  gender: PersonGender;
+  teacherCode: string | null;
 };
 
-export type PersonInput = Parse<typeof personSchema>;
-
-export default wrapAction(
-  [[v.string, null], [v.string, null], personSchema],
-  async (personId, ifRev, data) => {
+export default wrapFormAction(
+  {
+    id: [v.string, null],
+    rev: [v.string, null],
+    type: PERSON_TYPES,
+    firstname: v.string,
+    lastname: v.string,
+    gender: PERSON_GENDERS,
+    teacherCode: [v.string, null],
+  },
+  async ({
+    id: personId,
+    rev: ifRev,
+    type,
+    firstname,
+    lastname,
+    gender,
+    teacherCode,
+  }) => {
     if (typeof personId !== typeof ifRev) {
       throw new InvalidInputError();
     }
 
     const context = await requireLogin();
+
+    const data = {
+      type,
+      firstname,
+      lastname,
+      gender,
+      teacherCode: type === 'teacher' ? teacherCode : null,
+    };
 
     if (personId === null) {
       return createPerson(context, data);

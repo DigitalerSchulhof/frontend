@@ -22,10 +22,12 @@ import React, {
 } from 'react';
 import { styled } from 'styled-components';
 
-export interface FormProps extends React.HTMLAttributes<HTMLFormElement> {}
+export type FormProps = React.ComponentProps<'form'> & {
+  submit: [(formData: FormData) => Promise<void>, React.ReactNode];
+};
 
 export const Form = forwardRef(function Form(
-  { children, ...props }: FormProps,
+  { children, submit, ...props }: FormProps,
   ref: React.ForwardedRef<HTMLFormElement>
 ) {
   return (
@@ -34,9 +36,11 @@ export const Form = forwardRef(function Form(
       ref={ref}
       onSubmit={(e) => {
         e.preventDefault();
-        props.onSubmit?.(e);
+        const formData = new FormData(e.target as HTMLFormElement);
+        void submit[0](formData);
       }}
     >
+      {submit[1]}
       {children}
     </form>
   );
@@ -45,6 +49,10 @@ export const Form = forwardRef(function Form(
 export const DisplayContentsForm = styled(Form)`
   display: contents;
 `;
+
+export const HiddenInput = (props: React.ComponentProps<'input'>) => (
+  <input {...props} type='hidden' />
+);
 
 export type FormRowProps = {
   label: TranslationsWithStringTypeAndNoVariables;

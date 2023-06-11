@@ -3,33 +3,33 @@
 import { T, useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { DisplayContentsForm } from '#/ui/Form';
+import { Form } from '#/ui/Form';
 import { Modal } from '#/ui/Modal';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { useSend } from '#/utils/form';
 import React, { useCallback } from 'react';
 import action from './action';
 
-export const EditAccountSettingsForm = ({
-  own,
+export const ClientAccountForm = ({
   personId,
-  maxSessionTimeout,
+  own,
+  mode,
   children,
 }: {
-  own: 'own' | 'other';
   personId: string;
-  maxSessionTimeout: number;
+  own: 'own' | 'other';
+  mode: 'create' | 'edit';
   children: React.ReactNode;
 }) => {
-  const submit = useSubmit(own, personId, maxSessionTimeout);
+  const submit = useSubmit(personId, own, mode);
 
-  return <DisplayContentsForm submit={submit}>{children}</DisplayContentsForm>;
+  return <Form submit={submit}>{children}</Form>;
 };
 
 function useSubmit(
-  own: 'own' | 'other',
   personId: string,
-  maxSessionTimeout: number
+  own: 'own' | 'other',
+  mode: 'create' | 'edit'
 ) {
   const { t } = useT();
 
@@ -38,45 +38,44 @@ function useSubmit(
     useCallback(
       () => (
         <LoadingModal
-          title='schulhof.administration.sections.persons.settings.modals.loading.title'
-          description='schulhof.administration.sections.persons.settings.modals.loading.description'
+          title={`schulhof.administration.sections.persons.${mode}-account.modals.loading.title`}
+          description={`schulhof.administration.sections.persons.${mode}-account.modals.loading.description`}
         />
       ),
-      []
+      [mode]
     ),
     useCallback(
       (close, errors) => {
         const reasons = errors.flatMap((err) =>
           t(
-            `schulhof.administration.sections.persons.settings.modals.error.reasons.${mapError(
+            `schulhof.administration.sections.persons.${mode}-account.modals.error.reasons.${mapError(
               err
-            )}`,
-            {
-              max_session_timeout: maxSessionTimeout,
-            }
+            )}`
           )
         );
 
         return (
           <ErrorModal
             close={close}
-            title='schulhof.administration.sections.persons.settings.modals.error.title'
-            description='schulhof.administration.sections.persons.settings.modals.error.description'
+            title={`schulhof.administration.sections.persons.${mode}-account.modals.error.title`}
+            description={`schulhof.administration.sections.persons.${mode}-account.modals.error.description`}
             reasons={reasons}
           />
         );
       },
-      [t, maxSessionTimeout]
+      [t, mode]
     ),
     useCallback(() => {
       return (
         <Modal onClose={close}>
           <Alert
             variant='success'
-            title='schulhof.administration.sections.persons.settings.modals.success.title'
+            title={`schulhof.administration.sections.persons.${mode}-account.modals.success.title`}
           >
             <p>
-              <T t='schulhof.administration.sections.persons.settings.modals.success.description' />
+              <T
+                t={`schulhof.administration.sections.persons.${mode}-account.modals.success.description`}
+              />
             </p>
           </Alert>
           <ButtonGroup>
@@ -95,24 +94,18 @@ function useSubmit(
                       `{${personId}}`,
                     ]
               }
-              t={`schulhof.administration.sections.persons.settings.modals.success.button.${own}`}
+              t={`schulhof.administration.sections.persons.${mode}-account.modals.success.button.${own}`}
             />
           </ButtonGroup>
         </Modal>
       );
-    }, [own, personId])
+    }, [own, personId, mode])
   );
 }
 
 function mapError(err: string) {
   switch (err) {
-    case 'ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_IN_BIN_INVALID':
-      return 'invalid-mailbox-delete-after-in-bin';
-    case 'ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_INVALID':
-      return 'invalid-mailbox-delete-after';
-    case 'ACCOUNT_SETTINGS_PROFILE_SESSION_TIMEOUT_INVALID':
-      return 'invalid-session-timeout';
     default:
-      return 'internal-error';
+      return 'internal-error' as const;
   }
 }

@@ -2,7 +2,7 @@
 
 import { requireLogin } from '#/auth/action';
 import { LoggedInBackendContext } from '#/context';
-import { InvalidInputError, wrapAction } from '#/utils/action';
+import { InvalidInputError, wrapFormAction } from '#/utils/action';
 import ms from 'ms';
 import { Parse, v } from 'vality';
 
@@ -13,12 +13,20 @@ const accountSchema = {
 
 export type AccountInput = Parse<typeof accountSchema>;
 
-export default wrapAction(
-  [v.string, v.string, [v.string, null], accountSchema],
-  async (personId, personRev, accountRev, data) => {
+export default wrapFormAction(
+  {
+    personId: v.string,
+    personRev: v.string,
+    accountRev: v.string,
+    username: v.string,
+    email: v.string,
+  },
+  async ({ personId, personRev, accountRev, username, email }) => {
     const context = await requireLogin();
 
-    if (accountRev === null) {
+    const data = { username, email };
+
+    if (!accountRev) {
       return createAccount(context, personId, personRev, data);
     } else {
       return editAccount(context, personId, accountRev, data);

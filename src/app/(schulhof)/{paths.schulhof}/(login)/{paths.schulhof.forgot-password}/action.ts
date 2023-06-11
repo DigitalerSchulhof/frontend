@@ -7,16 +7,16 @@ import {
   FormOfAddress,
 } from '#/backend/repositories/content/account';
 import { BackendContext } from '#/context';
-import { wrapAction } from '#/utils/action';
+import { wrapFormAction } from '#/utils/action';
 import { ClientError } from '#/utils/server';
 import { v } from 'vality';
 
-export default wrapAction(
-  [v.string, v.string],
-  async (
+export default wrapFormAction(
+  { username: v.string, email: v.string },
+  async ({
     username,
-    email
-  ): Promise<{
+    email,
+  }): Promise<{
     formOfAddress: FormOfAddress;
     email: string;
   }> => {

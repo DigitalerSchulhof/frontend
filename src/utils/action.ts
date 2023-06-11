@@ -1,7 +1,24 @@
 import { getContext } from '#/auth/action';
 import { MaybePromise } from '#/utils';
 import { AggregateClientError, ClientError } from '#/utils/server';
-import { Eny, Parse, validate } from 'vality';
+import { isRedirectError } from 'next/dist/client/components/redirect';
+import { Eny, Parse, Scalar, scalar, v, validate } from 'vality';
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace vality {
+    interface scalars {
+      toggle: Scalar<'toggle', boolean>;
+    }
+  }
+}
+
+v.toggle = scalar('toggle', (val) => {
+  if (val === 'on') return true;
+  if (val === null) return false;
+
+  return undefined;
+});
 
 export type WrappedActionResult<R> =
   | { code: 'OK'; data: R }
@@ -70,6 +87,10 @@ export function wrapAction<const A extends readonly Eny[], R = void>(
         };
       }
 
+      if (isRedirectError(err)) {
+        throw err;
+      }
+
       const context = getContext();
       context.logger.error(err);
 
@@ -82,6 +103,21 @@ export function wrapAction<const A extends readonly Eny[], R = void>(
         ],
       };
     }
+  };
+}
+
+export function wrapFormAction<Schema extends Record<string, Eny>, R>(
+  schema: Schema,
+  fn: (data: Parse<Schema>) => MaybePromise<R>
+): (formData: FormData) => Promise<WrappedActionResult<R>> {
+  return (formData: FormData) => {
+    const data = {} as Parse<Schema>;
+    for (const key of Object.keys(schema)) {
+      // @ts-expect-error -- Object access
+      data[key] = formData.get(key);
+    }
+
+    return wrapAction([schema], fn)(data);
   };
 }
 

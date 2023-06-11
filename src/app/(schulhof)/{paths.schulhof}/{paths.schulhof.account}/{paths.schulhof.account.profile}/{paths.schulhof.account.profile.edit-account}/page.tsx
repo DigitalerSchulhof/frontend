@@ -23,15 +23,8 @@ export default async function Page() {
       <Col w='12'>
         <AccountForm
           isOwnProfile
-          person={{
-            id: context.person.id,
-            rev: context.person.rev,
-          }}
-          account={{
-            rev: context.account.rev,
-            username: context.account.username,
-            email: context.account.email,
-          }}
+          person={context.person}
+          account={context.account}
         />
       </Col>
     </>

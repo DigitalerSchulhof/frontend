@@ -1,13 +1,18 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import { wrapAction } from '#/utils/action';
+import { wrapFormAction } from '#/utils/action';
 import { ClientError } from '#/utils/server';
 import { v } from 'vality';
 
-export default wrapAction(
-  [v.string, v.string, v.string, v.string],
-  async (ifRev, oldPassword, newPassword, newPasswordAgain) => {
+export default wrapFormAction(
+  {
+    rev: v.string,
+    oldPassword: v.string,
+    newPassword: v.string,
+    newPasswordAgain: v.string,
+  },
+  async ({ rev, oldPassword, newPassword, newPasswordAgain }) => {
     const context = await requireLogin();
 
     if (newPassword !== newPasswordAgain) {
@@ -29,7 +34,7 @@ export default wrapAction(
       context.account.id,
       newPassword,
       null,
-      ifRev
+      rev
     );
   }
 );

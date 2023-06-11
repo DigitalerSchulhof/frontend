@@ -47,17 +47,7 @@ export default async function Page({
         </Heading>
       </Col>
       <Col w='12'>
-        <AccountForm
-          person={{
-            id: person.id,
-            rev: person.rev,
-          }}
-          account={{
-            rev: account.rev,
-            username: account.username,
-            email: account.email,
-          }}
-        />
+        <AccountForm person={person} account={account} />
       </Col>
     </>
   );

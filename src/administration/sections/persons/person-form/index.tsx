@@ -1,38 +1,15 @@
-'use client';
-
-import {
-  PersonGender,
-  PersonType,
-} from '#/backend/repositories/content/person';
-import { T, useT } from '#/i18n';
-import { Alert } from '#/ui/Alert';
+import { WithId } from '#/backend/repositories/arango';
+import { PersonBase } from '#/backend/repositories/content/person';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { Form, SelectFormRow, TextFormRow } from '#/ui/Form';
-import { Modal } from '#/ui/Modal';
-import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
+import { HiddenInput, SelectFormRow, TextFormRow } from '#/ui/Form';
 import { Table } from '#/ui/Table';
-import { unwrapAction } from '#/utils/client';
-import { useSend } from '#/utils/form';
-import {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
-import action, { generateTeacherCode } from './action';
+import { ClientPersonForm, TeacherCodeSelector } from './form';
 
-export type PersonFormPerson = {
-  id: string;
-  rev: string;
-  type: PersonType;
-  firstname: string;
-  lastname: string;
-  gender: PersonGender;
-  teacherCode: string | null;
-};
-
-export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
+export const PersonForm = ({
+  person,
+}: {
+  person: WithId<PersonBase> | null;
+}) => {
   const mode = person === null ? 'create' : 'edit';
 
   const {
@@ -43,81 +20,35 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
     gender = 'male',
   } = person ?? {};
 
-  const [typeState, setTypeState] = useState(type);
-  const [lastnameState, setLastnameState] = useState(lastname);
-  const teacherCodeInputRef = useRef<{ value: string }>(null);
-
-  const typeRef = useRef<{ value: PersonType }>(null);
-  const firstnameRef = useRef<{ value: string }>(null);
-  const lastnameRef = useRef<{ value: string }>(null);
-  const genderRef = useRef<{ value: PersonGender }>(null);
-  const teacherCodeRef = useRef<{ value: string | null }>(null);
-
-  useImperativeHandle(
-    teacherCodeRef,
-    () => ({
-      get value() {
-        return typeState === 'teacher'
-          ? teacherCodeInputRef.current!.value
-          : null;
-      },
-    }),
-    [typeState]
-  );
-
-  const teacherCodeSuggestion = useTeacherCodeSuggestion();
-
-  // TODO: Warn on duplicate name
-  const [send, modal] = useSubmit();
-
   return (
-    <Form onSubmit={send}>
-      {modal}
+    <ClientPersonForm personId={person?.id ?? null} mode={mode}>
+      <HiddenInput name='id' value={person?.id} />
+      <HiddenInput name='rev' value={person?.rev} />
       <Table>
-        <SelectFormRow
-          label={`schulhof.administration.sections.persons.${mode}-person.form.type`}
-          defaultValue={typeState}
-          ref={typeRef}
-          onInput={setTypeState}
-          values={
-            {
-              student: 'generic.person-types.student.singular',
-              teacher: 'generic.person-types.teacher.singular',
-              parent: 'generic.person-types.parent.singular',
-              admin: 'generic.person-types.admin.singular',
-              other: 'generic.person-types.other.singular',
-            } as const
-          }
-        />
-        <TextFormRow
-          label={`schulhof.administration.sections.persons.${mode}-person.form.firstname`}
-          defaultValue={firstname}
-          ref={firstnameRef}
-        />
-        <TextFormRow
-          label={`schulhof.administration.sections.persons.${mode}-person.form.lastname`}
-          defaultValue={lastname}
-          ref={lastnameRef}
-          onInput={setLastnameState}
-        />
-        <SelectFormRow
-          label={`schulhof.administration.sections.persons.${mode}-person.form.gender`}
-          defaultValue={gender}
-          ref={genderRef}
-          values={{
-            male: 'generic.genders.male',
-            female: 'generic.genders.female',
-            other: 'generic.genders.other',
-          }}
-        />
-        {typeState === 'teacher' && (
-          <TextFormRow
-            label={`schulhof.administration.sections.persons.${mode}-person.form.teacher-code`}
-            defaultValue={teacherCode ?? ''}
-            placeholder={teacherCodeSuggestion ?? undefined}
-            ref={teacherCodeInputRef}
-          />
-        )}
+        <TeacherCodeSelector
+          mode={mode}
+          defaultType={type}
+          defaultLastname={lastname}
+          defaultTeacherCode={teacherCode}
+        >
+          <>
+            <TextFormRow
+              label={`schulhof.administration.sections.persons.${mode}-person.form.firstname`}
+              name='firstname'
+              defaultValue={firstname}
+            />
+            <SelectFormRow
+              label={`schulhof.administration.sections.persons.${mode}-person.form.gender`}
+              name='gender'
+              defaultValue={gender}
+              values={{
+                male: 'generic.genders.male',
+                female: 'generic.genders.female',
+                other: 'generic.genders.other',
+              }}
+            />
+          </>
+        </TeacherCodeSelector>
       </Table>
       <ButtonGroup>
         <Button
@@ -143,137 +74,6 @@ export const PersonForm = ({ person }: { person: PersonFormPerson | null }) => {
           t={`schulhof.administration.sections.persons.${mode}-person.form.buttons.back`}
         />
       </ButtonGroup>
-    </Form>
+    </ClientPersonForm>
   );
-
-  function useTeacherCodeSuggestion() {
-    const [teacherCodeSuggestion, setTeacherCodeSuggestion] = useState<
-      string | null
-    >(null);
-
-    const lastnameFirstThree = lastnameState.substring(0, 3).toUpperCase();
-
-    useEffect(() => {
-      let mounted = true as boolean;
-
-      if (typeState === 'teacher') {
-        void (async () => {
-          const teacherCode = await unwrapAction(
-            generateTeacherCode(lastnameFirstThree)
-          );
-
-          if (mounted) {
-            setTeacherCodeSuggestion(teacherCode);
-          }
-        })();
-      } else {
-        setTeacherCodeSuggestion(null);
-      }
-
-      return () => {
-        mounted = false;
-      };
-    }, [typeState, lastnameFirstThree]);
-
-    return teacherCodeSuggestion;
-  }
-
-  function useSubmit() {
-    const { t } = useT();
-
-    return useSend(
-      useCallback(
-        () =>
-          unwrapAction(
-            action(person?.id ?? null, person?.rev ?? null, {
-              type: typeRef.current!.value,
-              firstname: firstnameRef.current!.value,
-              lastname: lastnameRef.current!.value,
-              gender: genderRef.current!.value,
-              teacherCode:
-                teacherCodeRef.current!.value === ''
-                  ? teacherCodeSuggestion
-                  : teacherCodeRef.current!.value,
-            })
-          ),
-        [person]
-      ),
-      useCallback(
-        () => (
-          <LoadingModal
-            title={`schulhof.administration.sections.persons.${mode}-person.modals.loading.title`}
-            description={`schulhof.administration.sections.persons.${mode}-person.modals.loading.description`}
-          />
-        ),
-        [mode]
-      ),
-      useCallback(
-        (close, errors) => {
-          const reasons = errors.flatMap((err) =>
-            t(
-              `schulhof.administration.sections.persons.${mode}-person.modals.error.reasons.${mapError(
-                err
-              )}`
-            )
-          );
-
-          return (
-            <ErrorModal
-              close={close}
-              title={`schulhof.administration.sections.persons.${mode}-person.modals.error.title`}
-              description={`schulhof.administration.sections.persons.${mode}-person.modals.error.description`}
-              reasons={reasons}
-            />
-          );
-        },
-        [t, mode]
-      ),
-      useCallback(() => {
-        return (
-          <Modal onClose={close}>
-            <Alert
-              variant='success'
-              title={`schulhof.administration.sections.persons.${mode}-person.modals.success.title`}
-            >
-              <p>
-                <T
-                  t={`schulhof.administration.sections.persons.${mode}-person.modals.success.description`}
-                />
-              </p>
-            </Alert>
-            <ButtonGroup>
-              <Button
-                href={
-                  person
-                    ? [
-                        'paths.schulhof',
-                        'paths.schulhof.administration',
-                        'paths.schulhof.administration.persons',
-                        `{${person.id}}`,
-                      ]
-                    : [
-                        'paths.schulhof',
-                        'paths.schulhof.administration',
-                        'paths.schulhof.administration.persons',
-                      ]
-                }
-                t={`schulhof.administration.sections.persons.${mode}-person.modals.success.button`}
-              />
-            </ButtonGroup>
-          </Modal>
-        );
-      }, [person, mode])
-    );
-  }
 };
-
-function mapError(err: string) {
-  switch (err) {
-    case 'PERSON_FIRSTNAME_INVALID':
-      return 'firstname-invalid';
-    case 'PERSON_LASTNAME_INVALID':
-      return 'lastname-invalid';
-    default:
-      return 'internal-error';
-  }
-}

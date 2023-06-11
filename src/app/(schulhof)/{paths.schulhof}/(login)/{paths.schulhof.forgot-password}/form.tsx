@@ -3,129 +3,87 @@
 import { T, useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { Form, TextFormRow } from '#/ui/Form';
+import { Form } from '#/ui/Form';
 import { Modal } from '#/ui/Modal';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
-import { Table } from '#/ui/Table';
-import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
-import { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import action from './action';
 
-export const ForgotPasswordForm = () => {
-  const usernameRef = useRef<{ value: string }>(null);
-  const emailRef = useRef<{ value: string }>(null);
+export const ForgotPasswordForm = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const submit = useSubmit();
 
-  const [sendForgotPassword, modal] = useSubmit();
-
-  return (
-    <Form onSubmit={sendForgotPassword}>
-      {modal}
-      <Table>
-        <TextFormRow
-          label='schulhof.login.actions.forgot-password.form.username'
-          autoComplete='username'
-          ref={usernameRef}
-        />
-        <TextFormRow
-          label='schulhof.login.actions.forgot-password.form.email'
-          autoComplete='email'
-          ref={emailRef}
-        />
-      </Table>
-      <Alert
-        variant='information'
-        title='schulhof.login.actions.forgot-password.info.title'
-      >
-        <p>
-          <T t='schulhof.login.actions.forgot-password.info.content' />
-        </p>
-      </Alert>
-      <ButtonGroup>
-        <Button
-          type='submit'
-          variant='success'
-          t='schulhof.login.actions.forgot-password.form.buttons.send'
-        />
-        <Button
-          href={['paths.schulhof', 'paths.schulhof.login']}
-          t='schulhof.login.actions.forgot-password.form.buttons.login'
-        />
-      </ButtonGroup>
-    </Form>
-  );
-
-  function useSubmit() {
-    const { t } = useT();
-
-    return useSend(
-      useCallback(
-        () =>
-          unwrapAction(
-            action(usernameRef.current!.value, emailRef.current!.value)
-          ),
-        []
-      ),
-      useCallback(
-        () => (
-          <LoadingModal
-            title='schulhof.login.actions.forgot-password.modals.loading.title'
-            description='schulhof.login.actions.forgot-password.modals.loading.description'
-          />
-        ),
-        []
-      ),
-      useCallback(
-        (close, errors) => {
-          const reasons = errors.flatMap((err) =>
-            t(
-              `schulhof.login.actions.forgot-password.modals.error.reasons.${mapError(
-                err
-              )}`
-            )
-          );
-
-          return (
-            <ErrorModal
-              close={close}
-              title='schulhof.login.actions.forgot-password.modals.error.title'
-              description='schulhof.login.actions.forgot-password.modals.error.description'
-              reasons={reasons}
-            />
-          );
-        },
-        [t]
-      ),
-      useCallback(
-        (close, { email, formOfAddress }) => (
-          <Modal onClose={close}>
-            <Alert
-              variant='success'
-              title='schulhof.login.actions.forgot-password.modals.success.title'
-            >
-              <p>
-                <T
-                  t='schulhof.login.actions.forgot-password.modals.success.description'
-                  args={{
-                    email,
-                    form_of_address: formOfAddress,
-                  }}
-                />
-              </p>
-            </Alert>
-            <ButtonGroup>
-              <Button
-                href={['paths.schulhof', 'paths.schulhof.login']}
-                t='schulhof.login.actions.forgot-password.modals.success.button'
-              />
-            </ButtonGroup>
-          </Modal>
-        ),
-        []
-      )
-    );
-  }
+  return <Form submit={submit}>{children}</Form>;
 };
+
+function useSubmit() {
+  const { t } = useT();
+
+  return useSend(
+    action,
+    useCallback(
+      () => (
+        <LoadingModal
+          title='schulhof.login.actions.forgot-password.modals.loading.title'
+          description='schulhof.login.actions.forgot-password.modals.loading.description'
+        />
+      ),
+      []
+    ),
+    useCallback(
+      (close, errors) => {
+        const reasons = errors.flatMap((err) =>
+          t(
+            `schulhof.login.actions.forgot-password.modals.error.reasons.${mapError(
+              err
+            )}`
+          )
+        );
+
+        return (
+          <ErrorModal
+            close={close}
+            title='schulhof.login.actions.forgot-password.modals.error.title'
+            description='schulhof.login.actions.forgot-password.modals.error.description'
+            reasons={reasons}
+          />
+        );
+      },
+      [t]
+    ),
+    useCallback(
+      (close, { email, formOfAddress }) => (
+        <Modal onClose={close}>
+          <Alert
+            variant='success'
+            title='schulhof.login.actions.forgot-password.modals.success.title'
+          >
+            <p>
+              <T
+                t='schulhof.login.actions.forgot-password.modals.success.description'
+                args={{
+                  email,
+                  form_of_address: formOfAddress,
+                }}
+              />
+            </p>
+          </Alert>
+          <ButtonGroup>
+            <Button
+              href={['paths.schulhof', 'paths.schulhof.login']}
+              t='schulhof.login.actions.forgot-password.modals.success.button'
+            />
+          </ButtonGroup>
+        </Modal>
+      ),
+      []
+    )
+  );
+}
 
 function mapError(err: string) {
   switch (err) {

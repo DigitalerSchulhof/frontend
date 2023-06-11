@@ -45,17 +45,7 @@ export default async function Page({
         </Heading>
       </Col>
       <Col w='12'>
-        <PersonForm
-          person={{
-            id: person.id,
-            rev: person.rev,
-            firstname: person.firstname,
-            lastname: person.lastname,
-            gender: person.gender,
-            teacherCode: person.teacherCode,
-            type: person.type,
-          }}
-        />
+        <PersonForm person={person} />
       </Col>
     </>
   );
