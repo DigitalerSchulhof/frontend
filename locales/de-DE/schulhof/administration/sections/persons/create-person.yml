@@ -16,12 +16,12 @@ modals:
     title: Person Anlegen fehlgeschlagen
     description: Die Person wurde nicht angelegt, denn ...
     reasons:
+      internal-error:
+        - es ist ein interner Fehler aufgetreten.
       firstname-invalid:
         - der Vorname ist ungültig.
       lastname-invalid:
         - der Nachname ist ungültig.
-      internal-error:
-        - "{generic.reasons.error, tpl}"
   success:
     title: Person anlegen
     description: Die Person wurde erfolgreich angelegt.

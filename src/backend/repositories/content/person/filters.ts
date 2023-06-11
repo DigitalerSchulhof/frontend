@@ -3,16 +3,13 @@ import { PersonGender, PersonType } from '.';
 import { MaybeArray } from '../../../utils';
 import { Filter, RelationalFilter, ScalarFilter } from '../../filters';
 import {
-  BooleanFilterOperator,
   EqFilterOperator,
   FilterOperator,
   IDFilterOperator,
   InFilterOperator,
   NeqFilterOperator,
   NinFilterOperator,
-  NullableNumberFilterOperator,
   NullableStringFilterOperator,
-  NumberFilterOperator,
   StringFilterOperator,
 } from '../../filters/operators';
 

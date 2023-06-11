@@ -53,12 +53,12 @@ export function identity<T>(x: T): T {
   return x;
 }
 
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   fn: T,
   ms: number
 ): T {
   let lastCall = 0;
-  let lastResult: any;
+  let lastResult: unknown;
 
   return function (...args) {
     const now = Date.now();

@@ -17,7 +17,6 @@ import {
 import crypto from 'crypto';
 import ms from 'ms';
 import { Service } from '../base';
-import { PersonIdFilter } from '#/backend/repositories/content/person/filters';
 
 export class AccountService extends Service<
   'accounts',

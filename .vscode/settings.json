@@ -23,5 +23,6 @@
   ],
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "colorize.languages": ["typescript"],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.prettierPath": "./node_modules/prettier"
 }

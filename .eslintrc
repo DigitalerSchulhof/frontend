@@ -4,7 +4,8 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:@typescript-eslint/strict"
+    "plugin:@typescript-eslint/strict",
+    "plugin:prettier/recommended"
   ],
   "parserOptions": {
     "project": true
@@ -16,7 +17,6 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/require-await": "off",
     "@typescript-eslint/no-invalid-void-type": "off",
-
     "@typescript-eslint/consistent-type-definitions": "off",
 
     // Mostly handled by TS warnings
@@ -27,7 +27,7 @@
 
     // Covered by @typescript-eslint/no-explicit-any
     "@typescript-eslint/no-unsafe-return": "off",
-    // There is no difference between interface/type in these cases, and the once I chose expresses what I want better
+    // There is no difference between interface/type in these cases, and the one I choose expresses what I want better
     "@typescript-eslint/no-empty-interface": "off",
 
     "@typescript-eslint/no-unused-vars": [
