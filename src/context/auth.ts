@@ -1,5 +1,3 @@
-import { WithId } from '#/backend/repositories/arango';
-import { SessionBase } from '#/backend/repositories/content/session';
 import {
   BackendContext,
   LoggedInBackendContext,
@@ -37,7 +35,7 @@ abstract class ContextCreator {
     return this.context;
   }
 
-  async getSession(): Promise<WithId<SessionBase> | null> {
+  async getSession(): Promise<Session | null> {
     const jwt = this.getJwt();
     if (!jwt) return null;
 
@@ -62,13 +60,13 @@ abstract class ContextCreator {
 
   protected abstract handleNotLoggedIn(): never;
 
-  protected abstract handleAlreadyLoggedIn(session: WithId<SessionBase>): void;
+  protected abstract handleAlreadyLoggedIn(session: Session): void;
 
   protected async createLoggedInContext(
-    session: WithId<SessionBase>
+    session: Session
   ): Promise<Promise<LoggedInBackendContext>> {
     const account = (await this.context.services.account.getById(
-      session.accountId
+      session.account_id
     ))!;
 
     const person = (await this.context.services.person.getById(

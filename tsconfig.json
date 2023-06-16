@@ -33,7 +33,6 @@
         "./src/*"
       ]
     },
-    "moduleResolution": "node"
   },
   "include": [
     "./src/**/*.ts",
