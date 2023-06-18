@@ -3,19 +3,6 @@ import { loadEnv } from 'vality-env';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const configSchema = {
-  cache: {
-    engine: ['void', 'memory', 'redis'],
-    shouldSaveMemoryToDisk: v.env('SAVE_MEMORY_CACHE_TO_DISK', v.boolean),
-    'redis?': {
-      host: v.string,
-      port: v.number,
-      'password?': v.string,
-    },
-  },
-  database: {
-    host: v.string,
-    name: v.string,
-  },
   jwtSecret: v.string,
 } as const;
 /* eslint-enable @typescript-eslint/naming-convention */

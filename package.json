@@ -21,7 +21,7 @@
     "pnpm": "8"
   },
   "dependencies": {
-    "@dsh/protocols": "link:../protocols/clients/ts/build",
+    "@dsh/protocols": "link:../protocols/clients/ts/dist",
     "@formatjs/icu-messageformat-parser": "2.5.0",
     "@grpc/grpc-js": "1.8.15",
     "@isaacs/ttlcache": "1.4.0",
