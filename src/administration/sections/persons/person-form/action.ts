@@ -1,13 +1,13 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
+import { LoggedInBackendContext } from '#/context';
 import {
   PERSON_GENDERS,
   PERSON_TYPES,
   PersonGender,
   PersonType,
-} from '#/backend/repositories/content/person';
-import { LoggedInBackendContext } from '#/context';
+} from '#/services/interfaces/person';
 import { InvalidInputError, wrapAction, wrapFormAction } from '#/utils/action';
 import { v } from 'vality';
 
@@ -76,7 +76,7 @@ async function editPerson(
   ifRev: string,
   data: PersonInput
 ) {
-  const person = await context.services.person.getById(personId);
+  const person = await context.services.person.get(personId);
 
   if (!person) {
     throw new InvalidInputError();

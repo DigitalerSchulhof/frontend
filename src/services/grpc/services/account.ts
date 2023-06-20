@@ -13,11 +13,11 @@ import {
   accountFromObject,
   accountToObject,
 } from '../converters/dsh/services/account/v1/resources';
-import { GrpcAdapter, createListRequest, transformListResponse } from './base';
+import { GrpcService, createListRequest, transformListResponse } from './base';
 import { FieldMask } from '@dsh/protocols/google/protobuf/field_mask';
 
-export class AccountServiceGrpcAdapter
-  extends GrpcAdapter<AccountServiceClient>
+export class AccountServiceGrpcService
+  extends GrpcService<AccountServiceClient>
   implements AccountService
 {
   async list(options: ListOptions): Promise<ListResult<WithId<Account>>> {

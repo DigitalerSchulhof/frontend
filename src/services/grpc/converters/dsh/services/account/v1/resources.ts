@@ -21,9 +21,15 @@ export function accountToObject(account: grpc.Account): WithId<js.Account> {
     email: account.email,
     password: account.password,
     salt: account.salt,
-    passwordExpiresAt: timestampToObject(account.password_expires_at),
-    lastLogin: timestampToObject(account.last_login),
-    secondLastLogin: timestampToObject(account.second_last_login),
+    passwordExpiresAt: account.has_password_expires_at
+      ? timestampToObject(account.password_expires_at)
+      : null,
+    lastLogin: account.has_last_login
+      ? timestampToObject(account.last_login)
+      : null,
+    secondLastLogin: account.has_second_last_login
+      ? timestampToObject(account.second_last_login)
+      : null,
     settings: accountSettingsToObject(account.settings),
   };
 }
@@ -65,8 +71,12 @@ function accountSettingsMailboxToObject(
   mailbox: grpc.AccountSettingsMailbox
 ): js.AccountSettingsMailbox {
   return {
-    deleteAfter: durationToObject(mailbox.delete_after),
-    deleteAfterInBin: durationToObject(mailbox.delete_after_in_bin),
+    deleteAfter: mailbox.has_delete_after
+      ? durationToObject(mailbox.delete_after)
+      : null,
+    deleteAfterInBin: mailbox.has_delete_after_in_bin
+      ? durationToObject(mailbox.delete_after_in_bin)
+      : null,
   };
 }
 

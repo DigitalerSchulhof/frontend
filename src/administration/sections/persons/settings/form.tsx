@@ -13,24 +13,18 @@ import action from './action';
 export const EditAccountSettingsForm = ({
   own,
   personId,
-  maxSessionTimeout,
   children,
 }: {
   own: 'own' | 'other';
   personId: string;
-  maxSessionTimeout: number;
   children: React.ReactNode;
 }) => {
-  const submit = useSubmit(own, personId, maxSessionTimeout);
+  const submit = useSubmit(own, personId);
 
   return <DisplayContentsForm submit={submit}>{children}</DisplayContentsForm>;
 };
 
-function useSubmit(
-  own: 'own' | 'other',
-  personId: string,
-  maxSessionTimeout: number
-) {
+function useSubmit(own: 'own' | 'other', personId: string) {
   const { t } = useT();
 
   return useSend(
@@ -52,7 +46,7 @@ function useSubmit(
               err
             )}`,
             {
-              max_session_timeout: maxSessionTimeout,
+              max_session_timeout: 300,
             }
           )
         );
@@ -66,7 +60,7 @@ function useSubmit(
           />
         );
       },
-      [t, maxSessionTimeout]
+      [t]
     ),
     useCallback(() => {
       return (

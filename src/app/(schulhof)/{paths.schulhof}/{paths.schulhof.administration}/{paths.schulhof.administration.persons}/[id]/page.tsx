@@ -16,14 +16,14 @@ export default async function Page({
 }) {
   const context = await requireLogin();
 
-  const person = await context.services.person.getById(params.id);
+  const person = await context.services.person.get(params.id);
 
   if (!person) notFound();
 
   const account =
     person.accountId === null
       ? null
-      : await context.services.account.getById(person.accountId);
+      : await context.services.account.get(person.accountId);
 
   return (
     <>

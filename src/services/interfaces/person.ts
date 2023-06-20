@@ -18,7 +18,7 @@ export const PERSON_TYPES = [
 ] as const;
 export type PersonType = (typeof PERSON_TYPES)[number];
 
-export const PERSON_GENDER = ['male', 'female', 'other'] as const;
-export type PersonGender = (typeof PERSON_GENDER)[number];
+export const PERSON_GENDERS = ['male', 'female', 'other'] as const;
+export type PersonGender = (typeof PERSON_GENDERS)[number];
 
 export interface PersonService extends BaseService<Person> {}

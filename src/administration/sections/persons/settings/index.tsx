@@ -1,8 +1,7 @@
-import { WithId } from '#/backend/repositories/arango';
-import { AccountBase } from '#/backend/repositories/content/account';
-import { PersonBase } from '#/backend/repositories/content/person';
-import { MAX_SESSION_TIMEOUT } from '#/backend/validators/content/account';
 import { T } from '#/i18n';
+import { Account } from '#/services/interfaces/account';
+import { WithId } from '#/services/interfaces/base';
+import { Person } from '#/services/interfaces/person';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
@@ -19,8 +18,8 @@ import { EditAccountSettingsForm } from './form';
 
 export type SettingsProps = {
   isOwnProfile?: boolean;
-  person: WithId<PersonBase>;
-  account: WithId<AccountBase>;
+  person: WithId<Person>;
+  account: WithId<Account>;
 };
 
 export const EditAccountSettings = async ({
@@ -32,11 +31,7 @@ export const EditAccountSettings = async ({
   const { settings } = account;
 
   return (
-    <EditAccountSettingsForm
-      own={own}
-      personId={person.id}
-      maxSessionTimeout={MAX_SESSION_TIMEOUT}
-    >
+    <EditAccountSettingsForm own={own} personId={person.id}>
       <HiddenInput name='id' value={account.id} />
       <HiddenInput name='rev' value={account.rev} />
       <Col w='6'>

@@ -39,7 +39,7 @@ export interface AccountSettingsMailbox {
 }
 
 export interface AccountSettingsProfile {
-  sessionTimeout: number | null;
+  sessionTimeout: number;
   formOfAddress: FormOfAddress;
 }
 

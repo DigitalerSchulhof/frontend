@@ -33,6 +33,6 @@ export function createListRequest<C>(
   });
 }
 
-export abstract class GrpcAdapter<Client extends grpc.Client> {
+export abstract class GrpcService<Client extends grpc.Client> {
   constructor(protected readonly client: Client) {}
 }

@@ -1,11 +1,11 @@
-import { AccountServiceGrpcAdapter } from '#/services/grpc/adapters/account';
-import { ClassServiceGrpcAdapter } from '#/services/grpc/adapters/class';
-import { CourseServiceGrpcAdapter } from '#/services/grpc/adapters/course';
-import { IdentityTheftServiceGrpcAdapter } from '#/services/grpc/adapters/identity-theft';
-import { LevelServiceGrpcAdapter } from '#/services/grpc/adapters/level';
-import { PersonServiceGrpcAdapter } from '#/services/grpc/adapters/person';
-import { SchoolyearServiceGrpcAdapter } from '#/services/grpc/adapters/schoolyear';
-import { SessionServiceGrpcAdapter } from '#/services/grpc/adapters/session';
+import { AccountServiceGrpcService } from '#/services/grpc/services/account';
+import { ClassServiceGrpcService } from '#/services/grpc/services/class';
+import { CourseServiceGrpcService } from '#/services/grpc/services/course';
+import { IdentityTheftServiceGrpcService } from '#/services/grpc/services/identity-theft';
+import { LevelServiceGrpcService } from '#/services/grpc/services/level';
+import { PersonServiceGrpcService } from '#/services/grpc/services/person';
+import { SchoolyearServiceGrpcService } from '#/services/grpc/services/schoolyear';
+import { SessionServiceGrpcService } from '#/services/grpc/services/session';
 import { AccountService } from '#/services/interfaces/account';
 import { ClassService } from '#/services/interfaces/class';
 import { CourseService } from '#/services/interfaces/course';
@@ -50,28 +50,28 @@ export function createServicesContext(
 
   return {
     services: {
-      account: new AccountServiceGrpcAdapter(
+      account: new AccountServiceGrpcService(
         new AccountServiceClient(address, credentials, options)
       ),
-      class: new ClassServiceGrpcAdapter(
+      class: new ClassServiceGrpcService(
         new ClassServiceClient(address, credentials, options)
       ),
-      course: new CourseServiceGrpcAdapter(
+      course: new CourseServiceGrpcService(
         new CourseServiceClient(address, credentials, options)
       ),
-      identityTheft: new IdentityTheftServiceGrpcAdapter(
+      identityTheft: new IdentityTheftServiceGrpcService(
         new IdentityTheftServiceClient(address, credentials, options)
       ),
-      level: new LevelServiceGrpcAdapter(
+      level: new LevelServiceGrpcService(
         new LevelServiceClient(address, credentials, options)
       ),
-      person: new PersonServiceGrpcAdapter(
+      person: new PersonServiceGrpcService(
         new PersonServiceClient(address, credentials, options)
       ),
-      schoolyear: new SchoolyearServiceGrpcAdapter(
+      schoolyear: new SchoolyearServiceGrpcService(
         new SchoolyearServiceClient(address, credentials, options)
       ),
-      session: new SessionServiceGrpcAdapter(
+      session: new SessionServiceGrpcService(
         new SessionServiceClient(address, credentials, options)
       ),
     },

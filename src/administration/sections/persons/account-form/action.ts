@@ -40,7 +40,7 @@ async function createAccount(
   personRev: string,
   data: AccountInput
 ) {
-  const person = await context.services.person.getById(personId);
+  const person = await context.services.person.get(personId);
 
   if (!person) {
     throw new InvalidInputError();
