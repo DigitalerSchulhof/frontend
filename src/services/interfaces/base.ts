@@ -1,10 +1,17 @@
-export interface BaseService<Base, Create = Base, Update = Partial<Create>> {
-  list(options: ListOptions): Promise<ListResult<Base>>;
-  get(id: string): Promise<Base | null>;
-  getByIds(ids: readonly string[]): Promise<(Base | null)[]>;
-  create(data: Create): Promise<Base>;
-  update(id: string, data: Update): Promise<Base>;
-  delete(id: string): Promise<Base>;
+export type WithId<T> = T & {
+  readonly id: string;
+  readonly rev: string;
+  readonly updatedAt: Date;
+  readonly createdAt: Date;
+};
+
+export interface BaseService<Base> {
+  list(options: ListOptions): Promise<ListResult<WithId<Base>>>;
+  get(id: string): Promise<WithId<Base> | null>;
+  getByIds(ids: readonly string[]): Promise<(WithId<Base> | null)[]>;
+  create(data: Base): Promise<WithId<Base>>;
+  update(id: string, data: Partial<Base>): Promise<WithId<Base>>;
+  delete(id: string): Promise<WithId<Base>>;
 }
 
 export interface ListOptions {

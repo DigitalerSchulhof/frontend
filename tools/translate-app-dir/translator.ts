@@ -1,4 +1,4 @@
-import { getTranslations } from '#/context/contexts/i18n/service';
+import { getTranslations } from '#/i18n/service';
 import { __app, __nextApp } from '#/utils/paths';
 import { TYPE } from '@formatjs/icu-messageformat-parser';
 import * as chokidar from 'chokidar';

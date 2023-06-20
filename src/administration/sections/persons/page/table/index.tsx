@@ -1,6 +1,6 @@
 'use client';
 
-import { FormOfAddress } from '#/backend/repositories/content/account';
+import { FormOfAddress } from '#/services/interfaces/account';
 import { useState } from 'react';
 import { LoadPersonsFilter } from '../action';
 import { PersonsTableContent } from './content';

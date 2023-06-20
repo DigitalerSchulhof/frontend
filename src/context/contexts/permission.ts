@@ -1,4 +1,6 @@
 import { BackendContext } from '#/context';
+import { Account } from '#/services/interfaces/account';
+import { WithId } from '#/services/interfaces/base';
 
 export interface BackendPermissionsContext {
   hasPermission: (permission: string) => Promise<boolean>;

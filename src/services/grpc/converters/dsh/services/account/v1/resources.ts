@@ -1,15 +1,16 @@
-import {
-  durationToObject,
-  durationFromObject,
-} from '#/services/grpc/google/protobuf/duration';
-import {
-  timestampToObject,
-  timestampFromObject,
-} from '#/services/grpc/google/protobuf/timestamp';
 import * as js from '#/services/interfaces/account';
+import { WithId } from '#/services/interfaces/base';
 import * as grpc from '@dsh/protocols/dsh/services/account/v1/resources';
+import {
+  durationFromObject,
+  durationToObject,
+} from '../../../../google/protobuf/duration';
+import {
+  timestampFromObject,
+  timestampToObject,
+} from '../../../../google/protobuf/timestamp';
 
-export function accountToObject(account: grpc.Account): js.Account {
+export function accountToObject(account: grpc.Account): WithId<js.Account> {
   return {
     id: account.id,
     rev: account.rev,
@@ -27,7 +28,7 @@ export function accountToObject(account: grpc.Account): js.Account {
   };
 }
 
-export function accountSettingsToObject(
+function accountSettingsToObject(
   settings: grpc.AccountSettings
 ): js.AccountSettings {
   return {
@@ -39,7 +40,7 @@ export function accountSettingsToObject(
   };
 }
 
-export function accountSettingsNotifyOnToObject(
+function accountSettingsNotifyOnToObject(
   notifyOn: grpc.AccountSettingsNotifyOn
 ): js.AccountSettingsNotifyOn {
   return {
@@ -49,7 +50,7 @@ export function accountSettingsNotifyOnToObject(
   };
 }
 
-export function accountSettingsConsiderNewsToObject(
+function accountSettingsConsiderNewsToObject(
   considerNews: grpc.AccountSettingsConsiderNews
 ): js.AccountSettingsConsiderNews {
   return {
@@ -60,7 +61,7 @@ export function accountSettingsConsiderNewsToObject(
   };
 }
 
-export function accountSettingsMailboxToObject(
+function accountSettingsMailboxToObject(
   mailbox: grpc.AccountSettingsMailbox
 ): js.AccountSettingsMailbox {
   return {
@@ -69,7 +70,7 @@ export function accountSettingsMailboxToObject(
   };
 }
 
-export function accountSettingsProfileToObject(
+function accountSettingsProfileToObject(
   profile: grpc.AccountSettingsProfile
 ): js.AccountSettingsProfile {
   return {
@@ -78,12 +79,12 @@ export function accountSettingsProfileToObject(
   };
 }
 
-export function formOfAddressToObject(
+function formOfAddressToObject(
   formOfAddress: grpc.AccountSettingsFormOfAddress
 ): js.FormOfAddress {
   switch (formOfAddress) {
     case grpc.AccountSettingsFormOfAddress.FORM_OF_ADDRESS_UNSPECIFIED:
-      throw new Error('FORM_OF_ADDRESS_UNSPECIFIED is not supported');
+      throw new Error('FORM_OF_ADDRESS_UNSPECIFIED is not supported.');
     case grpc.AccountSettingsFormOfAddress.FORM_OF_ADDRESS_FORMAL:
       return 'formal';
     case grpc.AccountSettingsFormOfAddress.FORM_OF_ADDRESS_INFORMAL:
@@ -91,8 +92,12 @@ export function formOfAddressToObject(
   }
 }
 
-export function accountFromObject(account: js.Account): grpc.Account {
-  return {
+export function accountFromObject(
+  account: Partial<WithId<js.Account>> | null | undefined
+): grpc.Account | undefined {
+  if (!account) return undefined;
+
+  return new grpc.Account({
     id: account.id,
     rev: account.rev,
     updated_at: timestampFromObject(account.updatedAt),
@@ -106,12 +111,14 @@ export function accountFromObject(account: js.Account): grpc.Account {
     last_login: timestampFromObject(account.lastLogin),
     second_last_login: timestampFromObject(account.secondLastLogin),
     settings: accountSettingsFromObject(account.settings),
-  };
+  });
 }
 
-export function accountSettingsFromObject(
-  settings: js.AccountSettings
-): grpc.AccountSettings {
+function accountSettingsFromObject(
+  settings: Partial<js.AccountSettings> | null | undefined
+): grpc.AccountSettings | undefined {
+  if (!settings) return undefined;
+
   return new grpc.AccountSettings({
     email_on: accountSettingsNotifyOnFromObject(settings.emailOn),
     push_on: accountSettingsNotifyOnFromObject(settings.pushOn),
@@ -121,9 +128,11 @@ export function accountSettingsFromObject(
   });
 }
 
-export function accountSettingsNotifyOnFromObject(
-  notifyOn: js.AccountSettingsNotifyOn
-): grpc.AccountSettingsNotifyOn {
+function accountSettingsNotifyOnFromObject(
+  notifyOn: Partial<js.AccountSettingsNotifyOn> | null | undefined
+): grpc.AccountSettingsNotifyOn | undefined {
+  if (!notifyOn) return undefined;
+
   return new grpc.AccountSettingsNotifyOn({
     new_message: notifyOn.newMessage,
     new_news: notifyOn.newNews,
@@ -131,9 +140,11 @@ export function accountSettingsNotifyOnFromObject(
   });
 }
 
-export function accountSettingsConsiderNewsFromObject(
-  considerNews: js.AccountSettingsConsiderNews
-): grpc.AccountSettingsConsiderNews {
+function accountSettingsConsiderNewsFromObject(
+  considerNews: Partial<js.AccountSettingsConsiderNews> | null | undefined
+): grpc.AccountSettingsConsiderNews | undefined {
+  if (!considerNews) return undefined;
+
   return new grpc.AccountSettingsConsiderNews({
     new_event: considerNews.newEvent,
     new_blog: considerNews.newBlog,
@@ -142,27 +153,33 @@ export function accountSettingsConsiderNewsFromObject(
   });
 }
 
-export function accountSettingsMailboxFromObject(
-  mailbox: js.AccountSettingsMailbox
-): grpc.AccountSettingsMailbox {
+function accountSettingsMailboxFromObject(
+  mailbox: Partial<js.AccountSettingsMailbox> | null | undefined
+): grpc.AccountSettingsMailbox | undefined {
+  if (!mailbox) return undefined;
+
   return new grpc.AccountSettingsMailbox({
     delete_after: durationFromObject(mailbox.deleteAfter),
     delete_after_in_bin: durationFromObject(mailbox.deleteAfterInBin),
   });
 }
 
-export function accountSettingsProfileFromObject(
-  profile: js.AccountSettingsProfile
-): grpc.AccountSettingsProfile {
+function accountSettingsProfileFromObject(
+  profile: Partial<js.AccountSettingsProfile> | null | undefined
+): grpc.AccountSettingsProfile | undefined {
+  if (!profile) return undefined;
+
   return new grpc.AccountSettingsProfile({
     session_timeout: durationFromObject(profile.sessionTimeout),
     form_of_address: formOfAddressFromObject(profile.formOfAddress),
   });
 }
 
-export function formOfAddressFromObject(
-  formOfAddress: js.FormOfAddress
-): grpc.AccountSettingsFormOfAddress {
+function formOfAddressFromObject(
+  formOfAddress: Partial<js.FormOfAddress> | null | undefined
+): grpc.AccountSettingsFormOfAddress | undefined {
+  if (!formOfAddress) return undefined;
+
   switch (formOfAddress) {
     case 'formal':
       return grpc.AccountSettingsFormOfAddress.FORM_OF_ADDRESS_FORMAL;

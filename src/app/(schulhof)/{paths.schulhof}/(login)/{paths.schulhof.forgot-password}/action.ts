@@ -1,12 +1,9 @@
 'use server';
 
 import { requireNoLogin } from '#/auth/action';
-import { WithId } from '#/backend/repositories/arango';
-import {
-  AccountBase,
-  FormOfAddress,
-} from '#/backend/repositories/content/account';
 import { BackendContext } from '#/context';
+import { Account, FormOfAddress } from '#/services/interfaces/account';
+import { WithId } from '#/services/interfaces/base';
 import { wrapFormAction } from '#/utils/action';
 import { ClientError } from '#/utils/server';
 import { v } from 'vality';
@@ -46,7 +43,7 @@ export default wrapFormAction(
 
 async function sendPasswordResetEmail(
   _context: BackendContext,
-  account: WithId<AccountBase>,
+  account: WithId<Account>,
   newPassword: string
 ): Promise<void> {
   console.log(

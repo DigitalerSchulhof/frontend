@@ -1,5 +1,7 @@
-import { FormOfAddress } from '#/backend/repositories/content/account';
 import { LoggedInBackendContext } from '#/context';
+import { Account, FormOfAddress } from '#/services/interfaces/account';
+import { WithId } from '#/services/interfaces/base';
+import { Person } from '#/services/interfaces/person';
 import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Note } from '#/ui/Note';
@@ -15,10 +17,9 @@ import { IdentityTheftButton } from './identity-theft';
 import { PermissionsButton } from './permissions';
 import { SettingsButton } from './settings';
 
-export type PersonDetailsChangePersonalDataSectionProps = Pick<
-  PersonDetailsProps,
-  'person' | 'account'
-> & {
+export type PersonDetailsChangePersonalDataSectionProps = {
+  person: WithId<Person>;
+  account: WithId<Account> | null;
   context: LoggedInBackendContext;
   isOwnProfile: boolean;
 };

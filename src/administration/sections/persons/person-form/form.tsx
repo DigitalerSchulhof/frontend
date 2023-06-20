@@ -1,7 +1,7 @@
 'use client';
 
-import { PersonType } from '#/backend/repositories/content/person';
 import { T, useT } from '#/i18n';
+import { PersonType } from '#/services/interfaces/person';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, SelectFormRow, TextFormRow } from '#/ui/Form';

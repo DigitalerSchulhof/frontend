@@ -1,26 +1,16 @@
 import { BaseService } from './base';
 
 export interface Account {
-  readonly id: string;
-  readonly rev: string;
-  readonly updatedAt: Date;
-  readonly createdAt: Date;
-  readonly personId: string;
-
+  personId: string;
   username: string;
   email: string;
   password: string;
   salt: string;
-  passwordExpiresAt?: Date;
-  lastLogin?: Date;
-  secondLastLogin?: Date;
+  passwordExpiresAt: Date | null;
+  lastLogin: Date | null;
+  secondLastLogin: Date | null;
   settings: AccountSettings;
 }
-
-export type CreateAccount = Omit<
-  Account,
-  'id' | 'rev' | 'updatedAt' | 'createdAt' | 'personId'
->;
 
 export interface AccountSettings {
   emailOn: AccountSettingsNotifyOn;
@@ -44,18 +34,16 @@ export interface AccountSettingsConsiderNews {
 }
 
 export interface AccountSettingsMailbox {
-  deleteAfter?: number;
-  deleteAfterInBin?: number;
+  deleteAfter: number | null;
+  deleteAfterInBin: number | null;
 }
 
 export interface AccountSettingsProfile {
-  sessionTimeout?: number;
+  sessionTimeout: number | null;
   formOfAddress: FormOfAddress;
 }
 
-export type FormOfAddress = 'formal' | 'informal';
+export const FORMS_OF_ADDRESS = ['formal', 'informal'] as const;
+export type FormOfAddress = (typeof FORMS_OF_ADDRESS)[number];
 
-export interface AccountService
-  extends Omit<BaseService<Account, CreateAccount>, 'create'> {
-  create(data: CreateAccount, personId: string): Promise<Account>;
-}
+export interface AccountService extends BaseService<Account> {}

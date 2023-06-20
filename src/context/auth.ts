@@ -3,6 +3,8 @@ import {
   LoggedInBackendContext,
   createLoggedInBackendContext,
 } from '#/context';
+import { WithId } from '#/services/interfaces/base';
+import { Session } from '#/services/interfaces/session';
 // eslint-disable-next-line @typescript-eslint/no-var-requires -- See https://github.com/vercel/next.js/issues/49752#issuecomment-1546687003
 const { cookies } = require('next/headers');
 
@@ -33,7 +35,7 @@ abstract class ContextCreator {
     return this.baseContext;
   }
 
-  async getSession(): Promise<Session | null> {
+  async getSession(): Promise<WithId<Session> | null> {
     const jwt = this.getJwt();
     if (!jwt) return null;
 
@@ -61,16 +63,15 @@ abstract class ContextCreator {
   protected abstract handleAlreadyLoggedIn(session: Session): void;
 
   protected async createLoggedInContext(
-    session: Session
+    session: WithId<Session>
   ): Promise<Promise<LoggedInBackendContext>> {
-    const account = await this.baseContext.services.account.get(
-      session.account_id
-    );
+    const person = await this.baseContext.services.person.get(session.personId);
 
-    if (!account) throw new Error('Account not found');
+    if (!person) throw new Error('No person');
+    if (!person.accountId) throw new Error('No account');
 
-    const person = (await this.baseContext.services.person.getById(
-      account.personId
+    const account = (await this.baseContext.services.account.get(
+      person.accountId
     ))!;
 
     return createLoggedInBackendContext(

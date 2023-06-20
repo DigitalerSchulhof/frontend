@@ -1,9 +1,5 @@
-import {
-  Account,
-  AccountService,
-  CreateAccount,
-} from '#/services/interfaces/account';
-import { ListOptions, ListResult } from '#/services/interfaces/base';
+import { Account, AccountService } from '#/services/interfaces/account';
+import { ListOptions, ListResult, WithId } from '#/services/interfaces/base';
 import {
   AccountServiceClient,
   BatchGetAccountsRequest,
@@ -11,19 +7,20 @@ import {
   DeleteAccountRequest,
   GetAccountRequest,
   ListAccountsRequest,
+  UpdateAccountRequest,
 } from '@dsh/protocols/dsh/services/account/v1/service';
 import {
-  GrpcAdapter,
-  createListRequest,
-  transformListResponse,
-} from '../../../../base';
-import { accountFromObject, accountToObject } from './resources';
+  accountFromObject,
+  accountToObject,
+} from '../converters/dsh/services/account/v1/resources';
+import { GrpcAdapter, createListRequest, transformListResponse } from './base';
+import { FieldMask } from '@dsh/protocols/google/protobuf/field_mask';
 
 export class AccountServiceGrpcAdapter
   extends GrpcAdapter<AccountServiceClient>
   implements AccountService
 {
-  async list(options: ListOptions): Promise<ListResult<Account>> {
+  async list(options: ListOptions): Promise<ListResult<WithId<Account>>> {
     const res = await this.client.ListAccounts(
       createListRequest(ListAccountsRequest, options)
     );
@@ -31,13 +28,13 @@ export class AccountServiceGrpcAdapter
     return transformListResponse('accounts', accountToObject, res);
   }
 
-  async get(id: string): Promise<Account | null> {
+  async get(id: string): Promise<WithId<Account> | null> {
     const res = await this.client.GetAccount(new GetAccountRequest({ id }));
 
     return accountToObject(res.account);
   }
 
-  async getByIds(ids: readonly string[]): Promise<Account[]> {
+  async getByIds(ids: readonly string[]): Promise<(WithId<Account> | null)[]> {
     const res = await this.client.BatchGetAccounts(
       new BatchGetAccountsRequest({ ids })
     );
@@ -45,10 +42,9 @@ export class AccountServiceGrpcAdapter
     return res.accounts.map(accountToObject);
   }
 
-  async create(data: CreateAccount, personId: string): Promise<Account> {
+  async create(data: Account): Promise<WithId<Account>> {
     const res = await this.client.CreateAccount(
       new CreateAccountRequest({
-        person_id: personId,
         account: accountFromObject(data),
       })
     );
@@ -56,11 +52,18 @@ export class AccountServiceGrpcAdapter
     return accountToObject(res.account);
   }
 
-  update(id: string, data: Partial<CreateAccount>): Promise<Account> {
-    throw new Error('Method not implemented.');
+  async update(id: string, data: Partial<Account>): Promise<WithId<Account>> {
+    const res = await this.client.UpdateAccount(
+      new UpdateAccountRequest({
+        account: accountFromObject({ id, ...data }),
+        update_mask: new FieldMask({ paths: Object.keys(data) }),
+      })
+    );
+
+    return accountToObject(res.account);
   }
 
-  async delete(id: string): Promise<Account> {
+  async delete(id: string): Promise<WithId<Account>> {
     const res = await this.client.DeleteAccount(
       new DeleteAccountRequest({ id })
     );

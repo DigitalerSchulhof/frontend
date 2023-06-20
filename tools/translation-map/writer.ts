@@ -3,7 +3,7 @@ import {
   expandTranslations,
   flattenAst,
   getTranslations,
-} from '#/context/contexts/i18n/service';
+} from '#/i18n/service';
 import { DEFAULT_LOCALE } from '#/utils';
 import { __src } from '#/utils/paths';
 import {

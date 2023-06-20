@@ -1,7 +1,6 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import { PersonType } from '#/backend/repositories/content/person';
 import {
   PersonFirstnameFilter,
   PersonLastnameFilter,
@@ -12,6 +11,7 @@ import {
   InFilterOperator,
   LikeFilterOperator,
 } from '#/backend/repositories/filters/operators';
+import { PersonType } from '#/services/interfaces/person';
 import { wrapAction } from '#/utils/action';
 import { Parse, v } from 'vality';
 

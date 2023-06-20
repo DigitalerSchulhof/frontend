@@ -1,5 +1,5 @@
+import { ListOptions, ListResult } from '#/services/interfaces/base';
 import type * as grpc from '@grpc/grpc-js';
-import { ListOptions, ListResult } from '../interfaces/base';
 
 export function transformListResponse<K extends string, TGrpc, TJs>(
   key: K,

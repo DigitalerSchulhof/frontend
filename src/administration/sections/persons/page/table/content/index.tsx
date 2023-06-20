@@ -1,7 +1,7 @@
 import { DetailsButton } from '#/administration/sections/persons/page/table/content/buttons/details';
-import { FormOfAddress } from '#/backend/repositories/content/account';
 import { DataList } from '#/components/data-list';
 import { T } from '#/i18n';
+import { FormOfAddress } from '#/services/interfaces/account';
 import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import {

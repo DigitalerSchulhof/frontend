@@ -1,7 +1,7 @@
-import { WithId } from '#/backend/repositories/arango';
-import { AccountBase } from '#/backend/repositories/content/account';
-import { PersonBase } from '#/backend/repositories/content/person';
-import { ButtonGroup, Button } from '#/ui/Button';
+import { Account } from '#/services/interfaces/account';
+import { WithId } from '#/services/interfaces/base';
+import { Person } from '#/services/interfaces/person';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { HiddenInput, TextFormRow } from '#/ui/Form';
 import { Table } from '#/ui/Table';
 import { ClientAccountForm } from './form';
@@ -12,8 +12,8 @@ export const AccountForm = ({
   account,
 }: {
   isOwnProfile?: boolean;
-  person: WithId<PersonBase>;
-  account: WithId<AccountBase> | null;
+  person: WithId<Person>;
+  account: WithId<Account> | null;
 }) => {
   const mode = account === null ? 'create' : 'edit';
   const own = isOwnProfile ? 'own' : 'other';

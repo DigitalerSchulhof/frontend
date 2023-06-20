@@ -1,17 +1,18 @@
 import { LoggedInBackendContext } from '#/context';
 import { useT } from '#/i18n';
+import { Account } from '#/services/interfaces/account';
+import { WithId } from '#/services/interfaces/base';
+import { Person } from '#/services/interfaces/person';
 import { Button } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { formatName } from '#/utils';
-import { PersonDetailsProps } from '..';
 import { NoAccountButton } from './buttons/no-account';
 import { MayNotMessagePersonButton } from './buttons/no-permission';
 import { PersonDetailsPersonalDataSectionTable } from './table';
 
-export type PersonDetailsPersonalDataSectionProps = Pick<
-  PersonDetailsProps,
-  'person' | 'account'
-> & {
+export type PersonDetailsPersonalDataSectionProps = {
+  person: WithId<Person>;
+  account: WithId<Account> | null;
   context: LoggedInBackendContext;
 };
 

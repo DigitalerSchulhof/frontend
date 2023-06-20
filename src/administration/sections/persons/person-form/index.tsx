@@ -1,15 +1,11 @@
-import { WithId } from '#/backend/repositories/arango';
-import { PersonBase } from '#/backend/repositories/content/person';
+import { WithId } from '#/services/interfaces/base';
+import { Person } from '#/services/interfaces/person';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { HiddenInput, SelectFormRow, TextFormRow } from '#/ui/Form';
 import { Table } from '#/ui/Table';
 import { ClientPersonForm, TeacherCodeSelector } from './form';
 
-export const PersonForm = ({
-  person,
-}: {
-  person: WithId<PersonBase> | null;
-}) => {
+export const PersonForm = ({ person }: { person: WithId<Person> | null }) => {
   const mode = person === null ? 'create' : 'edit';
 
   const {

@@ -1,28 +1,15 @@
-import {
-  PersonGender,
-  PersonType,
-} from '#/backend/repositories/content/person';
 import { LoggedInBackendContext } from '#/context';
+import { Account } from '#/services/interfaces/account';
+import { WithId } from '#/services/interfaces/base';
+import { Person } from '#/services/interfaces/person';
 import { PersonDetailsButtonSection } from './buttons';
 import { PersonDetailsPersonalDataSection } from './personal-data';
 
 export type PersonDetailsProps = {
   context: LoggedInBackendContext;
   isOwnProfile?: boolean;
-  person: {
-    id: string;
-    type: PersonType;
-    firstname: string;
-    lastname: string;
-    gender: PersonGender;
-    teacherCode: string | null;
-  };
-  account: {
-    username: string;
-    email: string;
-    lastLogin: number | null;
-    secondLastLogin: number | null;
-  } | null;
+  person: WithId<Person>;
+  account: WithId<Account> | null;
 };
 
 export const PersonDetails = async ({

@@ -1,6 +1,5 @@
 // Both Server and Client Component
 
-import { MaybeArray } from '#/backend/utils';
 import { useT } from '#/i18n';
 import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import {
@@ -8,6 +7,7 @@ import {
   StyledBreadcrumbs,
 } from '#/ui/Breadcrumbs/client';
 import { LinkProps } from '#/ui/Link';
+import { MaybeArray } from '#/utils';
 import { Fragment } from 'react';
 
 /**

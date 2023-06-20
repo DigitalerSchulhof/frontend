@@ -1,7 +1,7 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import { FORMS_OF_ADDRESS } from '#/backend/repositories/content/account';
+import { FORMS_OF_ADDRESS } from '#/services/interfaces/account';
 import { wrapFormAction } from '#/utils/action';
 import { v } from 'vality';
 
