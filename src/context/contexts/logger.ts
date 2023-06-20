@@ -1,5 +1,5 @@
 import { Logger } from '#/log/server';
-import { ContextCreatorContext } from '../setup';
+import { ContextCreatorContext } from '.';
 
 export interface BackendLoggerContext {
   logger: Logger;

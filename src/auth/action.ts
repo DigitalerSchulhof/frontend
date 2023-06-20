@@ -1,5 +1,15 @@
 import { backendContext } from '#/context';
-import { ActionContextCreator } from '#/context/auth';
+import { CookiesContextCreator } from '#/context/auth';
+
+export class ActionContextCreator extends CookiesContextCreator {
+  handleNotLoggedIn(): never {
+    throw new Error('Not logged in');
+  }
+
+  handleAlreadyLoggedIn() {
+    throw new Error('Already logged in');
+  }
+}
 
 export const actionContextCreator = new ActionContextCreator(backendContext);
 

@@ -23,6 +23,7 @@ import { PersonServiceClient } from '@dsh/protocols/dsh/services/person/v1/servi
 import { SchoolyearServiceClient } from '@dsh/protocols/dsh/services/schoolyear/v1/service';
 import { SessionServiceClient } from '@dsh/protocols/dsh/services/session/v1/service';
 import * as grpc from '@grpc/grpc-js';
+import { ContextCreatorContext } from '..';
 
 export interface Services {
   account: AccountService;
@@ -42,7 +43,8 @@ export interface BackendServicesContext {
 export function createServicesContext(
   context: ContextCreatorContext
 ): BackendServicesContext {
-  const address = '';
+  const address = context.config.grpc.address;
+  // TODO: Add TLS support
   const credentials = grpc.credentials.createInsecure();
   const options: grpc.ChannelOptions = {};
 

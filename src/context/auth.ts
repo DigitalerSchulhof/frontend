@@ -3,16 +3,14 @@ import {
   LoggedInBackendContext,
   createLoggedInBackendContext,
 } from '#/context';
-import { redirect } from 'next/navigation';
 // eslint-disable-next-line @typescript-eslint/no-var-requires -- See https://github.com/vercel/next.js/issues/49752#issuecomment-1546687003
 const { cookies } = require('next/headers');
 
 abstract class ContextCreator {
-  constructor(protected context: BackendContext) {}
+  constructor(protected baseContext: BackendContext) {}
 
   getContext(): BackendContext {
-    // TODO: Return LoggedInBackendContext if logged in
-    return this.context;
+    return this.baseContext;
   }
 
   async requireLogin(): Promise<LoggedInBackendContext> {
@@ -32,21 +30,21 @@ abstract class ContextCreator {
       this.handleAlreadyLoggedIn(session);
     }
 
-    return this.context;
+    return this.baseContext;
   }
 
   async getSession(): Promise<Session | null> {
     const jwt = this.getJwt();
     if (!jwt) return null;
 
-    const jwtContent = this.context.services.session.verifyJwt(jwt);
+    const jwtContent = this.baseContext.services.session.getJwtContent(jwt);
     if (!jwtContent) return null;
 
     if (jwtContent.exp < Date.now() / 1000) {
       return null;
     }
 
-    const session = await this.context.services.session.getById(
+    const session = await this.baseContext.services.session.get(
       jwtContent.sessionId
     );
 
@@ -65,46 +63,27 @@ abstract class ContextCreator {
   protected async createLoggedInContext(
     session: Session
   ): Promise<Promise<LoggedInBackendContext>> {
-    const account = (await this.context.services.account.getById(
+    const account = await this.baseContext.services.account.get(
       session.account_id
-    ))!;
+    );
 
-    const person = (await this.context.services.person.getById(
+    if (!account) throw new Error('Account not found');
+
+    const person = (await this.baseContext.services.person.getById(
       account.personId
     ))!;
 
-    return createLoggedInBackendContext(this.context, session, account, person);
+    return createLoggedInBackendContext(
+      this.baseContext,
+      session,
+      account,
+      person
+    );
   }
 }
 
-abstract class CookiesContextCreator extends ContextCreator {
+export abstract class CookiesContextCreator extends ContextCreator {
   getJwt() {
     return cookies().get('jwt')?.value;
-  }
-}
-
-export class ActionContextCreator extends CookiesContextCreator {
-  handleNotLoggedIn(): never {
-    throw new Error('Not logged in');
-  }
-
-  handleAlreadyLoggedIn() {
-    throw new Error('Already logged in');
-  }
-}
-
-export class ComponentContextCreator extends CookiesContextCreator {
-  handleNotLoggedIn(): never {
-    const { t } = this.context;
-
-    redirect(`/${[t('paths.schulhof'), t('paths.schulhof.login')].join('/')}`);
-  }
-
-  handleAlreadyLoggedIn(): never {
-    const { t } = this.context;
-
-    redirect(
-      `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
-    );
   }
 }

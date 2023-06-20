@@ -1,5 +1,3 @@
-import { WithId } from '#/backend/repositories/arango';
-import { AccountBase } from '#/backend/repositories/content/account';
 import { BackendContext } from '#/context';
 
 export interface BackendPermissionsContext {
@@ -8,7 +6,7 @@ export interface BackendPermissionsContext {
 
 export function createPermissionsContext(
   context: BackendContext,
-  account: WithId<AccountBase>
+  account: WithId<Account>
 ): BackendPermissionsContext {
   async function hasPermission(permission: string): Promise<boolean> {
     return true;

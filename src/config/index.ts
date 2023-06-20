@@ -3,6 +3,9 @@ import { loadEnv } from 'vality-env';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const configSchema = {
+  grpc: {
+    address: v.string,
+  },
   jwtSecret: v.string,
 } as const;
 /* eslint-enable @typescript-eslint/naming-convention */

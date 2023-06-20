@@ -1,7 +1,4 @@
-import {
-  expandTranslations,
-  getTranslations,
-} from '#/context/contexts/i18n/service';
+import { expandTranslations, getTranslations } from '#/i18n/service';
 import { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 
 export type ClientTranslations = Record<
