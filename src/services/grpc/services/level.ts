@@ -7,7 +7,7 @@ export class LevelServiceGrpcService
   extends GrpcService<LevelServiceClient>
   implements LevelService
 {
-  list(options: ListOptions): Promise<ListResult<WithId<Level>>> {
+  search(options: ListOptions): Promise<ListResult<WithId<Level>>> {
     throw new Error('Method not implemented.');
   }
 

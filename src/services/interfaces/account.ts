@@ -1,4 +1,4 @@
-import { BaseService } from './base';
+import { BaseFilter, BaseService, WithId } from './base';
 
 export interface Account {
   personId: string;
@@ -6,9 +6,9 @@ export interface Account {
   email: string;
   password: string;
   salt: string;
-  passwordExpiresAt: Date | null;
-  lastLogin: Date | null;
-  secondLastLogin: Date | null;
+  passwordExpiresAt: number | null;
+  lastLogin: number | null;
+  secondLastLogin: number | null;
   settings: AccountSettings;
 }
 
@@ -46,4 +46,16 @@ export interface AccountSettingsProfile {
 export const FORMS_OF_ADDRESS = ['formal', 'informal'] as const;
 export type FormOfAddress = (typeof FORMS_OF_ADDRESS)[number];
 
-export interface AccountService extends BaseService<Account> {}
+export interface AccountService extends BaseService<Account> {
+  create(
+    data: Account,
+    options?: {
+      /**
+       * Only creates the account if the person has the given rev.
+       */
+      ifPersonRev?: string;
+    }
+  ): Promise<WithId<Account>>;
+}
+
+export class AccountFilter extends BaseFilter<Account> {}

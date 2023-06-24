@@ -5,6 +5,7 @@ import {
 } from '#/context';
 import { WithId } from '#/services/interfaces/base';
 import { Session } from '#/services/interfaces/session';
+import { verifyJwt } from '#/utils/password';
 // eslint-disable-next-line @typescript-eslint/no-var-requires -- See https://github.com/vercel/next.js/issues/49752#issuecomment-1546687003
 const { cookies } = require('next/headers');
 
@@ -39,10 +40,10 @@ abstract class ContextCreator {
     const jwt = this.getJwt();
     if (!jwt) return null;
 
-    const jwtContent = this.baseContext.services.session.getJwtContent(jwt);
+    const jwtContent = verifyJwt(jwt);
     if (!jwtContent) return null;
 
-    if (jwtContent.exp < Date.now() / 1000) {
+    if (jwtContent.exp < Math.floor(Date.now() / 1000)) {
       return null;
     }
 

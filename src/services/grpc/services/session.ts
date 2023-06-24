@@ -7,7 +7,7 @@ export class SessionServiceGrpcService
   extends GrpcService<SessionServiceClient>
   implements SessionService
 {
-  list(options: ListOptions): Promise<ListResult<WithId<Session>>> {
+  search(options: ListOptions): Promise<ListResult<WithId<Session>>> {
     throw new Error('Method not implemented.');
   }
 

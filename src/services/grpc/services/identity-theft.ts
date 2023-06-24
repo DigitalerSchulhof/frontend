@@ -10,7 +10,7 @@ export class IdentityTheftServiceGrpcService
   extends GrpcService<IdentityTheftServiceClient>
   implements IdentityTheftService
 {
-  list(options: ListOptions): Promise<ListResult<WithId<IdentityTheft>>> {
+  search(options: ListOptions): Promise<ListResult<WithId<IdentityTheft>>> {
     throw new Error('Method not implemented.');
   }
 

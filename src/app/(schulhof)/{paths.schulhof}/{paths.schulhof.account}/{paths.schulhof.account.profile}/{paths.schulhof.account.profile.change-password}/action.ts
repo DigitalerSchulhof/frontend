@@ -2,6 +2,7 @@
 
 import { requireLogin } from '#/auth/action';
 import { wrapFormAction } from '#/utils/action';
+import { doPasswordsMatch, generateSalt, hashPassword } from '#/utils/password';
 import { ClientError } from '#/utils/server';
 import { v } from 'vality';
 
@@ -19,20 +20,31 @@ export default wrapFormAction(
       throw new ClientError('PASSWORD_MISMATCH');
     }
 
-    const isOldPasswordValid = await context.services.account.isPasswordValid(
-      context.account.id,
-      oldPassword
+    const oldPasswordHashed = hashPassword(oldPassword, context.account.salt);
+
+    const isOldPasswordValid = doPasswordsMatch(
+      context.account.password,
+      oldPasswordHashed
     );
 
     if (!isOldPasswordValid) {
       throw new ClientError('INVALID_CREDENTIALS');
     }
 
-    await context.services.account.changePassword(
+    const newSalt = generateSalt();
+
+    const newPasswordHashed = hashPassword(newPassword, newSalt);
+
+    await context.services.account.update(
       context.account.id,
-      newPassword,
-      null,
-      rev
+      {
+        password: newPasswordHashed,
+        salt: newSalt,
+        passwordExpiresAt: null,
+      },
+      {
+        ifRev: rev,
+      }
     );
   }
 );

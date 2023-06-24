@@ -10,7 +10,7 @@ export class SchoolyearServiceGrpcService
   extends GrpcService<SchoolyearServiceClient>
   implements SchoolyearService
 {
-  list(options: ListOptions): Promise<ListResult<WithId<Schoolyear>>> {
+  search(options: ListOptions): Promise<ListResult<WithId<Schoolyear>>> {
     throw new Error('Method not implemented.');
   }
 

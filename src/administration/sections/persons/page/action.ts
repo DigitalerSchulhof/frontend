@@ -1,17 +1,8 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import {
-  PersonFirstnameFilter,
-  PersonLastnameFilter,
-  PersonTypeFilter,
-} from '#/backend/repositories/content/person/filters';
-import { AndFilter, Filter } from '#/backend/repositories/filters';
-import {
-  InFilterOperator,
-  LikeFilterOperator,
-} from '#/backend/repositories/filters/operators';
-import { PersonType } from '#/services/interfaces/person';
+import { AndFilter } from '#/services/interfaces/base';
+import { PersonFilter, PersonType } from '#/services/interfaces/person';
 import { wrapAction } from '#/utils/action';
 import { Parse, v } from 'vality';
 
@@ -43,13 +34,13 @@ export default wrapAction(
     const context = await requireLogin();
 
     const persons = await context.services.person.search({
-      filter: createFiltersFromFilter(filter),
+      filter: createFiltersFromFilter(filter) ?? undefined,
       offset,
       limit: limit !== -1 ? limit : undefined,
     });
 
     return {
-      items: persons.nodes.map((person) => ({
+      items: persons.items.map((person) => ({
         id: person.id,
         type: person.type,
         firstname: person.firstname,
@@ -64,19 +55,15 @@ export default wrapAction(
 
 function createFiltersFromFilter(
   filter: LoadPersonsFilter
-): Filter<'persons'> | null {
-  const filters: (Filter<'persons'> | null)[] = [];
+): PersonFilter | null {
+  const filters: (PersonFilter | null)[] = [];
 
   if (filter.lastname) {
-    filters.push(
-      new PersonLastnameFilter(new LikeFilterOperator(filter.lastname))
-    );
+    filters.push(new PersonFilter('lastname', 'like', filter.lastname));
   }
 
   if (filter.firstname) {
-    filters.push(
-      new PersonFirstnameFilter(new LikeFilterOperator(filter.firstname))
-    );
+    filters.push(new PersonFilter('firstname', 'like', filter.firstname));
   }
 
   if (filter.class) {
@@ -98,7 +85,7 @@ function createFiltersFromFilter(
 
 function createTypeFilterFromFilter(
   filter: LoadPersonsFilter
-): Filter<'persons'> | null {
+): PersonFilter | null {
   const types: PersonType[] = [];
 
   if (filter.typeStudent) {
@@ -122,7 +109,7 @@ function createTypeFilterFromFilter(
   }
 
   if (types.length) {
-    return new PersonTypeFilter(new InFilterOperator(types));
+    return new PersonFilter('type', 'in', types);
   }
 
   return null;

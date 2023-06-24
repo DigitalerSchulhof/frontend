@@ -7,7 +7,7 @@ export class CourseServiceGrpcService
   extends GrpcService<CourseServiceClient>
   implements CourseService
 {
-  list(options: ListOptions): Promise<ListResult<WithId<Course>>> {
+  search(options: ListOptions): Promise<ListResult<WithId<Course>>> {
     throw new Error('Method not implemented.');
   }
 

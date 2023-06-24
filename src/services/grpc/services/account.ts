@@ -20,7 +20,7 @@ export class AccountServiceGrpcService
   extends GrpcService<AccountServiceClient>
   implements AccountService
 {
-  async list(options: ListOptions): Promise<ListResult<WithId<Account>>> {
+  async search(options: ListOptions): Promise<ListResult<WithId<Account>>> {
     const res = await this.client.ListAccounts(
       createListRequest(ListAccountsRequest, options)
     );

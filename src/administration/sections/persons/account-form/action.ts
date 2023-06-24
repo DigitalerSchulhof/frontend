@@ -3,6 +3,7 @@
 import { requireLogin } from '#/auth/action';
 import { LoggedInBackendContext } from '#/context';
 import { InvalidInputError, wrapFormAction } from '#/utils/action';
+import { generatePassword } from '#/utils/password';
 import ms from 'ms';
 import { Parse, v } from 'vality';
 
@@ -46,39 +47,48 @@ async function createAccount(
     throw new InvalidInputError();
   }
 
-  await context.services.account.createForPerson(personId, personRev, {
-    ...data,
-    personId,
-    passwordExpiresAt: Date.now() + ms('1h'),
-    lastLogin: null,
-    secondLastLogin: null,
-    settings: {
-      emailOn: {
-        newMessage: true,
-        newSubstitution: true,
-        newNews: true,
-      },
-      pushOn: {
-        newMessage: true,
-        newSubstitution: true,
-        newNews: true,
-      },
-      considerNews: {
-        newEvent: true,
-        newBlog: true,
-        newGallery: true,
-        fileChanged: true,
-      },
-      mailbox: {
-        deleteAfter: 30,
-        deleteAfterInBin: 90,
-      },
-      profile: {
-        sessionTimeout: 60,
-        formOfAddress: person.type === 'student' ? 'informal' : 'formal',
+  const { password, salt } = generatePassword();
+
+  await context.services.account.create(
+    {
+      personId,
+      ...data,
+      password,
+      salt,
+      passwordExpiresAt: Date.now() + ms('1h'),
+      lastLogin: null,
+      secondLastLogin: null,
+      settings: {
+        emailOn: {
+          newMessage: true,
+          newSubstitution: true,
+          newNews: true,
+        },
+        pushOn: {
+          newMessage: true,
+          newSubstitution: true,
+          newNews: true,
+        },
+        considerNews: {
+          newEvent: true,
+          newBlog: true,
+          newGallery: true,
+          fileChanged: true,
+        },
+        mailbox: {
+          deleteAfter: 30,
+          deleteAfterInBin: 90,
+        },
+        profile: {
+          sessionTimeout: 60,
+          formOfAddress: person.type === 'student' ? 'informal' : 'formal',
+        },
       },
     },
-  });
+    {
+      ifPersonRev: personRev,
+    }
+  );
 
   // TODO: Send mail to user
 }
@@ -89,7 +99,7 @@ async function editAccount(
   accountRev: string,
   data: AccountInput
 ) {
-  const person = await context.services.person.getById(personId);
+  const person = await context.services.person.get(personId);
 
   if (!person || person.accountId === null) {
     throw new InvalidInputError();
