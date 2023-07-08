@@ -1,31 +1,48 @@
 import { Account, AccountService } from '#/services/interfaces/account';
-import { ListOptions, ListResult, WithId } from '#/services/interfaces/base';
+import {
+  ListResult,
+  SearchOptions,
+  TypeFilter,
+  WithId,
+} from '#/services/interfaces/base';
 import {
   AccountServiceClient,
   BatchGetAccountsRequest,
   CreateAccountRequest,
   DeleteAccountRequest,
+  DeleteAccountsWhereRequest,
   GetAccountRequest,
   ListAccountsRequest,
   UpdateAccountRequest,
+  UpdateAccountsWhereRequest,
 } from '@dsh/protocols/dsh/services/account/v1/service';
+import { FieldMask } from '@dsh/protocols/google/protobuf/field_mask';
 import {
   accountFromObject,
   accountToObject,
 } from '../converters/dsh/services/account/v1/resources';
-import { GrpcService, createListRequest, transformListResponse } from './base';
-import { FieldMask } from '@dsh/protocols/google/protobuf/field_mask';
+import { GrpcService, filtersToGrpc } from './base';
 
 export class AccountServiceGrpcService
   extends GrpcService<AccountServiceClient>
   implements AccountService
 {
-  async search(options: ListOptions): Promise<ListResult<WithId<Account>>> {
+  async search(
+    options: SearchOptions<Account>
+  ): Promise<ListResult<WithId<Account>>> {
     const res = await this.client.ListAccounts(
-      createListRequest(ListAccountsRequest, options)
+      new ListAccountsRequest({
+        limit: options.limit,
+        offset: options.offset,
+        filter: filtersToGrpc(options.filter),
+        order_by: options.order,
+      })
     );
 
-    return transformListResponse('accounts', accountToObject, res);
+    return {
+      total: res.meta.total_count,
+      items: res.accounts.map(accountToObject),
+    };
   }
 
   async get(id: string): Promise<WithId<Account> | null> {
@@ -55,12 +72,28 @@ export class AccountServiceGrpcService
   async update(id: string, data: Partial<Account>): Promise<WithId<Account>> {
     const res = await this.client.UpdateAccount(
       new UpdateAccountRequest({
-        account: accountFromObject({ id, ...data }),
+        id,
+        account: accountFromObject(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
       })
     );
 
     return accountToObject(res.account);
+  }
+
+  async updateWhere(
+    filter: TypeFilter<Account>,
+    data: Partial<Account>
+  ): Promise<WithId<Account>[]> {
+    const res = await this.client.UpdateAccountsWhere(
+      new UpdateAccountsWhereRequest({
+        filter: filtersToGrpc(filter),
+        data: accountFromObject(data),
+        update_mask: new FieldMask({ paths: Object.keys(data) }),
+      })
+    );
+
+    return res.accounts.map(accountToObject);
   }
 
   async delete(id: string): Promise<WithId<Account>> {
@@ -69,5 +102,15 @@ export class AccountServiceGrpcService
     );
 
     return accountToObject(res.account);
+  }
+
+  async deleteWhere(filter: TypeFilter<Account>): Promise<WithId<Account>[]> {
+    const res = await this.client.DeleteAccountsWhere(
+      new DeleteAccountsWhereRequest({
+        filter: filtersToGrpc(filter),
+      })
+    );
+
+    return res.accounts.map(accountToObject);
   }
 }

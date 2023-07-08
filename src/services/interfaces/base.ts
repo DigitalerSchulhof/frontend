@@ -5,10 +5,10 @@ export type WithId<T> = T & {
   readonly createdAt: number;
 };
 
-export interface ListOptions<Base extends object> {
+export interface SearchOptions<Base extends object> {
   limit?: number;
   offset?: number;
-  filter?: BaseFilter<Base>;
+  filter?: TypeFilter<Base>;
   order?: string;
 }
 
@@ -17,33 +17,46 @@ export interface ListResult<T> {
   items: T[];
 }
 
-type SignaturesFor<T, P extends string = ''> = T extends object
+export type OverloadsForObject<
+  Type extends object,
+  Path extends string = ''
+> = Type extends unknown
   ? {
-      [K in keyof T]: T[K] extends object
-        ? SignaturesFor<T[K], `${P}${K & string}.`>
-        : TuplesFor<`${P}${K & string}`, T[K]>;
-    }[keyof T]
+      [Key in keyof Type & string]: Type[Key] extends
+        | number
+        | string
+        | boolean
+        | Buffer
+        | null
+        ? OverloadsForScalar<`${Path}${Key}`, Type[Key]>
+        : Type[Key] extends object
+        ? OverloadsForObject<Type[Key], `${Path}${Key}.`>
+        : never;
+    }[keyof Type & string]
   : never;
 
-type TuplesFor<K, T> = [T] extends [number]
-  ? [K, 'eq' | 'neq' | 'gt' | 'lt', T] | [K, 'in' | 'nin', T[]]
-  : [T] extends [string]
-  ? [K, 'eq' | 'neq' | 'like' | 'nlike', T] | [K, 'in' | 'nin', T[]]
-  : [T] extends [boolean]
-  ? [K, 'eq' | 'neq', T]
-  : [T] extends [number | null]
-  ? [K, 'eq' | 'neq', T] | [K, 'in' | 'nin', T[]]
-  : [T] extends [string | null]
-  ? [K, 'eq' | 'neq', T] | [K, 'in' | 'nin', T[]]
-  : [T] extends [boolean | null]
-  ? [K, 'eq' | 'neq', T]
+type OverloadsForScalar<Key, Type> = [Type] extends [number]
+  ? [Key, 'eq' | 'neq' | 'gt' | 'lt', Type] | [Key, 'in' | 'nin', Type[]]
+  : [Type] extends [string]
+  ? [Key, 'eq' | 'neq' | 'like' | 'nlike', Type] | [Key, 'in' | 'nin', Type[]]
+  : [Type] extends [boolean | Buffer]
+  ? [Key, 'eq' | 'neq', Type]
+  : [Type] extends [number | null]
+  ? [Key, 'eq' | 'neq', Type] | [Key, 'in' | 'nin', Type[]]
+  : [Type] extends [string | null]
+  ? [Key, 'eq' | 'neq', Type] | [Key, 'in' | 'nin', Type[]]
+  : [Type] extends [boolean | Buffer | null]
+  ? [Key, 'eq' | 'neq', Type]
   : never;
 
 export interface BaseService<Base extends object> {
-  search(options: ListOptions<Base>): Promise<ListResult<WithId<Base>>>;
+  search(options: SearchOptions<Base>): Promise<ListResult<WithId<Base>>>;
+
   get(id: string): Promise<WithId<Base> | null>;
   getByIds(ids: readonly string[]): Promise<(WithId<Base> | null)[]>;
+
   create(data: Base): Promise<WithId<Base>>;
+
   update(
     id: string,
     data: Partial<Base>,
@@ -51,33 +64,69 @@ export interface BaseService<Base extends object> {
       ifRev?: string;
     }
   ): Promise<WithId<Base>>;
+  updateWhere(
+    filter: TypeFilter<Base>,
+    data: Partial<Base>
+  ): Promise<WithId<Base>[]>;
+
   delete(
     id: string,
     options?: {
       ifRev?: string;
     }
   ): Promise<WithId<Base>>;
-  deleteWhere(filter: BaseFilter<Base>): Promise<WithId<Base>[]>;
+  deleteWhere(filter: TypeFilter<Base>): Promise<WithId<Base>[]>;
 }
 
-export abstract class BaseFilter<Base extends object> {
-  declare _obj: Base;
-  property;
-  operator;
-  value;
+export class OrFilter<Type extends object> {
+  private filters;
 
-  constructor(...args: SignaturesFor<Base>) {
-    // @ts-expect-error -- ???
-    [this.property, this.operator, this.value] = args;
-  }
-}
-
-export class AndFilter<Base extends object> extends BaseFilter<Base> {
-  filters;
-
-  constructor(...filters: (BaseFilter<Base> | null)[]) {
-    // @ts-expect-error -- test
-    super('and', 'and', 'and');
+  constructor(...filters: TypeFilter<Type>[]) {
     this.filters = filters;
   }
+
+  getFilters() {
+    return this.filters;
+  }
 }
+
+export class AndFilter<Type extends object> {
+  private filters;
+
+  constructor(...filters: TypeFilter<Type>[]) {
+    this.filters = filters;
+  }
+
+  getFilters() {
+    return this.filters;
+  }
+}
+
+export class Filter<Type extends object = object> {
+  private property: string;
+  private operator: string;
+  private value: unknown;
+
+  constructor(...args: OverloadsForObject<Type>) {
+    // @ts-expect-error -- Not sure
+    [this.property, this.operator, this.value] = args;
+  }
+
+  getProperty() {
+    return this.property;
+  }
+
+  getOperator() {
+    return this.operator;
+  }
+
+  getValue() {
+    return this.value;
+  }
+}
+
+export type TypeFilter<Type extends object> =
+  | OrFilter<Type>
+  | AndFilter<Type>
+  | Filter<Type>
+  | null;

@@ -1,11 +1,11 @@
-import { BaseFilter, BaseService, WithId } from './base';
+import { BaseService, WithId } from './base';
 
 export interface Account {
   personId: string;
   username: string;
   email: string;
-  password: string;
-  salt: string;
+  password: Buffer;
+  salt: Buffer;
   passwordExpiresAt: number | null;
   lastLogin: number | null;
   secondLastLogin: number | null;
@@ -57,5 +57,3 @@ export interface AccountService extends BaseService<Account> {
     }
   ): Promise<WithId<Account>>;
 }
-
-export class AccountFilter extends BaseFilter<Account> {}

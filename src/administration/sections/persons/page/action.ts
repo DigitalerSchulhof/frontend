@@ -1,8 +1,11 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import { AndFilter } from '#/services/interfaces/base';
-import { PersonFilter, PersonType } from '#/services/interfaces/person';
+import {
+  AndFilter,
+  Filter
+} from '#/services/interfaces/base';
+import { Person, PersonType } from '#/services/interfaces/person';
 import { wrapAction } from '#/utils/action';
 import { Parse, v } from 'vality';
 
@@ -55,15 +58,15 @@ export default wrapAction(
 
 function createFiltersFromFilter(
   filter: LoadPersonsFilter
-): PersonFilter | null {
-  const filters: (PersonFilter | null)[] = [];
+): AndFilter<Person> | null {
+  const filters: Filter<Person>[] = [];
 
   if (filter.lastname) {
-    filters.push(new PersonFilter('lastname', 'like', filter.lastname));
+    filters.push(new Filter('lastname', 'like', filter.lastname));
   }
 
   if (filter.firstname) {
-    filters.push(new PersonFilter('firstname', 'like', filter.firstname));
+    filters.push(new Filter('firstname', 'like', filter.firstname));
   }
 
   if (filter.class) {
@@ -85,7 +88,7 @@ function createFiltersFromFilter(
 
 function createTypeFilterFromFilter(
   filter: LoadPersonsFilter
-): PersonFilter | null {
+): Filter<Person> | null {
   const types: PersonType[] = [];
 
   if (filter.typeStudent) {
@@ -109,7 +112,7 @@ function createTypeFilterFromFilter(
   }
 
   if (types.length) {
-    return new PersonFilter('type', 'in', types);
+    return new Filter('type', 'in', types);
   }
 
   return null;

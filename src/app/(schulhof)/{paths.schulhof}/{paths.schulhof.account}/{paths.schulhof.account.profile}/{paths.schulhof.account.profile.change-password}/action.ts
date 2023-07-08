@@ -20,7 +20,10 @@ export default wrapFormAction(
       throw new ClientError('PASSWORD_MISMATCH');
     }
 
-    const oldPasswordHashed = hashPassword(oldPassword, context.account.salt);
+    const oldPasswordHashed = await hashPassword(
+      oldPassword,
+      context.account.salt
+    );
 
     const isOldPasswordValid = doPasswordsMatch(
       context.account.password,
@@ -33,7 +36,7 @@ export default wrapFormAction(
 
     const newSalt = generateSalt();
 
-    const newPasswordHashed = hashPassword(newPassword, newSalt);
+    const newPasswordHashed = await hashPassword(newPassword, newSalt);
 
     await context.services.account.update(
       context.account.id,

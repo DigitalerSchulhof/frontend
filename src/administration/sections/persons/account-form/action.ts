@@ -47,7 +47,7 @@ async function createAccount(
     throw new InvalidInputError();
   }
 
-  const { password, salt } = generatePassword();
+  const { password, salt } = await generatePassword();
 
   await context.services.account.create(
     {

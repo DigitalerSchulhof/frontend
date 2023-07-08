@@ -1,5 +1,6 @@
 import { config } from '#/config';
 import crypto from 'crypto';
+import 'fs.promises';
 import jwt from 'jsonwebtoken';
 
 export type JwtPayload = {
@@ -20,44 +21,52 @@ export type JwtPayload = {
   sub: string;
 };
 
-export function generatePassword(): { password: string; salt: string } {
+export async function generatePassword(): Promise<{
+  password: Buffer;
+  salt: Buffer;
+}> {
   const password = generateRawPassword();
   const salt = generateSalt();
 
-  return { password: hashPassword(password, salt), salt };
+  return { password: await hashPassword(password, salt), salt };
 }
 
-export function generateSalt(): string {
-  return crypto.randomBytes(128).toString('base64');
+export function generateSalt(): Buffer {
+  return crypto.randomBytes(128);
 }
 
 const wishlist =
   '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$';
 
+// https://stackoverflow.com/a/51540480/12405307
 function generateRawPassword(length = 20): string {
-  // https://stackoverflow.com/a/51540480/12405307
-
   return Array.from(crypto.getRandomValues(new Uint32Array(length)))
     .map((x) => wishlist[x % wishlist.length])
     .join('');
 }
 
-export function hashPassword(password: string, salt: string): string {
-  return crypto
-    .pbkdf2Sync(password, salt, 10000, 512, 'sha512')
-    .toString('base64');
+export async function hashPassword(
+  password: string,
+  salt: Buffer
+): Promise<Buffer> {
+  return new Promise((res, rej) =>
+    crypto.pbkdf2(password, salt, 10000, 512, 'sha512', (err, key) => {
+      if (err) {
+        rej(err);
+      } else {
+        res(key);
+      }
+    })
+  );
 }
 
 export function doPasswordsMatch(
-  hashedPassword: string,
-  hashedOtherPassword: string
+  hashedPassword: Buffer,
+  hashedOtherPassword: Buffer
 ): boolean {
   return (
     hashedPassword.length === hashedOtherPassword.length &&
-    crypto.timingSafeEqual(
-      Buffer.from(hashedPassword, 'base64'),
-      Buffer.from(hashedOtherPassword, 'base64')
-    )
+    crypto.timingSafeEqual(hashedPassword, hashedOtherPassword)
   );
 }
 

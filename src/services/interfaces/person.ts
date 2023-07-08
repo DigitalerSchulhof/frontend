@@ -1,4 +1,4 @@
-import { BaseFilter, BaseService } from './base';
+import { BaseService } from './base';
 
 export interface Person {
   firstname: string;
@@ -24,5 +24,3 @@ export type PersonGender = (typeof PERSON_GENDERS)[number];
 export interface PersonService extends BaseService<Person> {
   generateTeacherCodeSuggestion(lastname: string): Promise<string | null>;
 }
-
-export class PersonFilter extends BaseFilter<Person> {}

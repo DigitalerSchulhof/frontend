@@ -19,8 +19,8 @@ export function accountToObject(account: grpc.Account): WithId<js.Account> {
     personId: account.person_id,
     username: account.username,
     email: account.email,
-    password: account.password,
-    salt: account.salt,
+    password: Buffer.from(account.password),
+    salt: Buffer.from(account.salt),
     passwordExpiresAt: account.has_password_expires_at
       ? timestampToObject(account.password_expires_at)
       : null,
