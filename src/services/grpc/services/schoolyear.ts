@@ -1,36 +1,116 @@
-import { GrpcService } from '#/services/grpc/services/base';
-import { ListOptions, ListResult, WithId } from '#/services/interfaces/base';
 import {
-  Schoolyear,
-  SchoolyearService,
-} from '#/services/interfaces/schoolyear';
-import { SchoolyearServiceClient } from '@dsh/protocols/dsh/services/schoolyear/v1/service';
+  ListResult,
+  SearchOptions,
+  TypeFilter,
+  WithId,
+} from '#/services/interfaces/base';
+import { Schoolyear, SchoolyearService } from '#/services/interfaces/schoolyear';
+import {
+  BatchGetSchoolyearsRequest,
+  CreateSchoolyearRequest,
+  DeleteSchoolyearRequest,
+  DeleteSchoolyearsWhereRequest,
+  GetSchoolyearRequest,
+  ListSchoolyearsRequest,
+  SchoolyearServiceClient,
+  UpdateSchoolyearRequest,
+  UpdateSchoolyearsWhereRequest,
+} from '@dsh/protocols/dsh/services/schoolyear/v1/service';
+import { FieldMask } from '@dsh/protocols/google/protobuf/field_mask';
+import {
+  schoolyearFromJs,
+  schoolyearToJs,
+} from '../converters/dsh/services/schoolyear/v1/resources';
+import { GrpcService, filtersToGrpc } from './base';
 
 export class SchoolyearServiceGrpcService
   extends GrpcService<SchoolyearServiceClient>
   implements SchoolyearService
 {
-  search(options: ListOptions): Promise<ListResult<WithId<Schoolyear>>> {
-    throw new Error('Method not implemented.');
+  async search(
+    options: SearchOptions<Schoolyear>
+  ): Promise<ListResult<WithId<Schoolyear>>> {
+    const res = await this.client.ListSchoolyears(
+      new ListSchoolyearsRequest({
+        limit: options.limit,
+        offset: options.offset,
+        filter: filtersToGrpc(options.filter),
+        order_by: options.order,
+      })
+    );
+
+    return {
+      total: res.meta.total_count,
+      items: res.schoolyears.map(schoolyearToJs),
+    };
   }
 
-  get(id: string): Promise<WithId<Schoolyear> | null> {
-    throw new Error('Method not implemented.');
+  async get(id: string): Promise<WithId<Schoolyear> | null> {
+    const res = await this.client.GetSchoolyear(new GetSchoolyearRequest({ id }));
+
+    return schoolyearToJs(res.schoolyear);
   }
 
-  getByIds(ids: readonly string[]): Promise<(WithId<Schoolyear> | null)[]> {
-    throw new Error('Method not implemented.');
+  async getByIds(ids: readonly string[]): Promise<(WithId<Schoolyear> | null)[]> {
+    const res = await this.client.BatchGetSchoolyears(
+      new BatchGetSchoolyearsRequest({ ids })
+    );
+
+    return res.schoolyears.map(schoolyearToJs);
   }
 
-  create(data: Schoolyear): Promise<WithId<Schoolyear>> {
-    throw new Error('Method not implemented.');
+  async create(data: Schoolyear): Promise<WithId<Schoolyear>> {
+    const res = await this.client.CreateSchoolyear(
+      new CreateSchoolyearRequest({
+        data: schoolyearFromJs(data),
+      })
+    );
+
+    return schoolyearToJs(res.schoolyear);
   }
 
-  update(id: string, data: Partial<Schoolyear>): Promise<WithId<Schoolyear>> {
-    throw new Error('Method not implemented.');
+  async update(id: string, data: Partial<Schoolyear>): Promise<WithId<Schoolyear>> {
+    const res = await this.client.UpdateSchoolyear(
+      new UpdateSchoolyearRequest({
+        id,
+        data: schoolyearFromJs(data),
+        update_mask: new FieldMask({ paths: Object.keys(data) }),
+      })
+    );
+
+    return schoolyearToJs(res.schoolyear);
   }
 
-  delete(id: string): Promise<WithId<Schoolyear>> {
-    throw new Error('Method not implemented.');
+  async updateWhere(
+    filter: TypeFilter<Schoolyear>,
+    data: Partial<Schoolyear>
+  ): Promise<WithId<Schoolyear>[]> {
+    const res = await this.client.UpdateSchoolyearsWhere(
+      new UpdateSchoolyearsWhereRequest({
+        filter: filtersToGrpc(filter),
+        data: schoolyearFromJs(data),
+        update_mask: new FieldMask({ paths: Object.keys(data) }),
+      })
+    );
+
+    return res.schoolyears.map(schoolyearToJs);
+  }
+
+  async delete(id: string): Promise<WithId<Schoolyear>> {
+    const res = await this.client.DeleteSchoolyear(
+      new DeleteSchoolyearRequest({ id })
+    );
+
+    return schoolyearToJs(res.schoolyear);
+  }
+
+  async deleteWhere(filter: TypeFilter<Schoolyear>): Promise<WithId<Schoolyear>[]> {
+    const res = await this.client.DeleteSchoolyearsWhere(
+      new DeleteSchoolyearsWhereRequest({
+        filter: filtersToGrpc(filter),
+      })
+    );
+
+    return res.schoolyears.map(schoolyearToJs);
   }
 }

@@ -1,39 +1,128 @@
-import { GrpcService } from '#/services/grpc/services/base';
-import { ListOptions, ListResult, WithId } from '#/services/interfaces/base';
+import {
+  ListResult,
+  SearchOptions,
+  TypeFilter,
+  WithId,
+} from '#/services/interfaces/base';
 import {
   IdentityTheft,
   IdentityTheftService,
 } from '#/services/interfaces/identity-theft';
-import { IdentityTheftServiceClient } from '@dsh/protocols/dsh/services/identity_theft/v1/service';
+import {
+  BatchGetIdentityTheftsRequest,
+  CreateIdentityTheftRequest,
+  DeleteIdentityTheftRequest,
+  DeleteIdentityTheftsWhereRequest,
+  GetIdentityTheftRequest,
+  IdentityTheftServiceClient,
+  ListIdentityTheftsRequest,
+  UpdateIdentityTheftRequest,
+  UpdateIdentityTheftsWhereRequest,
+} from '@dsh/protocols/dsh/services/identity_theft/v1/service';
+import { FieldMask } from '@dsh/protocols/google/protobuf/field_mask';
+import {
+  identityTheftFromJs,
+  identityTheftToJs,
+} from '../converters/dsh/services/identity_theft/v1/resources';
+import { GrpcService, filtersToGrpc } from './base';
 
 export class IdentityTheftServiceGrpcService
   extends GrpcService<IdentityTheftServiceClient>
   implements IdentityTheftService
 {
-  search(options: ListOptions): Promise<ListResult<WithId<IdentityTheft>>> {
-    throw new Error('Method not implemented.');
+  async search(
+    options: SearchOptions<IdentityTheft>
+  ): Promise<ListResult<WithId<IdentityTheft>>> {
+    const res = await this.client.ListIdentityThefts(
+      new ListIdentityTheftsRequest({
+        limit: options.limit,
+        offset: options.offset,
+        filter: filtersToGrpc(options.filter),
+        order_by: options.order,
+      })
+    );
+
+    return {
+      total: res.meta.total_count,
+      items: res.identity_thefts.map(identityTheftToJs),
+    };
   }
 
-  get(id: string): Promise<WithId<IdentityTheft> | null> {
-    throw new Error('Method not implemented.');
+  async get(id: string): Promise<WithId<IdentityTheft> | null> {
+    const res = await this.client.GetIdentityTheft(
+      new GetIdentityTheftRequest({ id })
+    );
+
+    return identityTheftToJs(res.identity_theft);
   }
 
-  getByIds(ids: readonly string[]): Promise<(WithId<IdentityTheft> | null)[]> {
-    throw new Error('Method not implemented.');
+  async getByIds(
+    ids: readonly string[]
+  ): Promise<(WithId<IdentityTheft> | null)[]> {
+    const res = await this.client.BatchGetIdentityThefts(
+      new BatchGetIdentityTheftsRequest({ ids })
+    );
+
+    return res.identity_thefts.map(identityTheftToJs);
   }
 
-  create(data: IdentityTheft): Promise<WithId<IdentityTheft>> {
-    throw new Error('Method not implemented.');
+  async create(data: IdentityTheft): Promise<WithId<IdentityTheft>> {
+    const res = await this.client.CreateIdentityTheft(
+      new CreateIdentityTheftRequest({
+        data: identityTheftFromJs(data),
+      })
+    );
+
+    return identityTheftToJs(res.identity_theft);
   }
 
-  update(
+  async update(
     id: string,
     data: Partial<IdentityTheft>
   ): Promise<WithId<IdentityTheft>> {
-    throw new Error('Method not implemented.');
+    const res = await this.client.UpdateIdentityTheft(
+      new UpdateIdentityTheftRequest({
+        id,
+        data: identityTheftFromJs(data),
+        update_mask: new FieldMask({ paths: Object.keys(data) }),
+      })
+    );
+
+    return identityTheftToJs(res.identity_theft);
   }
 
-  delete(id: string): Promise<WithId<IdentityTheft>> {
-    throw new Error('Method not implemented.');
+  async updateWhere(
+    filter: TypeFilter<IdentityTheft>,
+    data: Partial<IdentityTheft>
+  ): Promise<WithId<IdentityTheft>[]> {
+    const res = await this.client.UpdateIdentityTheftsWhere(
+      new UpdateIdentityTheftsWhereRequest({
+        filter: filtersToGrpc(filter),
+        data: identityTheftFromJs(data),
+        update_mask: new FieldMask({ paths: Object.keys(data) }),
+      })
+    );
+
+    return res.identity_thefts.map(identityTheftToJs);
+  }
+
+  async delete(id: string): Promise<WithId<IdentityTheft>> {
+    const res = await this.client.DeleteIdentityTheft(
+      new DeleteIdentityTheftRequest({ id })
+    );
+
+    return identityTheftToJs(res.identity_theft);
+  }
+
+  async deleteWhere(
+    filter: TypeFilter<IdentityTheft>
+  ): Promise<WithId<IdentityTheft>[]> {
+    const res = await this.client.DeleteIdentityTheftsWhere(
+      new DeleteIdentityTheftsWhereRequest({
+        filter: filtersToGrpc(filter),
+      })
+    );
+
+    return res.identity_thefts.map(identityTheftToJs);
   }
 }

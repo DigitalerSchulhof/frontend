@@ -1,13 +1,13 @@
 import * as grpc from '@dsh/protocols/google/protobuf/timestamp';
 
-export function timestampToObject(timestamp: grpc.Timestamp): number {
+export function timestampToJs(timestamp: grpc.Timestamp): number {
   return Math.floor(timestamp.seconds * 1000 + timestamp.nanos / 1e6);
 }
 
-export function timestampFromObject(
-  timestamp: number | null | undefined
+export function timestampFromJs(
+  timestamp: number | undefined
 ): grpc.Timestamp | undefined {
-  if (timestamp == null) return undefined;
+  if (timestamp === undefined) return undefined;
 
   return new grpc.Timestamp({
     seconds: Math.floor(timestamp / 1000),

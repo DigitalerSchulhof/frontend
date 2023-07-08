@@ -1,13 +1,13 @@
 import * as grpc from '@dsh/protocols/google/protobuf/duration';
 
-export function durationToObject(duration: grpc.Duration): number {
+export function durationToJs(duration: grpc.Duration): number {
   return duration.seconds * 1000 + Math.floor(duration.nanos / 1e6);
 }
 
-export function durationFromObject(
-  duration: number | null | undefined
+export function durationFromJs(
+  duration: number  | undefined
 ): grpc.Duration | undefined {
-  if (duration == null) {
+  if (duration === undefined) {
     return undefined;
   }
 

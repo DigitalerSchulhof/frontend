@@ -1,33 +1,116 @@
-import { GrpcService } from '#/services/grpc/services/base';
-import { ListOptions, ListResult, WithId } from '#/services/interfaces/base';
+import {
+  ListResult,
+  SearchOptions,
+  TypeFilter,
+  WithId,
+} from '#/services/interfaces/base';
 import { Course, CourseService } from '#/services/interfaces/course';
-import { CourseServiceClient } from '@dsh/protocols/dsh/services/course/v1/service';
+import {
+  BatchGetCoursesRequest,
+  CourseServiceClient,
+  CreateCourseRequest,
+  DeleteCourseRequest,
+  DeleteCoursesWhereRequest,
+  GetCourseRequest,
+  ListCoursesRequest,
+  UpdateCourseRequest,
+  UpdateCoursesWhereRequest,
+} from '@dsh/protocols/dsh/services/course/v1/service';
+import { FieldMask } from '@dsh/protocols/google/protobuf/field_mask';
+import {
+  courseFromJs,
+  courseToJs,
+} from '../converters/dsh/services/course/v1/resources';
+import { GrpcService, filtersToGrpc } from './base';
 
 export class CourseServiceGrpcService
   extends GrpcService<CourseServiceClient>
   implements CourseService
 {
-  search(options: ListOptions): Promise<ListResult<WithId<Course>>> {
-    throw new Error('Method not implemented.');
+  async search(
+    options: SearchOptions<Course>
+  ): Promise<ListResult<WithId<Course>>> {
+    const res = await this.client.ListCourses(
+      new ListCoursesRequest({
+        limit: options.limit,
+        offset: options.offset,
+        filter: filtersToGrpc(options.filter),
+        order_by: options.order,
+      })
+    );
+
+    return {
+      total: res.meta.total_count,
+      items: res.courses.map(courseToJs),
+    };
   }
 
-  get(id: string): Promise<WithId<Course> | null> {
-    throw new Error('Method not implemented.');
+  async get(id: string): Promise<WithId<Course> | null> {
+    const res = await this.client.GetCourse(new GetCourseRequest({ id }));
+
+    return courseToJs(res.course);
   }
 
-  getByIds(ids: readonly string[]): Promise<(WithId<Course> | null)[]> {
-    throw new Error('Method not implemented.');
+  async getByIds(ids: readonly string[]): Promise<(WithId<Course> | null)[]> {
+    const res = await this.client.BatchGetCourses(
+      new BatchGetCoursesRequest({ ids })
+    );
+
+    return res.courses.map(courseToJs);
   }
 
-  create(data: Course): Promise<WithId<Course>> {
-    throw new Error('Method not implemented.');
+  async create(data: Course): Promise<WithId<Course>> {
+    const res = await this.client.CreateCourse(
+      new CreateCourseRequest({
+        data: courseFromJs(data),
+      })
+    );
+
+    return courseToJs(res.course);
   }
 
-  update(id: string, data: Partial<Course>): Promise<WithId<Course>> {
-    throw new Error('Method not implemented.');
+  async update(id: string, data: Partial<Course>): Promise<WithId<Course>> {
+    const res = await this.client.UpdateCourse(
+      new UpdateCourseRequest({
+        id,
+        data: courseFromJs(data),
+        update_mask: new FieldMask({ paths: Object.keys(data) }),
+      })
+    );
+
+    return courseToJs(res.course);
   }
 
-  delete(id: string): Promise<WithId<Course>> {
-    throw new Error('Method not implemented.');
+  async updateWhere(
+    filter: TypeFilter<Course>,
+    data: Partial<Course>
+  ): Promise<WithId<Course>[]> {
+    const res = await this.client.UpdateCoursesWhere(
+      new UpdateCoursesWhereRequest({
+        filter: filtersToGrpc(filter),
+        data: courseFromJs(data),
+        update_mask: new FieldMask({ paths: Object.keys(data) }),
+      })
+    );
+
+    return res.courses.map(courseToJs);
+  }
+
+  async delete(id: string): Promise<WithId<Course>> {
+    const res = await this.client.DeleteCourse(
+      new DeleteCourseRequest({ id })
+    );
+
+    return courseToJs(res.course);
+  }
+
+  async deleteWhere(filter: TypeFilter<Course>): Promise<WithId<Course>[]> {
+    const res = await this.client.DeleteCoursesWhere(
+      new DeleteCoursesWhereRequest({
+        filter: filtersToGrpc(filter),
+      })
+    );
+
+    return res.courses.map(courseToJs);
   }
 }
