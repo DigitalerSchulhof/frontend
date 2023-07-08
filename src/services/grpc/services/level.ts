@@ -97,9 +97,7 @@ export class LevelServiceGrpcService
   }
 
   async delete(id: string): Promise<WithId<Level>> {
-    const res = await this.client.DeleteLevel(
-      new DeleteLevelRequest({ id })
-    );
+    const res = await this.client.DeleteLevel(new DeleteLevelRequest({ id }));
 
     return levelToJs(res.level);
   }

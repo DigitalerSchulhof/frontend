@@ -2,8 +2,8 @@ import { BaseService } from './base';
 
 export interface Schoolyear {
   name: string;
-  start: Date;
-  end: Date;
+  start: number;
+  end: number;
 }
 
 export interface SchoolyearService extends BaseService<Schoolyear> {}

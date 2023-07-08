@@ -97,9 +97,7 @@ export class CourseServiceGrpcService
   }
 
   async delete(id: string): Promise<WithId<Course>> {
-    const res = await this.client.DeleteCourse(
-      new DeleteCourseRequest({ id })
-    );
+    const res = await this.client.DeleteCourse(new DeleteCourseRequest({ id }));
 
     return courseToJs(res.course);
   }

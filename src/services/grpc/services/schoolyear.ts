@@ -4,7 +4,10 @@ import {
   TypeFilter,
   WithId,
 } from '#/services/interfaces/base';
-import { Schoolyear, SchoolyearService } from '#/services/interfaces/schoolyear';
+import {
+  Schoolyear,
+  SchoolyearService,
+} from '#/services/interfaces/schoolyear';
 import {
   BatchGetSchoolyearsRequest,
   CreateSchoolyearRequest,
@@ -46,12 +49,16 @@ export class SchoolyearServiceGrpcService
   }
 
   async get(id: string): Promise<WithId<Schoolyear> | null> {
-    const res = await this.client.GetSchoolyear(new GetSchoolyearRequest({ id }));
+    const res = await this.client.GetSchoolyear(
+      new GetSchoolyearRequest({ id })
+    );
 
     return schoolyearToJs(res.schoolyear);
   }
 
-  async getByIds(ids: readonly string[]): Promise<(WithId<Schoolyear> | null)[]> {
+  async getByIds(
+    ids: readonly string[]
+  ): Promise<(WithId<Schoolyear> | null)[]> {
     const res = await this.client.BatchGetSchoolyears(
       new BatchGetSchoolyearsRequest({ ids })
     );
@@ -69,7 +76,10 @@ export class SchoolyearServiceGrpcService
     return schoolyearToJs(res.schoolyear);
   }
 
-  async update(id: string, data: Partial<Schoolyear>): Promise<WithId<Schoolyear>> {
+  async update(
+    id: string,
+    data: Partial<Schoolyear>
+  ): Promise<WithId<Schoolyear>> {
     const res = await this.client.UpdateSchoolyear(
       new UpdateSchoolyearRequest({
         id,
@@ -104,7 +114,9 @@ export class SchoolyearServiceGrpcService
     return schoolyearToJs(res.schoolyear);
   }
 
-  async deleteWhere(filter: TypeFilter<Schoolyear>): Promise<WithId<Schoolyear>[]> {
+  async deleteWhere(
+    filter: TypeFilter<Schoolyear>
+  ): Promise<WithId<Schoolyear>[]> {
     const res = await this.client.DeleteSchoolyearsWhere(
       new DeleteSchoolyearsWhereRequest({
         filter: filtersToGrpc(filter),

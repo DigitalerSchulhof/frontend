@@ -100,9 +100,7 @@ export class PersonServiceGrpcService
   }
 
   async delete(id: string): Promise<WithId<Person>> {
-    const res = await this.client.DeletePerson(
-      new DeletePersonRequest({ id })
-    );
+    const res = await this.client.DeletePerson(new DeletePersonRequest({ id }));
 
     return personToJs(res.person);
   }

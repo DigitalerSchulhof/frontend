@@ -2,7 +2,7 @@ import { BaseService } from './base';
 
 export interface Session {
   personId: string;
-  issuedAt: Date;
+  issuedAt: number;
   didShowLastLogin: boolean;
 }
 

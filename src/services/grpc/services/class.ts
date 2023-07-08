@@ -97,9 +97,7 @@ export class ClassServiceGrpcService
   }
 
   async delete(id: string): Promise<WithId<Class>> {
-    const res = await this.client.DeleteClass(
-      new DeleteClassRequest({ id })
-    );
+    const res = await this.client.DeleteClass(new DeleteClassRequest({ id }));
 
     return classToJs(res.class);
   }
