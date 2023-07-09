@@ -24,7 +24,7 @@ import {
   identityTheftFromJs,
   identityTheftToJs,
 } from '../converters/dsh/services/identity_theft/v1/resources';
-import { GrpcService, filtersToGrpc } from './base';
+import { GrpcService, filterToGrpc } from './base';
 
 export class IdentityTheftServiceGrpcService
   extends GrpcService<IdentityTheftServiceClient>
@@ -37,7 +37,7 @@ export class IdentityTheftServiceGrpcService
       new ListIdentityTheftsRequest({
         limit: options.limit,
         offset: options.offset,
-        filter: filtersToGrpc(options.filter),
+        filter: filterToGrpc(options.filter),
         order_by: options.order,
       })
     );
@@ -97,7 +97,7 @@ export class IdentityTheftServiceGrpcService
   ): Promise<WithId<IdentityTheft>[]> {
     const res = await this.client.UpdateIdentityTheftsWhere(
       new UpdateIdentityTheftsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
         data: identityTheftFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
       })
@@ -119,7 +119,7 @@ export class IdentityTheftServiceGrpcService
   ): Promise<WithId<IdentityTheft>[]> {
     const res = await this.client.DeleteIdentityTheftsWhere(
       new DeleteIdentityTheftsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
       })
     );
 

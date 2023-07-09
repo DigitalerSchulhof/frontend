@@ -21,7 +21,7 @@ import {
   accountFromJs,
   accountToJs,
 } from '../converters/dsh/services/account/v1/resources';
-import { GrpcService, filtersToGrpc } from './base';
+import { GrpcService, filterToGrpc } from './base';
 
 export class AccountServiceGrpcService
   extends GrpcService<AccountServiceClient>
@@ -34,7 +34,7 @@ export class AccountServiceGrpcService
       new ListAccountsRequest({
         limit: options.limit,
         offset: options.offset,
-        filter: filtersToGrpc(options.filter),
+        filter: filterToGrpc(options.filter),
         order_by: options.order,
       })
     );
@@ -87,7 +87,7 @@ export class AccountServiceGrpcService
   ): Promise<WithId<Account>[]> {
     const res = await this.client.UpdateAccountsWhere(
       new UpdateAccountsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
         data: accountFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
       })
@@ -107,7 +107,7 @@ export class AccountServiceGrpcService
   async deleteWhere(filter: TypeFilter<Account>): Promise<WithId<Account>[]> {
     const res = await this.client.DeleteAccountsWhere(
       new DeleteAccountsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
       })
     );
 

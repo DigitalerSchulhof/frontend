@@ -21,7 +21,7 @@ import {
   personFromJs,
   personToJs,
 } from '../converters/dsh/services/person/v1/resources';
-import { GrpcService, filtersToGrpc } from './base';
+import { GrpcService, filterToGrpc } from './base';
 
 export class PersonServiceGrpcService
   extends GrpcService<PersonServiceClient>
@@ -37,7 +37,7 @@ export class PersonServiceGrpcService
       new ListPersonsRequest({
         limit: options.limit,
         offset: options.offset,
-        filter: filtersToGrpc(options.filter),
+        filter: filterToGrpc(options.filter),
         order_by: options.order,
       })
     );
@@ -90,7 +90,7 @@ export class PersonServiceGrpcService
   ): Promise<WithId<Person>[]> {
     const res = await this.client.UpdatePersonsWhere(
       new UpdatePersonsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
         data: personFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
       })
@@ -108,7 +108,7 @@ export class PersonServiceGrpcService
   async deleteWhere(filter: TypeFilter<Person>): Promise<WithId<Person>[]> {
     const res = await this.client.DeletePersonsWhere(
       new DeletePersonsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
       })
     );
 

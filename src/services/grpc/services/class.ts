@@ -21,7 +21,7 @@ import {
   classFromJs,
   classToJs,
 } from '../converters/dsh/services/class/v1/resources';
-import { GrpcService, filtersToGrpc } from './base';
+import { GrpcService, filterToGrpc } from './base';
 
 export class ClassServiceGrpcService
   extends GrpcService<ClassServiceClient>
@@ -34,7 +34,7 @@ export class ClassServiceGrpcService
       new ListClassesRequest({
         limit: options.limit,
         offset: options.offset,
-        filter: filtersToGrpc(options.filter),
+        filter: filterToGrpc(options.filter),
         order_by: options.order,
       })
     );
@@ -87,7 +87,7 @@ export class ClassServiceGrpcService
   ): Promise<WithId<Class>[]> {
     const res = await this.client.UpdateClassesWhere(
       new UpdateClassesWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
         data: classFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
       })
@@ -105,7 +105,7 @@ export class ClassServiceGrpcService
   async deleteWhere(filter: TypeFilter<Class>): Promise<WithId<Class>[]> {
     const res = await this.client.DeleteClassesWhere(
       new DeleteClassesWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
       })
     );
 

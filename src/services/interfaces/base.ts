@@ -1,3 +1,5 @@
+import { MaybeArray } from '#/utils';
+
 export type WithId<T> = T & {
   readonly id: string;
   readonly rev: string;
@@ -79,49 +81,29 @@ export interface BaseService<Base extends object> {
 }
 
 export class OrFilter<Type extends object> {
-  private filters;
+  filters;
 
   constructor(...filters: TypeFilter<Type>[]) {
     this.filters = filters;
-  }
-
-  getFilters() {
-    return this.filters;
   }
 }
 
 export class AndFilter<Type extends object> {
-  private filters;
+  filters;
 
   constructor(...filters: TypeFilter<Type>[]) {
     this.filters = filters;
   }
-
-  getFilters() {
-    return this.filters;
-  }
 }
 
 export class Filter<Type extends object = object> {
-  private property: string;
-  private operator: string;
-  private value: unknown;
+  property: string;
+  operator: string;
+  value: MaybeArray<number | string | boolean | Buffer | null>;
 
   constructor(...args: OverloadsForObject<Type>) {
     // @ts-expect-error -- Not sure
     [this.property, this.operator, this.value] = args;
-  }
-
-  getProperty() {
-    return this.property;
-  }
-
-  getOperator() {
-    return this.operator;
-  }
-
-  getValue() {
-    return this.value;
   }
 }
 

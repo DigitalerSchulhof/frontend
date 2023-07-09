@@ -5,32 +5,34 @@ export abstract class GrpcService<Client extends grpc.Client> {
   constructor(protected readonly client: Client) {}
 }
 
-export function filtersToGrpc(
+export function filterToGrpc(
   filter: TypeFilter<object> | undefined
 ): string | undefined {
   // JSON.stringify(undefined) === undefined
   // Buffer has a `toJSON` method, so we're fine to JSON.stringify it
-  return JSON.stringify(filtersToGrpcWorker(filter));
+  return JSON.stringify(filterToGrpcWorker(filter));
 }
 
-function filtersToGrpcWorker(
+function filterToGrpcWorker(
   filter: TypeFilter<object> | undefined
 ): object | undefined {
   if (!filter) return undefined;
 
   if (filter instanceof AndFilter) {
     return {
-      and: filter.getFilters().map(filtersToGrpc),
+      and: filter.filters.map(filterToGrpcWorker),
     };
   }
 
   if (filter instanceof OrFilter) {
     return {
-      or: filter.getFilters().map(filtersToGrpc),
+      or: filter.filters.map(filterToGrpcWorker),
     };
   }
 
+  const { property, operator, value } = filter;
+
   return {
-    filter: [filter.getProperty(), filter.getOperator(), filter.getValue()],
+    filter: { property, operator, value },
   };
 }

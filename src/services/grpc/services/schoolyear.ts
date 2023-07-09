@@ -24,7 +24,7 @@ import {
   schoolyearFromJs,
   schoolyearToJs,
 } from '../converters/dsh/services/schoolyear/v1/resources';
-import { GrpcService, filtersToGrpc } from './base';
+import { GrpcService, filterToGrpc } from './base';
 
 export class SchoolyearServiceGrpcService
   extends GrpcService<SchoolyearServiceClient>
@@ -37,7 +37,7 @@ export class SchoolyearServiceGrpcService
       new ListSchoolyearsRequest({
         limit: options.limit,
         offset: options.offset,
-        filter: filtersToGrpc(options.filter),
+        filter: filterToGrpc(options.filter),
         order_by: options.order,
       })
     );
@@ -97,7 +97,7 @@ export class SchoolyearServiceGrpcService
   ): Promise<WithId<Schoolyear>[]> {
     const res = await this.client.UpdateSchoolyearsWhere(
       new UpdateSchoolyearsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
         data: schoolyearFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
       })
@@ -119,7 +119,7 @@ export class SchoolyearServiceGrpcService
   ): Promise<WithId<Schoolyear>[]> {
     const res = await this.client.DeleteSchoolyearsWhere(
       new DeleteSchoolyearsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
       })
     );
 

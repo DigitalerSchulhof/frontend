@@ -21,7 +21,7 @@ import {
   courseFromJs,
   courseToJs,
 } from '../converters/dsh/services/course/v1/resources';
-import { GrpcService, filtersToGrpc } from './base';
+import { GrpcService, filterToGrpc } from './base';
 
 export class CourseServiceGrpcService
   extends GrpcService<CourseServiceClient>
@@ -34,7 +34,7 @@ export class CourseServiceGrpcService
       new ListCoursesRequest({
         limit: options.limit,
         offset: options.offset,
-        filter: filtersToGrpc(options.filter),
+        filter: filterToGrpc(options.filter),
         order_by: options.order,
       })
     );
@@ -87,7 +87,7 @@ export class CourseServiceGrpcService
   ): Promise<WithId<Course>[]> {
     const res = await this.client.UpdateCoursesWhere(
       new UpdateCoursesWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
         data: courseFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
       })
@@ -105,7 +105,7 @@ export class CourseServiceGrpcService
   async deleteWhere(filter: TypeFilter<Course>): Promise<WithId<Course>[]> {
     const res = await this.client.DeleteCoursesWhere(
       new DeleteCoursesWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
       })
     );
 

@@ -21,7 +21,7 @@ import {
   sessionFromJs,
   sessionToJs,
 } from '../converters/dsh/services/session/v1/resources';
-import { GrpcService, filtersToGrpc } from './base';
+import { GrpcService, filterToGrpc } from './base';
 
 export class SessionServiceGrpcService
   extends GrpcService<SessionServiceClient>
@@ -34,7 +34,7 @@ export class SessionServiceGrpcService
       new ListSessionsRequest({
         limit: options.limit,
         offset: options.offset,
-        filter: filtersToGrpc(options.filter),
+        filter: filterToGrpc(options.filter),
         order_by: options.order,
       })
     );
@@ -87,7 +87,7 @@ export class SessionServiceGrpcService
   ): Promise<WithId<Session>[]> {
     const res = await this.client.UpdateSessionsWhere(
       new UpdateSessionsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
         data: sessionFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
       })
@@ -107,7 +107,7 @@ export class SessionServiceGrpcService
   async deleteWhere(filter: TypeFilter<Session>): Promise<WithId<Session>[]> {
     const res = await this.client.DeleteSessionsWhere(
       new DeleteSessionsWhereRequest({
-        filter: filtersToGrpc(filter),
+        filter: filterToGrpc(filter),
       })
     );
 
