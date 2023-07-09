@@ -23,7 +23,7 @@ import {
 } from '../converters/dsh/services/account/v1/resources';
 import { GrpcService, filterToGrpc } from './base';
 
-export class AccountServiceGrpcService
+export class GrpcAccountService
   extends GrpcService<AccountServiceClient>
   implements AccountService
 {
@@ -69,12 +69,19 @@ export class AccountServiceGrpcService
     return accountToJs(res.account);
   }
 
-  async update(id: string, data: Partial<Account>): Promise<WithId<Account>> {
+  async update(
+    id: string,
+    data: Partial<Account>,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Account>> {
     const res = await this.client.UpdateAccount(
       new UpdateAccountRequest({
         id,
         data: accountFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
+        if_rev: options?.ifRev,
       })
     );
 
@@ -96,9 +103,14 @@ export class AccountServiceGrpcService
     return res.accounts.map(accountToJs);
   }
 
-  async delete(id: string): Promise<WithId<Account>> {
+  async delete(
+    id: string,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Account>> {
     const res = await this.client.DeleteAccount(
-      new DeleteAccountRequest({ id })
+      new DeleteAccountRequest({ id, if_rev: options?.ifRev })
     );
 
     return accountToJs(res.account);

@@ -23,7 +23,7 @@ import {
 } from '../converters/dsh/services/level/v1/resources';
 import { GrpcService, filterToGrpc } from './base';
 
-export class LevelServiceGrpcService
+export class GrpcLevelService
   extends GrpcService<LevelServiceClient>
   implements LevelService
 {
@@ -69,12 +69,19 @@ export class LevelServiceGrpcService
     return levelToJs(res.level);
   }
 
-  async update(id: string, data: Partial<Level>): Promise<WithId<Level>> {
+  async update(
+    id: string,
+    data: Partial<Level>,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Level>> {
     const res = await this.client.UpdateLevel(
       new UpdateLevelRequest({
         id,
         data: levelFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
+        if_rev: options?.ifRev,
       })
     );
 
@@ -96,8 +103,15 @@ export class LevelServiceGrpcService
     return res.levels.map(levelToJs);
   }
 
-  async delete(id: string): Promise<WithId<Level>> {
-    const res = await this.client.DeleteLevel(new DeleteLevelRequest({ id }));
+  async delete(
+    id: string,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Level>> {
+    const res = await this.client.DeleteLevel(
+      new DeleteLevelRequest({ id, if_rev: options?.ifRev })
+    );
 
     return levelToJs(res.level);
   }

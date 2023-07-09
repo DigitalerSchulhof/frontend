@@ -23,7 +23,7 @@ import {
 } from '../converters/dsh/services/person/v1/resources';
 import { GrpcService, filterToGrpc } from './base';
 
-export class PersonServiceGrpcService
+export class GrpcPersonService
   extends GrpcService<PersonServiceClient>
   implements PersonService
 {
@@ -72,12 +72,19 @@ export class PersonServiceGrpcService
     return personToJs(res.person);
   }
 
-  async update(id: string, data: Partial<Person>): Promise<WithId<Person>> {
+  async update(
+    id: string,
+    data: Partial<Person>,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Person>> {
     const res = await this.client.UpdatePerson(
       new UpdatePersonRequest({
         id,
         data: personFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
+        if_rev: options?.ifRev,
       })
     );
 
@@ -99,8 +106,15 @@ export class PersonServiceGrpcService
     return res.persons.map(personToJs);
   }
 
-  async delete(id: string): Promise<WithId<Person>> {
-    const res = await this.client.DeletePerson(new DeletePersonRequest({ id }));
+  async delete(
+    id: string,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Person>> {
+    const res = await this.client.DeletePerson(
+      new DeletePersonRequest({ id, if_rev: options?.ifRev })
+    );
 
     return personToJs(res.person);
   }

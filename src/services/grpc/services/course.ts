@@ -23,7 +23,7 @@ import {
 } from '../converters/dsh/services/course/v1/resources';
 import { GrpcService, filterToGrpc } from './base';
 
-export class CourseServiceGrpcService
+export class GrpcCourseService
   extends GrpcService<CourseServiceClient>
   implements CourseService
 {
@@ -69,12 +69,19 @@ export class CourseServiceGrpcService
     return courseToJs(res.course);
   }
 
-  async update(id: string, data: Partial<Course>): Promise<WithId<Course>> {
+  async update(
+    id: string,
+    data: Partial<Course>,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Course>> {
     const res = await this.client.UpdateCourse(
       new UpdateCourseRequest({
         id,
         data: courseFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
+        if_rev: options?.ifRev,
       })
     );
 
@@ -96,8 +103,15 @@ export class CourseServiceGrpcService
     return res.courses.map(courseToJs);
   }
 
-  async delete(id: string): Promise<WithId<Course>> {
-    const res = await this.client.DeleteCourse(new DeleteCourseRequest({ id }));
+  async delete(
+    id: string,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Course>> {
+    const res = await this.client.DeleteCourse(
+      new DeleteCourseRequest({ id, if_rev: options?.ifRev })
+    );
 
     return courseToJs(res.course);
   }

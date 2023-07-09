@@ -23,7 +23,7 @@ import {
 } from '../converters/dsh/services/session/v1/resources';
 import { GrpcService, filterToGrpc } from './base';
 
-export class SessionServiceGrpcService
+export class GrpcSessionService
   extends GrpcService<SessionServiceClient>
   implements SessionService
 {
@@ -69,12 +69,19 @@ export class SessionServiceGrpcService
     return sessionToJs(res.session);
   }
 
-  async update(id: string, data: Partial<Session>): Promise<WithId<Session>> {
+  async update(
+    id: string,
+    data: Partial<Session>,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Session>> {
     const res = await this.client.UpdateSession(
       new UpdateSessionRequest({
         id,
         data: sessionFromJs(data),
         update_mask: new FieldMask({ paths: Object.keys(data) }),
+        if_rev: options?.ifRev,
       })
     );
 
@@ -96,9 +103,14 @@ export class SessionServiceGrpcService
     return res.sessions.map(sessionToJs);
   }
 
-  async delete(id: string): Promise<WithId<Session>> {
+  async delete(
+    id: string,
+    options?: {
+      ifRev?: string;
+    }
+  ): Promise<WithId<Session>> {
     const res = await this.client.DeleteSession(
-      new DeleteSessionRequest({ id })
+      new DeleteSessionRequest({ id, if_rev: options?.ifRev })
     );
 
     return sessionToJs(res.session);
