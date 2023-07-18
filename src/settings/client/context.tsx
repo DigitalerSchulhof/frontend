@@ -15,7 +15,7 @@ export interface AppSettings {
   };
 }
 
-// @ts-expect-error -- ´This context requires a provider provider and if none is used, we want a 'cannot read property of null' error
+// @ts-expect-error -- This context requires a provider provider and if none is used, we want a 'cannot read property of null' error
 export const settingsContext = createContext<AppSettings>(null);
 
 export const SettingsProvider = ({
