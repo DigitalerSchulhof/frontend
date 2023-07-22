@@ -1,6 +1,5 @@
 import { config } from '#/config';
 import crypto from 'crypto';
-import 'fs.promises';
 import jwt from 'jsonwebtoken';
 
 export type JwtPayload = {

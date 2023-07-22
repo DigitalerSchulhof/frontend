@@ -11,19 +11,29 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noImplicitOverride": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "jsx": "preserve",
     "baseUrl": ".",
-    "types": ["node", "jest"],
+    "types": [
+      "node",
+      "jest"
+    ],
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "#/*": ["./src/*"]
-    }
+      "#/*": [
+        "./src/*"
+      ]
+    },
+    "moduleResolution": "node"
   },
   "include": [
     "./src/**/*.ts",
@@ -33,5 +43,7 @@
     "next.config.js",
     "reset.d.ts"
   ],
-  "exclude": ["**/node_modules/*"]
+  "exclude": [
+    "**/node_modules/*"
+  ]
 }
