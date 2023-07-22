@@ -1,13 +1,7 @@
 'use client';
 
-import {
-  ChangeEventHandler,
-  InputHTMLAttributes,
-  forwardRef,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-} from 'react';
+import type { ChangeEventHandler, InputHTMLAttributes } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
 import { styled } from 'styled-components';
 
 export type ToggleProps = Omit<

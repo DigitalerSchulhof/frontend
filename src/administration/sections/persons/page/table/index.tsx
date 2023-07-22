@@ -1,8 +1,8 @@
 'use client';
 
-import { FormOfAddress } from '#/services/interfaces/account';
+import type { FormOfAddress } from '#/services/interfaces/account';
 import { useState } from 'react';
-import { LoadPersonsFilter } from '../action';
+import type { LoadPersonsFilter } from '../action';
 import { PersonsTableContent } from './content';
 import { PersonsTableFilter } from './filter';
 

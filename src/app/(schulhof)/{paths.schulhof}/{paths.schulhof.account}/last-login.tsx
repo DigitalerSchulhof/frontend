@@ -1,4 +1,4 @@
-import { LoggedInBackendContext } from '#/context';
+import type { LoggedInBackendContext } from '#/context';
 import { T, makeLink } from '#/i18n';
 
 export async function getLastLoginAndUpdateDidShow(

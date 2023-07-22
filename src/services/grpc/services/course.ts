@@ -1,13 +1,13 @@
-import {
+import type {
   ListResult,
   SearchOptions,
   TypeFilter,
   WithId,
 } from '#/services/interfaces/base';
-import { Course, CourseService } from '#/services/interfaces/course';
+import type { Course, CourseService } from '#/services/interfaces/course';
+import type { CourseServiceClient } from '@dsh/protocols/dsh/services/course/v1/service';
 import {
   BatchGetCoursesRequest,
-  CourseServiceClient,
   CreateCourseRequest,
   DeleteCourseRequest,
   DeleteCoursesWhereRequest,

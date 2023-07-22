@@ -1,7 +1,7 @@
-import { LoggedInBackendContext } from '#/context';
-import { Account } from '#/services/interfaces/account';
-import { WithId } from '#/services/interfaces/base';
-import { Person } from '#/services/interfaces/person';
+import type { LoggedInBackendContext } from '#/context';
+import type { Account } from '#/services/interfaces/account';
+import type { WithId } from '#/services/interfaces/base';
+import type { Person } from '#/services/interfaces/person';
 import { PersonDetailsButtonSection } from './buttons';
 import { PersonDetailsPersonalDataSection } from './personal-data';
 

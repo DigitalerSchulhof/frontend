@@ -1,7 +1,7 @@
 import { DetailsButton } from '#/administration/sections/persons/page/table/content/buttons/details';
 import { DataList } from '#/components/data-list';
 import { T } from '#/i18n';
-import { FormOfAddress } from '#/services/interfaces/account';
+import type { FormOfAddress } from '#/services/interfaces/account';
 import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import {
@@ -21,7 +21,8 @@ import {
 import { Note } from '#/ui/Note';
 import { formatName } from '#/utils';
 import { useCallback } from 'react';
-import action, { LoadPersonsFilter, LoadPersonsPerson } from '../../action';
+import type { LoadPersonsFilter, LoadPersonsPerson } from '../../action';
+import action from '../../action';
 import {
   CreateAccountButton,
   DeleteAccountButton,

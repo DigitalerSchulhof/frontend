@@ -1,7 +1,7 @@
 'use client';
 
 import { makeLink, useT } from '#/i18n';
-import { FormOfAddress } from '#/services/interfaces/account';
+import type { FormOfAddress } from '#/services/interfaces/account';
 import { Form } from '#/ui/Form';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { sleep } from '#/utils';

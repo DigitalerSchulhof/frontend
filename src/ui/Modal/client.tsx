@@ -2,13 +2,13 @@
 
 import { T } from '#/i18n';
 import { useT } from '#/i18n/hook';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Loading } from '#/ui/Loading';
 import { Modal } from '#/ui/Modal';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export type LoadingModalProps = {
   title: TranslationsWithStringTypeAndNoVariables;

@@ -1,7 +1,7 @@
 'use client';
 
 import { List } from '#/ui/List';
-import { WrappedActionResult } from '#/utils/action';
+import type { WrappedActionResult } from '#/utils/action';
 import { unwrapAction } from '#/utils/client';
 import React, { Fragment, useEffect, useState } from 'react';
 

@@ -1,10 +1,11 @@
-import {
+import type {
   ListResult,
   SearchOptions,
   TypeFilter,
   WithId,
 } from '#/services/interfaces/base';
-import { Person, PersonService } from '#/services/interfaces/person';
+import type { Person, PersonService } from '#/services/interfaces/person';
+import type { PersonServiceClient } from '@dsh/protocols/dsh/services/person/v1/service';
 import {
   BatchGetPersonsRequest,
   CreatePersonRequest,
@@ -12,7 +13,6 @@ import {
   DeletePersonsWhereRequest,
   GetPersonRequest,
   ListPersonsRequest,
-  PersonServiceClient,
   UpdatePersonRequest,
   UpdatePersonsWhereRequest,
 } from '@dsh/protocols/dsh/services/person/v1/service';

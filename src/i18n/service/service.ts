@@ -1,5 +1,6 @@
 import { DEFAULT_LOCALE } from '#/utils';
-import { TranslationEntry, loadTranslations } from './loader';
+import type { TranslationEntry } from './loader';
+import { loadTranslations } from './loader';
 import { verifyTranslations } from './verifier';
 
 const localeTranslations = new Map<string, Map<string, TranslationEntry>>();
@@ -36,9 +37,9 @@ export function getTranslations(locale: string): Map<string, TranslationEntry> {
  */
 function mergeTranslationsWithDefault(
   translations: Map<string, TranslationEntry>,
-  defaultTranslations: ReadonlyMap<string, TranslationEntry>
+  defaultT: ReadonlyMap<string, TranslationEntry>
 ): void {
-  for (const [key, defaultTranslation] of defaultTranslations) {
+  for (const [key, defaultTranslation] of defaultT) {
     if (!translations.has(key)) {
       translations.set(key, defaultTranslation);
     }

@@ -1,10 +1,7 @@
-import {
-  BackendContext,
-  LoggedInBackendContext,
-  createLoggedInBackendContext,
-} from '#/context';
-import { WithId } from '#/services/interfaces/base';
-import { Session } from '#/services/interfaces/session';
+import type { BackendContext, LoggedInBackendContext } from '#/context';
+import { createLoggedInBackendContext } from '#/context';
+import type { WithId } from '#/services/interfaces/base';
+import type { Session } from '#/services/interfaces/session';
 import { verifyJwt } from '#/utils/password';
 // eslint-disable-next-line @typescript-eslint/no-var-requires -- See https://github.com/vercel/next.js/issues/49752#issuecomment-1546687003
 const { cookies } = require('next/headers');

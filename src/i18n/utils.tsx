@@ -1,5 +1,5 @@
 import { Link } from '#/ui/Link';
-import { FormatXMLElementFn } from 'intl-messageformat';
+import type { FormatXMLElementFn } from 'intl-messageformat';
 import React from 'react';
 
 type LinkProps = React.ComponentProps<typeof Link>;

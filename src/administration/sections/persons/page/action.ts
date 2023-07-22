@@ -1,13 +1,11 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import {
-  AndFilter,
-  Filter
-} from '#/services/interfaces/base';
-import { Person, PersonType } from '#/services/interfaces/person';
+import { AndFilter, Filter } from '#/services/interfaces/base';
+import type { Person, PersonType } from '#/services/interfaces/person';
 import { wrapAction } from '#/utils/action';
-import { Parse, v } from 'vality';
+import type { Parse } from 'vality';
+import { v } from 'vality';
 
 export type LoadPersonsPerson = {
   id: string;

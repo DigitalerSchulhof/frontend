@@ -1,12 +1,12 @@
-import { LoggedInBackendContext } from '#/context';
-import { Account, FormOfAddress } from '#/services/interfaces/account';
-import { WithId } from '#/services/interfaces/base';
-import { Person } from '#/services/interfaces/person';
+import type { LoggedInBackendContext } from '#/context';
+import type { Account, FormOfAddress } from '#/services/interfaces/account';
+import type { WithId } from '#/services/interfaces/base';
+import type { Person } from '#/services/interfaces/person';
 import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Note } from '#/ui/Note';
 import { formatName } from '#/utils';
-import { PersonDetailsProps } from '..';
+import type { PersonDetailsProps } from '..';
 import { ChangePasswordButton } from './change-password';
 import { CreateAccountButton } from './create-account';
 import { DeleteAccountButton } from './delete-account';

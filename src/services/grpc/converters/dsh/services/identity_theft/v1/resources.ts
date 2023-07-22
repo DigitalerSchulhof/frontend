@@ -1,12 +1,14 @@
-import { WithId } from '#/services/interfaces/base';
-import * as js from '#/services/interfaces/identity-theft';
+import type { WithId } from '#/services/interfaces/base';
+import type * as js from '#/services/interfaces/identity-theft';
 import * as grpc from '@dsh/protocols/dsh/services/identity_theft/v1/resources';
 import {
   timestampFromJs,
   timestampToJs,
 } from '../../../../google/protobuf/timestamp';
 
-export function identityTheftToJs(identityTheft: grpc.IdentityTheft): WithId<js.IdentityTheft> {
+export function identityTheftToJs(
+  identityTheft: grpc.IdentityTheft
+): WithId<js.IdentityTheft> {
   return {
     id: identityTheft.id,
     rev: identityTheft.rev,

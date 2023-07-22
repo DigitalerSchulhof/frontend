@@ -1,12 +1,13 @@
 'use client';
 
-import { StyledIcon } from '../Icon';
-import React from 'react';
-import { Link } from '#/ui/Link';
-import { ExecutionContext, css, styled } from 'styled-components';
-import { Variant } from '../variants';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { T, useT } from '#/i18n';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import { Link } from '#/ui/Link';
+import React from 'react';
+import type { ExecutionContext } from 'styled-components';
+import { css, styled } from 'styled-components';
+import { StyledIcon } from '../Icon';
+import type { Variant } from '../variants';
 
 export type BaseButtonProps = {
   $variant?: Variant | 'disabled';
@@ -22,7 +23,9 @@ export const ButtonStyles = ({
   line-height: 1.5em;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
 
   background-color: ${theme.accents[$variant].regular.background};
   color: ${theme.accents[$variant].regular.text};

@@ -1,6 +1,6 @@
 'use client';
 
-import { ClientTranslations } from '#/context/contexts/i18n/client-translations';
+import type { ClientTranslations } from '#/context/contexts/i18n/client-translations';
 import { createContext } from 'react';
 
 export const translationsContext = createContext<ClientTranslations>({});

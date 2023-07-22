@@ -1,4 +1,4 @@
-import { BaseService } from './base';
+import type { BaseService } from './base';
 
 export interface Course {
   classId: string;

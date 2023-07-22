@@ -1,11 +1,12 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import { LoggedInBackendContext } from '#/context';
+import type { LoggedInBackendContext } from '#/context';
 import { InvalidInputError, wrapFormAction } from '#/utils/action';
 import { generatePassword } from '#/utils/password';
 import ms from 'ms';
-import { Parse, v } from 'vality';
+import type { Parse } from 'vality';
+import { v } from 'vality';
 
 const accountSchema = {
   username: v.string,

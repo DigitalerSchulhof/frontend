@@ -1,4 +1,4 @@
-import { AppSettings } from '#/settings/client';
+import type { AppSettings } from '#/settings/client';
 import settings from '../../../settings.json';
 
 export async function getSettings(): Promise<AppSettings> {

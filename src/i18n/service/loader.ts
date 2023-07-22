@@ -1,10 +1,7 @@
 import { flattenObject } from '#/utils';
 import { __locales } from '#/utils/paths';
-import {
-  MessageFormatElement,
-  TYPE,
-  parse,
-} from '@formatjs/icu-messageformat-parser';
+import type { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
+import { TYPE, parse } from '@formatjs/icu-messageformat-parser';
 import * as fs from 'fs';
 import * as globby from 'globby';
 import * as path from 'path';

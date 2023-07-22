@@ -16,7 +16,7 @@ import { SchoolyearServiceClient } from '@dsh/protocols/dsh/services/schoolyear/
 import { SessionServiceClient } from '@dsh/protocols/dsh/services/session/v1/service';
 import * as grpc from '@grpc/grpc-js';
 import type { Services } from '.';
-import { ContextCreatorContext } from '../..';
+import type { ContextCreatorContext } from '../..';
 
 export function createGrpcServices(context: ContextCreatorContext): Services {
   const address = context.config.grpc.address;

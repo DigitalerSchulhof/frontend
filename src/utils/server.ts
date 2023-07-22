@@ -1,5 +1,8 @@
 export class ClientError extends Error {
-  constructor(readonly code: string, readonly baggage?: object) {
+  constructor(
+    readonly code: string,
+    readonly baggage?: object
+  ) {
     super(`Client Error: ${code}`);
   }
 }

@@ -1,4 +1,4 @@
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Heading } from '#/ui/Heading';
 
 export type AdministrationGroupProps = {

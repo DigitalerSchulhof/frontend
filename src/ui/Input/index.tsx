@@ -1,9 +1,9 @@
 'use client';
 
 import { T } from '#/i18n';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { FormEventHandler } from 'react';
 import React, {
-  FormEventHandler,
   forwardRef,
   useCallback,
   useImperativeHandle,
@@ -111,7 +111,7 @@ export type SelectInputProps<Value extends string> = SelectProps & {
 };
 
 export const SelectInput = forwardRef(function SelectInput<
-  Value extends string
+  Value extends string,
 >(
   { onInput, values, ...props }: SelectInputProps<Value>,
   ref: React.ForwardedRef<{ value: Value }>

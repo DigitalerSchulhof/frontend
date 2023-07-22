@@ -1,4 +1,5 @@
-import { Parse, v } from 'vality';
+import type { Parse } from 'vality';
+import { v } from 'vality';
 import { loadEnv } from 'vality-env';
 
 /* eslint-disable @typescript-eslint/naming-convention */

@@ -1,7 +1,7 @@
 'use client';
 
 import { useT } from '#/i18n';
-import { FormOfAddress } from '#/services/interfaces/account';
+import type { FormOfAddress } from '#/services/interfaces/account';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';

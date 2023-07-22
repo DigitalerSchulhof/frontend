@@ -1,5 +1,5 @@
-import { WithId } from '#/services/interfaces/base';
-import { Person } from '#/services/interfaces/person';
+import type { WithId } from '#/services/interfaces/base';
+import type { Person } from '#/services/interfaces/person';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { HiddenInput, SelectFormRow, TextFormRow } from '#/ui/Form';
 import { Table } from '#/ui/Table';

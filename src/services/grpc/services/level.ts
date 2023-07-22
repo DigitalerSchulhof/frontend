@@ -1,17 +1,17 @@
-import {
+import type {
   ListResult,
   SearchOptions,
   TypeFilter,
   WithId,
 } from '#/services/interfaces/base';
-import { Level, LevelService } from '#/services/interfaces/level';
+import type { Level, LevelService } from '#/services/interfaces/level';
+import type { LevelServiceClient } from '@dsh/protocols/dsh/services/level/v1/service';
 import {
   BatchGetLevelsRequest,
   CreateLevelRequest,
   DeleteLevelRequest,
   DeleteLevelsWhereRequest,
   GetLevelRequest,
-  LevelServiceClient,
   ListLevelsRequest,
   UpdateLevelRequest,
   UpdateLevelsWhereRequest,

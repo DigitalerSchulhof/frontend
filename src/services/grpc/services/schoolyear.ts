@@ -1,13 +1,14 @@
-import {
+import type {
   ListResult,
   SearchOptions,
   TypeFilter,
   WithId,
 } from '#/services/interfaces/base';
-import {
+import type {
   Schoolyear,
   SchoolyearService,
 } from '#/services/interfaces/schoolyear';
+import type { SchoolyearServiceClient } from '@dsh/protocols/dsh/services/schoolyear/v1/service';
 import {
   BatchGetSchoolyearsRequest,
   CreateSchoolyearRequest,
@@ -15,7 +16,6 @@ import {
   DeleteSchoolyearsWhereRequest,
   GetSchoolyearRequest,
   ListSchoolyearsRequest,
-  SchoolyearServiceClient,
   UpdateSchoolyearRequest,
   UpdateSchoolyearsWhereRequest,
 } from '@dsh/protocols/dsh/services/schoolyear/v1/service';

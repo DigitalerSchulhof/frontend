@@ -1,13 +1,9 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import { LoggedInBackendContext } from '#/context';
-import {
-  PERSON_GENDERS,
-  PERSON_TYPES,
-  PersonGender,
-  PersonType,
-} from '#/services/interfaces/person';
+import type { LoggedInBackendContext } from '#/context';
+import type { PersonGender, PersonType } from '#/services/interfaces/person';
+import { PERSON_GENDERS, PERSON_TYPES } from '#/services/interfaces/person';
 import { InvalidInputError, wrapAction, wrapFormAction } from '#/utils/action';
 import { v } from 'vality';
 

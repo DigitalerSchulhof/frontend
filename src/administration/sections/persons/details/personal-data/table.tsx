@@ -5,7 +5,7 @@ import { Button, ButtonGroup } from '#/ui/Button';
 import { List, ListCell, ListHeader, ListRow } from '#/ui/List';
 import { Note } from '#/ui/Note';
 import { useCallback, useState } from 'react';
-import { PersonDetailsProps } from '..';
+import type { PersonDetailsProps } from '..';
 
 export type PersonDetailsPersonalDataSectionTableProps = Pick<
   PersonDetailsProps,

@@ -2,7 +2,8 @@
 
 import { useT } from '#/i18n';
 import { useLog } from '#/log/client';
-import { BreadcrumbItem, Breadcrumbs } from '#/ui/Breadcrumbs';
+import type { BreadcrumbItem } from '#/ui/Breadcrumbs';
+import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import { useMemo } from 'react';
 

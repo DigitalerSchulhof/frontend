@@ -1,8 +1,9 @@
 import { getContext } from '#/auth/action';
-import { MaybePromise } from '#/utils';
+import type { MaybePromise } from '#/utils';
 import { AggregateClientError, ClientError } from '#/utils/server';
 import { isRedirectError } from 'next/dist/client/components/redirect';
-import { Eny, Parse, Scalar, scalar, v, validate } from 'vality';
+import type { Eny, Parse, Scalar } from 'vality';
+import { scalar, v, validate } from 'vality';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

@@ -1,5 +1,5 @@
 import { useLog } from '#/log/client';
-import { WrappedActionResult } from '#/utils/action';
+import type { WrappedActionResult } from '#/utils/action';
 import {
   AggregateServerActionError,
   ServerActionError,

@@ -1,7 +1,7 @@
 'use client';
 
 import 'styled-components';
-import { Variant } from './variants';
+import type { Variant } from './variants';
 
 declare module 'styled-components' {
   export interface DefaultTheme extends Theme {}

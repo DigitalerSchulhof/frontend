@@ -1,9 +1,8 @@
-import { TFunction, makeTFunction } from '#/i18n/function';
+import type { TFunction } from '#/i18n/function';
+import { makeTFunction } from '#/i18n/function';
 import { DEFAULT_LOCALE } from '#/utils';
-import {
-  ClientTranslations,
-  getClientTranslations,
-} from './client-translations';
+import type { ClientTranslations } from './client-translations';
+import { getClientTranslations } from './client-translations';
 
 export interface BackendI18nContext {
   t: TFunction;

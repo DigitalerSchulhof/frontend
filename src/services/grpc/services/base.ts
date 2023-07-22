@@ -1,4 +1,5 @@
-import { AndFilter, OrFilter, TypeFilter } from '#/services/interfaces/base';
+import type { TypeFilter } from '#/services/interfaces/base';
+import { AndFilter, OrFilter } from '#/services/interfaces/base';
 import type * as grpc from '@grpc/grpc-js';
 
 export abstract class GrpcService<Client extends grpc.Client> {

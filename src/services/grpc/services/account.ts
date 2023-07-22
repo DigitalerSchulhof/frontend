@@ -1,12 +1,12 @@
-import { Account, AccountService } from '#/services/interfaces/account';
-import {
+import type { Account, AccountService } from '#/services/interfaces/account';
+import type {
   ListResult,
   SearchOptions,
   TypeFilter,
   WithId,
 } from '#/services/interfaces/base';
+import type { AccountServiceClient } from '@dsh/protocols/dsh/services/account/v1/service';
 import {
-  AccountServiceClient,
   BatchGetAccountsRequest,
   CreateAccountRequest,
   DeleteAccountRequest,

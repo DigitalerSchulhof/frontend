@@ -5,7 +5,7 @@ export function durationToJs(duration: grpc.Duration): number {
 }
 
 export function durationFromJs(
-  duration: number  | undefined
+  duration: number | undefined
 ): grpc.Duration | undefined {
   if (duration === undefined) {
     return undefined;

@@ -1,5 +1,5 @@
 import { TYPE } from '@formatjs/icu-messageformat-parser';
-import { TranslationEntry } from '.';
+import type { TranslationEntry } from '.';
 import { flattenAst } from './utils';
 
 /**

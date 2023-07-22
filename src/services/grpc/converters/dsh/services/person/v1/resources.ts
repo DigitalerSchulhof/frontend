@@ -1,5 +1,5 @@
-import { WithId } from '#/services/interfaces/base';
-import * as js from '#/services/interfaces/person';
+import type { WithId } from '#/services/interfaces/base';
+import type * as js from '#/services/interfaces/person';
 import * as grpc from '@dsh/protocols/dsh/services/person/v1/resources';
 import {
   timestampFromJs,
@@ -38,9 +38,7 @@ function personTypeToJs(personType: grpc.PersonType): js.PersonType {
   }
 }
 
-function personGenderToJs(
-  personGender: grpc.PersonGender
-): js.PersonGender {
+function personGenderToJs(personGender: grpc.PersonGender): js.PersonGender {
   switch (personGender) {
     case grpc.PersonGender.PERSON_GENDER_UNSPECIFIED:
       throw new Error('PERSON_GENDER_UNSPECIFIED is not supported.');

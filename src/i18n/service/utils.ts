@@ -1,5 +1,6 @@
-import { MessageFormatElement, TYPE } from '@formatjs/icu-messageformat-parser';
-import { TranslationEntry } from '.';
+import type { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
+import { TYPE } from '@formatjs/icu-messageformat-parser';
+import type { TranslationEntry } from '.';
 
 export function flattenAst(
   translation: TranslationEntry

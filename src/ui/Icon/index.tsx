@@ -2,8 +2,9 @@
 'use client';
 
 import { useT } from '#/i18n';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
-import Image, { StaticImageData } from 'next/image';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import { styled } from 'styled-components';
 
 export const IconPersonStudent = makeIcon(

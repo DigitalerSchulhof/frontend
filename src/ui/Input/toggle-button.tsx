@@ -1,7 +1,7 @@
 'use client';
 
 import { T } from '#/i18n';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledButton } from '#/ui/Button';
 import { useToggle } from '#/utils/client';
 import { forwardRef, useCallback, useImperativeHandle } from 'react';

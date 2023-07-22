@@ -1,22 +1,22 @@
+import type { TranslationEntry } from '#/i18n/service';
 import {
-  TranslationEntry,
   expandTranslations,
   flattenAst,
   getTranslations,
 } from '#/i18n/service';
 import { DEFAULT_LOCALE } from '#/utils';
 import { __src } from '#/utils/paths';
-import {
+import type {
   ArgumentElement,
   DateElement,
   MessageFormatElement,
   NumberElement,
   PluralElement,
   SelectElement,
-  TYPE,
   TagElement,
   TimeElement,
 } from '@formatjs/icu-messageformat-parser';
+import { TYPE } from '@formatjs/icu-messageformat-parser';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';

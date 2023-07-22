@@ -1,16 +1,15 @@
 'use client';
 
 import { T } from '#/i18n';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
-import {
-  NumberInput,
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type {
   NumberInputProps,
-  SelectInput,
   SelectInputProps,
-  TextInput,
   TextInputProps,
 } from '#/ui/Input';
-import { Toggle, ToggleProps } from '#/ui/Input/toggle';
+import { NumberInput, SelectInput, TextInput } from '#/ui/Input';
+import type { ToggleProps } from '#/ui/Input/toggle';
+import { Toggle } from '#/ui/Input/toggle';
 import { TableCell, TableHeader, TableRow } from '#/ui/Table';
 import React, {
   forwardRef,
@@ -126,7 +125,7 @@ export type SelectFormRowProps<Value extends string> = SelectInputProps<Value> &
   Omit<FormRowProps, 'children'>;
 
 export const SelectFormRow = forwardRef(function SelectFormRow<
-  Value extends string
+  Value extends string,
 >(
   { label, ...props }: SelectFormRowProps<Value>,
   ref: React.ForwardedRef<{ value: Value }>

@@ -1,9 +1,9 @@
 'use server';
 
 import { requireNoLogin } from '#/auth/action';
-import { BackendContext } from '#/context';
-import { Account, FormOfAddress } from '#/services/interfaces/account';
-import { WithId } from '#/services/interfaces/base';
+import type { BackendContext } from '#/context';
+import type { Account, FormOfAddress } from '#/services/interfaces/account';
+import type { WithId } from '#/services/interfaces/base';
 import { wrapFormAction } from '#/utils/action';
 import { ClientError } from '#/utils/server';
 import { v } from 'vality';

@@ -1,4 +1,4 @@
-import { MaybeArray } from '#/utils';
+import type { MaybeArray } from '#/utils';
 
 export type WithId<T> = T & {
   readonly id: string;
@@ -21,7 +21,7 @@ export interface ListResult<T> {
 
 export type OverloadsForObject<
   Type extends object,
-  Path extends string = ''
+  Path extends string = '',
 > = Type extends unknown
   ? {
       [Key in keyof Type & string]: Type[Key] extends

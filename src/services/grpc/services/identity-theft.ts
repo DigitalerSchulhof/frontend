@@ -1,20 +1,20 @@
-import {
+import type {
   ListResult,
   SearchOptions,
   TypeFilter,
   WithId,
 } from '#/services/interfaces/base';
-import {
+import type {
   IdentityTheft,
   IdentityTheftService,
 } from '#/services/interfaces/identity-theft';
+import type { IdentityTheftServiceClient } from '@dsh/protocols/dsh/services/identity_theft/v1/service';
 import {
   BatchGetIdentityTheftsRequest,
   CreateIdentityTheftRequest,
   DeleteIdentityTheftRequest,
   DeleteIdentityTheftsWhereRequest,
   GetIdentityTheftRequest,
-  IdentityTheftServiceClient,
   ListIdentityTheftsRequest,
   UpdateIdentityTheftRequest,
   UpdateIdentityTheftsWhereRequest,

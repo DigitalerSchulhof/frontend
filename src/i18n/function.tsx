@@ -1,8 +1,8 @@
-import { ClientTranslations } from '#/context/contexts/i18n/client-translations';
-import { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
+import type { ClientTranslations } from '#/context/contexts/i18n/client-translations';
+import type { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 import IntlMessageFormat from 'intl-messageformat';
 import React from 'react';
-import { Translations } from './translations';
+import type { Translations } from './translations';
 
 export type TFunction = <K extends keyof Translations>(
   this: void,

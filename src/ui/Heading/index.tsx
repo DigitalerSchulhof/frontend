@@ -1,7 +1,7 @@
 'use client';
 
 import { T } from '#/i18n';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledBreadcrumbs } from '#/ui/Breadcrumbs/client';
 import { css, styled } from 'styled-components';
 

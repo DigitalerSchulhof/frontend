@@ -41,6 +41,8 @@
     "@typescript-eslint/explicit-module-boundary-types": "warn",
     "@typescript-eslint/naming-convention": "warn",
     "@typescript-eslint/switch-exhaustiveness-check": "warn",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/no-shadow": "error",
     "prefer-template": "error"
   },
   "overrides": [

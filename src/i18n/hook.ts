@@ -2,9 +2,10 @@
 
 import { useSettings } from '#/settings/client';
 import { useContext, useMemo } from 'react';
-import { TFunction, makeTFunction } from './function';
+import type { TFunction } from './function';
+import { makeTFunction } from './function';
 import { translationsContext } from './context';
-import { ClientTranslations } from '#/context/contexts/i18n/client-translations';
+import type { ClientTranslations } from '#/context/contexts/i18n/client-translations';
 
 export function useT(): { t: TFunction; translations: ClientTranslations } {
   if (typeof window === 'undefined') {

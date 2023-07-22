@@ -1,10 +1,10 @@
 // Both Server and Client Component
 
 import { useT } from '#/i18n';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledAlert } from '#/ui/Alert/client';
 import { Heading } from '#/ui/Heading';
-import { Variant } from '../variants';
+import type { Variant } from '../variants';
 
 export interface AlertProps {
   variant: Variant;

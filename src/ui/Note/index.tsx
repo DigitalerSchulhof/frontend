@@ -1,9 +1,9 @@
 'use client';
 
-import { css, styled } from 'styled-components';
-import { Variant } from '../variants';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { T } from '#/i18n';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import { css, styled } from 'styled-components';
+import type { Variant } from '../variants';
 
 export interface NoteProps {
   variant?: Variant;

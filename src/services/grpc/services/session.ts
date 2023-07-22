@@ -1,10 +1,11 @@
-import {
+import type {
   ListResult,
   SearchOptions,
   TypeFilter,
   WithId,
 } from '#/services/interfaces/base';
-import { Session, SessionService } from '#/services/interfaces/session';
+import type { Session, SessionService } from '#/services/interfaces/session';
+import type { SessionServiceClient } from '@dsh/protocols/dsh/services/session/v1/service';
 import {
   BatchGetSessionsRequest,
   CreateSessionRequest,
@@ -12,7 +13,6 @@ import {
   DeleteSessionsWhereRequest,
   GetSessionRequest,
   ListSessionsRequest,
-  SessionServiceClient,
   UpdateSessionRequest,
   UpdateSessionsWhereRequest,
 } from '@dsh/protocols/dsh/services/session/v1/service';

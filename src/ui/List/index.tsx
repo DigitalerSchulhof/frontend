@@ -1,7 +1,7 @@
 'use client';
 
 import { T } from '#/i18n';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledNote } from '#/ui/Note';
 import React from 'react';
 import { css, keyframes, styled } from 'styled-components';

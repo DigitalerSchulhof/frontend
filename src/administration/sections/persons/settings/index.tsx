@@ -1,7 +1,7 @@
 import { T } from '#/i18n';
-import { Account } from '#/services/interfaces/account';
-import { WithId } from '#/services/interfaces/base';
-import { Person } from '#/services/interfaces/person';
+import type { Account } from '#/services/interfaces/account';
+import type { WithId } from '#/services/interfaces/base';
+import type { Person } from '#/services/interfaces/person';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';

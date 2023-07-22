@@ -1,5 +1,5 @@
-import * as js from '#/services/interfaces/account';
-import { WithId } from '#/services/interfaces/base';
+import type * as js from '#/services/interfaces/account';
+import type { WithId } from '#/services/interfaces/base';
 import * as grpc from '@dsh/protocols/dsh/services/account/v1/resources';
 import {
   durationFromJs,

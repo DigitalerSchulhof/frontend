@@ -1,9 +1,9 @@
 'use client';
 
-import { ClientTranslations } from '#/context/contexts/i18n/client-translations';
+import type { ClientTranslations } from '#/context/contexts/i18n/client-translations';
 import { TranslationsProvider } from '#/i18n/context';
 import { SettingsProvider } from '#/settings/client';
-import { AppSettings } from '#/settings/client/context';
+import type { AppSettings } from '#/settings/client/context';
 import { StyleProvider } from './style-provider';
 
 export const Providers = ({

@@ -1,13 +1,13 @@
-import {
+import type {
   ListResult,
   SearchOptions,
   TypeFilter,
   WithId,
 } from '#/services/interfaces/base';
-import { Class, ClassService } from '#/services/interfaces/class';
+import type { Class, ClassService } from '#/services/interfaces/class';
+import type { ClassServiceClient } from '@dsh/protocols/dsh/services/class/v1/service';
 import {
   BatchGetClassesRequest,
-  ClassServiceClient,
   CreateClassRequest,
   DeleteClassRequest,
   DeleteClassesWhereRequest,

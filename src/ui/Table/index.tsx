@@ -1,11 +1,10 @@
 'use client';
 
 import { T } from '#/i18n';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { StyledToggle } from '#/ui/Input/toggle';
 import React from 'react';
-import { styled } from 'styled-components';
-import { css } from 'styled-components';
+import { css, styled } from 'styled-components';
 
 const StyledTable = styled.div<{ $h?: number | string; $w?: number | string }>(
   ({ theme, $h, $w }) => {

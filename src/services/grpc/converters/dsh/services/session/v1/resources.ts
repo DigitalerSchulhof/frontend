@@ -1,5 +1,5 @@
-import { WithId } from '#/services/interfaces/base';
-import * as js from '#/services/interfaces/session';
+import type { WithId } from '#/services/interfaces/base';
+import type * as js from '#/services/interfaces/session';
 import * as grpc from '@dsh/protocols/dsh/services/session/v1/resources';
 import {
   timestampFromJs,

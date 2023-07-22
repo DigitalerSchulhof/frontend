@@ -1,8 +1,8 @@
-import { LoggedInBackendContext } from '#/context';
+import type { LoggedInBackendContext } from '#/context';
 import { useT } from '#/i18n';
-import { Account } from '#/services/interfaces/account';
-import { WithId } from '#/services/interfaces/base';
-import { Person } from '#/services/interfaces/person';
+import type { Account } from '#/services/interfaces/account';
+import type { WithId } from '#/services/interfaces/base';
+import type { Person } from '#/services/interfaces/person';
 import { Button } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { formatName } from '#/utils';

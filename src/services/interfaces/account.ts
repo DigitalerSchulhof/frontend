@@ -1,4 +1,4 @@
-import { BaseService, WithId } from './base';
+import type { BaseService, WithId } from './base';
 
 export interface Account {
   personId: string;

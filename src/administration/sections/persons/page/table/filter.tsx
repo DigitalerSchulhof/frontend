@@ -3,7 +3,7 @@ import { Label } from '#/ui/Form';
 import { TextInput, ToggleButton } from '#/ui/Input';
 import { Table, TableCell, TableHeader, TableRow } from '#/ui/Table';
 import { useEffect, useId, useState } from 'react';
-import { LoadPersonsFilter } from '../action';
+import type { LoadPersonsFilter } from '../action';
 
 export const PersonsTableFilter = ({
   setFilter,

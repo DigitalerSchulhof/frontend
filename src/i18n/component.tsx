@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks -- Component works as both Client and Server Component. We don't memo if on the server. */
 import { useMemo } from 'react';
 import { useT } from './hook';
-import { Translations } from './translations';
+import type { Translations } from './translations';
 
 export type TProps<K extends keyof Translations> = {
   t: K;

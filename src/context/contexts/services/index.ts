@@ -1,12 +1,12 @@
-import { AccountService } from '#/services/interfaces/account';
-import { ClassService } from '#/services/interfaces/class';
-import { CourseService } from '#/services/interfaces/course';
-import { IdentityTheftService } from '#/services/interfaces/identity-theft';
-import { LevelService } from '#/services/interfaces/level';
-import { PersonService } from '#/services/interfaces/person';
-import { SchoolyearService } from '#/services/interfaces/schoolyear';
-import { SessionService } from '#/services/interfaces/session';
-import { ContextCreatorContext } from '../..';
+import type { AccountService } from '#/services/interfaces/account';
+import type { ClassService } from '#/services/interfaces/class';
+import type { CourseService } from '#/services/interfaces/course';
+import type { IdentityTheftService } from '#/services/interfaces/identity-theft';
+import type { LevelService } from '#/services/interfaces/level';
+import type { PersonService } from '#/services/interfaces/person';
+import type { SchoolyearService } from '#/services/interfaces/schoolyear';
+import type { SessionService } from '#/services/interfaces/session';
+import type { ContextCreatorContext } from '../..';
 import { createGrpcServices } from './grpc';
 
 export interface Services {

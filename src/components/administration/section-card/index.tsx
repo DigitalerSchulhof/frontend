@@ -1,10 +1,11 @@
 'use client';
 
 import { T } from '#/i18n';
-import { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Heading } from '#/ui/Heading';
-import { Link, LinkProps } from '#/ui/Link';
-import { StaticImageData } from 'next/image';
+import type { LinkProps } from '#/ui/Link';
+import { Link } from '#/ui/Link';
+import type { StaticImageData } from 'next/image';
 import { styled } from 'styled-components';
 
 export const AdministrationSectionCard = ({
