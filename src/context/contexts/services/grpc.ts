@@ -14,7 +14,8 @@ import { LevelServiceClient } from '@dsh/protocols/dsh/services/level/v1/service
 import { PersonServiceClient } from '@dsh/protocols/dsh/services/person/v1/service';
 import { SchoolyearServiceClient } from '@dsh/protocols/dsh/services/schoolyear/v1/service';
 import { SessionServiceClient } from '@dsh/protocols/dsh/services/session/v1/service';
-import * as grpc from '@grpc/grpc-js';
+// Required because of https://github.com/vercel/next.js/issues/53128
+import * as grpc from '../../../../../protocols/clients/ts/node_modules/@grpc/grpc-js';
 import type { Services } from '.';
 import type { ContextCreatorContext } from '../..';
 
