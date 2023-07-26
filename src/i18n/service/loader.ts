@@ -1,7 +1,7 @@
 import { flattenObject } from '#/utils';
 import { __locales } from '#/utils/paths';
 import type { MessageFormatElement } from '@formatjs/icu-messageformat-parser';
-import { TYPE, parse } from '@formatjs/icu-messageformat-parser';
+import { parse } from '@formatjs/icu-messageformat-parser';
 import * as fs from 'fs';
 import * as globby from 'globby';
 import * as path from 'path';
@@ -105,10 +105,7 @@ export function expandTranslations(
   const expandedTranslations = new Map<string, TranslationEntry>();
 
   for (const [key, translation] of translations) {
-    expandedTranslations.set(
-      key,
-      expandTranslation(key, translation, translations)
-    );
+    expandedTranslations.set(key, expandTranslation(key, translation));
   }
 
   return expandedTranslations;
@@ -121,8 +118,7 @@ const expandedTranslationsCache = new WeakMap<
 
 function expandTranslation(
   key: string,
-  translation: TranslationEntry,
-  translations: ReadonlyMap<string, TranslationEntry>
+  translation: TranslationEntry
 ): TranslationEntry {
   const cachedExpandedTranslation = expandedTranslationsCache.get(translation);
   if (cachedExpandedTranslation) {
@@ -139,72 +135,16 @@ function expandTranslation(
     expandedTranslation = {
       ...expandedBase,
       type: 'string',
-      ast: expandAst(key, translation.ast, translations),
+      ast: translation.ast,
     } satisfies StringTranslationEntry;
   } else {
     expandedTranslation = {
       ...expandedBase,
       type: 'array',
-      asts: translation.asts.map((ast) => expandAst(key, ast, translations)),
+      asts: translation.asts,
     } satisfies ArrayTranslationEntry;
   }
 
   expandedTranslationsCache.set(translation, expandedTranslation);
   return expandedTranslation;
-}
-
-function expandAst(
-  key: string,
-  ast: readonly MessageFormatElement[],
-  translations: ReadonlyMap<string, TranslationEntry>,
-  visitedKeys: Set<string> = new Set<string>()
-): MessageFormatElement[] {
-  if (visitedKeys.has(key)) {
-    throw new Error(
-      `Circular dependency detected for translation "${key}". Stack: ${[
-        ...visitedKeys,
-        key,
-      ].join(' -> ')}`
-    );
-  }
-
-  visitedKeys.add(key);
-
-  const newAst: MessageFormatElement[] = [];
-
-  for (const astElement of ast) {
-    if (astElement.type !== TYPE.template) {
-      newAst.push(astElement);
-      continue;
-    }
-
-    const referencedTranslationKey = astElement.value;
-    const referencedTranslation = translations.get(referencedTranslationKey);
-
-    if (!referencedTranslation) {
-      // Should never happen with verified translations
-      throw new Error(
-        `Translation for key ${key} references translation for unknown key ${referencedTranslationKey}.`
-      );
-    }
-
-    if (referencedTranslation.type === 'array') {
-      throw new Error(
-        `Translation for key ${key} references translation for array key ${referencedTranslationKey}.`
-      );
-    }
-
-    const expandedReferencedAst = expandAst(
-      referencedTranslationKey,
-      referencedTranslation.ast,
-      translations,
-      visitedKeys
-    );
-
-    newAst.push(...expandedReferencedAst);
-  }
-
-  visitedKeys.delete(key);
-
-  return newAst;
 }

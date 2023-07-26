@@ -27,7 +27,6 @@ export function flattenAst(
       case TYPE.time:
       case TYPE.argument:
       case TYPE.literal:
-      case TYPE.template:
         break;
     }
   }
