@@ -1,9 +1,11 @@
 import type { Account, AccountService } from '#/services/interfaces/account';
-import type {
-  ListResult,
-  SearchOptions,
-  TypeFilter,
-  WithId,
+import {
+  OrFilter,
+  type ListResult,
+  type SearchOptions,
+  type TypeFilter,
+  type WithId,
+  AndFilter,
 } from '#/services/interfaces/base';
 import type { AccountServiceClient } from '@dsh/protocols/dsh/services/account/v1/service';
 import {
@@ -28,13 +30,13 @@ export class GrpcAccountService
   implements AccountService
 {
   async search(
-    options: SearchOptions<Account>
+    options: SearchOptions<WithId<Account>>
   ): Promise<ListResult<WithId<Account>>> {
     const res = await this.client.ListAccounts(
       new ListAccountsRequest({
         limit: options.limit,
         offset: options.offset,
-        filter: filterToGrpc(options.filter),
+        filter: accountFilterToGrpc(options.filter),
         order_by: options.order,
       })
     );
@@ -124,5 +126,25 @@ export class GrpcAccountService
     );
 
     return res.accounts.map(accountToJs);
+  }
+}
+
+function accountFilterToGrpc(
+  filter: TypeFilter<Account> | undefined
+): string | undefined {
+  if (!filter) return undefined;
+
+  if (filter instanceof OrFilter) {
+    return `(${filter.filters.map(accountFilterToGrpc).join(') OR (')})`;
+  }
+
+  if (filter instanceof AndFilter) {
+    return `(${filter.filters.map(accountFilterToGrpc).join(') AND (')})`;
+  }
+
+  const { property, operator, value } = filter;
+
+  switch (property) {
+    case ""
   }
 }

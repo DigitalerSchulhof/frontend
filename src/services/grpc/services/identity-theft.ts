@@ -32,7 +32,7 @@ export class GrpcIdentityTheftService
   implements IdentityTheftService
 {
   async search(
-    options: SearchOptions<IdentityTheft>
+    options: SearchOptions<WithId<IdentityTheft>>
   ): Promise<ListResult<WithId<IdentityTheft>>> {
     const res = await this.client.ListIdentityThefts(
       new ListIdentityTheftsRequest({

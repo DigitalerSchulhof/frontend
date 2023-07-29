@@ -31,7 +31,7 @@ export class GrpcPersonService
     throw new Error('Method not implemented.');
   }
   async search(
-    options: SearchOptions<Person>
+    options: SearchOptions<WithId<Person>>
   ): Promise<ListResult<WithId<Person>>> {
     const res = await this.client.ListPersons(
       new ListPersonsRequest({

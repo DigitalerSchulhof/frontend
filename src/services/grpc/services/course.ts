@@ -28,7 +28,7 @@ export class GrpcCourseService
   implements CourseService
 {
   async search(
-    options: SearchOptions<Course>
+    options: SearchOptions<WithId<Course>>
   ): Promise<ListResult<WithId<Course>>> {
     const res = await this.client.ListCourses(
       new ListCoursesRequest({

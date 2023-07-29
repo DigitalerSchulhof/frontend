@@ -28,7 +28,7 @@ export class GrpcSessionService
   implements SessionService
 {
   async search(
-    options: SearchOptions<Session>
+    options: SearchOptions<WithId<Session>>
   ): Promise<ListResult<WithId<Session>>> {
     const res = await this.client.ListSessions(
       new ListSessionsRequest({

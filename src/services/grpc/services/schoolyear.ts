@@ -31,7 +31,7 @@ export class GrpcSchoolyearService
   implements SchoolyearService
 {
   async search(
-    options: SearchOptions<Schoolyear>
+    options: SearchOptions<WithId<Schoolyear>>
   ): Promise<ListResult<WithId<Schoolyear>>> {
     const res = await this.client.ListSchoolyears(
       new ListSchoolyearsRequest({

@@ -28,7 +28,7 @@ export class GrpcLevelService
   implements LevelService
 {
   async search(
-    options: SearchOptions<Level>
+    options: SearchOptions<WithId<Level>>
   ): Promise<ListResult<WithId<Level>>> {
     const res = await this.client.ListLevels(
       new ListLevelsRequest({
