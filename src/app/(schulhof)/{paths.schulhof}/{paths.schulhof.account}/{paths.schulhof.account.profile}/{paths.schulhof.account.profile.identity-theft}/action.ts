@@ -1,7 +1,9 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
+import type { LoggedInBackendContext } from '#/context';
 import { wrapFormAction } from '#/utils/action';
+import { doPasswordsMatch, generateSalt, hashPassword } from '#/utils/password';
 import { ClientError } from '#/utils/server';
 import { v } from 'vality';
 
@@ -19,9 +21,9 @@ export default wrapFormAction(
       throw new ClientError('PASSWORD_MISMATCH');
     }
 
-    const isOldPasswordValid = await context.services.account.isPasswordValid(
-      context.account.id,
-      oldPassword
+    const isOldPasswordValid = doPasswordsMatch(
+      context.account.password,
+      await hashPassword(oldPassword, context.account.salt)
     );
 
     if (!isOldPasswordValid) {
@@ -30,11 +32,25 @@ export default wrapFormAction(
 
     await context.services.identityTheft.report(context.person.id);
 
-    await context.services.account.changePassword(
-      context.account.id,
-      newPassword,
-      null,
-      rev
-    );
+    await updatePassword(context, newPassword, rev);
   }
 );
+
+async function updatePassword(
+  context: LoggedInBackendContext,
+  newPassword: string,
+  rev: string
+): Promise<void> {
+  const salt = generateSalt();
+
+  await context.services.account.update(
+    context.account.id,
+    {
+      password: await hashPassword(newPassword, salt),
+      salt,
+    },
+    {
+      ifRev: rev,
+    }
+  );
+}

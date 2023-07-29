@@ -1,7 +1,9 @@
 'use server';
 
 import { requireNoLogin } from '#/auth/action';
+import { Filter } from '#/services/interfaces/base';
 import { wrapFormAction } from '#/utils/action';
+import { doPasswordsMatch, hashPassword, signJwt } from '#/utils/password';
 import { ClientError } from '#/utils/server';
 import { cookies } from 'next/dist/client/components/headers';
 import { v } from 'vality';
@@ -11,12 +13,20 @@ export default wrapFormAction(
   async ({ username, password }) => {
     const context = await requireNoLogin();
 
-    const account = await context.services.account.getByUsernameAndPassword(
-      username,
-      password
-    );
+    const {
+      items: [account],
+      total: accountsTotal,
+    } = await context.services.account.search({
+      filter: new Filter('username', 'eq', username),
+    });
 
-    if (!account) {
+    if (!accountsTotal) {
+      throw new ClientError('INVALID_CREDENTIALS');
+    }
+
+    const hashedPassword = await hashPassword(password, account.salt);
+
+    if (!doPasswordsMatch(hashedPassword, account.password)) {
       throw new ClientError('INVALID_CREDENTIALS');
     }
 
@@ -29,18 +39,20 @@ export default wrapFormAction(
       });
     }
 
-    const jwt = await context.services.session.createJwt(account.id);
+    const now = Date.now();
 
-    await context.services.account.update(
-      account.id,
-      {
-        secondLastLogin: account.lastLogin,
-        lastLogin: new Date().getTime(),
-      },
-      {
-        skipValidation: true,
-      }
-    );
+    const session = await context.services.session.create({
+      personId: account.personId,
+      didShowLastLogin: false,
+      issuedAt: now,
+    });
+
+    const jwt = await signJwt(now, session.id, account.id);
+
+    await context.services.account.update(account.id, {
+      secondLastLogin: account.lastLogin,
+      lastLogin: new Date().getTime(),
+    });
 
     cookies().set('jwt', jwt);
   }

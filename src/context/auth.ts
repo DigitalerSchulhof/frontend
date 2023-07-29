@@ -37,7 +37,7 @@ abstract class ContextCreator {
     const jwt = this.getJwt();
     if (!jwt) return null;
 
-    const jwtContent = verifyJwt(jwt);
+    const jwtContent = await verifyJwt(jwt);
     if (!jwtContent) return null;
 
     if (jwtContent.exp < Math.floor(Date.now() / 1000)) {

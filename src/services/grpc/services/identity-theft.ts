@@ -16,6 +16,7 @@ import {
   DeleteIdentityTheftsWhereRequest,
   GetIdentityTheftRequest,
   ListIdentityTheftsRequest,
+  ReportIdentityTheftRequest,
   UpdateIdentityTheftRequest,
   UpdateIdentityTheftsWhereRequest,
 } from '@dsh/protocols/dsh/services/identity_theft/v1/service';
@@ -133,5 +134,11 @@ export class GrpcIdentityTheftService
     );
 
     return res.identity_thefts.map(identityTheftToJs);
+  }
+
+  async report(personId: string): Promise<void> {
+    await this.client.ReportIdentityTheft(
+      new ReportIdentityTheftRequest({ person_id: personId })
+    );
   }
 }

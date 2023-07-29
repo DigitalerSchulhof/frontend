@@ -3,9 +3,11 @@
 import { requireNoLogin } from '#/auth/action';
 import type { BackendContext } from '#/context';
 import type { Account, FormOfAddress } from '#/services/interfaces/account';
-import type { WithId } from '#/services/interfaces/base';
+import { AndFilter, Filter, type WithId } from '#/services/interfaces/base';
 import { wrapFormAction } from '#/utils/action';
+import { generatePassword } from '#/utils/password';
 import { ClientError } from '#/utils/server';
+import ms from 'ms';
 import { v } from 'vality';
 
 export default wrapFormAction(
@@ -19,20 +21,22 @@ export default wrapFormAction(
   }> => {
     const context = await requireNoLogin();
 
-    const account = await context.services.account.getByUsernameAndEmail(
-      username,
-      email
-    );
+    const {
+      items: [account],
+      total,
+    } = await context.services.account.search({
+      filter: new AndFilter(
+        new Filter('username', 'eq', username),
+        new Filter('email', 'eq', email)
+      ),
+      limit: 1,
+    });
 
-    if (!account) {
+    if (!total) {
       throw new ClientError('INVALID_CREDENTIALS');
     }
 
-    const newPassword = await context.services.account.resetPassword(
-      account.id
-    );
-
-    await sendPasswordResetEmail(context, account, newPassword);
+    await resetPassword(context, account);
 
     return {
       formOfAddress: account.settings.profile.formOfAddress,
@@ -40,6 +44,25 @@ export default wrapFormAction(
     };
   }
 );
+
+async function resetPassword(
+  context: BackendContext,
+  account: WithId<Account>
+) {
+  const {
+    hashedPassword: hashedNewPassword,
+    rawPassword: newPassword,
+    salt: newSalt,
+  } = await generatePassword();
+
+  await context.services.account.update(account.id, {
+    password: hashedNewPassword,
+    salt: newSalt,
+    passwordExpiresAt: Date.now() + ms('1h'),
+  });
+
+  await sendPasswordResetEmail(context, account, newPassword);
+}
 
 async function sendPasswordResetEmail(
   _context: BackendContext,

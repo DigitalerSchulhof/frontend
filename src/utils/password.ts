@@ -21,13 +21,18 @@ export type JwtPayload = {
 };
 
 export async function generatePassword(): Promise<{
-  password: Buffer;
+  hashedPassword: Buffer;
+  rawPassword: string;
   salt: Buffer;
 }> {
   const password = generateRawPassword();
   const salt = generateSalt();
 
-  return { password: await hashPassword(password, salt), salt };
+  return {
+    hashedPassword: await hashPassword(password, salt),
+    rawPassword: password,
+    salt,
+  };
 }
 
 export function generateSalt(): Buffer {
@@ -73,30 +78,36 @@ export function signJwt(
   iat: number,
   sessionId: string,
   accountId: string
-): string {
-  return jwt.sign(
-    { ver: '1', iat, sessionId } satisfies Omit<
-      JwtPayload,
-      'exp' | 'iss' | 'sub'
-    >,
-    config.jwtSecret,
-    {
-      expiresIn: '1d',
-      issuer: 'dsh',
-      subject: accountId,
-    }
-  );
+): Promise<string> {
+  return new Promise((res, rej) => {
+    jwt.sign(
+      { ver: '1', iat, sessionId } satisfies Omit<
+        JwtPayload,
+        'exp' | 'iss' | 'sub'
+      >,
+      config.jwtSecret,
+      {
+        expiresIn: '1d',
+        issuer: 'dsh',
+        subject: accountId,
+      },
+      (err, token) => (err ? rej(err) : res(token!))
+    );
+  });
 }
 
-export function verifyJwt(token: string): JwtPayload | null {
-  try {
-    // Only valid tokens can have our signature.
-    return jwt.verify(token, config.jwtSecret) as JwtPayload;
-  } catch (err) {
-    if (err instanceof jwt.JsonWebTokenError) {
-      return null;
-    }
+export function verifyJwt(token: string): Promise<JwtPayload | null> {
+  return new Promise((res, rej) => {
+    jwt.verify(token, config.jwtSecret, (err, decoded) => {
+      if (err) {
+        if (err instanceof jwt.JsonWebTokenError) {
+          return res(null);
+        }
 
-    throw err;
-  }
+        return rej(err);
+      }
+
+      return res(decoded as JwtPayload);
+    });
+  });
 }

@@ -48,13 +48,13 @@ async function createAccount(
     throw new InvalidInputError();
   }
 
-  const { password, salt } = await generatePassword();
+  const { hashedPassword, salt } = await generatePassword();
 
   await context.services.account.create(
     {
       personId,
       ...data,
-      password,
+      password: hashedPassword,
       salt,
       passwordExpiresAt: Date.now() + ms('1h'),
       lastLogin: null,
