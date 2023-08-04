@@ -47,7 +47,7 @@ type OverloadsForScalar<Key, Type> = [Type] extends [number]
   ? [Key, 'eq' | 'neq', Type] | [Key, 'in' | 'nin', Type[]]
   : [Type] extends [string | null]
   ? [Key, 'eq' | 'neq', Type] | [Key, 'in' | 'nin', Type[]]
-  : [Type] extends [boolean | Buffer | null]
+  : [Type] extends [boolean | Buffer | Date | null]
   ? [Key, 'eq' | 'neq', Type]
   : never;
 
@@ -99,7 +99,7 @@ export class AndFilter<Type extends object> {
 export class Filter<Type extends object = object> {
   property: string;
   operator: string;
-  value: MaybeArray<number | string | boolean | Buffer | null>;
+  value: MaybeArray<number | string | boolean | Buffer | Date | null>;
 
   constructor(...args: OverloadsForObject<Type>) {
     // @ts-expect-error -- Not sure

@@ -170,15 +170,23 @@ function filterToGrpcWorker(
     case 'rev':
       return { property: 'rev', operator, value };
     case 'updatedAt':
-      return { property: 'updated_at', operator, value };
+      return {
+        property: 'updated_at',
+        operator,
+        value: (value as Date).getTime(),
+      };
     case 'createdAt':
-      return { property: 'created_at', operator, value };
+      return {
+        property: 'created_at',
+        operator,
+        value: (value as Date).getTime(),
+      };
     case 'name':
       return { property: 'name', operator, value };
     case 'start':
-      return { property: 'start', operator, value };
+      return { property: 'start', operator, value: (value as Date).getTime() };
     case 'end':
-      return { property: 'end', operator, value };
+      return { property: 'end', operator, value: (value as Date).getTime() };
     default:
       throw new Error('Invariant: Unknown property in filter');
   }

@@ -161,13 +161,25 @@ function filterToGrpcWorker(
     case 'rev':
       return { property: 'rev', operator, value };
     case 'updatedAt':
-      return { property: 'updated_at', operator, value };
+      return {
+        property: 'updated_at',
+        operator,
+        value: (value as Date).getTime(),
+      };
     case 'createdAt':
-      return { property: 'created_at', operator, value };
+      return {
+        property: 'created_at',
+        operator,
+        value: (value as Date).getTime(),
+      };
     case 'personId':
       return { property: 'person_id', operator, value };
     case 'issuedAt':
-      return { property: 'issued_at', operator, value };
+      return {
+        property: 'issued_at',
+        operator,
+        value: (value as Date).getTime(),
+      };
     case 'didShowLastLogin':
       return { property: 'did_show_last_login', operator, value };
     default:

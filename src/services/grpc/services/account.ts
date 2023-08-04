@@ -161,9 +161,17 @@ function filterToGrpcWorker(
     case 'rev':
       return { property: 'rev', operator, value };
     case 'updatedAt':
-      return { property: 'updated_at', operator, value };
+      return {
+        property: 'updated_at',
+        operator,
+        value: (value as Date).getTime(),
+      };
     case 'createdAt':
-      return { property: 'created_at', operator, value };
+      return {
+        property: 'created_at',
+        operator,
+        value: (value as Date).getTime(),
+      };
     case 'personId':
       return { property: 'person_id', operator, value };
     case 'username':
@@ -186,19 +194,19 @@ function filterToGrpcWorker(
       return {
         property: 'password_expires_at',
         operator,
-        value: value,
+        value: (value as Date).getTime(),
       };
     case 'lastLogin':
       return {
         property: 'last_login',
         operator,
-        value: value,
+        value: (value as Date).getTime(),
       };
     case 'secondLastLogin':
       return {
         property: 'second_last_login',
         operator,
-        value: value,
+        value: (value as Date).getTime(),
       };
     case 'settings.emailOn.newMessage':
       return { property: 'settings.email_on.new_message', operator, value };
