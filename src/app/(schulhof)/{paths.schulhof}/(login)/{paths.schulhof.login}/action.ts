@@ -32,14 +32,14 @@ export default wrapFormAction(
 
     if (
       account.passwordExpiresAt !== null &&
-      account.passwordExpiresAt < new Date().getTime()
+      account.passwordExpiresAt < new Date()
     ) {
       throw new ClientError('PASSWORD_EXPIRED', {
         formOfAddress: account.settings.profile.formOfAddress,
       });
     }
 
-    const now = Date.now();
+    const now = new Date();
 
     const session = await context.services.session.create({
       personId: account.personId,
@@ -47,11 +47,11 @@ export default wrapFormAction(
       issuedAt: now,
     });
 
-    const jwt = await signJwt(now, session.id, account.id);
+    const jwt = await signJwt(now.getTime(), session.id, account.id);
 
     await context.services.account.update(account.id, {
       secondLastLogin: account.lastLogin,
-      lastLogin: new Date().getTime(),
+      lastLogin: now,
     });
 
     cookies().set('jwt', jwt);

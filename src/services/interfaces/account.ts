@@ -6,9 +6,9 @@ export interface Account {
   email: string;
   password: Buffer;
   salt: Buffer;
-  passwordExpiresAt: number | null;
-  lastLogin: number | null;
-  secondLastLogin: number | null;
+  passwordExpiresAt: Date | null;
+  lastLogin: Date | null;
+  secondLastLogin: Date | null;
   settings: AccountSettings;
 }
 

@@ -56,7 +56,7 @@ async function createAccount(
       ...data,
       password: hashedPassword,
       salt,
-      passwordExpiresAt: Date.now() + ms('1h'),
+      passwordExpiresAt: new Date(Date.now() + ms('1h')),
       lastLogin: null,
       secondLastLogin: null,
       settings: {

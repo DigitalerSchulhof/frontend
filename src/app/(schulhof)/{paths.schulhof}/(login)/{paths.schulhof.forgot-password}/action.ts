@@ -58,7 +58,7 @@ async function resetPassword(
   await context.services.account.update(account.id, {
     password: hashedNewPassword,
     salt: newSalt,
-    passwordExpiresAt: Date.now() + ms('1h'),
+    passwordExpiresAt: new Date(Date.now() + ms('1h')),
   });
 
   await sendPasswordResetEmail(context, account, newPassword);

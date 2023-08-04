@@ -1,8 +1,10 @@
-import type {
-  ListResult,
-  SearchOptions,
-  TypeFilter,
-  WithId,
+import {
+  AndFilter,
+  OrFilter,
+  type ListResult,
+  type SearchOptions,
+  type TypeFilter,
+  type WithId,
 } from '#/services/interfaces/base';
 import type { Course, CourseService } from '#/services/interfaces/course';
 import type { CourseServiceClient } from '@dsh/protocols/dsh/services/course/v1/service';
@@ -21,7 +23,7 @@ import {
   courseFromJs,
   courseToJs,
 } from '../converters/dsh/services/course/v1/resources';
-import { GrpcService, filterToGrpc } from './base';
+import { GrpcService } from './base';
 
 export class GrpcCourseService
   extends GrpcService<CourseServiceClient>
@@ -124,5 +126,49 @@ export class GrpcCourseService
     );
 
     return res.courses.map(courseToJs);
+  }
+}
+
+function filterToGrpc(
+  filter: TypeFilter<Course> | undefined
+): string | undefined {
+  // JSON.stringify(undefined) === undefined
+  return JSON.stringify(filterToGrpcWorker(filter));
+}
+
+function filterToGrpcWorker(
+  filter: TypeFilter<Course> | undefined
+): object | undefined {
+  if (!filter) return undefined;
+
+  if (filter instanceof AndFilter) {
+    return {
+      and: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  if (filter instanceof OrFilter) {
+    return {
+      or: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  const { property, operator, value } = filter;
+
+  switch (property) {
+    case 'id':
+      return { property: 'id', operator, value };
+    case 'rev':
+      return { property: 'rev', operator, value };
+    case 'updatedAt':
+      return { property: 'updated_at', operator, value };
+    case 'createdAt':
+      return { property: 'created_at', operator, value };
+    case 'classId':
+      return { property: 'class_id', operator, value };
+    case 'name':
+      return { property: 'name', operator, value };
+    default:
+      throw new Error('Invariant: Unknown property in filter');
   }
 }

@@ -1,8 +1,10 @@
-import type {
-  ListResult,
-  SearchOptions,
-  TypeFilter,
-  WithId,
+import {
+  AndFilter,
+  OrFilter,
+  type ListResult,
+  type SearchOptions,
+  type TypeFilter,
+  type WithId,
 } from '#/services/interfaces/base';
 import type { Session, SessionService } from '#/services/interfaces/session';
 import type { SessionServiceClient } from '@dsh/protocols/dsh/services/session/v1/service';
@@ -21,7 +23,7 @@ import {
   sessionFromJs,
   sessionToJs,
 } from '../converters/dsh/services/session/v1/resources';
-import { GrpcService, filterToGrpc } from './base';
+import { GrpcService } from './base';
 
 export class GrpcSessionService
   extends GrpcService<SessionServiceClient>
@@ -124,5 +126,51 @@ export class GrpcSessionService
     );
 
     return res.sessions.map(sessionToJs);
+  }
+}
+
+function filterToGrpc(
+  filter: TypeFilter<Session> | undefined
+): string | undefined {
+  // JSON.stringify(undefined) === undefined
+  return JSON.stringify(filterToGrpcWorker(filter));
+}
+
+function filterToGrpcWorker(
+  filter: TypeFilter<Session> | undefined
+): object | undefined {
+  if (!filter) return undefined;
+
+  if (filter instanceof AndFilter) {
+    return {
+      and: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  if (filter instanceof OrFilter) {
+    return {
+      or: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  const { property, operator, value } = filter;
+
+  switch (property) {
+    case 'id':
+      return { property: 'id', operator, value };
+    case 'rev':
+      return { property: 'rev', operator, value };
+    case 'updatedAt':
+      return { property: 'updated_at', operator, value };
+    case 'createdAt':
+      return { property: 'created_at', operator, value };
+    case 'personId':
+      return { property: 'person_id', operator, value };
+    case 'issuedAt':
+      return { property: 'issued_at', operator, value };
+    case 'didShowLastLogin':
+      return { property: 'did_show_last_login', operator, value };
+    default:
+      throw new Error('Invariant: Unknown property in filter');
   }
 }

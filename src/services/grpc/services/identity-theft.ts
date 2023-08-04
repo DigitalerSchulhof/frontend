@@ -1,8 +1,10 @@
-import type {
-  ListResult,
-  SearchOptions,
-  TypeFilter,
-  WithId,
+import {
+  AndFilter,
+  OrFilter,
+  type ListResult,
+  type SearchOptions,
+  type TypeFilter,
+  type WithId,
 } from '#/services/interfaces/base';
 import type {
   IdentityTheft,
@@ -25,7 +27,7 @@ import {
   identityTheftFromJs,
   identityTheftToJs,
 } from '../converters/dsh/services/identity_theft/v1/resources';
-import { GrpcService, filterToGrpc } from './base';
+import { GrpcService } from './base';
 
 export class GrpcIdentityTheftService
   extends GrpcService<IdentityTheftServiceClient>
@@ -140,5 +142,47 @@ export class GrpcIdentityTheftService
     await this.client.ReportIdentityTheft(
       new ReportIdentityTheftRequest({ person_id: personId })
     );
+  }
+}
+
+function filterToGrpc(
+  filter: TypeFilter<IdentityTheft> | undefined
+): string | undefined {
+  // JSON.stringify(undefined) === undefined
+  return JSON.stringify(filterToGrpcWorker(filter));
+}
+
+function filterToGrpcWorker(
+  filter: TypeFilter<IdentityTheft> | undefined
+): object | undefined {
+  if (!filter) return undefined;
+
+  if (filter instanceof AndFilter) {
+    return {
+      and: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  if (filter instanceof OrFilter) {
+    return {
+      or: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  const { property, operator, value } = filter;
+
+  switch (property) {
+    case 'id':
+      return { property: 'id', operator, value };
+    case 'rev':
+      return { property: 'rev', operator, value };
+    case 'updatedAt':
+      return { property: 'updated_at', operator, value };
+    case 'createdAt':
+      return { property: 'created_at', operator, value };
+    case 'personId':
+      return { property: 'person_id', operator, value };
+    default:
+      throw new Error('Invariant: Unknown property in filter');
   }
 }

@@ -1,8 +1,10 @@
-import type {
-  ListResult,
-  SearchOptions,
-  TypeFilter,
-  WithId,
+import {
+  AndFilter,
+  OrFilter,
+  type ListResult,
+  type SearchOptions,
+  type TypeFilter,
+  type WithId,
 } from '#/services/interfaces/base';
 import type { Person, PersonService } from '#/services/interfaces/person';
 import type { PersonServiceClient } from '@dsh/protocols/dsh/services/person/v1/service';
@@ -21,7 +23,7 @@ import {
   personFromJs,
   personToJs,
 } from '../converters/dsh/services/person/v1/resources';
-import { GrpcService, filterToGrpc } from './base';
+import { GrpcService } from './base';
 
 export class GrpcPersonService
   extends GrpcService<PersonServiceClient>
@@ -127,5 +129,57 @@ export class GrpcPersonService
     );
 
     return res.persons.map(personToJs);
+  }
+}
+
+function filterToGrpc(
+  filter: TypeFilter<Person> | undefined
+): string | undefined {
+  // JSON.stringify(undefined) === undefined
+  return JSON.stringify(filterToGrpcWorker(filter));
+}
+
+function filterToGrpcWorker(
+  filter: TypeFilter<Person> | undefined
+): object | undefined {
+  if (!filter) return undefined;
+
+  if (filter instanceof AndFilter) {
+    return {
+      and: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  if (filter instanceof OrFilter) {
+    return {
+      or: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  const { property, operator, value } = filter;
+
+  switch (property) {
+    case 'id':
+      return { property: 'id', operator, value };
+    case 'rev':
+      return { property: 'rev', operator, value };
+    case 'updatedAt':
+      return { property: 'updated_at', operator, value };
+    case 'createdAt':
+      return { property: 'created_at', operator, value };
+    case 'firstname':
+      return { property: 'firstname', operator, value };
+    case 'lastname':
+      return { property: 'lastname', operator, value };
+    case 'type':
+      return { property: 'type', operator, value };
+    case 'gender':
+      return { property: 'gender', operator, value };
+    case 'teacherCode':
+      return { property: 'teacher_code', operator, value };
+    case 'accountId':
+      return { property: 'account_id', operator, value };
+    default:
+      throw new Error('Invariant: Unknown property in filter');
   }
 }

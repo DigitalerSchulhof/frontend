@@ -1,8 +1,10 @@
-import type {
-  ListResult,
-  SearchOptions,
-  TypeFilter,
-  WithId,
+import {
+  AndFilter,
+  OrFilter,
+  type ListResult,
+  type SearchOptions,
+  type TypeFilter,
+  type WithId,
 } from '#/services/interfaces/base';
 import type { Class, ClassService } from '#/services/interfaces/class';
 import type { ClassServiceClient } from '@dsh/protocols/dsh/services/class/v1/service';
@@ -21,7 +23,7 @@ import {
   classFromJs,
   classToJs,
 } from '../converters/dsh/services/class/v1/resources';
-import { GrpcService, filterToGrpc } from './base';
+import { GrpcService } from './base';
 
 export class GrpcClassService
   extends GrpcService<ClassServiceClient>
@@ -124,5 +126,49 @@ export class GrpcClassService
     );
 
     return res.classes.map(classToJs);
+  }
+}
+
+function filterToGrpc(
+  filter: TypeFilter<Class> | undefined
+): string | undefined {
+  // JSON.stringify(undefined) === undefined
+  return JSON.stringify(filterToGrpcWorker(filter));
+}
+
+function filterToGrpcWorker(
+  filter: TypeFilter<Class> | undefined
+): object | undefined {
+  if (!filter) return undefined;
+
+  if (filter instanceof AndFilter) {
+    return {
+      and: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  if (filter instanceof OrFilter) {
+    return {
+      or: filter.filters.map(filterToGrpcWorker),
+    };
+  }
+
+  const { property, operator, value } = filter;
+
+  switch (property) {
+    case 'id':
+      return { property: 'id', operator, value };
+    case 'rev':
+      return { property: 'rev', operator, value };
+    case 'updatedAt':
+      return { property: 'updated_at', operator, value };
+    case 'createdAt':
+      return { property: 'created_at', operator, value };
+    case 'levelId':
+      return { property: 'level_id', operator, value };
+    case 'name':
+      return { property: 'name', operator, value };
+    default:
+      throw new Error('Invariant: Unknown property in filter');
   }
 }
