@@ -54,8 +54,7 @@ type OverloadsForScalar<Key, Type> = [Type] extends [number]
 export interface BaseService<Base extends object> {
   search(options: SearchOptions<Base>): Promise<ListResult<WithId<Base>>>;
 
-  get(id: string): Promise<WithId<Base> | null>;
-  getByIds(ids: readonly string[]): Promise<(WithId<Base> | null)[]>;
+  get(ids: readonly string[]): Promise<(WithId<Base> | null)[]>;
 
   create(data: Base): Promise<WithId<Base>>;
 
@@ -66,10 +65,6 @@ export interface BaseService<Base extends object> {
       ifRev?: string;
     }
   ): Promise<WithId<Base>>;
-  updateWhere(
-    filter: TypeFilter<Base>,
-    data: Partial<Base>
-  ): Promise<WithId<Base>[]>;
 
   delete(
     id: string,
@@ -77,7 +72,6 @@ export interface BaseService<Base extends object> {
       ifRev?: string;
     }
   ): Promise<WithId<Base>>;
-  deleteWhere(filter: TypeFilter<Base>): Promise<WithId<Base>[]>;
 }
 
 export class OrFilter<Type extends object> {

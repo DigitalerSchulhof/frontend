@@ -43,8 +43,10 @@ export interface AccountSettingsProfile {
   formOfAddress: FormOfAddress;
 }
 
-export const FORMS_OF_ADDRESS = ['formal', 'informal'] as const;
-export type FormOfAddress = (typeof FORMS_OF_ADDRESS)[number];
+export enum FormOfAddress {
+  Formal,
+  Informal,
+}
 
 export interface AccountService extends BaseService<Account> {
   create(
