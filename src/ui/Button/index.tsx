@@ -81,8 +81,8 @@ export const Button = ({
   const { href } = props;
 
   return href ? (
+    // @ts-expect-error -- Not sure
     <StyledLink
-      // @ts-expect-error -- Some issues with onClick and ButtonElement vs AnchorElement
       $variant={props.disabled ? 'disabled' : variant}
       {...props}
       href={href}

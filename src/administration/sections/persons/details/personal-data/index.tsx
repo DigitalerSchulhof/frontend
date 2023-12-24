@@ -13,11 +13,11 @@ export type PersonDetailsPersonalDataSectionProps = {
   context: LoggedInBackendContext;
 };
 
-export const PersonDetailsPersonalDataSection = ({
+export const PersonDetailsPersonalDataSection = async ({
   context,
   person,
 }: PersonDetailsPersonalDataSectionProps) => {
-  const writeMessageButton = useGetWriteMessageButton(context, person);
+  const writeMessageButton = await useGetWriteMessageButton(context, person);
 
   return (
     <>
@@ -33,15 +33,15 @@ export const PersonDetailsPersonalDataSection = ({
   );
 };
 
-function useGetWriteMessageButton(
+async function useGetWriteMessageButton(
   context: LoggedInBackendContext,
   person: Person
-): JSX.Element | null {
+): Promise<JSX.Element | null> {
   const { t } = useT();
 
   if (person.id === context.personId) return null;
 
-  if (!mayMessagePerson(context, person)) {
+  if (!(await context.services.permission.mayMessagePerson(person.id))) {
     return (
       <MayNotMessagePersonButton
         formOfAddress={context.formOfAddress}
@@ -69,12 +69,4 @@ function useGetWriteMessageButton(
       }
     />
   );
-}
-
-export function mayMessagePerson(
-  _context: LoggedInBackendContext,
-  _person: { id: string }
-) {
-  // TODO: Check permission
-  return true;
 }

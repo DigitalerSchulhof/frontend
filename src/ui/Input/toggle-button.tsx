@@ -38,7 +38,6 @@ export const ToggleButton = forwardRef(function ToggleButton(
         onChange?.(!enabled);
         toggle();
       }, [enabled, onChange, toggle])}
-      // @ts-expect-error -- TODO
       $value={enabled}
       {...props}
     >

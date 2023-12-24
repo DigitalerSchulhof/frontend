@@ -2,6 +2,9 @@ import type { DeepPartial } from '#/utils';
 import type { HasId, ListResult, SearchOptions } from './base';
 
 export interface PersonService {
+  /**
+   * Searches for persons.
+   */
   searchPersons(
     options: SearchOptions<{
       lastname: string;
@@ -72,7 +75,6 @@ export type Person = HasId & {
   type: PersonType;
   gender: PersonGender;
   teacherCode: string | null;
-  account: Account | null;
 } & (
     | {
         account: Account;

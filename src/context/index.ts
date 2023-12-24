@@ -9,8 +9,14 @@ import type { BackendI18nContext } from './contexts/i18n';
 import { createI18nContext } from './contexts/i18n';
 import type { BackendLoggerContext } from './contexts/logger';
 import { createLoggerContext } from './contexts/logger';
-import type { BackendServicesContext } from './contexts/services';
-import { createServicesContext } from './contexts/services';
+import type {
+  BackendLoggedInServicesContext,
+  BackendServicesContext,
+} from './contexts/services';
+import {
+  createLoggedInServicesContext,
+  createServicesContext,
+} from './contexts/services';
 
 export type ContextCreatorContext = {
   config: Config;
@@ -20,27 +26,28 @@ export type BackendContext = BackendServicesContext &
   BackendLoggerContext &
   BackendI18nContext;
 
-export type LoggedInBackendContext = BackendContext & {
-  /**
-   * The ID of the currently logged in user's person.
-   */
-  personId: string;
+export type LoggedInBackendContext = BackendContext &
+  BackendLoggedInServicesContext & {
+    /**
+     * The ID of the currently logged in user's person.
+     */
+    personId: string;
 
-  /**
-   * The session of the user is logged in with.
-   */
-  session: Session;
+    /**
+     * The session of the user is logged in with.
+     */
+    session: Session;
 
-  /**
-   * The form of address of the currently logged in person.
-   */
-  formOfAddress: ClientFormOfAddress;
+    /**
+     * The form of address of the currently logged in person.
+     */
+    formOfAddress: ClientFormOfAddress;
 
-  /**
-   * Gets the currently logged in user's person.
-   */
-  getPerson(): Promise<Person & { account: Account }>;
-};
+    /**
+     * Gets the currently logged in user's person.
+     */
+    getPerson(): Promise<Person & { account: Account }>;
+  };
 
 function createContextCreatorContext(c: Config): ContextCreatorContext {
   return { config: c };
@@ -62,8 +69,17 @@ export function createLoggedInBackendContext(
   session: Session,
   formOfAddress: FormOfAddress
 ): LoggedInBackendContext {
+  const loggedInServicesContext = createLoggedInServicesContext(
+    context,
+    personId
+  );
+
   return {
     ...context,
+    services: {
+      ...context.services,
+      ...loggedInServicesContext.services,
+    },
     personId,
     session,
     formOfAddress: (

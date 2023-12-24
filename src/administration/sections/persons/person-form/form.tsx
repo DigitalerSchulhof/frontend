@@ -21,7 +21,6 @@ export const ClientPersonForm = ({
   mode: 'create' | 'edit';
   children: React.ReactNode;
 }) => {
-  // TODO: Warn on duplicate name
   const submit = useSubmit(personId, mode);
 
   return <Form submit={submit}>{children}</Form>;
