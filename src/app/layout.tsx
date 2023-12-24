@@ -2,14 +2,6 @@ import { getContext } from '#/auth/component';
 import React from 'react';
 import { Providers } from './providers';
 
-if (process.env.NODE_ENV === 'development') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires -- Don't want this in prod
-  const whyDidYouRender = require('@welldone-software/why-did-you-render');
-  whyDidYouRender(React, {
-    trackAllPureComponents: true,
-  });
-}
-
 export default async function RootLayout({
   children,
 }: {
