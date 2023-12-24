@@ -92,3 +92,6 @@ export function useBitState(initialValue = 0): [
 
   return [value, createSet, createToggle, setAll];
 }
+
+// TODO
+export declare function noPermission(): never;
