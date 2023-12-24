@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 
 export default async function Page() {
   const { t } = componentContextCreator.getContext();
-  const session = await componentContextCreator.getSession();
+  const session = await componentContextCreator.getSessionData();
 
   if (session) {
     redirect(

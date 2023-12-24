@@ -1,25 +1,21 @@
 'use client';
 
-import type { FormOfAddress } from '#/services/interfaces/account';
+import type { ClientFormOfAddress } from '#/utils/client';
 import { useState } from 'react';
-import type { LoadPersonsFilter } from '../action';
+import type { LoadPersonsFilter } from './action';
 import { PersonsTableContent } from './content';
 import { PersonsTableFilter } from './filter';
 
 export const PersonsTable = ({
   formOfAddress,
 }: {
-  formOfAddress: FormOfAddress;
+  formOfAddress: ClientFormOfAddress;
 }) => {
   const [filter, setFilter] = useState<LoadPersonsFilter>({
     lastname: '',
     firstname: '',
     class: '',
-    typeStudent: false,
-    typeTeacher: false,
-    typeParent: false,
-    typeAdmin: false,
-    typeOther: false,
+    type: 0,
   });
 
   return (

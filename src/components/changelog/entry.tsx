@@ -5,7 +5,7 @@ import type { ChangelogEntry as ChangelogEntryType } from './service';
 export const ChangelogEntry = ({ entry }: { entry: ChangelogEntryType }) => {
   const { t } = useT();
 
-  const changeset = t(`schulhof.changelog.versions.${entry.id}.changeset`);
+  const changeset = t(`changelog.versions.${entry.id}.changeset`);
 
   return (
     <section>

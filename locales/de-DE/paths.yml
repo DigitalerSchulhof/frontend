@@ -22,7 +22,7 @@ schulhof:
       edit-account:
         index: Nutzerkonto_bearbeiten
         title: Nutzerkonto bearbeiten
-      settings: Einstellungen
+      account-settings: Einstellungen
     mailbox:
       index: Postfach
       compose:
@@ -46,7 +46,7 @@ schulhof:
       edit-person:
         index: Person_bearbeiten
         title: Bearbeiten
-      settings: Einstellungen
+      account-settings: Einstellungen
       permissions:
         index: Rollen_und_Rechte
         title: Rollen und Rechte vergeben

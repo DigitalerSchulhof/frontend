@@ -2,7 +2,6 @@ import { Changelog } from '#/components/changelog';
 import { SystemRequirements } from '#/components/system-requirements';
 import { requireNoLogin } from '#/auth/component';
 import { T } from '#/i18n';
-import { getSettings } from '#/settings/server';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 import { LoginBreadcrumbs } from './breadcrumbs';
@@ -13,7 +12,6 @@ export default async function LoginLayout({
   children: React.ReactNode;
 }) {
   await requireNoLogin();
-  const settings = await getSettings();
 
   return (
     <>
@@ -23,8 +21,9 @@ export default async function LoginLayout({
           <T
             t='schulhof.login.heading'
             args={{
-              school_name_genus: settings.school.name.genus,
-              school_name_genitive: settings.school.name.genitive,
+              // TODO: Load settings
+              school_name_genus: 'w',
+              school_name_genitive: 'settings.school.name.genitive',
             }}
           />
         </Heading>

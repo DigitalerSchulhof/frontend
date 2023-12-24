@@ -1,7 +1,5 @@
 import type { LoggedInBackendContext } from '#/context';
 import { useT } from '#/i18n';
-import type { Account } from '#/services/interfaces/account';
-import type { WithId } from '#/services/interfaces/base';
 import type { Person } from '#/services/interfaces/person';
 import { Button } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
@@ -11,21 +9,15 @@ import { MayNotMessagePersonButton } from './buttons/no-permission';
 import { PersonDetailsPersonalDataSectionTable } from './table';
 
 export type PersonDetailsPersonalDataSectionProps = {
-  person: WithId<Person>;
-  account: WithId<Account> | null;
+  person: Person;
   context: LoggedInBackendContext;
 };
 
 export const PersonDetailsPersonalDataSection = ({
   context,
   person,
-  account,
 }: PersonDetailsPersonalDataSectionProps) => {
-  const writeMessageButton = useGetWriteMessageButton(
-    context,
-    person,
-    !!account
-  );
+  const writeMessageButton = useGetWriteMessageButton(context, person);
 
   return (
     <>
@@ -35,7 +27,6 @@ export const PersonDetailsPersonalDataSection = ({
       />
       <PersonDetailsPersonalDataSectionTable
         person={person}
-        account={account}
         buttons={writeMessageButton}
       />
     </>
@@ -44,23 +35,22 @@ export const PersonDetailsPersonalDataSection = ({
 
 function useGetWriteMessageButton(
   context: LoggedInBackendContext,
-  person: { id: string; firstname: string; lastname: string },
-  hasAccount: boolean
+  person: Person
 ): JSX.Element | null {
   const { t } = useT();
 
-  if (person.id === context.person.id) return null;
+  if (person.id === context.personId) return null;
 
   if (!mayMessagePerson(context, person)) {
     return (
       <MayNotMessagePersonButton
-        formOfAddress={context.account.settings.profile.formOfAddress}
+        formOfAddress={context.formOfAddress}
         personName={formatName(person)}
       />
     );
   }
 
-  if (!hasAccount) {
+  if (!person.account) {
     return <NoAccountButton personName={formatName(person)} />;
   }
 

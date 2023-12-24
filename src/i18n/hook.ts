@@ -1,6 +1,5 @@
 // Both Client and Server Hook
 
-import { useSettings } from '#/settings/client';
 import { useContext, useMemo } from 'react';
 import type { TFunction } from './function';
 import { makeTFunction } from './function';
@@ -16,15 +15,15 @@ export function useT(): { t: TFunction; translations: ClientTranslations } {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const translations = useContext(translationsContext);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const settings = useSettings();
+  // TODO: Config
+  const locale = 'de-DE';
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   return useMemo(
     () => ({
-      t: makeTFunction(translations, settings.locale),
+      t: makeTFunction(translations, locale),
       translations,
     }),
-    [translations, settings.locale]
+    [translations, locale]
   );
 }

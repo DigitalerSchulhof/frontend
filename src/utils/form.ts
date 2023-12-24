@@ -8,26 +8,26 @@ import {
 import { isRedirectError } from 'next/dist/client/components/redirect';
 import { useCallback, useMemo, useState, useTransition } from 'react';
 
-export enum FormState {
+export enum ActionState {
   Idle,
   // Loading state is signified by 'isPending' in useTransition
   Error,
   Success,
 }
 
-export function useSend<R>(
-  action: (formData: FormData) => Promise<WrappedActionResult<R>>,
+export function useSend<A extends readonly unknown[], R>(
+  action: (...args: A) => Promise<WrappedActionResult<R>>,
   makeLoadingModalContent: () => JSX.Element,
   makeErrorModalContent: (
     close: () => void,
     actionErrorCodes: readonly string[],
     actionErrors: readonly ServerActionError[]
   ) => JSX.Element,
-  makeSuccessModalContent: (close: () => void, data: R) => JSX.Element
-): [(formData: FormData) => Promise<void>, JSX.Element | null] {
+  makeSuccessModalContent: (data: R) => JSX.Element
+): readonly [(...args: A) => Promise<void>, JSX.Element | null] {
   const [isPending, startTransition] = useTransition();
 
-  const [formState, setFormState] = useState(FormState.Idle);
+  const [actionState, setActionState] = useState(ActionState.Idle);
   const [actionRes, setActionRes] = useState<R | null>(null);
   const [actionErrors, setActionErrors] = useState<
     readonly ServerActionError[]
@@ -36,62 +36,72 @@ export function useSend<R>(
   const log = useLog();
 
   const send = useCallback(
-    async function send(formData: FormData) {
+    async function send(...args: A) {
       startTransition(async () => {
         let res;
         try {
-          res = await unwrapAction(action(formData));
+          res = await unwrapAction(action(...args));
         } catch (err) {
           if (isRedirectError(err)) {
             throw err;
           }
 
-          setFormState(FormState.Error);
+          setActionState(ActionState.Error);
 
           if (err instanceof ServerActionError) {
+            if (err.code === 'INTERNAL_ERROR') {
+              log.error(err);
+            }
+
             setActionErrors([err]);
             return;
           } else if (err instanceof AggregateServerActionError) {
+            err.errors.forEach((e) => {
+              if (e.code === 'INTERNAL_ERROR') {
+                log.error(e);
+              }
+            });
+
             setActionErrors(err.errors);
             return;
           }
 
-          setActionErrors([new ServerActionError('INTERNAL_ERROR')]);
           log.error(err);
+          setActionErrors([new ServerActionError('INTERNAL_ERROR')]);
 
           return;
         }
 
-        setFormState(FormState.Success);
+        setActionState(ActionState.Success);
         setActionRes(res);
       });
     },
-    [setFormState, setActionErrors, action, log]
+    [setActionState, setActionErrors, action, log]
   );
 
   const setIdle = useCallback(
-    () => setFormState(FormState.Idle),
-    [setFormState]
+    () => setActionState(ActionState.Idle),
+    [setActionState]
   );
 
   const modal = useMemo(() => {
     if (isPending) return makeLoadingModalContent();
 
-    switch (formState) {
-      case FormState.Idle:
+    switch (actionState) {
+      case ActionState.Idle:
         return null;
-      case FormState.Error:
+      case ActionState.Error:
         return makeErrorModalContent(
           setIdle,
           actionErrors.map((e) => e.code),
           actionErrors
         );
-      case FormState.Success:
-        return makeSuccessModalContent(setIdle, actionRes!);
+      case ActionState.Success:
+        return makeSuccessModalContent(actionRes!);
     }
   }, [
     isPending,
-    formState,
+    actionState,
     setIdle,
     actionErrors,
     actionRes,

@@ -1,7 +1,6 @@
 'use client';
 
 import { T, useT } from '#/i18n';
-import type { PersonType } from '#/services/interfaces/person';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Form, SelectFormRow, TextFormRow } from '#/ui/Form';
@@ -10,6 +9,7 @@ import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { unwrapAction } from '#/utils/client';
 import { useSend } from '#/utils/form';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import type { ClientPersonType } from './action';
 import action, { generateTeacherCode } from './action';
 
 export const ClientPersonForm = ({
@@ -119,7 +119,7 @@ export const TeacherCodeSelector = ({
   children,
 }: {
   mode: 'create' | 'edit';
-  defaultType: PersonType;
+  defaultType: ClientPersonType;
   defaultLastname: string;
   defaultTeacherCode: string | null;
   children: React.ReactNode;
@@ -128,7 +128,7 @@ export const TeacherCodeSelector = ({
   const [lastnameState, setLastnameState] = useState(defaultLastname);
   const teacherCodeInputRef = useRef<{ value: string }>(null);
 
-  const typeRef = useRef<{ value: PersonType }>(null);
+  const typeRef = useRef<{ value: ClientPersonType }>(null);
   const lastnameRef = useRef<{ value: string }>(null);
 
   const teacherCodeSuggestion = useTeacherCodeSuggestion(
@@ -175,7 +175,7 @@ export const TeacherCodeSelector = ({
   );
 };
 
-function useTeacherCodeSuggestion(type: PersonType, lastname: string) {
+function useTeacherCodeSuggestion(type: ClientPersonType, lastname: string) {
   const [teacherCodeSuggestion, setTeacherCodeSuggestion] = useState<
     string | null
   >(null);

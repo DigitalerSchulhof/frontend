@@ -3,7 +3,8 @@ import { Label } from '#/ui/Form';
 import { TextInput, ToggleButton } from '#/ui/Input';
 import { Table, TableCell, TableHeader, TableRow } from '#/ui/Table';
 import { useEffect, useId, useState } from 'react';
-import type { LoadPersonsFilter } from '../action';
+import type { LoadPersonsFilter } from './action';
+import { useBitState } from '#/utils/client';
 
 export const PersonsTableFilter = ({
   setFilter,
@@ -13,11 +14,7 @@ export const PersonsTableFilter = ({
   const [lastname, setLastname] = useState('');
   const [firstname, setFirstname] = useState('');
   const [clazz, setClass] = useState('');
-  const [typeStudent, setTypeStudent] = useState(false);
-  const [typeTeacher, setTypeTeacher] = useState(false);
-  const [typeParent, setTypeParent] = useState(false);
-  const [typeAdmin, setTypeAdmin] = useState(false);
-  const [typeOther, setTypeOther] = useState(false);
+  const [type, createSetType] = useBitState(0);
 
   const lastnameId = useId();
   const firstnameId = useId();
@@ -28,23 +25,9 @@ export const PersonsTableFilter = ({
       lastname,
       firstname,
       class: clazz,
-      typeStudent,
-      typeTeacher,
-      typeParent,
-      typeAdmin,
-      typeOther,
+      type,
     });
-  }, [
-    setFilter,
-    lastname,
-    firstname,
-    clazz,
-    typeStudent,
-    typeTeacher,
-    typeParent,
-    typeAdmin,
-    typeOther,
-  ]);
+  }, [setFilter, lastname, firstname, clazz, type]);
 
   return (
     <Table columns={'1fr 1fr 1fr auto'} rows={2}>
@@ -85,23 +68,23 @@ export const PersonsTableFilter = ({
           <ButtonGroup>
             <ToggleButton
               t={'generic.person-types.student.plural'}
-              onChange={setTypeStudent}
+              onChange={createSetType(0)}
             />
             <ToggleButton
               t={'generic.person-types.teacher.plural'}
-              onChange={setTypeTeacher}
+              onChange={createSetType(1)}
             />
             <ToggleButton
               t={'generic.person-types.parent.plural'}
-              onChange={setTypeParent}
+              onChange={createSetType(2)}
             />
             <ToggleButton
               t={'generic.person-types.admin.plural'}
-              onChange={setTypeAdmin}
+              onChange={createSetType(3)}
             />
             <ToggleButton
               t={'generic.person-types.other.plural'}
-              onChange={setTypeOther}
+              onChange={createSetType(4)}
             />
           </ButtonGroup>
         </TableCell>

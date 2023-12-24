@@ -1,4 +1,3 @@
-import { requireNoLogin } from '#/auth/component';
 import { makeLink, useT } from '#/i18n';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { TextFormRow } from '#/ui/Form';
@@ -7,8 +6,6 @@ import { Table } from '#/ui/Table';
 import { LoginForm } from './form';
 
 export default async function Page() {
-  await requireNoLogin();
-
   const { t } = useT();
 
   return (

@@ -6,6 +6,9 @@ import { Button, ButtonGroup } from '#/ui/Button';
 import { Modal } from '#/ui/Modal';
 import { useToggle } from '#/utils/client';
 
+/**
+ * Shows a disabled "write message" button that opens a modal explaining that the person has no account.
+ */
 export const NoAccountButton = ({ personName }: { personName: string }) => {
   const [isOpen, setIsOpenTrue, setIsOpenFalse] = useToggle();
 

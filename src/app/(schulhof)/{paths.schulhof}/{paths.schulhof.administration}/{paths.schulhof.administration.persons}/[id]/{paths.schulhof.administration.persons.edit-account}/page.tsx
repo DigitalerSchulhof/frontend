@@ -16,11 +16,9 @@ export default async function Page({
 }) {
   const context = await requireLogin();
 
-  const person = await context.services.person.get(params.id);
+  const person = await context.services.person.getPerson(params.id);
 
-  if (!person || person.accountId === null) notFound();
-
-  const account = (await context.services.account.get(person.accountId))!;
+  if (!person || person.account === null) notFound();
 
   return (
     <>
@@ -47,7 +45,7 @@ export default async function Page({
         </Heading>
       </Col>
       <Col w='12'>
-        <AccountForm person={person} account={account} />
+        <AccountForm person={person} />
       </Col>
     </>
   );

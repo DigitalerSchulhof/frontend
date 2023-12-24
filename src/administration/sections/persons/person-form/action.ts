@@ -1,92 +1,74 @@
 'use server';
 
 import { requireLogin } from '#/auth/action';
-import type { LoggedInBackendContext } from '#/context';
-import type { PersonGender, PersonType } from '#/services/interfaces/person';
-import { PERSON_GENDERS, PERSON_TYPES } from '#/services/interfaces/person';
-import { InvalidInputError, wrapAction, wrapFormAction } from '#/utils/action';
+import { PersonGender, PersonType } from '#/services/interfaces/person';
+import { assertClient, wrapAction, wrapFormAction } from '#/utils/action';
 import { v } from 'vality';
 
-export type PersonInput = {
-  type: PersonType;
-  firstname: string;
-  lastname: string;
-  gender: PersonGender;
-  teacherCode: string | null;
-};
+export type ClientPersonType =
+  | 'student'
+  | 'teacher'
+  | 'parent'
+  | 'admin'
+  | 'other';
+export type ClientGender = 'male' | 'female' | 'other';
 
 export default wrapFormAction(
   {
-    id: [v.string, null],
-    rev: [v.string, null],
-    type: PERSON_TYPES,
+    personId: v.string,
+    personRev: v.string,
     firstname: v.string,
     lastname: v.string,
-    gender: PERSON_GENDERS,
+    type: ['student', 'teacher', 'parent', 'admin', 'other'],
+    gender: ['male', 'female', 'other'],
     teacherCode: [v.string, null],
   },
   async ({
-    id: personId,
-    rev: ifRev,
-    type,
+    personId,
+    personRev,
     firstname,
     lastname,
+    type,
     gender,
     teacherCode,
-  }) => {
-    if (typeof personId !== typeof ifRev) {
-      throw new InvalidInputError();
-    }
-
+  }): Promise<void> => {
     const context = await requireLogin();
 
     const data = {
-      type,
       firstname,
       lastname,
-      gender,
+      type: {
+        student: PersonType.Student,
+        teacher: PersonType.Teacher,
+        parent: PersonType.Parent,
+        admin: PersonType.Admin,
+        other: PersonType.Other,
+      }[type],
+      gender: {
+        male: PersonGender.Male,
+        female: PersonGender.Female,
+        other: PersonGender.Other,
+      }[gender],
       teacherCode: type === 'teacher' ? teacherCode : null,
     };
 
-    if (personId === null) {
-      return createPerson(context, data);
+    if (personId) {
+      assertClient(personRev);
+
+      await context.services.person.updatePerson(personId, personRev, data);
     } else {
-      return editPerson(context, personId, ifRev!, data);
+      await context.services.person.createPerson(data);
     }
   }
 );
 
-async function createPerson(
-  context: LoggedInBackendContext,
-  data: PersonInput
-) {
-  await context.services.person.create({
-    ...data,
-    accountId: null,
-  });
-}
+export const generateTeacherCode = wrapAction(
+  [v.string],
+  async (lastnameFirstThree) => {
+    const context = await requireLogin();
 
-async function editPerson(
-  context: LoggedInBackendContext,
-  personId: string,
-  ifRev: string,
-  data: PersonInput
-) {
-  const person = await context.services.person.get(personId);
-
-  if (!person) {
-    throw new InvalidInputError();
+    return context.services.person.generateTeacherCodeSuggestion(
+      lastnameFirstThree
+    );
   }
-
-  await context.services.person.update(personId, data, {
-    ifRev,
-  });
-}
-
-export const generateTeacherCode = wrapAction([v.string], async (base) => {
-  const context = await requireLogin();
-
-  return (
-    (await context.services.person.generateTeacherCodeSuggestion(base)) ?? ''
-  );
-});
+);

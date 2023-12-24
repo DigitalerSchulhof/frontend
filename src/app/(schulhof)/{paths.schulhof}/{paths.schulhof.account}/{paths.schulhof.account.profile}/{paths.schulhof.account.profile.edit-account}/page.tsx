@@ -7,6 +7,8 @@ import { Heading } from '#/ui/Heading';
 export default async function Page() {
   const context = await requireLogin();
 
+  const person = await context.getPerson();
+
   return (
     <>
       <Col w='12'>
@@ -21,11 +23,7 @@ export default async function Page() {
         <Heading size='1' t='schulhof.account.profile.edit-account.title' />
       </Col>
       <Col w='12'>
-        <AccountForm
-          isOwnProfile
-          person={context.person}
-          account={context.account}
-        />
+        <AccountForm isOwnProfile person={person} />
       </Col>
     </>
   );

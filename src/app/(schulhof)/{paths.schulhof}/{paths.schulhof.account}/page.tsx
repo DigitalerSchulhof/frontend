@@ -11,10 +11,12 @@ import { getLastLoginAndUpdateDidShow } from './last-login';
 export default async function Page() {
   const context = await requireLogin();
 
-  const lastLogin = await getLastLoginAndUpdateDidShow(context);
+  const person = await context.getPerson();
+
+  const lastLogin = await getLastLoginAndUpdateDidShow(context, person);
 
   const shouldShowTemporaryPasswordWarning =
-    context.account.passwordExpiresAt !== null;
+    person.account.passwordExpiresAt !== null;
 
   return (
     <>
@@ -24,8 +26,8 @@ export default async function Page() {
           <T
             t='schulhof.account.title'
             args={{
-              person_firstname: context.person.firstname,
-              person_lastname: context.person.lastname,
+              person_firstname: person.firstname,
+              person_lastname: person.lastname,
             }}
           />
         </Heading>
@@ -41,7 +43,7 @@ export default async function Page() {
       </Col>
       <Col w='4' />
       <Col w='4'>
-        <Heading size='2' t='schulhof.account.my-account.title' />
+        <Heading size='2' t='schulhof.account.me.title' />
         <ButtonGroup>
           <Button
             href={[
@@ -49,16 +51,16 @@ export default async function Page() {
               'paths.schulhof.account',
               'paths.schulhof.account.profile',
             ]}
-            t='schulhof.account.my-account.details'
+            t='schulhof.account.me.details'
           />
           <Button
             href={[
               'paths.schulhof',
               'paths.schulhof.account',
               'paths.schulhof.account.profile',
-              'paths.schulhof.account.profile.settings',
+              'paths.schulhof.account.profile.account-settings',
             ]}
-            t='schulhof.account.my-account.settings'
+            t='schulhof.account.me.account-settings'
           />
         </ButtonGroup>
       </Col>

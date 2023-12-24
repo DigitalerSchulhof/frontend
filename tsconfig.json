@@ -16,7 +16,6 @@
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
     "jsx": "preserve",
     "baseUrl": ".",
     "types": [
@@ -33,7 +32,8 @@
         "./src/*"
       ]
     },
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "allowJs": true
   },
   "include": [
     "./src/**/*.ts",
@@ -44,6 +44,6 @@
     "reset.d.ts"
   ],
   "exclude": [
-    "**/node_modules/*"
+    "node_modules"
   ]
 }

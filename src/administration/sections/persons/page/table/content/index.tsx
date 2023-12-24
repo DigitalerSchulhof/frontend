@@ -1,7 +1,6 @@
 import { DetailsButton } from '#/administration/sections/persons/page/table/content/buttons/details';
 import { DataList } from '#/components/data-list';
 import { T } from '#/i18n';
-import type { FormOfAddress } from '#/services/interfaces/account';
 import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import {
@@ -20,9 +19,10 @@ import {
 } from '#/ui/List';
 import { Note } from '#/ui/Note';
 import { formatName } from '#/utils';
+import type { ClientFormOfAddress } from '#/utils/client';
 import { useCallback } from 'react';
-import type { LoadPersonsFilter, LoadPersonsPerson } from '../../action';
-import action from '../../action';
+import type { LoadPersonsFilter, LoadPersonsPerson } from '../action';
+import action from '../action';
 import {
   CreateAccountButton,
   DeleteAccountButton,
@@ -36,7 +36,7 @@ export const PersonsTableContent = ({
   formOfAddress,
   filter,
 }: {
-  formOfAddress: FormOfAddress;
+  formOfAddress: ClientFormOfAddress;
   filter: LoadPersonsFilter;
 }) => {
   const maxActionIcons = 6;
@@ -137,11 +137,9 @@ const PersonActionIcons = ({
   formOfAddress,
 }: {
   person: LoadPersonsPerson;
-  formOfAddress: FormOfAddress;
+  formOfAddress: ClientFormOfAddress;
 }) => {
   const icons = [];
-
-  const hasAccount = person.hasAccount;
 
   const personName = formatName(person);
 
@@ -151,22 +149,23 @@ const PersonActionIcons = ({
 
   icons.push(<EditPersonButton key='edit-person' personId={person.id} />);
 
-  if (hasAccount) {
+  if (person.hasAccount) {
     icons.push(<EditAccountButton key='edit-account' personId={person.id} />);
   }
 
-  if (!hasAccount) {
+  if (!person.hasAccount) {
     icons.push(
       <CreateAccountButton key='create-account' personId={person.id} />
     );
   }
 
-  if (hasAccount) {
+  if (person.hasAccount) {
     icons.push(
       <DeleteAccountButton
         key='delete-account'
-        formOfAddress={formOfAddress}
         personId={person.id}
+        personRev={person.rev}
+        formOfAddress={formOfAddress}
         personName={personName}
       />
     );
@@ -175,10 +174,11 @@ const PersonActionIcons = ({
   icons.push(
     <DeletePersonButton
       key='delete-person'
-      formOfAddress={formOfAddress}
       personId={person.id}
+      personRev={person.rev}
+      formOfAddress={formOfAddress}
       personName={personName}
-      hasAccount={hasAccount}
+      hasAccount={person.hasAccount}
     />
   );
 

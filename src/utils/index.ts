@@ -1,5 +1,8 @@
 export type MaybePromise<T> = T | Promise<T>;
 export type MaybeArray<T> = T | T[];
+export type DeepPartial<T> = {
+  [P in keyof T]?: DeepPartial<T[P]>;
+};
 
 export const DEFAULT_LOCALE = 'de-DE';
 
@@ -48,32 +51,4 @@ export function formatName({
   lastname: string;
 }) {
   return `${firstname} ${lastname}`;
-}
-
-/**
- * The identity function.
- */
-export function identity<T>(x: T): T {
-  return x;
-}
-
-export function throttle<T extends (...args: unknown[]) => unknown>(
-  fn: T,
-  ms: number
-): T {
-  let lastCall = 0;
-  let lastResult: unknown;
-
-  return function (...args) {
-    const now = Date.now();
-
-    if (now - lastCall < ms) {
-      return lastResult;
-    }
-
-    lastCall = now;
-    lastResult = fn(...args);
-
-    return lastResult;
-  } as T;
 }

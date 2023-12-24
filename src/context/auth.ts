@@ -1,10 +1,18 @@
 import type { BackendContext, LoggedInBackendContext } from '#/context';
 import { createLoggedInBackendContext } from '#/context';
-import type { WithId } from '#/services/interfaces/base';
+import type { FormOfAddress } from '#/services/interfaces/person';
 import type { Session } from '#/services/interfaces/session';
-import { verifyJwt } from '#/utils/password';
+import type { JwtPayload } from '#/services/interfaces/user';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires -- See https://github.com/vercel/next.js/issues/49752#issuecomment-1546687003
 const { cookies } = require('next/headers');
+
+export type SessionData = {
+  payload: JwtPayload;
+  personId: string;
+  session: Session;
+  formOfAddress: FormOfAddress;
+};
 
 abstract class ContextCreator {
   constructor(protected baseContext: BackendContext) {}
@@ -14,69 +22,51 @@ abstract class ContextCreator {
   }
 
   async requireLogin(): Promise<LoggedInBackendContext> {
-    const session = await this.getSession();
+    const sessionData = await this.getSessionData();
 
-    if (!session) {
+    if (!sessionData) {
       this.handleNotLoggedIn();
     }
 
-    return this.createLoggedInContext(session);
+    return this.createLoggedInContext(sessionData);
   }
 
   async requireNoLogin(): Promise<BackendContext> {
-    const session = await this.getSession();
+    const sessionData = await this.getSessionData();
 
-    if (session) {
-      this.handleAlreadyLoggedIn(session);
+    if (sessionData) {
+      this.handleAlreadyLoggedIn();
     }
 
     return this.baseContext;
   }
 
-  async getSession(): Promise<WithId<Session> | null> {
+  async getSessionData(): Promise<SessionData | null> {
     const jwt = this.getJwt();
+    // No JWT provided
     if (!jwt) return null;
 
-    const jwtContent = await verifyJwt(jwt);
-    if (!jwtContent) return null;
+    const verified = await this.baseContext.services.user.verifyJwt(jwt);
+    // Invalid JWT or session expired/revoked
+    if (!verified) return null;
 
-    if (jwtContent.exp < Math.floor(Date.now() / 1000)) {
-      return null;
-    }
-
-    const session = await this.baseContext.services.session.get(
-      jwtContent.sessionId
-    );
-
-    // Session revoked
-    if (!session) return null;
-
-    return session;
+    return verified;
   }
 
   protected abstract getJwt(): string | undefined;
 
   protected abstract handleNotLoggedIn(): never;
 
-  protected abstract handleAlreadyLoggedIn(session: Session): void;
+  protected abstract handleAlreadyLoggedIn(): void;
 
   protected async createLoggedInContext(
-    session: WithId<Session>
+    sessionData: SessionData
   ): Promise<Promise<LoggedInBackendContext>> {
-    const person = await this.baseContext.services.person.get(session.personId);
-
-    if (!person) throw new Error('No person');
-    if (!person.accountId) throw new Error('No account');
-
-    const account = (await this.baseContext.services.account.get(
-      person.accountId
-    ))!;
-
     return createLoggedInBackendContext(
       this.baseContext,
-      session,
-      account,
-      person
+      sessionData.personId,
+      sessionData.session,
+      sessionData.formOfAddress
     );
   }
 }

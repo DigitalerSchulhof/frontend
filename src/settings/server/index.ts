@@ -1,1 +1,0 @@
-export { getSettings } from './settings';

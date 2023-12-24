@@ -1,17 +1,20 @@
 'use client';
 
 import { T } from '#/i18n';
-import type { FormOfAddress } from '#/services/interfaces/account';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { Modal } from '#/ui/Modal';
+import type { ClientFormOfAddress } from '#/utils/client';
 import { useToggle } from '#/utils/client';
 
+/**
+ * Shows a disabled "write message" button that opens a modal explaining that the user may not message the person.
+ */
 export const MayNotMessagePersonButton = ({
   formOfAddress,
   personName,
 }: {
-  formOfAddress: FormOfAddress;
+  formOfAddress: ClientFormOfAddress;
   personName: string;
 }) => {
   const [isOpen, setIsOpenTrue, setIsOpenFalse] = useToggle();

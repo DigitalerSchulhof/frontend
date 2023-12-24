@@ -85,11 +85,11 @@ export class AppDirTranslator {
       appDirFile.lastIndexOf('.')
     )}`;
 
-    if (appDirFile.split('/').pop() === 'route.ts') {
-      return `export * from '${relativeAppDirFile}';`;
-    }
+    const client = appDirFile.split('/').pop() === 'error.tsx';
 
-    return `export { default } from '${relativeAppDirFile}';
+    return `${
+      client ? '"use client";\n\n' : ''
+    }export { default } from '${relativeAppDirFile}';
 export * from '${relativeAppDirFile}';
 `;
   }

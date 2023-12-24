@@ -1,22 +1,23 @@
 'use client';
 
 import { T } from '#/i18n';
+import {
+  PersonType,
+  type Person,
+  PersonGender,
+} from '#/services/interfaces/person';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { List, ListCell, ListHeader, ListRow } from '#/ui/List';
 import { Note } from '#/ui/Note';
 import { useCallback, useState } from 'react';
-import type { PersonDetailsProps } from '..';
 
-export type PersonDetailsPersonalDataSectionTableProps = Pick<
-  PersonDetailsProps,
-  'person' | 'account'
-> & {
+export type PersonDetailsPersonalDataSectionTableProps = {
+  person: Person;
   buttons?: React.ReactNode;
 };
 
 export const PersonDetailsPersonalDataSectionTable = ({
   person,
-  account,
   buttons,
 }: PersonDetailsPersonalDataSectionTableProps) => {
   const [showMore, setShowMore] = useState(false);
@@ -33,15 +34,27 @@ export const PersonDetailsPersonalDataSectionTable = ({
             <T t='schulhof.administration.sections.persons.details.personal-data.table.type' />
           </ListHeader>
           <ListCell>
-            <T t={`generic.person-types.${person.type}.singular`} />
+            <T
+              t={`generic.person-types.${
+                (
+                  {
+                    [PersonType.Student]: 'student',
+                    [PersonType.Teacher]: 'teacher',
+                    [PersonType.Parent]: 'parent',
+                    [PersonType.Admin]: 'admin',
+                    [PersonType.Other]: 'other',
+                  } as const
+                )[person.type]
+              }.singular`}
+            />
           </ListCell>
         </ListRow>
-        {account ? (
+        {person.account ? (
           <ListRow>
             <ListHeader>
               <T t='schulhof.administration.sections.persons.details.personal-data.table.username' />
             </ListHeader>
-            <ListCell>{account.username}</ListCell>
+            <ListCell>{person.account.username}</ListCell>
           </ListRow>
         ) : null}
         <ListRow>
@@ -61,18 +74,28 @@ export const PersonDetailsPersonalDataSectionTable = ({
             <T t='schulhof.administration.sections.persons.details.personal-data.table.gender' />
           </ListHeader>
           <ListCell>
-            <T t={`generic.genders.${person.gender}`} />
+            <T
+              t={`generic.genders.${
+                (
+                  {
+                    [PersonGender.Male]: 'male',
+                    [PersonGender.Female]: 'female',
+                    [PersonGender.Other]: 'other',
+                  } as const
+                )[person.gender]
+              }`}
+            />
           </ListCell>
         </ListRow>
-        {account ? (
+        {person.account ? (
           <ListRow>
             <ListHeader>
               <T t='schulhof.administration.sections.persons.details.personal-data.table.email' />
             </ListHeader>
-            <ListCell>{account.email}</ListCell>
+            <ListCell>{person.account.email}</ListCell>
           </ListRow>
         ) : null}
-        {person.type === 'teacher' ? (
+        {person.type === PersonType.Teacher ? (
           <ListRow>
             <ListHeader>
               <T t='schulhof.administration.sections.persons.details.personal-data.table.teacher-code' />
@@ -82,17 +105,17 @@ export const PersonDetailsPersonalDataSectionTable = ({
         ) : null}
         {showMore ? (
           <>
-            {account ? (
+            {person.account ? (
               <>
                 <ListRow>
                   <ListHeader>
                     <T t='schulhof.administration.sections.persons.details.personal-data.table.last-login' />
                   </ListHeader>
                   <ListCell>
-                    {account.lastLogin ? (
+                    {person.account.lastLogin ? (
                       <T
                         t='generic.dates.full'
-                        args={{ date: new Date(account.lastLogin) }}
+                        args={{ date: new Date(person.account.lastLogin) }}
                       />
                     ) : (
                       <T t='schulhof.administration.sections.persons.details.personal-data.table.no-login' />
@@ -104,10 +127,12 @@ export const PersonDetailsPersonalDataSectionTable = ({
                     <T t='schulhof.administration.sections.persons.details.personal-data.table.second-last-login' />
                   </ListHeader>
                   <ListCell>
-                    {account.secondLastLogin ? (
+                    {person.account.secondLastLogin ? (
                       <T
                         t='generic.dates.full'
-                        args={{ date: new Date(account.secondLastLogin) }}
+                        args={{
+                          date: new Date(person.account.secondLastLogin),
+                        }}
                       />
                     ) : (
                       <T t='schulhof.administration.sections.persons.details.personal-data.table.no-login' />
@@ -119,10 +144,7 @@ export const PersonDetailsPersonalDataSectionTable = ({
           </>
         ) : null}
       </List>
-      {!account ? (
-        <Note t='schulhof.administration.sections.persons.details.personal-data.no-account' />
-      ) : null}
-      {account && (
+      {person.account ? (
         <ButtonGroup>
           <Button
             onClick={toggleShowMore}
@@ -130,6 +152,8 @@ export const PersonDetailsPersonalDataSectionTable = ({
           />
           {buttons}
         </ButtonGroup>
+      ) : (
+        <Note t='schulhof.administration.sections.persons.details.personal-data.no-account' />
       )}
     </>
   );

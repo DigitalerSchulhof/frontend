@@ -56,7 +56,7 @@ function useSubmit() {
       [t]
     ),
     useCallback(
-      (close, { email, formOfAddress }) => (
+      ({ email, formOfAddress }) => (
         <Modal onClose={close}>
           <Alert
             variant='success'

@@ -22,7 +22,7 @@ import React, {
 import { styled } from 'styled-components';
 
 export type FormProps = React.ComponentProps<'form'> & {
-  submit: [(formData: FormData) => Promise<void>, React.ReactNode];
+  submit: readonly [(formData: FormData) => Promise<void>, React.ReactNode];
 };
 
 export const Form = forwardRef(function Form(
@@ -30,15 +30,7 @@ export const Form = forwardRef(function Form(
   ref: React.ForwardedRef<HTMLFormElement>
 ) {
   return (
-    <form
-      {...props}
-      ref={ref}
-      onSubmit={(e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target as HTMLFormElement);
-        void submit[0](formData);
-      }}
-    >
+    <form {...props} ref={ref} action={submit[0]}>
       {submit[1]}
       {children}
     </form>

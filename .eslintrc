@@ -37,6 +37,10 @@
       }
     ],
 
+    "@typescript-eslint/prefer-literal-enum-member": ["error", {
+      "allowBitwiseExpressions": true
+    }],
+
     // Want these
     "@typescript-eslint/explicit-module-boundary-types": "warn",
     "@typescript-eslint/naming-convention": "warn",
@@ -70,6 +74,9 @@
           }
         ],
         "react/self-closing-comp": "error",
+
+        // Server actions are referred to by their path
+        "import/no-anonymous-default-export": "off",
 
         // Make no sense with React components
         "@typescript-eslint/explicit-module-boundary-types": "off",

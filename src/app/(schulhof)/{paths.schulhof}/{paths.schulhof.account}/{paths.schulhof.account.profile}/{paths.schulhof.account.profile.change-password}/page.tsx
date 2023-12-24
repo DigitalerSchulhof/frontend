@@ -1,6 +1,6 @@
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
-import { ButtonGroup, Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
 import { HiddenInput, TextFormRow } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
@@ -9,6 +9,8 @@ import { ChangePasswordForm } from './form';
 
 export default async function Page() {
   const context = await requireLogin();
+
+  const person = await context.getPerson();
 
   return (
     <>
@@ -25,7 +27,7 @@ export default async function Page() {
       </Col>
       <Col w='12'>
         <ChangePasswordForm>
-          <HiddenInput name='rev' value={context.account.rev} />
+          <HiddenInput name='personRev' value={person.rev} />
           <Table>
             <TextFormRow
               label='schulhof.account.profile.change-password.form.old-password'

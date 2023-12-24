@@ -1,4 +1,3 @@
-import { requireNoLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
@@ -7,8 +6,6 @@ import { Table } from '#/ui/Table';
 import { ForgotPasswordForm } from './form';
 
 export default async function Page() {
-  await requireNoLogin();
-
   return (
     <ForgotPasswordForm>
       <Table>

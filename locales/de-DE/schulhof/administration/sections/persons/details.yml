@@ -27,12 +27,99 @@ buttons:
     create-account: Benutzerkonto anlegen
     edit-account: Benutzerkonto bearbeiten
     delete-account:
-      own: Mein Benutzerkonto löschen
-      other: Benutzerkonto löschen
-    settings: Einstellungen
+      own:
+        button: Mein Benutzerkonto löschen
+        modals:
+          confirm:
+            title: Nutzerkonto löschen
+            description:
+              - "<b>Achtung!</b> {form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, {form_of_address, select, informal {dein} formal {Ihr} other {~}} Nutzerkonto zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
+              - "Alle Daten, die mit diesem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht!"
+              - "{form_of_address, select, informal {Du wirst} formal {Sie werden} other {~}} ein neues Konto beantragen müssen, um {form_of_address, select, informal {dich} formal {sich} other {~}} wieder im Schulhof anmelden zu können."
+            action: Mein Benutzerkonto löschen
+          loading:
+            title: Nutzerkonto wird gelöscht
+            description: Das Nutzerkonto wird gelöscht.
+          error:
+            title: Löschung fehlgeschlagen
+            description: Das Konto konnte nicht gelöscht werden, denn ...
+            reasons:
+              internal-error:
+                - es ist ein interner Fehler aufgetreten.
+          success:
+            title: Konto gelöscht
+            description: Das Konto wurde erfolgreich gelöscht.
+            button: Zurück
+      other:
+        button: Benutzerkonto löschen
+        modals:
+          confirm:
+            title: Nutzerkonto löschen
+            description:
+              - "<b>Achtung!</b> {form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, das Nutzerkonto von <b>{person_name}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
+              - "Alle Daten, die mit diesem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht! Die Person wird über die Löschung benachrichtigt."
+            action: Nutzerkonto löschen
+          loading:
+            title: Nutzerkonto wird gelöscht
+            description: Das Nutzerkonto wird gelöscht.
+          error:
+            title: Löschung fehlgeschlagen
+            description: Das Konto konnte nicht gelöscht werden, denn ...
+            reasons:
+              internal-error:
+                - es ist ein interner Fehler aufgetreten.
+          success:
+            title: Konto gelöscht
+            description: Das Konto wurde erfolgreich gelöscht.
+            button: Zurück
+    account-settings: Einstellungen
     permissions: Rollen und Rechte vergeben
     edit-person: Persönliche Daten bearbeiten
-    delete-person: Person löschen
+    delete-person:
+      only:
+        button: Person löschen
+        modals:
+          confirm:
+            title: Person löschen
+            description:
+              - "<b>Achtung!</b> {form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, die Person <b>{person_name}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
+              - "Alle Daten, die mit dieser Person in Verbindung stehen, werden unwiderruflich gelöscht! Da kein Nutzerkonto hinterlegt ist, wird die Person nicht über die Löschung benachrichtigt."
+            action: Person löschen
+          loading:
+            title: Person wird gelöscht
+            description: Die Person wird gelöscht.
+          error:
+            title: Löschung fehlgeschlagen
+            description: Die Person konnte nicht gelöscht werden, denn ...
+            reasons:
+              internal-error:
+                - es ist ein interner Fehler aufgetreten.
+          success:
+            title: Person gelöscht
+            description: Die Person wurde erfolgreich gelöscht.
+            button: Zurück
+      with:
+        button: Person und Nutzerkonto löschen
+        modals:
+          confirm:
+            title: Person und Nutzerkonto löschen
+            description:
+              - "<b>Achtung!</b> {form_of_address, select, informal {Du bist} formal {Sie sind} other {~}} im Begriff, die Person und das Nutzerkonto von <b>{person_name}</b> zu löschen! {form_of_address, select, informal {Bist du sicher, dass du} formal {Sind Sie sicher, dass Sie} other {~}} fortfahren {form_of_address, select, informal {möchtest} formal {möchten} other {~}}?"
+              - "Alle Daten, die mit dieser Person und dem Nutzerkonto in Verbindung stehen, werden unwiderruflich gelöscht! Die Person wird über die Löschung benachrichtigt."
+            action: Person und Nutzerkonto löschen
+          loading:
+            title: Person wird gelöscht
+            description: Die Person wird gelöscht.
+          error:
+            title: Löschung fehlgeschlagen
+            description: Die Person konnte nicht gelöscht werden, denn ...
+            reasons:
+              internal-error:
+                - es ist ein interner Fehler aufgetreten.
+          success:
+            title: Person und Nutzerkonto gelöscht
+            description: Die Person und das Nutzerkonto wurden erfolgreich gelöscht.
+            button: Zurück
     change-password:
       button: Passwort ändern
       note: Das Passwort kann nur auf der eigenen Profilseite geändert werden.

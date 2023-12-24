@@ -1,6 +1,10 @@
 import { getContext } from '#/auth/action';
 import type { MaybePromise } from '#/utils';
-import { AggregateClientError, ClientError } from '#/utils/server';
+import {
+  AggregateClientError,
+  ClientError,
+  MalformedInputError,
+} from '#/utils/server';
 import { isRedirectError } from 'next/dist/client/components/redirect';
 import type { Eny, Parse, Scalar } from 'vality';
 import { scalar, v, validate } from 'vality';
@@ -14,16 +18,22 @@ declare global {
   }
 }
 
+export type Action<Args extends readonly unknown[], R> = (
+  ...args: Args
+) => Promise<WrappedActionResult<R>>;
+
+export type SimpleAction = Action<[], void>;
+
+export type WrappedActionResult<R> =
+  | { code: 'OK'; data: R }
+  | { code: 'NOT_OK'; data: readonly { code: string }[] };
+
 v.toggle = scalar('toggle', (val) => {
   if (val === 'on') return true;
   if (val === null) return false;
 
   return undefined;
 });
-
-export type WrappedActionResult<R> =
-  | { code: 'OK'; data: R }
-  | { code: 'NOT_OK'; data: readonly { code: string }[] };
 
 export function wrapAction<const A extends readonly Eny[], R = void>(
   argSchemas: A,
@@ -43,29 +53,27 @@ export function wrapAction<const A extends readonly Eny[], R = void>(
       -readonly [K in keyof A]: Parse<A[K]>;
     };
 
-    for (let i = 0; i < argSchemas.length; i++) {
-      const validated = validate(argSchemas[i], args[i]);
+    try {
+      for (let i = 0; i < argSchemas.length; i++) {
+        const validated = validate(argSchemas[i], args[i]);
 
-      if (!validated.valid) {
-        return {
-          code: 'NOT_OK',
-          data: [
-            {
-              code: 'INTERNAL_ERROR',
-            },
-          ],
-        };
+        if (!validated.valid) {
+          throw new MalformedInputError();
+        }
+
+        validatedArgs[i] = validated.data;
       }
 
-      validatedArgs[i] = validated.data;
-    }
-
-    try {
       return {
         code: 'OK',
+        // Await so we can try-catch
         data: await fn(...validatedArgs),
       };
     } catch (err) {
+      if (isRedirectError(err)) {
+        throw err;
+      }
+
       if (err instanceof AggregateClientError) {
         return {
           code: 'NOT_OK',
@@ -88,9 +96,7 @@ export function wrapAction<const A extends readonly Eny[], R = void>(
         };
       }
 
-      if (isRedirectError(err)) {
-        throw err;
-      }
+      // If we made it this far, it's an internal error
 
       const context = getContext();
       context.logger.error(err);
@@ -107,7 +113,7 @@ export function wrapAction<const A extends readonly Eny[], R = void>(
   };
 }
 
-export function wrapFormAction<Schema extends Record<string, Eny>, R>(
+export function wrapFormAction<const Schema extends Record<string, Eny>, R>(
   schema: Schema,
   fn: (data: Parse<Schema>) => MaybePromise<R>
 ): (formData: FormData) => Promise<WrappedActionResult<R>> {
@@ -118,12 +124,14 @@ export function wrapFormAction<Schema extends Record<string, Eny>, R>(
       data[key] = formData.get(key);
     }
 
+    console.log(fn.toString());
+
     return wrapAction([schema], fn)(data);
   };
 }
 
-export class InvalidInputError extends ClientError {
-  public constructor() {
-    super('INVALID_INPUT');
+export function assertClient(value: unknown): asserts value {
+  if (!value) {
+    throw new MalformedInputError();
   }
 }

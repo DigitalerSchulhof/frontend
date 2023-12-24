@@ -1,12 +1,10 @@
 import type { LoggedInBackendContext } from '#/context';
-import type { Account, FormOfAddress } from '#/services/interfaces/account';
-import type { WithId } from '#/services/interfaces/base';
 import type { Person } from '#/services/interfaces/person';
 import { ButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Note } from '#/ui/Note';
 import { formatName } from '#/utils';
-import type { PersonDetailsProps } from '..';
+import type { ClientFormOfAddress } from '#/utils/client';
 import { ChangePasswordButton } from './change-password';
 import { CreateAccountButton } from './create-account';
 import { DeleteAccountButton } from './delete-account';
@@ -17,19 +15,15 @@ import { IdentityTheftButton } from './identity-theft';
 import { PermissionsButton } from './permissions';
 import { SettingsButton } from './settings';
 
-export type PersonDetailsChangePersonalDataSectionProps = {
-  person: WithId<Person>;
-  account: WithId<Account> | null;
-  context: LoggedInBackendContext;
-  isOwnProfile: boolean;
-};
-
 export const PersonDetailsButtonSection = ({
   context,
   isOwnProfile,
   person,
-  account,
-}: PersonDetailsChangePersonalDataSectionProps) => {
+}: {
+  context: LoggedInBackendContext;
+  person: Person;
+  isOwnProfile: boolean;
+}) => {
   return (
     <>
       <Heading
@@ -37,16 +31,11 @@ export const PersonDetailsButtonSection = ({
         t='schulhof.administration.sections.persons.details.buttons.title'
       />
       <UserButtons
-        formOfAddress={context.account.settings.profile.formOfAddress}
+        formOfAddress={context.formOfAddress}
         isOwnProfile={isOwnProfile}
         person={person}
-        account={account}
       />
-      <AdminButtons
-        formOfAddress={context.account.settings.profile.formOfAddress}
-        person={person}
-        account={account}
-      />
+      <AdminButtons formOfAddress={context.formOfAddress} person={person} />
       {!isOwnProfile ? (
         <Note t='schulhof.administration.sections.persons.details.buttons.actions.change-password.note' />
       ) : null}
@@ -54,22 +43,23 @@ export const PersonDetailsButtonSection = ({
   );
 };
 
-type AccountButtonsProps = Pick<PersonDetailsProps, 'person' | 'account'> & {
-  formOfAddress: FormOfAddress;
-  isOwnProfile: boolean;
-};
-
+/**
+ * Buttons that a regular user can see on their own profile page.
+ */
 const UserButtons = ({
+  person,
   formOfAddress,
   isOwnProfile,
-  person,
-  account,
-}: AccountButtonsProps) => {
+}: {
+  person: Person;
+  formOfAddress: ClientFormOfAddress;
+  isOwnProfile: boolean;
+}) => {
   const personName = formatName(person);
 
   const buttons = [];
 
-  if (account) {
+  if (person.account) {
     buttons.push(
       <EditAccountButton
         key='edit-account'
@@ -83,7 +73,7 @@ const UserButtons = ({
     buttons.push(<ChangePasswordButton key='change-password' />);
   }
 
-  if (account) {
+  if (person.account) {
     buttons.push(
       <SettingsButton
         key='settings'
@@ -97,13 +87,14 @@ const UserButtons = ({
     buttons.push(<IdentityTheftButton key='identity-theft' />);
   }
 
-  if (account) {
+  if (person.account) {
     buttons.push(
       <DeleteAccountButton
         key='delete-account'
+        personId={person.id}
+        personRev={person.rev}
         formOfAddress={formOfAddress}
         isOwnProfile={isOwnProfile}
-        personId={person.id}
         personName={personName}
       />
     );
@@ -114,22 +105,23 @@ const UserButtons = ({
   return <ButtonGroup>{buttons}</ButtonGroup>;
 };
 
-type PersonButtonsProps = Pick<PersonDetailsProps, 'person' | 'account'> & {
-  formOfAddress: FormOfAddress;
-};
-
+/**
+ * Buttons that an admin can see on any profile page.
+ */
 const AdminButtons = ({
-  formOfAddress,
   person,
-  account,
-}: PersonButtonsProps) => {
+  formOfAddress,
+}: {
+  person: Person;
+  formOfAddress: ClientFormOfAddress;
+}) => {
   const buttons = [];
 
   buttons.push(<EditPersonButton key='edit-person' personId={person.id} />);
 
   buttons.push(<PermissionsButton key='permissions' personId={person.id} />);
 
-  if (!account) {
+  if (!person.account) {
     buttons.push(
       <CreateAccountButton key='create-account' personId={person.id} />
     );
@@ -138,10 +130,11 @@ const AdminButtons = ({
   buttons.push(
     <DeletePersonButton
       key='delete-person'
-      formOfAddress={formOfAddress}
       personId={person.id}
+      personRev={person.rev}
+      formOfAddress={formOfAddress}
       personName={formatName(person)}
-      hasAccount={!!account}
+      hasAccount={!!person.account}
     />
   );
 

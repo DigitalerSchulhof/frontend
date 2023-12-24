@@ -2,7 +2,7 @@ import { requireLogin } from '#/auth/component';
 import { useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
-import { ButtonGroup, Button } from '#/ui/Button';
+import { Button, ButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
 import { HiddenInput, TextFormRow } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
@@ -12,6 +12,8 @@ import { IdentityTheftForm } from './form';
 export default async function Page() {
   const context = await requireLogin();
   const { t } = useT();
+
+  const person = await context.getPerson();
 
   return (
     <>
@@ -32,13 +34,13 @@ export default async function Page() {
           title='schulhof.account.profile.identity-theft.disclaimer.title'
         >
           {t('schulhof.account.profile.identity-theft.disclaimer.description', {
-            form_of_address: context.account.settings.profile.formOfAddress,
+            form_of_address: context.formOfAddress,
           }).map((e, i) => (
             <p key={i}>{e}</p>
           ))}
         </Alert>
         <IdentityTheftForm>
-          <HiddenInput name='rev' value={context.account.rev} />
+          <HiddenInput name='personRev' value={person.rev} />
           <Table>
             <TextFormRow
               label='schulhof.account.profile.identity-theft.form.old-password'

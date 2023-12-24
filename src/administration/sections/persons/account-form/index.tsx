@@ -1,5 +1,3 @@
-import type { Account } from '#/services/interfaces/account';
-import type { WithId } from '#/services/interfaces/base';
 import type { Person } from '#/services/interfaces/person';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { HiddenInput, TextFormRow } from '#/ui/Form';
@@ -9,22 +7,20 @@ import { ClientAccountForm } from './form';
 export const AccountForm = ({
   isOwnProfile = false,
   person,
-  account,
 }: {
   isOwnProfile?: boolean;
-  person: WithId<Person>;
-  account: WithId<Account> | null;
+  person: Person;
 }) => {
-  const mode = account === null ? 'create' : 'edit';
+  const mode = person.account === null ? 'create' : 'edit';
   const own = isOwnProfile ? 'own' : 'other';
 
-  const { username = '', email = '' } = account ?? {};
+  const { username = '', email = '' } = person.account ?? {};
 
   return (
     <ClientAccountForm personId={person.id} own={own} mode={mode}>
       <HiddenInput name='personId' value={person.id} />
       <HiddenInput name='personRev' value={person.rev} />
-      <HiddenInput name='accountRev' value={account?.rev} />
+      <HiddenInput name='mode' value={mode} />
       <Table>
         <TextFormRow
           label={`schulhof.administration.sections.persons.${mode}-account.form.username`}

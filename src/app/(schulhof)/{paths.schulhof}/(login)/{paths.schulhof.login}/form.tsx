@@ -1,7 +1,6 @@
 'use client';
 
 import { makeLink, useT } from '#/i18n';
-import type { FormOfAddress } from '#/services/interfaces/account';
 import { Form } from '#/ui/Form';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { sleep } from '#/utils';
@@ -21,10 +20,11 @@ function useSubmit() {
   const router = useRouter();
 
   return useSend(
-    useCallback(async (formData) => {
+    useCallback(async (formData: FormData) => {
       const [res] = await Promise.all([
         action(formData),
-        // Because we don't show a dialogue on success, we intentionally put this delay here in order to not flash the login modal for a few milliseconds.
+        // Because we don't show a dialog on success (we redirect immediately),
+        // we intentionally put this delay here in order to not flash the login modal for a few milliseconds.
         sleep(500),
       ]);
 
@@ -41,17 +41,18 @@ function useSubmit() {
     ),
     useCallback(
       (close, _, errors) => {
+        const forgotPasswordLink = makeLink([
+          'paths.schulhof',
+          'paths.schulhof.forgot-password',
+        ]);
+
         const reasons = errors.flatMap((err) =>
           t(
             `schulhof.login.actions.login.modals.error.reasons.${mapError(
               err.code
             )}`,
             {
-              form_of_address: err.baggage?.formOfAddress as FormOfAddress,
-              ForgotPasswordLink: makeLink([
-                'paths.schulhof',
-                'paths.schulhof.forgot-password',
-              ]),
+              ForgotPasswordLink: forgotPasswordLink,
             }
           )
         );
@@ -68,6 +69,7 @@ function useSubmit() {
       [t]
     ),
     useCallback(() => {
+      // Redirect here instead so we keep the modal open while the new page is loading
       router.push(
         `/${[t('paths.schulhof'), t('paths.schulhof.account')].join('/')}`
       );
