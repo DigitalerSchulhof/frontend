@@ -10,7 +10,7 @@ import { useSend } from '#/utils/form';
 import React, { useCallback } from 'react';
 import action from './action';
 
-export const ClientAccountForm = ({
+export const ClientCreateEditAccountForm = ({
   personId,
   own,
   mode,

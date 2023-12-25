@@ -12,7 +12,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { ClientPersonType } from './action';
 import action, { generateTeacherCode } from './action';
 
-export const ClientPersonForm = ({
+export const ClientCreateEditPersonForm = ({
   personId,
   mode,
   children,

@@ -1,11 +1,16 @@
-import { EditAccountSettings } from '#/administration/sections/persons/account-settings';
+import { AccountSettingsForm } from '#/administration/sections/persons/account-settings';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 
 export default async function Page() {
-  const context = await requireLogin();
+  const context = await requireLogin({
+    permission: 'schulhof.administration.persons.account-settings',
+    context: {
+      personId: '#self',
+    },
+  });
 
   const person = await context.getPerson();
 
@@ -22,7 +27,7 @@ export default async function Page() {
         />
         <Heading size='1' t='schulhof.account.profile.account-settings.title' />
       </Col>
-      <EditAccountSettings isOwnProfile person={person} />
+      <AccountSettingsForm isOwnProfile person={person} />
     </>
   );
 }

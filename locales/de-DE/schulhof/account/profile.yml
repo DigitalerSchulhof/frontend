@@ -1,0 +1,14 @@
+title: Mein Profil
+edit-account:
+  title: Mein Benutzerkonto bearbeiten
+account-settings:
+  title: Meine Einstellungen
+report-identity-theft:
+  title: Identitätsdiebstahl melden
+  disclaimer:
+    title: Identitätsdiebstahl
+    description:
+      - Hiermit {form_of_address, select, informal {meldest du} formal {melden Sie} other {~}}, dass unerlaubt auf {form_of_address, select, informal {dein} formal {Ihr} other {~}} Konto zugegriffen worden ist. Eine leichtfertige Meldung sollte vermeiden werden, da hierdurch eine Sicherheitslücke gemeldet wird und ist vergleichbar mit dem Ziehen der Notbremse ohne triftigen Grund.
+      - <b>Ein Identitätsdiebstahl muss gemeldet werden, wenn einer vorliegt, aber nicht leichtfertig.</b>
+change-password:
+  title: Passwort ändern

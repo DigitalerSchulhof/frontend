@@ -23,7 +23,7 @@ personal-data:
 buttons:
   title: Daten ändern
   actions:
-    identity-theft: Identitätsdiebstahl melden
+    report-identity-theft: Identitätsdiebstahl melden
     create-account: Benutzerkonto anlegen
     edit-account: Benutzerkonto bearbeiten
     delete-account:

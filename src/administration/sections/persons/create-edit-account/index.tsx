@@ -2,9 +2,9 @@ import type { Person } from '#/services/interfaces/person';
 import { Button, ButtonGroup } from '#/ui/Button';
 import { HiddenInput, TextFormRow } from '#/ui/Form';
 import { Table } from '#/ui/Table';
-import { ClientAccountForm } from './form';
+import { ClientCreateEditAccountForm } from './form';
 
-export const AccountForm = ({
+export const CreateEditAccountForm = ({
   isOwnProfile = false,
   person,
 }: {
@@ -17,7 +17,7 @@ export const AccountForm = ({
   const { username = '', email = '' } = person.account ?? {};
 
   return (
-    <ClientAccountForm personId={person.id} own={own} mode={mode}>
+    <ClientCreateEditAccountForm personId={person.id} own={own} mode={mode}>
       <HiddenInput name='personId' value={person.id} />
       <HiddenInput name='personRev' value={person.rev} />
       <HiddenInput name='mode' value={mode} />
@@ -25,13 +25,13 @@ export const AccountForm = ({
         <TextFormRow
           label={`schulhof.administration.sections.persons.${mode}-account.form.username`}
           name='username'
-          autoComplete='username'
+          autoComplete={isOwnProfile ? 'username' : undefined}
           defaultValue={username}
         />
         <TextFormRow
           label={`schulhof.administration.sections.persons.${mode}-account.form.email`}
           name='email'
-          autoComplete='email'
+          autoComplete={isOwnProfile ? 'email' : undefined}
           defaultValue={email}
         />
       </Table>
@@ -59,6 +59,6 @@ export const AccountForm = ({
           t={`schulhof.administration.sections.persons.${mode}-account.form.buttons.back.${own}`}
         />
       </ButtonGroup>
-    </ClientAccountForm>
+    </ClientCreateEditAccountForm>
   );
 };

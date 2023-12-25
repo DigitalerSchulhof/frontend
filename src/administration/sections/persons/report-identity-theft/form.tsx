@@ -3,28 +3,28 @@
 import { T, useT } from '#/i18n';
 import { Alert } from '#/ui/Alert';
 import { Button, ButtonGroup } from '#/ui/Button';
-import { DisplayContentsForm } from '#/ui/Form';
+import { Form } from '#/ui/Form';
 import { Modal } from '#/ui/Modal';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { useSend } from '#/utils/form';
 import React, { useCallback } from 'react';
 import action from './action';
 
-export const ClientAccountSettingsForm = ({
-  own,
+export const ClientReportIdentityTheftForm = ({
   personId,
+  own,
   children,
 }: {
-  own: 'own' | 'other';
   personId: string;
+  own: 'own' | 'other';
   children: React.ReactNode;
 }) => {
-  const submit = useSubmit(own, personId);
+  const submit = useSubmit(personId, own);
 
-  return <DisplayContentsForm submit={submit}>{children}</DisplayContentsForm>;
+  return <Form submit={submit}>{children}</Form>;
 };
 
-function useSubmit(own: 'own' | 'other', personId: string) {
+function useSubmit(personId: string, own: 'own' | 'other') {
   const { t } = useT();
 
   return useSend(
@@ -32,8 +32,8 @@ function useSubmit(own: 'own' | 'other', personId: string) {
     useCallback(
       () => (
         <LoadingModal
-          title='schulhof.administration.sections.persons.account-settings.modals.loading.title'
-          description='schulhof.administration.sections.persons.account-settings.modals.loading.description'
+          title='schulhof.administration.sections.persons.report-identity-theft.modals.loading.title'
+          description='schulhof.administration.sections.persons.report-identity-theft.modals.loading.description'
         />
       ),
       []
@@ -42,35 +42,32 @@ function useSubmit(own: 'own' | 'other', personId: string) {
       (close, errors) => {
         const reasons = errors.flatMap((err) =>
           t(
-            `schulhof.administration.sections.persons.account-settings.modals.error.reasons.${mapError(
+            `schulhof.administration.sections.persons.report-identity-theft.modals.error.reasons.${mapError(
               err
-            )}`,
-            {
-              max_session_timeout: 300,
-            }
+            )}`
           )
         );
 
         return (
           <ErrorModal
             close={close}
-            title='schulhof.administration.sections.persons.account-settings.modals.error.title'
-            description='schulhof.administration.sections.persons.account-settings.modals.error.description'
+            title='schulhof.administration.sections.persons.report-identity-theft.modals.error.title'
+            description='schulhof.administration.sections.persons.report-identity-theft.modals.error.description'
             reasons={reasons}
           />
         );
       },
       [t]
     ),
-    useCallback(() => {
-      return (
+    useCallback(
+      () => (
         <Modal onClose={close}>
           <Alert
             variant='success'
-            title='schulhof.administration.sections.persons.account-settings.modals.success.title'
+            title='schulhof.administration.sections.persons.report-identity-theft.modals.success.title'
           >
             <p>
-              <T t='schulhof.administration.sections.persons.account-settings.modals.success.description' />
+              <T t='schulhof.administration.sections.persons.report-identity-theft.modals.success.description' />
             </p>
           </Alert>
           <ButtonGroup>
@@ -89,23 +86,22 @@ function useSubmit(own: 'own' | 'other', personId: string) {
                       `{${personId}}`,
                     ]
               }
-              t={`schulhof.administration.sections.persons.account-settings.modals.success.button.${own}`}
+              t={`schulhof.administration.sections.persons.report-identity-theft.modals.success.button.${own}`}
             />
           </ButtonGroup>
         </Modal>
-      );
-    }, [own, personId])
+      ),
+      [own, personId]
+    )
   );
 }
 
 function mapError(err: string) {
   switch (err) {
-    case 'ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_IN_BIN_INVALID':
-      return 'invalid-mailbox-delete-after-in-bin';
-    case 'ACCOUNT_SETTINGS_MAILBOX_DELETE_AFTER_INVALID':
-      return 'invalid-mailbox-delete-after';
-    case 'ACCOUNT_SETTINGS_PROFILE_SESSION_TIMEOUT_INVALID':
-      return 'invalid-session-timeout';
+    case 'INVALID_CREDENTIALS':
+      return 'invalid-credentials';
+    case 'PASSWORD_MISMATCH':
+      return 'password-mismatch';
     default:
       return 'internal-error';
   }

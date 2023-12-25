@@ -13,9 +13,9 @@ import {
 } from '#/ui/Form';
 import { Heading } from '#/ui/Heading';
 import { Table } from '#/ui/Table';
-import { EditAccountSettingsForm } from './form';
+import { ClientAccountSettingsForm } from './form';
 
-export const EditAccountSettings = async ({
+export const AccountSettingsForm = async ({
   person,
   isOwnProfile = false,
 }: {
@@ -27,7 +27,7 @@ export const EditAccountSettings = async ({
   const own = isOwnProfile ? 'own' : 'other';
 
   return (
-    <EditAccountSettingsForm own={own} personId={person.id}>
+    <ClientAccountSettingsForm own={own} personId={person.id}>
       <HiddenInput name='personId' value={person.id} />
       <HiddenInput name='personRev' value={person.rev} />
       <Col w='6'>
@@ -186,6 +186,6 @@ export const EditAccountSettings = async ({
           />
         </ButtonGroup>
       </Col>
-    </EditAccountSettingsForm>
+    </ClientAccountSettingsForm>
   );
 };

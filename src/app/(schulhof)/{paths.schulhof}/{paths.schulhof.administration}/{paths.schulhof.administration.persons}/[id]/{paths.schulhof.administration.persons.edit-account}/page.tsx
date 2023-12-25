@@ -1,4 +1,4 @@
-import { AccountForm } from '#/administration/sections/persons/account-form';
+import { CreateEditAccountForm } from '#/administration/sections/persons/create-edit-account';
 import { requireLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -14,7 +14,12 @@ export default async function Page({
     id: string;
   };
 }) {
-  const context = await requireLogin();
+  const context = await requireLogin({
+    permission: 'schulhof.administration.persons.edit-account',
+    context: {
+      personId: params.id,
+    },
+  });
 
   const person = await context.services.person.getPerson(params.id);
 
@@ -45,7 +50,7 @@ export default async function Page({
         </Heading>
       </Col>
       <Col w='12'>
-        <AccountForm person={person} />
+        <CreateEditAccountForm person={person} />
       </Col>
     </>
   );

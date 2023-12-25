@@ -130,3 +130,15 @@ export const ButtonGroup = styled.section`
 
   margin: 10px 0;
 `;
+
+export function createButtonGroup(
+  ...buttons: readonly (JSX.Element | null)[]
+): JSX.Element | null {
+  const filteredButtons = buttons.filter((button) => button !== null);
+
+  if (filteredButtons.length === 0) {
+    return null;
+  }
+
+  return <ButtonGroup>{filteredButtons}</ButtonGroup>;
+}

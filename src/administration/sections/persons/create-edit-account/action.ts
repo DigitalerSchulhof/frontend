@@ -13,7 +13,12 @@ export default wrapFormAction(
     email: v.string,
   },
   async ({ personId, personRev, mode, username, email }): Promise<void> => {
-    const context = await requireLogin();
+    const context = await requireLogin({
+      permission: `schulhof.administration.persons.${mode}-account`,
+      context: {
+        personId: personId,
+      },
+    });
 
     const data = { username, email };
 

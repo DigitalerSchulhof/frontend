@@ -21,7 +21,18 @@ abstract class ContextCreator {
     return this.baseContext;
   }
 
-  async requireLogin(): Promise<LoggedInBackendContext> {
+  /**
+   * @param permission Explicitly no permission required if null
+   */
+  async requireLogin(
+    permission:
+      | string
+      | {
+          permission: string;
+          context: object;
+        }
+      | null
+  ): Promise<LoggedInBackendContext> {
     const sessionData = await this.getSessionData();
 
     if (!sessionData) {

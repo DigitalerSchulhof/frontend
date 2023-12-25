@@ -1,11 +1,16 @@
-import { AccountForm } from '#/administration/sections/persons/account-form';
+import { CreateEditAccountForm } from '#/administration/sections/persons/create-edit-account';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 
 export default async function Page() {
-  const context = await requireLogin();
+  const context = await requireLogin({
+    permission: 'schulhof.administration.persons.edit-account',
+    context: {
+      personId: '#self',
+    },
+  });
 
   const person = await context.getPerson();
 
@@ -23,7 +28,7 @@ export default async function Page() {
         <Heading size='1' t='schulhof.account.profile.edit-account.title' />
       </Col>
       <Col w='12'>
-        <AccountForm isOwnProfile person={person} />
+        <CreateEditAccountForm isOwnProfile person={person} />
       </Col>
     </>
   );

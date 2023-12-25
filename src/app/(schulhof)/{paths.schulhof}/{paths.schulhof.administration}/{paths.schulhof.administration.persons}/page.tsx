@@ -1,12 +1,27 @@
 import { PersonsTable } from '#/administration/sections/persons/page/table';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
-import { Button, ButtonGroup } from '#/ui/Button';
+import { Button, createButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 
 export default async function Page() {
-  const context = await requireLogin();
+  const context = await requireLogin(
+    'schulhof.administration.persons.[|read,create-person]'
+  );
+
+  const mayReadPromise = context.services.permission.hasPermission(
+    'schulhof.administration.persons.read'
+  );
+
+  const mayCreatePromise = context.services.permission.hasPermission(
+    'schulhof.administration.persons.create-person'
+  );
+
+  const [mayRead, mayCreate] = await Promise.all([
+    mayReadPromise,
+    mayCreatePromise,
+  ]);
 
   return (
     <>
@@ -24,23 +39,29 @@ export default async function Page() {
         />
       </Col>
       <Col w='12'>
-        <Heading
-          size='2'
-          t='schulhof.administration.sections.persons.page.filter.title'
-        />
-        <PersonsTable formOfAddress={context.formOfAddress} />
-        <ButtonGroup>
-          <Button
-            variant='success'
-            t='schulhof.administration.sections.persons.page.buttons.create-person'
-            href={[
-              'paths.schulhof',
-              'paths.schulhof.administration',
-              'paths.schulhof.administration.persons',
-              'paths.schulhof.administration.persons.create-person',
-            ]}
-          />
-        </ButtonGroup>
+        {mayRead ? (
+          <>
+            <Heading
+              size='2'
+              t='schulhof.administration.sections.persons.page.filter.title'
+            />
+            <PersonsTable formOfAddress={context.formOfAddress} />
+          </>
+        ) : null}
+        {createButtonGroup(
+          mayCreate ? (
+            <Button
+              variant='success'
+              t='schulhof.administration.sections.persons.page.buttons.create-person'
+              href={[
+                'paths.schulhof',
+                'paths.schulhof.administration',
+                'paths.schulhof.administration.persons',
+                'paths.schulhof.administration.persons.create-person',
+              ]}
+            />
+          ) : null
+        )}
       </Col>
     </>
   );

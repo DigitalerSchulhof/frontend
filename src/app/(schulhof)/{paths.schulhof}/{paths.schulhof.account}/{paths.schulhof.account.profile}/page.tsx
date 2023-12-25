@@ -5,7 +5,12 @@ import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 
 export default async function Page() {
-  const context = await requireLogin();
+  const context = await requireLogin({
+    permission: 'schulhof.administration.persons.details',
+    context: {
+      personId: '#self',
+    },
+  });
 
   const person = await context.getPerson();
 

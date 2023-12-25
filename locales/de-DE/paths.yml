@@ -13,7 +13,7 @@ schulhof:
     profile:
       index: Profil
       title: Mein Profil
-      identity-theft:
+      report-identity-theft:
         index: Identitaetsdiebstahl
         title: Identitätsdiebstahl
       change-password:
@@ -50,4 +50,10 @@ schulhof:
       permissions:
         index: Rollen_und_Rechte
         title: Rollen und Rechte vergeben
+      report-identity-theft:
+        index: Identitaetsdiebstahl
+        title: Identitätsdiebstahl
+      change-password:
+        index: Passwort_aendern
+        title: Passwort ändern
     roles: Rollen

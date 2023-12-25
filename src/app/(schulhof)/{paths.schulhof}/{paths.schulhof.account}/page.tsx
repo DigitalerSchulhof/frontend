@@ -9,7 +9,7 @@ import { Link } from '#/ui/Link';
 import { getLastLoginAndUpdateDidShow } from './last-login';
 
 export default async function Page() {
-  const context = await requireLogin();
+  const context = await requireLogin(null);
 
   const person = await context.getPerson();
 
@@ -43,7 +43,7 @@ export default async function Page() {
       </Col>
       <Col w='4' />
       <Col w='4'>
-        <Heading size='2' t='schulhof.account.me.title' />
+        <Heading size='2' t='schulhof.account.profile.title' />
         <ButtonGroup>
           <Button
             href={[
@@ -51,7 +51,7 @@ export default async function Page() {
               'paths.schulhof.account',
               'paths.schulhof.account.profile',
             ]}
-            t='schulhof.account.me.details'
+            t='schulhof.account.profile.details'
           />
           <Button
             href={[
@@ -60,7 +60,7 @@ export default async function Page() {
               'paths.schulhof.account.profile',
               'paths.schulhof.account.profile.account-settings',
             ]}
-            t='schulhof.account.me.account-settings'
+            t='schulhof.account.profile.account-settings'
           />
         </ButtonGroup>
       </Col>

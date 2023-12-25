@@ -32,7 +32,16 @@ export default wrapFormAction(
     gender,
     teacherCode,
   }): Promise<void> => {
-    const context = await requireLogin();
+    const permission = personId
+      ? {
+          permission: 'schulhof.administration.persons.edit-person',
+          context: {
+            personId,
+          },
+        }
+      : 'schulhof.administration.persons.create-person';
+
+    const context = await requireLogin(permission);
 
     const data = {
       firstname,
@@ -65,7 +74,9 @@ export default wrapFormAction(
 export const generateTeacherCode = wrapAction(
   [v.string],
   async (lastnameFirstThree) => {
-    const context = await requireLogin();
+    const context = await requireLogin(
+      'schulhof.administration.persons.[|create-person,edit-person]'
+    );
 
     return context.services.person.generateTeacherCodeSuggestion(
       lastnameFirstThree

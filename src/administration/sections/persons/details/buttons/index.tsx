@@ -1,6 +1,6 @@
 import type { LoggedInBackendContext } from '#/context';
 import type { Person } from '#/services/interfaces/person';
-import { ButtonGroup } from '#/ui/Button';
+import { createButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import { Note } from '#/ui/Note';
 import { formatName } from '#/utils';
@@ -31,11 +31,16 @@ export const PersonDetailsButtonSection = ({
         t='schulhof.administration.sections.persons.details.buttons.title'
       />
       <UserButtons
+        context={context}
         formOfAddress={context.formOfAddress}
         isOwnProfile={isOwnProfile}
         person={person}
       />
-      <AdminButtons formOfAddress={context.formOfAddress} person={person} />
+      <AdminButtons
+        context={context}
+        formOfAddress={context.formOfAddress}
+        person={person}
+      />
       {!isOwnProfile ? (
         <Note t='schulhof.administration.sections.persons.details.buttons.actions.change-password.note' />
       ) : null}
@@ -46,99 +51,170 @@ export const PersonDetailsButtonSection = ({
 /**
  * Buttons that a regular user can see on their own profile page.
  */
-const UserButtons = ({
+const UserButtons = async ({
+  context,
   person,
   formOfAddress,
   isOwnProfile,
 }: {
+  context: LoggedInBackendContext;
   person: Person;
   formOfAddress: ClientFormOfAddress;
   isOwnProfile: boolean;
 }) => {
-  const personName = formatName(person);
+  const mayEditAccountPromise = context.services.permission.hasPermission({
+    checkIf: !!person.account,
+    permission: 'schulhof.administration.edit-account',
+    context: {
+      person: person.id,
+    },
+  });
 
-  const buttons = [];
+  const mayChangePasswordPromise = context.services.permission.hasPermission({
+    permission: 'schulhof.administration.persons.change-password',
+    context: {
+      personId: person.id,
+    },
+  });
 
-  if (person.account) {
-    buttons.push(
+  const maySettingsPromise = context.services.permission.hasPermission({
+    checkIf: !!person.account,
+    permission: 'schulhof.administration.account-settings',
+    context: {
+      person: person.id,
+    },
+  });
+
+  const mayReportIdentityTheftPromise =
+    context.services.permission.hasPermission({
+      permission: 'schulhof.administration.persons.report-identity-theft',
+      context: {
+        person: person.id,
+      },
+    });
+
+  const mayDeleteAccountPromise = context.services.permission.hasPermission({
+    checkIf: !!person.account,
+    permission: 'schulhof.administration.persons.delete-account',
+    context: {
+      person: person.id,
+    },
+  });
+
+  const [
+    mayEditAccount,
+    mayChangePassword,
+    maySettings,
+    mayReportIdentityTheft,
+    mayDeleteAccount,
+  ] = await Promise.all([
+    mayEditAccountPromise,
+    mayChangePasswordPromise,
+    maySettingsPromise,
+    mayReportIdentityTheftPromise,
+    mayDeleteAccountPromise,
+  ]);
+
+  return createButtonGroup(
+    mayEditAccount ? (
       <EditAccountButton
         key='edit-account'
         isOwnProfile={isOwnProfile}
         personId={person.id}
       />
-    );
-  }
-
-  if (isOwnProfile) {
-    buttons.push(<ChangePasswordButton key='change-password' />);
-  }
-
-  if (person.account) {
-    buttons.push(
+    ) : null,
+    mayChangePassword ? <ChangePasswordButton key='change-password' /> : null,
+    maySettings ? (
       <SettingsButton
         key='settings'
         isOwnProfile={isOwnProfile}
         personId={person.id}
       />
-    );
-  }
-
-  if (isOwnProfile) {
-    buttons.push(<IdentityTheftButton key='identity-theft' />);
-  }
-
-  if (person.account) {
-    buttons.push(
+    ) : null,
+    mayReportIdentityTheft ? (
+      <IdentityTheftButton
+        key='report-identity-theft'
+        isOwnProfile={isOwnProfile}
+        personId={person.id}
+      />
+    ) : null,
+    mayDeleteAccount ? (
       <DeleteAccountButton
         key='delete-account'
         personId={person.id}
         personRev={person.rev}
         formOfAddress={formOfAddress}
         isOwnProfile={isOwnProfile}
-        personName={personName}
+        personName={formatName(person)}
       />
-    );
-  }
-
-  if (!buttons.length) return null;
-
-  return <ButtonGroup>{buttons}</ButtonGroup>;
+    ) : null
+  );
 };
 
 /**
  * Buttons that an admin can see on any profile page.
  */
-const AdminButtons = ({
+const AdminButtons = async ({
+  context,
   person,
   formOfAddress,
 }: {
+  context: LoggedInBackendContext;
   person: Person;
   formOfAddress: ClientFormOfAddress;
 }) => {
-  const buttons = [];
+  const mayEditPersonPromise = context.services.permission.hasPermission({
+    permission: 'schulhof.administration.persons.edit-person',
+    context: {
+      personId: person.id,
+    },
+  });
 
-  buttons.push(<EditPersonButton key='edit-person' personId={person.id} />);
+  // TODO
+  const maySetPermissionsPromise = Promise.resolve(true);
 
-  buttons.push(<PermissionsButton key='permissions' personId={person.id} />);
+  const mayCreateAccountPromise = context.services.permission.hasPermission({
+    checkIf: !person.account,
+    permission: 'schulhof.administration.persons.create-account',
+    context: {
+      personId: person.id,
+    },
+  });
 
-  if (!person.account) {
-    buttons.push(
+  const mayDeletePersonPromise = context.services.permission.hasPermission({
+    permission: 'schulhof.administration.persons.delete-person',
+    context: {
+      personId: person.id,
+    },
+  });
+
+  const [mayEditPerson, maySetPermissions, mayCreateAccount, mayDeletePerson] =
+    await Promise.all([
+      mayEditPersonPromise,
+      maySetPermissionsPromise,
+      mayCreateAccountPromise,
+      mayDeletePersonPromise,
+    ]);
+
+  return createButtonGroup(
+    mayEditPerson ? (
+      <EditPersonButton key='edit-person' personId={person.id} />
+    ) : null,
+    maySetPermissions ? (
+      <PermissionsButton key='permissions' personId={person.id} />
+    ) : null,
+    mayCreateAccount ? (
       <CreateAccountButton key='create-account' personId={person.id} />
-    );
-  }
-
-  buttons.push(
-    <DeletePersonButton
-      key='delete-person'
-      personId={person.id}
-      personRev={person.rev}
-      formOfAddress={formOfAddress}
-      personName={formatName(person)}
-      hasAccount={!!person.account}
-    />
+    ) : null,
+    mayDeletePerson ? (
+      <DeletePersonButton
+        key='delete-person'
+        personId={person.id}
+        personRev={person.rev}
+        formOfAddress={formOfAddress}
+        personName={formatName(person)}
+        hasAccount={!!person.account}
+      />
+    ) : null
   );
-
-  if (!buttons.length) return null;
-
-  return <ButtonGroup>{buttons}</ButtonGroup>;
 };

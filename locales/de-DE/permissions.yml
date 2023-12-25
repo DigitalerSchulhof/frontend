@@ -1,0 +1,14 @@
+schulhof:
+  administration:
+    persons:
+      read: View all
+      details: View one
+      create-person: _
+      create-account: _
+      edit-person: _
+      edit-account: _
+      delete-person: _
+      delete-account: _
+      account-settings: _
+      change-password: _
+      report-identity-theft: _

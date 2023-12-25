@@ -1,4 +1,4 @@
-import { EditAccountSettings } from '#/administration/sections/persons/account-settings';
+import { AccountSettingsForm } from '#/administration/sections/persons/account-settings';
 import { requireLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -14,7 +14,12 @@ export default async function Page({
     id: string;
   };
 }) {
-  const context = await requireLogin();
+  const context = await requireLogin({
+    permission: 'schulhof.administration.persons.account-settings',
+    context: {
+      personId: params.id,
+    },
+  });
 
   const person = await context.services.person.getPerson(params.id);
 
@@ -44,7 +49,7 @@ export default async function Page({
           />
         </Heading>
       </Col>
-      <EditAccountSettings person={person} />
+      <AccountSettingsForm person={person} />
     </>
   );
 }

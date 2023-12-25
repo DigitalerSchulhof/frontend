@@ -6,9 +6,9 @@ import {
 import { Button, ButtonGroup } from '#/ui/Button';
 import { HiddenInput, SelectFormRow, TextFormRow } from '#/ui/Form';
 import { Table } from '#/ui/Table';
-import { ClientPersonForm, TeacherCodeSelector } from './form';
+import { ClientCreateEditPersonForm, TeacherCodeSelector } from './form';
 
-export const PersonForm = ({ person }: { person: Person | null }) => {
+export const CreateEditPersonForm = ({ person }: { person: Person | null }) => {
   const mode = person === null ? 'create' : 'edit';
 
   const {
@@ -20,7 +20,7 @@ export const PersonForm = ({ person }: { person: Person | null }) => {
   } = person ?? {};
 
   return (
-    <ClientPersonForm personId={person?.id ?? null} mode={mode}>
+    <ClientCreateEditPersonForm personId={person?.id ?? null} mode={mode}>
       <HiddenInput name='personId' value={person?.id} />
       <HiddenInput name='personRev' value={person?.rev} />
       <Table>
@@ -89,6 +89,6 @@ export const PersonForm = ({ person }: { person: Person | null }) => {
           t={`schulhof.administration.sections.persons.${mode}-person.form.buttons.back`}
         />
       </ButtonGroup>
-    </ClientPersonForm>
+    </ClientCreateEditPersonForm>
   );
 };

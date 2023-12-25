@@ -1,7 +1,7 @@
 import { DetailsButton } from '#/administration/sections/persons/page/table/content/buttons/details';
 import { DataList } from '#/components/data-list';
 import { T } from '#/i18n';
-import { ButtonGroup } from '#/ui/Button';
+import { createButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
 import {
   IconPersonAdministrator,
@@ -139,28 +139,25 @@ const PersonActionIcons = ({
   person: LoadPersonsPerson;
   formOfAddress: ClientFormOfAddress;
 }) => {
-  const icons = [];
-
   const personName = formatName(person);
 
-  icons.push(<DetailsButton key='details' personId={person.id} />);
-
-  icons.push(<PermissionsButton key='permissions' personId={person.id} />);
-
-  icons.push(<EditPersonButton key='edit-person' personId={person.id} />);
-
-  if (person.hasAccount) {
-    icons.push(<EditAccountButton key='edit-account' personId={person.id} />);
-  }
-
-  if (!person.hasAccount) {
-    icons.push(
+  return createButtonGroup(
+    person.permissions.mayDetails ? (
+      <DetailsButton key='details' personId={person.id} />
+    ) : null,
+    person.permissions.mayPermissions ? (
+      <PermissionsButton key='permissions' personId={person.id} />
+    ) : null,
+    person.permissions.mayEditPerson ? (
+      <EditPersonButton key='edit-person' personId={person.id} />
+    ) : null,
+    person.permissions.mayCreateAccount ? (
       <CreateAccountButton key='create-account' personId={person.id} />
-    );
-  }
-
-  if (person.hasAccount) {
-    icons.push(
+    ) : null,
+    person.permissions.mayEditAccount ? (
+      <EditAccountButton key='edit-account' personId={person.id} />
+    ) : null,
+    person.permissions.mayDeleteAccount ? (
       <DeleteAccountButton
         key='delete-account'
         personId={person.id}
@@ -168,19 +165,16 @@ const PersonActionIcons = ({
         formOfAddress={formOfAddress}
         personName={personName}
       />
-    );
-  }
-
-  icons.push(
-    <DeletePersonButton
-      key='delete-person'
-      personId={person.id}
-      personRev={person.rev}
-      formOfAddress={formOfAddress}
-      personName={personName}
-      hasAccount={person.hasAccount}
-    />
+    ) : null,
+    person.permissions.mayDeletePerson ? (
+      <DeletePersonButton
+        key='delete-person'
+        personId={person.id}
+        personRev={person.rev}
+        formOfAddress={formOfAddress}
+        personName={personName}
+        hasAccount={person.hasAccount}
+      />
+    ) : null
   );
-
-  return <ButtonGroup>{icons}</ButtonGroup>;
 };

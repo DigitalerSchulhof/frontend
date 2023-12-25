@@ -1,4 +1,4 @@
-import { PersonForm } from '#/administration/sections/persons/person-form';
+import { CreateEditPersonForm } from '#/administration/sections/persons/create-edit-person';
 import { requireLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -14,7 +14,12 @@ export default async function Page({
     id: string;
   };
 }) {
-  const context = await requireLogin();
+  const context = await requireLogin({
+    permission: 'schulhof.administration.persons.edit-person',
+    context: {
+      personId: params.id,
+    },
+  });
 
   const person = await context.services.person.getPerson(params.id);
 
@@ -45,7 +50,7 @@ export default async function Page({
         </Heading>
       </Col>
       <Col w='12'>
-        <PersonForm person={person} />
+        <CreateEditPersonForm person={person} />
       </Col>
     </>
   );

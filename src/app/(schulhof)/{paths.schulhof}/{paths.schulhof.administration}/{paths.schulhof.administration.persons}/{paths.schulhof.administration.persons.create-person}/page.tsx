@@ -1,11 +1,11 @@
-import { PersonForm } from '#/administration/sections/persons/person-form';
+import { CreateEditPersonForm } from '#/administration/sections/persons/create-edit-person';
 import { requireLogin } from '#/auth/component';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
 
 export default async function Page() {
-  await requireLogin();
+  await requireLogin('schulhof.administration.persons.create-person');
 
   return (
     <>
@@ -24,7 +24,7 @@ export default async function Page() {
         />
       </Col>
       <Col w='12'>
-        <PersonForm person={null} />
+        <CreateEditPersonForm person={null} />
       </Col>
     </>
   );

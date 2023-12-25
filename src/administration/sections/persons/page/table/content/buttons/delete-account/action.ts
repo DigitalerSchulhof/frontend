@@ -7,7 +7,12 @@ import { v } from 'vality';
 export default wrapAction(
   [v.string, v.string],
   async (personId, personRev): Promise<void> => {
-    const context = await requireLogin();
+    const context = await requireLogin({
+      permission: 'schulhof.administration.persons.delete-account',
+      context: {
+        personId,
+      },
+    });
 
     await context.services.person.deleteAccount(personId, personRev);
   }

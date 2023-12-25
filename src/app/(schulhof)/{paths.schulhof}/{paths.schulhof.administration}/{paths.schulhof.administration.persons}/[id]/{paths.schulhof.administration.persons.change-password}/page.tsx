@@ -1,4 +1,4 @@
-import { PersonDetails } from '#/administration/sections/persons/details';
+import { ChangePasswordForm } from '#/administration/sections/persons/change-password';
 import { requireLogin } from '#/auth/component';
 import { T } from '#/i18n';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
@@ -15,7 +15,7 @@ export default async function Page({
   };
 }) {
   const context = await requireLogin({
-    permission: 'schulhof.administration.persons.details',
+    permission: 'schulhof.administration.persons.change-password',
     context: {
       personId: params.id,
     },
@@ -37,19 +37,20 @@ export default async function Page({
               title: `{${formatName(person)}}`,
               segment: `{${person.id}}`,
             },
+            'paths.schulhof.administration.persons.change-password',
           ]}
         />
         <Heading size='1'>
           <T
-            t='schulhof.administration.sections.persons.details.title'
+            t='schulhof.administration.sections.persons.change-password.title'
             args={{
               name: formatName(person),
             }}
           />
         </Heading>
       </Col>
-      <Col w='6'>
-        <PersonDetails context={context} person={person} />
+      <Col w='12'>
+        <ChangePasswordForm person={person} />
       </Col>
     </>
   );

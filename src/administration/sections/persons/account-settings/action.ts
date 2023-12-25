@@ -42,7 +42,12 @@ export default wrapFormAction(
     profileSessionTimeout,
     profileFormOfAddress,
   }): Promise<void> => {
-    const context = await requireLogin();
+    const context = await requireLogin({
+      permission: 'schulhof.administration.persons.account-settings',
+      context: {
+        personId,
+      },
+    });
 
     await context.services.person.updateAccount(personId, personRev, {
       settings: {

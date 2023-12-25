@@ -41,7 +41,8 @@ async function useGetWriteMessageButton(
 
   if (person.id === context.personId) return null;
 
-  if (!(await context.services.permission.mayMessagePerson(person.id))) {
+  // eslint-disable-next-line no-constant-condition -- TODO: Permission for messaging
+  if (1 === 1) {
     return (
       <MayNotMessagePersonButton
         formOfAddress={context.formOfAddress}

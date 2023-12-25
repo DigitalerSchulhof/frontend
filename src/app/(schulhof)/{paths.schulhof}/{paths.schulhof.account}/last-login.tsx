@@ -21,7 +21,7 @@ export async function getLastLoginAndUpdateDidShow(
             'paths.schulhof',
             'paths.schulhof.account',
             'paths.schulhof.account.profile',
-            'paths.schulhof.account.profile.identity-theft',
+            'paths.schulhof.account.profile.report-identity-theft',
           ]),
         }}
       />
