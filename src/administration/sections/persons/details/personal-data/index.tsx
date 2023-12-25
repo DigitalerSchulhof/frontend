@@ -8,15 +8,13 @@ import { NoAccountButton } from './buttons/no-account';
 import { MayNotMessagePersonButton } from './buttons/no-permission';
 import { PersonDetailsPersonalDataSectionTable } from './table';
 
-export type PersonDetailsPersonalDataSectionProps = {
-  person: Person;
-  context: LoggedInBackendContext;
-};
-
 export const PersonDetailsPersonalDataSection = async ({
   context,
   person,
-}: PersonDetailsPersonalDataSectionProps) => {
+}: {
+  person: Person;
+  context: LoggedInBackendContext;
+}) => {
   const writeMessageButton = await useGetWriteMessageButton(context, person);
 
   return (

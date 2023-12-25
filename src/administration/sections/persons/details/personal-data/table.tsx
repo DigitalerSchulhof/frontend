@@ -11,15 +11,13 @@ import { List, ListCell, ListHeader, ListRow } from '#/ui/List';
 import { Note } from '#/ui/Note';
 import { useCallback, useState } from 'react';
 
-export type PersonDetailsPersonalDataSectionTableProps = {
-  person: Person;
-  buttons?: React.ReactNode;
-};
-
 export const PersonDetailsPersonalDataSectionTable = ({
   person,
   buttons,
-}: PersonDetailsPersonalDataSectionTableProps) => {
+}: {
+  person: Person;
+  buttons?: React.ReactNode;
+}) => {
   const [showMore, setShowMore] = useState(false);
 
   const toggleShowMore = useCallback(() => {

@@ -3,17 +3,15 @@ import type { Person } from '#/services/interfaces/person';
 import { PersonDetailsButtonSection } from './buttons';
 import { PersonDetailsPersonalDataSection } from './personal-data';
 
-export type PersonDetailsProps = {
-  context: LoggedInBackendContext;
-  isOwnProfile?: boolean;
-  person: Person;
-};
-
 export const PersonDetails = async ({
   context,
   isOwnProfile = false,
   person,
-}: PersonDetailsProps) => {
+}: {
+  context: LoggedInBackendContext;
+  isOwnProfile?: boolean;
+  person: Person;
+}) => {
   return (
     <>
       <PersonDetailsPersonalDataSection context={context} person={person} />
