@@ -50,7 +50,4 @@ schulhof:
       permissions:
         index: Rollen_und_Rechte
         title: Rollen und Rechte vergeben
-      report-identity-theft:
-        index: Identitaetsdiebstahl
-        title: Identitätsdiebstahl
     roles: Rollen

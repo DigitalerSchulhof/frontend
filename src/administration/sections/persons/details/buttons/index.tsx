@@ -71,7 +71,7 @@ const UserButtons = async ({
   });
 
   const mayChangePasswordPromise = context.services.permission.hasPermission({
-    checkIf: !!isOwnProfile,
+    checkIf: isOwnProfile,
     permission: 'schulhof.account.profile.change-password',
     context: {
       personId: person.id,
@@ -88,7 +88,8 @@ const UserButtons = async ({
 
   const mayReportIdentityTheftPromise =
     context.services.permission.hasPermission({
-      permission: 'schulhof.administration.persons.report-identity-theft',
+      checkIf: isOwnProfile,
+      permission: 'schulhof.account.profile.report-identity-theft',
       context: {
         person: person.id,
       },
@@ -133,11 +134,7 @@ const UserButtons = async ({
       />
     ) : null,
     mayReportIdentityTheft ? (
-      <IdentityTheftButton
-        key='report-identity-theft'
-        isOwnProfile={isOwnProfile}
-        personId={person.id}
-      />
+      <IdentityTheftButton key='report-identity-theft' />
     ) : null,
     mayDeleteAccount ? (
       <DeleteAccountButton

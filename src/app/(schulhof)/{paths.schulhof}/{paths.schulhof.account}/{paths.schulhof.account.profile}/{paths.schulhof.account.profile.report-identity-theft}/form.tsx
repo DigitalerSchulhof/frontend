@@ -7,10 +7,10 @@ import { Form } from '#/ui/Form';
 import { Modal } from '#/ui/Modal';
 import { ErrorModal, LoadingModal } from '#/ui/Modal/client';
 import { useSend } from '#/utils/form';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import action from './action';
 
-export const ClientChangePasswordForm = ({
+export const ClientReportIdentityTheftForm = ({
   children,
 }: {
   children: React.ReactNode;
@@ -28,8 +28,8 @@ function useSubmit() {
     useCallback(
       () => (
         <LoadingModal
-          title='schulhof.account.profile.change-password.modals.loading.title'
-          description='schulhof.account.profile.change-password.modals.loading.description'
+          title='schulhof.account.profile.report-identity-theft.modals.loading.title'
+          description='schulhof.account.profile.report-identity-theft.modals.loading.description'
         />
       ),
       []
@@ -38,7 +38,7 @@ function useSubmit() {
       (close, errors) => {
         const reasons = errors.flatMap((err) =>
           t(
-            `schulhof.account.profile.change-password.modals.error.reasons.${mapError(
+            `schulhof.account.profile.report-identity-theft.modals.error.reasons.${mapError(
               err
             )}`
           )
@@ -47,8 +47,8 @@ function useSubmit() {
         return (
           <ErrorModal
             close={close}
-            title='schulhof.account.profile.change-password.modals.error.title'
-            description='schulhof.account.profile.change-password.modals.error.description'
+            title='schulhof.account.profile.report-identity-theft.modals.error.title'
+            description='schulhof.account.profile.report-identity-theft.modals.error.description'
             reasons={reasons}
           />
         );
@@ -60,10 +60,10 @@ function useSubmit() {
         <Modal onClose={close}>
           <Alert
             variant='success'
-            title='schulhof.account.profile.change-password.modals.success.title'
+            title='schulhof.account.profile.report-identity-theft.modals.success.title'
           >
             <p>
-              <T t='schulhof.account.profile.change-password.modals.success.description' />
+              <T t='schulhof.account.profile.report-identity-theft.modals.success.description' />
             </p>
           </Alert>
           <ButtonGroup>
@@ -73,7 +73,7 @@ function useSubmit() {
                 'paths.schulhof.account',
                 'paths.schulhof.account.profile',
               ]}
-              t='schulhof.account.profile.change-password.modals.success.button'
+              t='schulhof.account.profile.report-identity-theft.modals.success.button'
             />
           </ButtonGroup>
         </Modal>
