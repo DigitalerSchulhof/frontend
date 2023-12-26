@@ -1,0 +1,38 @@
+title: Mein Konto
+details: Profildaten
+account-settings: Einstellungen
+edit-account: Mein Benutzerkonto bearbeiten
+change-password:
+  title: Passwort ändern
+  form:
+    old-password: "Altes Passwort:"
+    new-password: "Neues Passwort:"
+    new-password-again: "Neues Passwort wiederholen:"
+    buttons:
+      submit: Passwort ändern
+      back: Zurück zur Profilansicht
+  modals:
+    loading:
+      title: Passwort ändern
+      description: Die eingegebenen Daten werden überprüft und das Passwort wird geändert.
+    error:
+      title: Passwort Ändern fehlgeschlagen
+      description: Das Passwort wurde nicht geändert, denn ...
+      reasons:
+        internal-error:
+          - es ist ein interner Fehler aufgetreten.
+        invalid-credentials:
+          - das alte Passwort ist ungültig.
+        password-mismatch:
+          - das neue Passwort stimmt nicht mit der Wiederholung überein.
+    success:
+      title: Passwort ändern
+      description: Das Passwort wurde geändert.
+      button:  Zurück zur Profilansicht
+report-identity-theft:
+  title: Identitätsdiebstahl melden
+  disclaimer:
+    title: Identitätsdiebstahl
+    description:
+      - Hiermit {form_of_address, select, informal {meldest du} formal {melden Sie} other {~}}, dass unerlaubt auf {form_of_address, select, informal {dein} formal {Ihr} other {~}} Konto zugegriffen worden ist. Eine leichtfertige Meldung sollte vermeiden werden, da hierdurch eine Sicherheitslücke gemeldet wird und ist vergleichbar mit dem Ziehen der Notbremse ohne triftigen Grund.
+      - <b>Ein Identitätsdiebstahl muss gemeldet werden, wenn einer vorliegt, aber nicht leichtfertig.</b>

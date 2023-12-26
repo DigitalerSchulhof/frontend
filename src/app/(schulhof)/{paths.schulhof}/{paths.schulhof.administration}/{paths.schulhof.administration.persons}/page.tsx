@@ -4,11 +4,10 @@ import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Button, createButtonGroup } from '#/ui/Button';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
+import { noPermission } from '#/utils/client';
 
 export default async function Page() {
-  const context = await requireLogin(
-    'schulhof.administration.persons.[|read,create-person]'
-  );
+  const context = await requireLogin(null);
 
   const mayReadPromise = context.services.permission.hasPermission(
     'schulhof.administration.persons.read'
@@ -22,6 +21,8 @@ export default async function Page() {
     mayReadPromise,
     mayCreatePromise,
   ]);
+
+  if (!mayRead && !mayCreate) noPermission();
 
   return (
     <>

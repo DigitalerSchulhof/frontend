@@ -53,7 +53,4 @@ schulhof:
       report-identity-theft:
         index: Identitaetsdiebstahl
         title: Identitätsdiebstahl
-      change-password:
-        index: Passwort_aendern
-        title: Passwort ändern
     roles: Rollen

@@ -4,7 +4,3 @@ temporary-password-warning:
   title: Begrenzte Gültigkeit {form_of_address, select, informal {deines} formal {Ihres} other {~}} Passworts
   text: "{form_of_address, select, informal {Du verwendest} formal {Sie verwenden} other {~}} ein temporäres Passwort. Es sollte unverzüglich geändert werden."
   button: Passwort ändern
-profile:
-  title: Mein Konto
-  details: Profildaten
-  account-settings: Einstellungen

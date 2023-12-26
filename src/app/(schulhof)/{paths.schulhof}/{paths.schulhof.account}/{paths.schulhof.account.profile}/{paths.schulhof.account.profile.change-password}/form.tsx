@@ -11,20 +11,16 @@ import { useCallback } from 'react';
 import action from './action';
 
 export const ClientChangePasswordForm = ({
-  personId,
-  own,
   children,
 }: {
-  personId: string;
-  own: 'own' | 'other';
   children: React.ReactNode;
 }) => {
-  const submit = useSubmit(personId, own);
+  const submit = useSubmit();
 
   return <Form submit={submit}>{children}</Form>;
 };
 
-function useSubmit(personId: string, own: 'own' | 'other') {
+function useSubmit() {
   const { t } = useT();
 
   return useSend(
@@ -32,8 +28,8 @@ function useSubmit(personId: string, own: 'own' | 'other') {
     useCallback(
       () => (
         <LoadingModal
-          title='schulhof.administration.sections.persons.change-password.modals.loading.title'
-          description='schulhof.administration.sections.persons.change-password.modals.loading.description'
+          title='schulhof.account.profile.change-password.modals.loading.title'
+          description='schulhof.account.profile.change-password.modals.loading.description'
         />
       ),
       []
@@ -42,7 +38,7 @@ function useSubmit(personId: string, own: 'own' | 'other') {
       (close, errors) => {
         const reasons = errors.flatMap((err) =>
           t(
-            `schulhof.administration.sections.persons.change-password.modals.error.reasons.${mapError(
+            `schulhof.account.profile.change-password.modals.error.reasons.${mapError(
               err
             )}`
           )
@@ -51,8 +47,8 @@ function useSubmit(personId: string, own: 'own' | 'other') {
         return (
           <ErrorModal
             close={close}
-            title='schulhof.administration.sections.persons.change-password.modals.error.title'
-            description='schulhof.administration.sections.persons.change-password.modals.error.description'
+            title='schulhof.account.profile.change-password.modals.error.title'
+            description='schulhof.account.profile.change-password.modals.error.description'
             reasons={reasons}
           />
         );
@@ -64,34 +60,25 @@ function useSubmit(personId: string, own: 'own' | 'other') {
         <Modal onClose={close}>
           <Alert
             variant='success'
-            title='schulhof.administration.sections.persons.change-password.modals.success.title'
+            title='schulhof.account.profile.change-password.modals.success.title'
           >
             <p>
-              <T t='schulhof.administration.sections.persons.change-password.modals.success.description' />
+              <T t='schulhof.account.profile.change-password.modals.success.description' />
             </p>
           </Alert>
           <ButtonGroup>
             <Button
-              href={
-                own === 'own'
-                  ? [
-                      'paths.schulhof',
-                      'paths.schulhof.account',
-                      'paths.schulhof.account.profile',
-                    ]
-                  : [
-                      'paths.schulhof',
-                      'paths.schulhof.administration',
-                      'paths.schulhof.administration.persons',
-                      `{${personId}}`,
-                    ]
-              }
-              t={`schulhof.administration.sections.persons.change-password.modals.success.button.${own}`}
+              href={[
+                'paths.schulhof',
+                'paths.schulhof.account',
+                'paths.schulhof.account.profile',
+              ]}
+              t={`schulhof.account.profile.change-password.modals.success.button`}
             />
           </ButtonGroup>
         </Modal>
       ),
-      [personId, own]
+      []
     )
   );
 }

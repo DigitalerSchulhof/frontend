@@ -25,7 +25,7 @@ export default async function Page() {
             'paths.schulhof.account.profile.edit-account',
           ]}
         />
-        <Heading size='1' t='schulhof.account.profile.edit-account.title' />
+        <Heading size='1' t='schulhof.account.profile.edit-account' />
       </Col>
       <Col w='12'>
         <CreateEditAccountForm isOwnProfile person={person} />

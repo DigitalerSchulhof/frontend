@@ -10,5 +10,7 @@ schulhof:
       delete-person: _
       delete-account: _
       account-settings: _
-      change-password: _
       report-identity-theft: _
+  account:
+   profile:
+    change-password: _

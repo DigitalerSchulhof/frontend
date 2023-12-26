@@ -2,6 +2,7 @@ import { requireLogin } from '#/auth/component';
 import { AdministrationGroup } from '#/components/administration/group';
 import { AdministrationSectionCard } from '#/components/administration/section-card';
 import type { LoggedInBackendContext } from '#/context';
+import type { TranslationsWithStringTypeAndNoVariables } from '#/i18n/translations';
 import { Breadcrumbs } from '#/ui/Breadcrumbs';
 import { Col } from '#/ui/Col';
 import { Heading } from '#/ui/Heading';
@@ -37,10 +38,11 @@ const PersonsGroup = ({
 }: {
   context: LoggedInBackendContext;
 }): Promise<JSX.Element | null> => {
-  return filterGroupSections(
+  return createAdministrationGroup(
+    'schulhof.administration.groups.persons.title',
     [
       context.services.permission
-        .hasPermission('schulhof.administration.sections.persons.view')
+        .hasPermission('schulhof.administration.sections.persons.read')
         .then((r) =>
           r ? (
             <AdministrationSectionCard
@@ -56,23 +58,22 @@ const PersonsGroup = ({
             />
           ) : null
         ),
-    ],
-    (elements) => (
-      <AdministrationGroup title='schulhof.administration.groups.persons.title'>
-        {elements}
-      </AdministrationGroup>
-    )
+    ]
   );
 };
 
-async function filterGroupSections(
-  promises: readonly Promise<JSX.Element | null>[],
-  createGroup: (elements: JSX.Element[]) => JSX.Element
+async function createAdministrationGroup(
+  title: TranslationsWithStringTypeAndNoVariables,
+  promises: readonly Promise<JSX.Element | null>[]
 ): Promise<JSX.Element | null> {
   const elementsOrNull = await Promise.all(promises);
   const elements = elementsOrNull.filter((e): e is JSX.Element => !!e);
 
   if (!elements.length) return null;
 
-  return <Col w='3'>{createGroup(elements)}</Col>;
+  return (
+    <Col w='3'>
+      <AdministrationGroup title={title}>{elements}</AdministrationGroup>
+    </Col>
+  );
 }

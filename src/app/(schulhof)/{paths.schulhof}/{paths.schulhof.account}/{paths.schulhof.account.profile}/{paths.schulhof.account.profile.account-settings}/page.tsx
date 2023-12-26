@@ -25,7 +25,7 @@ export default async function Page() {
             'paths.schulhof.account.profile.account-settings',
           ]}
         />
-        <Heading size='1' t='schulhof.account.profile.account-settings.title' />
+        <Heading size='1' t='schulhof.account.profile.account-settings' />
       </Col>
       <AccountSettingsForm isOwnProfile person={person} />
     </>
