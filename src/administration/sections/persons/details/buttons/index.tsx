@@ -2,7 +2,6 @@ import type { LoggedInBackendContext } from '#/context';
 import type { Person } from '#/services/interfaces/person';
 import { createButtonGroup } from '#/ui/Button';
 import { Heading } from '#/ui/Heading';
-import { Note } from '#/ui/Note';
 import { formatName } from '#/utils';
 import type { ClientFormOfAddress } from '#/utils/client';
 import { ChangePasswordButton } from './change-password';
@@ -41,9 +40,6 @@ export const PersonDetailsButtonSection = ({
         formOfAddress={context.formOfAddress}
         person={person}
       />
-      {!isOwnProfile ? (
-        <Note t='schulhof.administration.sections.persons.details.buttons.actions.change-password.note' />
-      ) : null}
     </>
   );
 };
@@ -123,7 +119,13 @@ const UserButtons = async ({
         personId={person.id}
       />
     ) : null,
-    mayChangePassword ? <ChangePasswordButton key='change-password' /> : null,
+    mayChangePassword ? (
+      <ChangePasswordButton
+        key='change-password'
+        isOwnProfile={isOwnProfile}
+        personId={person.id}
+      />
+    ) : null,
     maySettings ? (
       <SettingsButton
         key='settings'

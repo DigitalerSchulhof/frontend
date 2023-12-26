@@ -75,6 +75,7 @@ buttons:
     account-settings: Einstellungen
     permissions: Rollen und Rechte vergeben
     edit-person: Persönliche Daten bearbeiten
+    change-password: Passwort ändern
     delete-person:
       only:
         button: Person löschen
@@ -120,6 +121,3 @@ buttons:
             title: Person und Nutzerkonto gelöscht
             description: Die Person und das Nutzerkonto wurden erfolgreich gelöscht.
             button: Zurück
-    change-password:
-      button: Passwort ändern
-      note: Das Passwort kann nur auf der eigenen Profilseite geändert werden.
